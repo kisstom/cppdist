@@ -1,0 +1,25 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+
+COMMON_OBJ = Glob('#/../bin/main/common/components/socket/*.o')  + Glob('#/../bin/main/common/util/*.o') + Glob('#/../bin/main/common/random/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/components/*.o') + ['#/../bin/main/algos/algo.o']
+COMMON_OBJ += Glob('#/../bin/main/common/thread/*.o')
+COMMON_OBJ += ['#/../bin/main/algos/node.o']
+
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_odd_even/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
+
+env.Program('tournament_test', ['tournament_test.cpp', '../../../bin/main/common/util/tournament_maker.o'] )
+env.Program('empty', ['empty.cpp'] )
+env.Program('mycompare_test', ['mycompare_test.cpp'] )
+env.Program('fp_reader_test', ['fp_reader_test.cpp', '../../../bin/main/common/components/fingerprint_reader.o', '../../../bin/main/common/util/util.o'])
+env.Program('test_util', ['test_util.cpp', '../../../bin/main/common/util/util.o'])
+env.Program('test_edgelist_container', ['test_edgelist_container.cpp', '../../../bin/main/common/graph/edgelist_container.o','../../../bin/main/common/util/util.o' ])
+env.Program('test_sender_buffer', ['test_sender_buffer.cpp'] + COMMON_OBJ )
+env.Program('test_store_from_binary', ['test_store_from_binary.cpp'] + COMMON_OBJ)
+env.Program('test_serializer', ['test_serializer.cpp'])
+env.Program('test_fp_read', ['test_fp_read.cpp'] + COMMON_OBJ)
+env.Program('test_random_generator', ['test_random_generator.cpp'] + COMMON_OBJ)
+env.Program('test_hash_pseudo_random', ['test_hash_pseudo_random.cpp', '../../../bin/main/common/random/hash_pseudo_random.o'] )

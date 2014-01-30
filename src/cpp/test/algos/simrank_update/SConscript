@@ -1,0 +1,15 @@
+Import('env')
+
+COMMON_OBJ = Glob('#/../bin/main/common/components/*.o') + Glob('#/../bin/main/common/util/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/thread/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/random/*.o')
+COMMON_OBJ += ['#/../bin/main/algos/node.o', '#/../bin/main/algos/algo.o']
+
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_odd_even/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
+
+env.Program('test_node', ['test_node.cpp'] + COMMON_OBJ)
+env.Program('test_simrank_update', ['test_simrank_update.cpp'] + COMMON_OBJ)
+env.Program('test_simrank_update_deserializer', ['test_simrank_update_deserializer.cpp']  + COMMON_OBJ)
+

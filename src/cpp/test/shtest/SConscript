@@ -1,0 +1,3 @@
+Import('env')
+
+env.Program('pseudo_random_test', ['pseudo_random_test.cpp', '../../../bin/main/common/random/hash_pseudo_random.o'])

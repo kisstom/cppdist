@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns:r="http://www.w3.org/TR/RDF/" xmlns:d="http://purl.org/dc/elements/1.0/" xmlns="http://dmoz.org/rdf/">
+  <!-- Generated at 2011-10-23 00:02:37 EST from DMOZ 2.0 -->
+  <Topic r:id="">
+    <catid>1</catid>
+  </Topic>
+  <Topic r:id="Top/Arts">
+    <catid>381773</catid>
+  </Topic>
+  <Topic r:id="Top/Arts/Animation">
+    <catid>423945</catid>
+    <link1 r:resource="http://www.awn.com/"></link1>
+    <link r:resource="http://animation.about.com/"></link>
+    <link r:resource="http://www.toonhound.com/"></link>
+    <link r:resource="http://enculturation.gmu.edu/2_1/pisters.html"></link>
+    <link r:resource="http://www.digitalmediafx.com/Features/animationhistory.html"></link>
+    <link r:resource="http://www-viz.tamu.edu/courses/viza615/97spring/pjames/history/main.html"></link>
+    <link r:resource="http://www.spark-online.com/august00/media/romano.html"></link>
+    <link r:resource="http://www.animated-divots.net/"></link>
+  </Topic>
+  asdasda
+  <ExternalPage about="http://www.animated-divots.net/">
+  <d:Title>Richard's Animated Divots</d:Title>
+  <d:Description>Chronology of animated movies, television programs, and short cartoons. Includes animation filmographies and
+  a list of anime television series.</d:Description>
+  <topic>Top/Arts/Animation</topic>
+  </ExternalPage>
+  <Topic r:id="Top/Arts/Animation/Anime">
+  <catid>425085</catid>
+  </Topic>
+  <Topic r:id="Top/Arts/Animation/Anime/Characters">
+  <catid>425147</catid>
+  <link r:resource="http://www.angelfire.com/anime2/ninisbishonen/"></link>
+  <link r:resource="http://www.angelfire.com/anime2/bestanimecharacters/"></link>
+  <link r:resource="http://valleyofazure.tripod.com/"></link>
+  <link r:resource="http://www.angelfire.com/nv/neko/"></link>
+  <link r:resource="http://www.angelfire.com/grrl/magicshoppe2/"></link>
+  <link r:resource="http://shotani.www2.50megs.com/animen_uno.html"></link>
+  </Topic>
+  <ExternalPage about="http://www.angelfire.com/anime2/ninisbishonen/">
+  <d:Title>Nini's Bishonen Dungeon</d:Title>
+  <d:Description>Shrines to Vega, Taiki, Dilandau, and Tiger Eye, as
+  well as fan art, adoptions, and links.</d:Description>
+

@@ -1,0 +1,11 @@
+Import('env')
+
+COMMON_OBJ = Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/util/*.o')
+
+env.Object(Glob('*.cpp'))
+env.Program('sorted_vector_node_matrix_test', ['sorted_vector_node_matrix_test.cpp'] + COMMON_OBJ)
+env.Program('edge_list_builder_test', ['edge_list_builder_test.cpp'] + COMMON_OBJ)
+env.Program('test_sorted_vector_reader', ['test_sorted_vector_reader.cpp'] + COMMON_OBJ)
+env.Program('file_util_test', ['file_util_test.cpp'] + COMMON_OBJ)
+
+
