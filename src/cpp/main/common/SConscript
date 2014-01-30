@@ -1,0 +1,12 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+
+SConscript(['./components/SConscript'], exports = 'env')
+SConscript(['./graph/SConscript'], exports = 'env')
+SConscript(['./graph_converter/SConscript'], exports = 'env')
+SConscript(['./old/SConscript'], exports = 'env')
+SConscript(['./random/SConscript'], exports = 'env')
+SConscript(['./thread/SConscript'], exports = 'env')
+SConscript(['./tools/SConscript'], exports = 'env')
+SConscript(['./util/SConscript'], exports = 'env')

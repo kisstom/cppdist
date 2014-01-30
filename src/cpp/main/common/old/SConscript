@@ -1,0 +1,4 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+env.Program('split_new', ['split_new.cpp'] )

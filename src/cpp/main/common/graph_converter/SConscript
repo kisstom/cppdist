@@ -1,0 +1,10 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+
+env.Program('continue_indexing', ['continue_indexing_job.cpp', 'continue_indexing.o'] )
+env.Program('reindexer', ['reindexer_job.cpp', 'reindexer.o'] )
+env.Program('print_clue_format', ['print_clue_format_job.cpp', 'print_clue_format.o'] )
+env.Program('inverse_job', ['inverse_job.cpp', 'inverse.o'] )
+env.Program('remove_paralel_job', ['remove_paralel_job.cpp', 'remove_paralel.o'] )
+env.Program('split_by_row_job', ['split_by_row_job.cpp', 'split_by_row.o'])

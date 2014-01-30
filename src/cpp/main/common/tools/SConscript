@@ -1,0 +1,13 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+
+
+env.Program('split_clueweb_vector_node', ['split_clueweb_vector_node.cpp'] )
+env.Program('init_trust_partitioner', ['init_trust_partitioner.cpp'] )
+env.Program('serialize_result', ['serialize_result.cpp', '../util/ConfigParser.o', 'serialize.o'] )
+env.Program('serialize_single', ['serialize_single.cpp', 'serialize.o'] )
+env.Program('deserialize_result', ['deserialize_result.cpp', '../util/ConfigParser.o', 'serialize.o'] )
+env.Program('merge', ['merge_results.cpp', 'merge.o'] )
+env.Program('check_line_length', ['check_line_length.cpp'] )
+env.Program('host_graph_creator_job', ['host_graph_creator_job.cpp', 'host_graph_creator.o'] )
