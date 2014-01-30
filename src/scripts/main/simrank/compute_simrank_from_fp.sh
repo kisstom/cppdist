@@ -1,5 +1,6 @@
 # "Ez egy test komment"
-SRCDIR=/home/kisstom/git/DistributedComp/DistributedFrame/src/
+thisDir=$(dirname $0)
+SRCDIR=$thisDir/../../../
 
 echo "Computes simrank and distance from tree and measures with kendal."
 if [ $# -lt 1 ]; then
@@ -46,16 +47,16 @@ echo "number of pairs"
 wc -l $outdir/concat.ord.sort.merge.u
 
 echo "computing simrank"
-echo $SRCDIR/bin/main/simrank/get_simrank $nodes $path_len $num_pathes $const $outdir/fingerprints.txt $outdir/concat.ord.sort.merge.u $outdir/concat.ord.sort.merge.u.sr
+echo $SRCDIR/bin/main/dmoz/get_simrank $nodes $path_len $num_pathes $const $outdir/fingerprints.txt $outdir/concat.ord.sort.merge.u $outdir/concat.ord.sort.merge.u.sr
 
-$SRCDIR/bin/main/simrank/get_simrank $nodes $path_len $num_pathes $const $outdir/fingerprints.txt $outdir/concat.ord.sort.merge.u $outdir/concat.ord.sort.merge.u.sr
+$SRCDIR/bin/main/dmoz/get_simrank $nodes $path_len $num_pathes $const $outdir/fingerprints.txt $outdir/concat.ord.sort.merge.u $outdir/concat.ord.sort.merge.u.sr
 
 awk -v input=$outdir/concat.ord.sort.merge.u.sr -f $SRCDIR/scripts/main/simrank/extend_pairs.awk $outdir/concat.ord.sort.merge.u.sr > $outdir/concat.ord.sort.merge.u.sr.ext
 sort -grk1,1 -grk3,3  $outdir/concat.ord.sort.merge.u.sr.ext > $outdir/concat.ord.sort.merge.u.sr.ext.sort
 
 if [ $compute_topic_dist == 1 ]; then
   
-  $SRCDIR/bin/main/simrank/distance_calculator  $outdir/concat.ord.sort.merge.u $node_topic $outdir/concat.ord.sort.merge.u.topic
+  $SRCDIR/bin/main/dmoz/distance_calculator  $outdir/concat.ord.sort.merge.u $node_topic $outdir/concat.ord.sort.merge.u.topic
   awk -v input=$outdir/concat.ord.sort.merge.u.topic -f $SRCDIR/scripts/main/simrank/extend_pairs.awk $outdir/concat.ord.sort.merge.u.topic > $outdir/concat.ord.sort.merge.u.topic.ext
   sort -grk1,1 -grk3,3  $outdir/concat.ord.sort.merge.u.topic.ext > $outdir/concat.ord.sort.merge.u.topic.ext.sort
   python $SRCDIR/scripts/main/algos/bitprop/kendal.py $outdir/concat.ord.sort.merge.u.sr.ext.sort  $outdir/concat.ord.sort.merge.u.topic.ext.sort 20 0.001
