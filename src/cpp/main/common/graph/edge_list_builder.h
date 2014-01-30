@@ -19,6 +19,7 @@ using std::vector;
 #include "../util/util.h"
 #include <log4cpp/Category.hh>
 #include <sstream>
+#include <algorithm>
 
 using std::stringstream;
 
@@ -26,8 +27,8 @@ class EdgeListBuilder {
 public:
 	EdgeListBuilder();
 	void buildFromFile(string fname);
-	void buildFromFileOld(string fname);
-	void buildFromFileOld2(string fname);
+	//void buildFromFileOld(string fname);
+	//void buildFromFileOld2(string fname);
 	EdgelistContainer* getContainer();
 	void split(char* line, vector<long>& edges);
 	void setContainer(EdgelistContainer* container);

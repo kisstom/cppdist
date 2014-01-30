@@ -12,7 +12,7 @@ EdgeListBuilder::EdgeListBuilder() : fileUtil_(15000000) {
 	//container_->setMinnode(0);
 }
 
-void EdgeListBuilder::buildFromFileOld(string fname) {
+/*void EdgeListBuilder::buildFromFileOld(string fname) {
   FILE* input = fopen(fname.c_str(), "r");
   if (NULL == input) {
   	logger_->error("Could noot open edge list container %s", fname.c_str());
@@ -66,7 +66,7 @@ void EdgeListBuilder::buildFromFileOld2(string fname) {
   container_->setFinish();
   fclose(input);
   delete[] buffer;
-}
+}*/
 
 void EdgeListBuilder::buildFromFile(string fname) {
   FILE* input = fopen(fname.c_str(), "r");
@@ -92,6 +92,8 @@ void EdgeListBuilder::buildFromFile(string fname) {
 
   	line[strlen(line)-1] = '\0';
   	split(line, edges);
+
+  	std::sort (edges.begin(), edges.end());
 
   	for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
   	  container_->addEdge(lineNumber, *it);

@@ -132,7 +132,7 @@ def makePartition():
   if splitType == '' or splitType == 'EDGE_BALANCED':
     print 'Using partitioner edge balanced'
     numEdgePerPart = getNumEdgePerPart()
-    run('%s/main/common/split_clueweb_vector_node -input %s -init_slave_port %s -numedge_perpart %d -part_prefix %s -partition_cfg %s'%(bin_dir, inputData, initSlavePort, numEdgePerPart, remoteDir + 'slavery', remoteDir + slaveryCfg))
+    run('%s/main/common/tools/split_clueweb_vector_node -input %s -init_slave_port %s -numedge_perpart %d -part_prefix %s -partition_cfg %s'%(bin_dir, inputData, initSlavePort, numEdgePerPart, remoteDir + 'slavery', remoteDir + slaveryCfg))
  
  
   elif splitType == 'NODE_BALANCED':
