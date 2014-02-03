@@ -21,14 +21,15 @@ void Simrank::getFingerprint( string outFileName, short fpnum, short pathlength 
   if (outfile.is_open()){
     long numnodes =  matrix->getNumberOfNodes();
     for (long n = 0; n < numnodes; ++n) {
-      for (short i = 1; i <= fpnum; ++i){
+      for (short i = 0; i < fpnum; ++i){
 	long u = n;
 	stringstream path (stringstream::in | stringstream::out );
-	path << n << '\t' << i; // << '\t'<< u;
-	for (short j = 1; j <= pathlength; ++j){
+	//	path << n << " " << i; 
+	path << i << " " << n; 
+	for (short j = 0; j < pathlength; ++j){
 	  u = getRandomNeighbor(u, i, j);
 	  if (u==-1) break;
-	 path << '\t' << u ;
+	 path << " " << u ;
 	}
 	outfile << path.str() << '\n';
       }

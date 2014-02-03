@@ -1,8 +1,0 @@
-Import('env' )
-env.Object(Glob('*.cpp'))
-
-COMMON_OBJ = Glob('#/../bin/main/common/random/*.o') + Glob('#/../bin/main/common/graph/*.o')
-
-env.Program('simrank_one_computer', ['simrank_one_computer.cpp', 'simrank.o', 'read_from_file.o'] + COMMON_OBJ)
-
-
