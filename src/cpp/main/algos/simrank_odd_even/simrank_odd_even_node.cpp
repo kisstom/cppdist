@@ -237,7 +237,7 @@ void SimrankOddEvenNode::initData(string partName, long minnode, long numnodes) 
 	logger_->info("Initing data.");
 	matrix_ = new EdgelistContainer();
 	matrix_->initContainers();
-	// Igy egyszerubb beolvasni.
+	// Igy egyszerubb beolvasni, de igazabol egy hack.
 	matrix_->setMinnode(0);
 
 	EdgeListBuilder builder;
