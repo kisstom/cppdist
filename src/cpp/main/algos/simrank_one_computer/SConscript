@@ -1,0 +1,12 @@
+Import('env' )
+env.Object(Glob('*.cpp'))
+
+COMMON_OBJ = Glob('#/../bin/main/common/util/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/random/*.o')
+#COMMON_OBJ += ['#/../bin/main/algos/node.o', '#/../bin/main/algos/algo.o']
+
+#COMMON_OBJ += Glob('#/../bin/main/algos/simrank_odd_even/*.o')
+#COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
+#COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
+
+env.Program('simrank_one_computer', ['simrank_one_computer.cpp', 'simrank.o', 'read_from_file.o'] + COMMON_OBJ)

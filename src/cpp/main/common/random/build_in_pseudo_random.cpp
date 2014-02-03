@@ -15,6 +15,6 @@ BuildInPseudoRandom::BuildInPseudoRandom(int seed_) {
   srand(seed);
 };
   
-int BuildInPseudoRandom::get(int fp, int step, long node){
+int BuildInPseudoRandom::get(short fp, short step, long node){
   return rand();
 }

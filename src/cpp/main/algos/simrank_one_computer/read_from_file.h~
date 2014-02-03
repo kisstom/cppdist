@@ -1,0 +1,30 @@
+/*
+ * read_graph_from_file.h
+ *
+ *  Created on: 2014.01.30.
+ *      Author: mrita
+ */
+
+#ifndef READ_GRAPH_FROM_FILE_H_
+#define READ_GRAPH_FROM_FILE_H_
+
+#include <log4cpp/Category.hh>
+
+#include "../../common/edgelist_container.h"
+#include "../../common/edge_list_builder.h"
+
+//using namespace std;
+
+class ReadGraphFromFile {
+  private:
+    EdgelistContainer* matrix;
+    log4cpp::Category* logger;
+   
+  
+  public:
+    ReadGraphFromFile();
+    EdgelistContainer* read(string inFileName);
+     
+};
+
+#endif /* READ_GRAPH_FROM_FILE_H_ */

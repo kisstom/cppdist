@@ -15,7 +15,7 @@
 class BuildInPseudoRandom: public PseudoRandom {
   public:
     BuildInPseudoRandom(int seed_);
-    int get(int fp, int step, long node);
+    int get(short fp, short step, long node);
 };
 
 #endif /* BUILD_IN_PSEUDO_RANDOM_H_ */

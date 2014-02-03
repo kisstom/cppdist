@@ -29,6 +29,7 @@ env = Environment(
 SConscript([
     'main/common/SConscript',
     'main/dmoz/SConscript',
+    'main/algos/simrank_one_computer/SConscript',	
     'main/algos/simrank_odd_even/SConscript',
     'main/algos/simrank_store_first/SConscript',
     'main/algos/simrank_update/SConscript', 
@@ -39,6 +40,7 @@ SConscript([
     'test/algos/simple_mock_algo/SConscript',
     'test/algos/simrank_update/SConscript',
     'test/algos/simrank_store_first/SConscript',
+    'test/algos/simrank_one_computer/SConscript',
     'test/dmoz/SConscript',
     'test/useFileSystem/common/SConscript',
     'test/shtest/SConscript',
