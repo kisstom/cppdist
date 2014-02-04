@@ -19,6 +19,7 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
 	current_iteration_ = 0;
 	num_slaves_ = num_slaves;
   slave_index_ = slave_index;
+  logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
   //startLogger();
 }
 
