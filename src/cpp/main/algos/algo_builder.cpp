@@ -35,6 +35,14 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params) {
   return algo_;
 }
 
+Algo* AlgoBuilder::getAlgo() {
+	return algo_;
+}
+
+Node* AlgoBuilder::getNode() {
+	return node_;
+}
+
 AlgoBuilder::~AlgoBuilder() {
   delete senderBuffer_;
   delete socketManager_;

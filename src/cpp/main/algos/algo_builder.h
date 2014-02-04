@@ -17,6 +17,8 @@ class AlgoBuilder {
 public:
   Algo* buildFromConfig(unordered_map<string, string>* params);
   ~AlgoBuilder();
+  Algo* getAlgo();
+  Node* getNode();
 private:
   Algo* createAlgoFromConfig(unordered_map<string, string>* params);
   Algo* algo_;
