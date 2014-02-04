@@ -8,10 +8,10 @@
 #include "algo.h"
 
 
-Algo::Algo(char* master_host, int master_port, int slave_port, char* logfile_name_pref,
+Algo::Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index) {
 	strcpy(master_host_, master_host);
-	strcpy(logfile_name_pref_, logfile_name_pref);
+	//strcpy(logfile_name_pref_, logfile_name_pref);
 	master_port_ = master_port;
 	slave_port_ = slave_port;
 	send_limit_ = send_limit;
@@ -19,14 +19,14 @@ Algo::Algo(char* master_host, int master_port, int slave_port, char* logfile_nam
 	current_iteration_ = 0;
 	num_slaves_ = num_slaves;
   slave_index_ = slave_index;
-  startLogger();
+  //startLogger();
 }
 
 int Algo::getSlaveIndex() {
 	return slave_index_;
 }
 
-void Algo::startLogger() {
+/*void Algo::startLogger() {
 	char logfile_name[1024];
 	sprintf(logfile_name, "%s_%d", logfile_name_pref_, slave_index_);
 
@@ -38,7 +38,7 @@ void Algo::startLogger() {
 	log4cpp::Category& root = log4cpp::Category::getRoot();
 	root.addAppender(appender);
 	logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
-}
+}*/
 
 int Algo::getPartitionIndex(long node) {
   for (int i = partition_min_node_.size() - 1; i >= 0; --i) {

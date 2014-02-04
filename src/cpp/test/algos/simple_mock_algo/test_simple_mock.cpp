@@ -67,9 +67,9 @@ TEST(SimpleMockTest, test) {
   char master_log[1024] = "/tmp/test_master_log";
 
 	Algo* algo1 = new Algo(localhost, 8000,
-			8001, test_cluster1, 6000, 1000, 2, 0);
+			8001,  6000, 1000, 2, 0);
 	Algo* algo2 = new Algo(localhost, 8000,
-			8002, test_cluster2, 6000, 1000, 2, 1);
+			8002,  6000, 1000, 2, 1);
 
 	vector<Slave> slaves;
 	Slave s;

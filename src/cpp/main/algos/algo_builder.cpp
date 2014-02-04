@@ -65,15 +65,15 @@ Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slave_index);
 
 	char master_host[1024];
-	char logfile_n[1024];
+	//char logfile_n[1024];
 	strcpy(master_host, (*params)["MASTER_HOST"].c_str());
-	strcpy(logfile_n, (*params)["LOCAL_DIR"].c_str());
+	/*strcpy(logfile_n, (*params)["LOCAL_DIR"].c_str());
 	char log[1024] = "/log";
-	strcat(logfile_n, log);
+	strcat(logfile_n, log);*/
 
 
   slave_port = init_slave_port + slave_index;
 
 	return new Algo(master_host, master_port,
-			slave_port, logfile_n, send_limit, all_node, num_slaves, slave_index);
+			slave_port, send_limit, all_node, num_slaves, slave_index);
 }

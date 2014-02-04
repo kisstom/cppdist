@@ -16,8 +16,11 @@
 #include "log4cpp/Priority.hh"
 #include "log4cpp/PatternLayout.hh"
 
+#include "../common/util/logger_factory.h"
+#include <string.h>
+
 void initLogger(unordered_map<string, string>* params) {
-	string debugLevel;
+	string debugLevel, appender, logfileName;
 
 	if (params->find(string("DEBUG_LEVEL")) != params->end()) {
 		debugLevel = (*params)["DEBUG_LEVEL"];
@@ -25,17 +28,17 @@ void initLogger(unordered_map<string, string>* params) {
 		debugLevel = string("INFO");
 	}
 
-	log4cpp::Category& root = log4cpp::Category::getRoot();
-
-	if (debugLevel.compare("INFO") == 0) {
-		root.setPriority(log4cpp::Priority::INFO);
-	} else if (debugLevel.compare("DEBUG") == 0) {
-		root.setPriority(log4cpp::Priority::DEBUG);
-	} else if (debugLevel.compare("ERROR") == 0) {
-		root.setPriority(log4cpp::Priority::ERROR);
+	if (params->find(string("APPENDER")) != params->end()) {
+	  appender = (*params)["APPENDER"];
 	} else {
-		root.setPriority(log4cpp::Priority::INFO);
+		appender = string("FILE");
 	}
+
+	logfileName = (*params)["LOCAL_DIR"];
+	logfileName.append("/log_");
+	logfileName.append((*params)["SLAVE_INDEX"]);
+
+	LoggerFactory::initLogger(debugLevel, appender, logfileName);
 
 	log4cpp::Category* logger = &log4cpp::Category::getInstance(std::string("NodeTask"));
 	logger->info("Logger started. Level %s.", debugLevel.c_str());

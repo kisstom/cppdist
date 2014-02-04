@@ -26,10 +26,7 @@ Master::Master(int master_port, vector<Slave>* slaves, char* logfile)
 
 Master::~Master()
 {
-  /*for (unsigned int i = 0; i < slaves_->size(); ++i)
-  {
-    delete (*slaves_)[i].socket;
-  }*/
+
   delete master_socket_;
 }
 

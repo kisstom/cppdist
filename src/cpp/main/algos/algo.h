@@ -34,10 +34,10 @@ using std::vector;
 
 class Algo : public Runnable {
 public:
-	Algo(char* master_host, int master_port, int slave_port, char* outfile_name,
+	Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index);
 	void run();
-	void startLogger();
+	//void startLogger();
 	void setIp();
 	void initClient();
 	void connectToMaster();
@@ -61,7 +61,7 @@ public:
   virtual ~Algo();
 private:
 	char ip_[1024];
-	char logfile_name_pref_[1024];
+	//char logfile_name_pref_[1024];
 	char master_host_[1024];
 	int master_port_;
 	int slave_port_;
@@ -69,7 +69,7 @@ private:
   long num_nodes_;
   int current_iteration_;
 
-	FILE* logfile_, *outfile_;
+	//FILE* logfile_, *outfile_;
 	vector<long> partition_min_node_;
 	int num_slaves_;
 	int send_limit_;

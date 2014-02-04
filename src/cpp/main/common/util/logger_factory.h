@@ -23,7 +23,7 @@ using std::string;
 
 class LoggerFactory {
 public:
-	LoggerFactory(string level, string appender, string logfilename);
+	static void initLogger(string level, string appender, string logfilename);
 };
 
 
