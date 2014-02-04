@@ -13,18 +13,6 @@ MasterBuilder::MasterBuilder() {
 	logger_ = &log4cpp::Category::getInstance(std::string("MasterBuilder"));
 }
 
-Master* MasterBuilder::buildFromConfig(unordered_map<string, string>* params) {
-	string masterType = (*params)["MASTER_TYPE"];
-	InnerMasterFactory innerMasterFactory;
-	Master* master = createMaster(params);
-	InnerMaster* innerMaster;
-
-  innerMaster = innerMasterFactory.createInnerInnerMaster(params);
-  master->setInnerMaster(innerMaster);
-
-	return master;
-}
-
 Master* MasterBuilder::createMaster(unordered_map<string, string>* params) {
 	int master_port, num_slaves;
 	char logfile_name[1024], slavery_cfg[1024];

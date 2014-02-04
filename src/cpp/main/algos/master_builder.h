@@ -18,9 +18,10 @@
 class MasterBuilder : public IMasterBuilder {
 public:
 	MasterBuilder();
-	Master* buildFromConfig(unordered_map<string, string>* params);
-private:
+	//Master* buildFromConfig(unordered_map<string, string>* params);
+protected:
 	Master* createMaster(unordered_map<string, string>*);
+private:
 	vector<Slave>* readSlaveConfigs(char* cfg, int num_slaves);
 	log4cpp::Category* logger_;
 };

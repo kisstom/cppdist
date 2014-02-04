@@ -12,4 +12,4 @@ COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 
 env.Program('node_task', ['node_task.cpp', 'node_factory.o', 'algo_builder.o', 'node.o', 'algo.o'] + COMMON_OBJ)
 
-env.Program('master_task', ['master_task.cpp', 'inner_master_factory.o', 'master_builder.o', 'master.o', 'node.o',  'algo.o'] + COMMON_OBJ)
+env.Program('master_task', ['master_task.cpp', 'inner_master_factory.o', 'master_builder.o', 'master.o', 'node.o',  'algo.o', 'IMasterBuilder.o'] + COMMON_OBJ)
