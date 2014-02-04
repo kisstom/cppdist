@@ -34,7 +34,7 @@ struct Slave {
 
 class Master : public Runnable {
   public:
-    Master(int, vector<Slave>*, char* logfile);
+    Master(int, vector<Slave>*);
     ~Master();
     void run();
     void WaitForAccepts();
@@ -53,10 +53,8 @@ class Master : public Runnable {
     InnerMaster* innerMaster_;
     int master_port_;
     char master_host_[1024];
-    //char file_format_;
     vector<Slave>* slaves_;
     ServerSocket* master_socket_;
-    char logfile_[1024];
     log4cpp::Category* logger_;
 };
 

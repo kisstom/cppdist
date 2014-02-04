@@ -84,7 +84,7 @@ TEST(SimpleMockTest, test) {
 	strcpy(s.path, test_input2);
 	slaves.push_back(s);
 
-	Master* master = new Master(8000, &slaves, master_log);
+	Master* master = new Master(8000, &slaves);
 	SimpleMockInnerMaster* mockInnerMaster = new SimpleMockInnerMaster;
 	master->setInnerMaster(mockInnerMaster);
 

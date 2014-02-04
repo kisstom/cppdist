@@ -10,23 +10,15 @@
 
 using std::vector;
 
-Master::Master(int master_port, vector<Slave>* slaves, char* logfile)
+Master::Master(int master_port, vector<Slave>* slaves)
 {
   master_port_ = master_port;
   slaves_ = slaves;
-  strcpy(logfile_, logfile);
-
-  log4cpp::Appender *appender = new log4cpp::FileAppender("default", string(logfile_));
-  appender->setLayout(new log4cpp::BasicLayout());
-  log4cpp::Category& root = log4cpp::Category::getRoot();
-  root.addAppender(appender);
-
   logger_ = &log4cpp::Category::getInstance(std::string("Master"));
 }
 
 Master::~Master()
 {
-
   delete master_socket_;
 }
 
