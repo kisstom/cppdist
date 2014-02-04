@@ -50,7 +50,9 @@ void Cluster::initNode(int nodeId) {
 }
 
 void Cluster::initMaster() {
-	MasterBuilder builder;
+	TestMasterBuilder builder;
+	// TODO set slaves
+	builder.setTestSlaveConfig(NULL);
 	master_ = builder.buildFromConfig(params_);
 }
 

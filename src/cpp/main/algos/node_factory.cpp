@@ -72,6 +72,7 @@ SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
   int seed;
   short numPathes;
 	short pathLen;
+	long num_nodes, min_node;
 	sscanf((*params)["NUM_PATHES"].c_str(), "%hd", &numPathes);
 	sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
 
@@ -93,6 +94,11 @@ SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
 		}
 	}
 
-	SimrankOddEvenNode* node = new SimrankOddEvenNode(numPathes, pathLen, fpStartName, string(outputFileN), seed, type);
+	sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes);
+	sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
+
+	SimrankOddEvenNode* node = new SimrankOddEvenNode(numPathes, pathLen, seed, type);
+	node->initData((*params)["INPUT_PARTITION"], min_node, num_nodes);
+
   return node;
 }

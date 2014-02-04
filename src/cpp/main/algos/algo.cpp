@@ -9,7 +9,8 @@
 
 
 Algo::Algo(char* master_host, int master_port, int slave_port,
-			int send_limit, long all_node, int num_slaves, int slave_index) {
+			int send_limit, long all_node, int num_slaves, int slave_index,
+			long num_nodes, long min_node) {
 	strcpy(master_host_, master_host);
 	//strcpy(logfile_name_pref_, logfile_name_pref);
 	master_port_ = master_port;
@@ -19,6 +20,8 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
 	current_iteration_ = 0;
 	num_slaves_ = num_slaves;
   slave_index_ = slave_index;
+  num_nodes_ = num_nodes;
+  min_node_ = min_node;
   logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
   //startLogger();
 }
@@ -26,20 +29,6 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
 int Algo::getSlaveIndex() {
 	return slave_index_;
 }
-
-/*void Algo::startLogger() {
-	char logfile_name[1024];
-	sprintf(logfile_name, "%s_%d", logfile_name_pref_, slave_index_);
-
-	log4cpp::Appender *appender = new log4cpp::FileAppender("default", string(logfile_name));
-	log4cpp::PatternLayout * fooo = new log4cpp::PatternLayout();
-	fooo->setConversionPattern("%d{%H:%M:%S,%l} %c %x: %m\n");
-	appender->setLayout(fooo);
-
-	log4cpp::Category& root = log4cpp::Category::getRoot();
-	root.addAppender(appender);
-	logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
-}*/
 
 int Algo::getPartitionIndex(long node) {
   for (int i = partition_min_node_.size() - 1; i >= 0; --i) {
@@ -188,13 +177,13 @@ bool Algo::storeFromBinary(int socket_index) {
 }
 
 void Algo::initFromMaster() {
-	char buf[send_limit_], path[1024];
+	char buf[send_limit_];
 	int size;
 	size = socketManager_->recvFromMaster(1024, buf);
+
 	if (strcmp(buf, "die") == 0) throw MasterException();
 	stringstream ss (stringstream::in | stringstream::out);
 	ss << buf;
-	ss >> path; ss >> min_node_; ss >> num_nodes_;
 	long actMin;
 	while (ss.peek() != EOF) {
 		ss >> actMin;
@@ -204,13 +193,13 @@ void Algo::initFromMaster() {
 
 	node_->setPartitionIndex(part_index_);
 
-	//node_->SetNumNode(num_nodes_);
 	if (ss.tellg() != -1) {
 		node_->initFromMaster(ss.str().substr(ss.tellg()));
 	} else {
 		node_->initFromMaster("");
 	}
-	node_->initData(string(path), min_node_, num_nodes_);
+
+	//node_->initData(string(path), min_node_, num_nodes_);
 }
 
 void Algo::runThreads() {

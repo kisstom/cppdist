@@ -38,9 +38,9 @@ vector<Slave>* MasterBuilder::readSlaveConfigs(char* cfg, int num_slaves) {
 		exit(1);
 	}
 	slaves = new vector<Slave>(num_slaves);
-	for (int i = 0; i <  num_slaves; ++i)
+	for (int i = 0; i < num_slaves; ++i)
 	{
-	  fscanf(slavery_par,"%d %s %ld %*ld %ld", &((*slaves)[i].port), (*slaves)[i].path, &((*slaves)[i].numNode),  &((*slaves)[i].minNode));
+	  fscanf(slavery_par,"%d %*s %ld %*ld %ld", &((*slaves)[i].port), &((*slaves)[i].numNode),  &((*slaves)[i].minNode));
 	}
 	fclose(slavery_par);
 	return slaves;

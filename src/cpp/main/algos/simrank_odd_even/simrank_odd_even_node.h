@@ -33,7 +33,7 @@ public:
 	SimrankOddEvenNode();
 	~SimrankOddEvenNode();
 	SimrankOddEvenNode(short numFingerprints, short pathLen,
-				string fpStartFname, string outFileName, int seed, GeneratorType type);
+			int seed, GeneratorType type);
 	void beforeIteration();
 	bool afterIteration();
 	void sender();
@@ -55,6 +55,7 @@ public:
 	int hashToEdgeIndex(int hash, int length);
 
 	void setFingerprints(vector<list<long*> >);
+	void setMatrix(EdgelistContainer* matrix);
 	void setNextNodes(unordered_map<long, long>);
 	void initFinishedPathes(vector<vector<long*> >);
 	vector<list<long*> >* getPathes();

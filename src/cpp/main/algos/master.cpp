@@ -118,8 +118,7 @@ void Master::SendInfoToNodes()
   char info[1024];
   for (unsigned int i = 0; i < slaves_->size(); ++i) {
     stringstream ss(stringstream::in | stringstream::out);
-    ss << (*slaves_)[i].path << " ";
-    //ss << string(1, file_format_) << " ";
+
     ss <<  (*slaves_)[i].minNode << " ";
     ss << (*slaves_)[i].numNode;
     for (unsigned int j = 0; j < slaves_->size(); ++j) {

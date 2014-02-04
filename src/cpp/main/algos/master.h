@@ -25,7 +25,7 @@ using std::vector;
 
 struct Slave {
   int port;
-  char path[1024];
+  //char path[1024];
   char ip[1024];
   SocketConnection* socket;
   long minNode;

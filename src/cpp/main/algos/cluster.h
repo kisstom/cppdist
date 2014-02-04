@@ -14,7 +14,7 @@
 
 #include "algo_builder.h"
 #include "master.h"
-#include "master_builder.h"
+#include "test_master_builder.h"
 #include "../common/thread/main_thread.h"
 #include "log4cpp/Category.hh"
 

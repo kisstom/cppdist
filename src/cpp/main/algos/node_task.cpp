@@ -52,6 +52,10 @@ int main(int argc, char* argv[]) {
   (*params)["SLAVE_INDEX"] = string(argv[2]);
   (*params)["NUM_SLAVES"] = string(argv[3]);
 
+  (*params)["INPUT_PARTITION"] = string(argv[4]);
+  (*params)["NUM_NODES"] = string(argv[5]);
+  (*params)["MIN_NODE"] = string(argv[6]);
+
   initLogger(params);
 
   AlgoBuilder builder;

@@ -17,14 +17,14 @@ SimrankOddEvenNode::SimrankOddEvenNode() {
 }
 
 SimrankOddEvenNode::SimrankOddEvenNode(short numFingerprints, short pathLen,
-		string fpStartFname, string outFileName, int seed, GeneratorType genType) {
+		int seed, GeneratorType genType) {
 	logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenNode"));
 	fpIndex_ = 0;
 	pathIndex_ = 0;
 	numFingerprints_ = numFingerprints;
 	pathLen_ = pathLen;
-	fpStartFname_ = fpStartFname;
-	outFileName_ = outFileName;
+	//fpStartFname_ = fpStartFname;
+	//outFileName_ = outFileName;
 	initRandomGenerator(seed, genType);
 	matrix_ = NULL;
 	oddIter_ = true;
@@ -311,6 +311,10 @@ void SimrankOddEvenNode::final() {
 
   fclose(outputFile);
   logger_->info("Fingerprints writed to output file.");
+}
+
+void SimrankOddEvenNode::setMatrix(EdgelistContainer* matrix) {
+	matrix_ = matrix;
 }
 
 void SimrankOddEvenNode::setFingerprints(vector<list<long*> > fingerprints) {
