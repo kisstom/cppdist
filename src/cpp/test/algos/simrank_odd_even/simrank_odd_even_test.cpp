@@ -41,8 +41,9 @@ protected:
   // Objects declared here can be used by all tests in the test case for Foo.
 };
 
-TEST(SimrankOddEvenTest, testAfterIteration) {
+TEST(SimrankOddEvenTest, testRun) {
 	unordered_map<string, string> params;
+
 	params["MASTER_PORT"] = "7000";
 	params["INIT_SLAVE_PORT"] = "7001";
 	params["SEND_LIMIT"] = "6000";
@@ -50,19 +51,18 @@ TEST(SimrankOddEvenTest, testAfterIteration) {
 	// numline variable
 	params["NUMLINE"] = "3";
 	params["MASTER_HOST"] = "localhost";
-	params["LOCAL_DIR"] = "/tmp/simrank_odd_even_test/";
+	//params["LOCAL_DIR"] = "/tmp/simrank_odd_even_test/";
 	params["NODE_TYPE"] = "SIMRANK_ODD_EVEN";
 	params["NUM_PATHES"] = "10";
 	params["PATH_LEN"] = "10";
 	params["RANDOM_TYPE"] = "PSEUDO";
 	params["SEED"] = "13";
-	params["FP_START_NAME"] = "NULL";
-	params["LOGFILE_NAME"] = "NULL";
-	params["REMOTE_DIR"] = "NULL";
-	params["SLAVERY_CFG"] = "slavery.cfg";
+	//params["FP_START_NAME"] = "NULL";
+	//params["LOGFILE_NAME"] = "NULL";
+	//params["REMOTE_DIR"] = "NULL";
+	//params["SLAVERY_CFG"] = "slavery.cfg";
 	params["INNER_MASTER_TYPE"] = "SIMRANK_ODD_EVEN";
-	params["MASTER_LOG"] = "/tmp/simrank_odd_even_test/master.log";
-
+	params["APPENDER"] = "CONSOLE";
 
 	Cluster cluster(&params);
 	cluster.init();

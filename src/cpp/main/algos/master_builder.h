@@ -10,11 +10,12 @@
 
 #include "../common/util/cfg_reader.h"
 #include "master.h"
+#include "IMasterBuilder.h"
 #include <log4cpp/Category.hh>
 #include <vector>
 
 
-class MasterBuilder {
+class MasterBuilder : public IMasterBuilder {
 public:
 	MasterBuilder();
 	Master* buildFromConfig(unordered_map<string, string>* params);
