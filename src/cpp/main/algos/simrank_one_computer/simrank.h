@@ -14,23 +14,21 @@
 #include <iostream>
 
 #include "../../common/graph/edgelist_container.h"
-#include "../../common/random/hash_pseudo_random.h"
-#include "../../common/random/build_in_pseudo_random.h"
-#include "random_generator_type.h"
+#include "../../common/random/pseudo_random.h"
+#include "fingerprint_path.h"
 
 using namespace std;
 
 class Simrank {
   private:
     EdgelistContainer* matrix;
-    int seed;
     log4cpp::Category* logger;
     PseudoRandom* random;
-    long getRandomNeighbor(long node, short i, short j);
-  
+    FingerprintPath* fppath;
   public:
-    Simrank(EdgelistContainer* matrix, PseudoRandom* random);
-    void getFingerprint(string outFileName, short fpnum, short pathlength); 
+    Simrank(EdgelistContainer* matrix, PseudoRandom* random, FingerprintPath* fppath);
+    void getFingerprint(short fpnum, short pathlength); 
 };
 
 #endif /* SIMRANK_H_ */
+
