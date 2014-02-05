@@ -134,9 +134,13 @@ void Algo::run()
   }
 
   //log_info(logfile_, "Finished at iteration %d.", current_iteration_);
-  node_->final();
-  logger_->info("Algo finished.");
+
   // destructor should destroy and send to master
+}
+
+void Algo::final() {
+	 node_->final();
+	 logger_->info("Algo finished.");
 }
 
 void Algo::receiver() {
@@ -198,8 +202,6 @@ void Algo::initFromMaster() {
 	} else {
 		node_->initFromMaster("");
 	}
-
-	//node_->initData(string(path), min_node_, num_nodes_);
 }
 
 void Algo::runThreads() {

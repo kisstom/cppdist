@@ -33,7 +33,7 @@ public:
 	SimrankOddEvenNode();
 	~SimrankOddEvenNode();
 	SimrankOddEvenNode(short numFingerprints, short pathLen,
-			int seed, GeneratorType type, long num_nodes, long min_node);
+			int seed, GeneratorType type, long num_nodes, long min_node, long nextMinNode);
 	void beforeIteration();
 	bool afterIteration();
 	void sender();
@@ -79,6 +79,7 @@ private:
 	bool oddIter_;
 	long numNodes_;
 	long minNode_;
+	long nextMinNode_;
 
 	string fpStartFname_;
 	string outFileName_;

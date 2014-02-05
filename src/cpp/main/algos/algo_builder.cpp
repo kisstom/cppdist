@@ -14,9 +14,8 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params) {
 	DeserializerFactory deserializerFactory;
 
 	algo_ = createAlgoFromConfig(params);
-
   node_ = nodeFactory.createNodeFromConfig(params);
-	// should deserializer->setNode(node);
+
   deserializer_ = deserializerFactory.createDeserializerFromConfig(params, node_);
   algo_->setNode(node_);
   node_->setAlgo(algo_);

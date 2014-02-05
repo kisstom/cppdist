@@ -54,6 +54,7 @@ public:
   int getSlaveIndex();
   long getPartitionStartNode(int part_index);
   short getNumberOfPartitions();
+  void final();
 
 	void setNode(Node *);
   void setSocketManager(SocketManager*);
@@ -81,7 +82,6 @@ private:
 	Node* node_;
 	StoreFromBinary* storeFromBinary_;
 	log4cpp::Category* logger_;
-	//tmp
 };
 
 

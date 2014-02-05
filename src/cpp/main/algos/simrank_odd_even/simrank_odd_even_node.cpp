@@ -17,7 +17,7 @@ SimrankOddEvenNode::SimrankOddEvenNode() {
 }
 
 SimrankOddEvenNode::SimrankOddEvenNode(short numFingerprints, short pathLen,
-		int seed, GeneratorType genType, long num_nodes, long min_node) {
+		int seed, GeneratorType genType, long num_nodes, long min_node, long nextMinNode) {
 	logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenNode"));
 	fpIndex_ = 0;
 	pathIndex_ = 0;
@@ -25,8 +25,7 @@ SimrankOddEvenNode::SimrankOddEvenNode(short numFingerprints, short pathLen,
 	pathLen_ = pathLen;
 	numNodes_ = num_nodes;
 	minNode_ = min_node;
-	//fpStartFname_ = fpStartFname;
-	//outFileName_ = outFileName;
+	nextMinNode_ = nextMinNode;
 	initRandomGenerator(seed, genType);
 	matrix_ = NULL;
 	oddIter_ = true;
@@ -250,12 +249,10 @@ void SimrankOddEvenNode::initData(string partName) {
 
 	logger_->info("matrix data read");
 	if (fpStartFname_.compare("NULL") == 0) {
-		initStartForAll(algo_->getPartitionStartNode(partIndex_),
-				algo_->getPartitionStartNode(partIndex_ + 1), numNodes_, numFingerprints_);
+		initStartForAll(minNode_, nextMinNode_, numNodes_, numFingerprints_);
 	} else {
 		FileUtil util(1024);
-	  util.readFingerprintStart(algo_->getPartitionStartNode(partIndex_),
-			algo_->getPartitionStartNode(partIndex_ + 1), numFingerprints_, &fingerprints_,
+	  util.readFingerprintStart(minNode_, nextMinNode_, numFingerprints_, &fingerprints_,
 			fpStartFname_, pathLen_ + 1);
 	}
 	finishedPathes_.resize(fingerprints_.size());

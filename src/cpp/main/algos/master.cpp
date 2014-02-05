@@ -119,10 +119,8 @@ void Master::SendInfoToNodes()
   for (unsigned int i = 0; i < slaves_->size(); ++i) {
     stringstream ss(stringstream::in | stringstream::out);
 
-    ss <<  (*slaves_)[i].minNode << " ";
-    ss << (*slaves_)[i].numNode;
-    for (unsigned int j = 0; j < slaves_->size(); ++j) {
-      sprintf(info, " %ld", (*slaves_)[j].minNode);
+    ss << (*slaves_)[0].minNode;
+    for (unsigned int j = 1; j < slaves_->size(); ++j) {
       ss << " " << (*slaves_)[j].minNode;
     }
     //innerMaster_->addInfoForNodes(&ss);

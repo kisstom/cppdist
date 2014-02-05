@@ -63,7 +63,10 @@ def storePartitionCfg(cfg):
   partCfgFile = open(cfg, 'r')
   for line in partCfgFile:
     spl = line.strip().split(' ')
-    partCfg += (spl[1], spl[2], spl[4])
+    partCfg += [(spl[1], spl[2], spl[4])]
+
+  lastMaxNode = int(partCfg[-1][1]) + int(partCfg[-1][2])
+  partCfg += [('', -1, str(lastMaxNode))]
 
   partCfgFile.close()
 
@@ -123,7 +126,7 @@ def startOnMachine(slave_index):
    global configFile, numJobs, conf
    bin_dir = conf.get('ALGO', 'BIN') 
    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
-   run('(nohup %s/main/algos/node_task %s %d %d %s %s %s 1> %s 2>&1 < /dev/null &)'%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], logfile), pty = False)
+   run('(nohup %s/main/algos/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &)'%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
   
 
 @task

@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
   (*params)["INPUT_PARTITION"] = string(argv[4]);
   (*params)["NUM_NODES"] = string(argv[5]);
   (*params)["MIN_NODE"] = string(argv[6]);
+  (*params)["NEXT_MIN_NODE"] = string(argv[7]);
 
   initLogger(params);
 
@@ -65,6 +66,7 @@ int main(int argc, char* argv[]) {
     algo->run();
   }
 
+  algo->final();
   delete params;
 }
 
