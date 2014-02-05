@@ -10,6 +10,8 @@ global isConfReaded
 global conf
 global cfg_hosts
 global numJobs
+global partCfg
+partCfg = []
 
 env.rolesdefs = {'server' : []}
 
@@ -30,9 +32,6 @@ def cfg(configFileParam):
   configFile = configFileParam
   conf = readCfg()
 
-@task
-def runBackground():
-  run('nohup /home/kisstom/foo.sh &')
 
 def readCfg():
   global conf
@@ -42,10 +41,31 @@ def readCfg():
     error('Configfile of the deployment is missing! Use task "cfg"!')
   if not isConfReaded:
     conf = readConfig(configFile)
+
+    partitionDir = conf.get('ALGO', 'REMOTE_DIR')
+    partCfg = conf.get('ALGO', 'SLAVERY_CFG')
+    storePartitionCfg(partitionDir + '/' + partCfg)
+
     isConfReaded = True
   env.user = 'kisstom'
   buildHosts(conf)
   return conf
+
+def readConfig(configFile):
+  config = ConfigParser.ConfigParser()
+  config.optionxform = str
+  config.read(configFile)
+  return config
+
+
+def storePartitionCfg(cfg):
+  global partCfg
+  partCfgFile = open(cfg, 'r')
+  for line in partCfgFile:
+    spl = line.strip().split(' ')
+    partCfg += (spl[1], spl[2], spl[4])
+
+  partCfgFile.close()
 
 def buildHosts(cfg):
   global numJobs, cfg_hosts
@@ -55,12 +75,6 @@ def buildHosts(cfg):
     numJobs += int(cfg.get(section, option))
     cfg_hosts += [option]
   env.hosts = cfg_hosts
-
-def readConfig(configFile):
-  config = ConfigParser.ConfigParser()
-  config.optionxform = str
-  config.read(configFile)
-  return config
 
 @task
 def cleanup():
@@ -109,7 +123,7 @@ def startOnMachine(slave_index):
    global configFile, numJobs, conf
    bin_dir = conf.get('ALGO', 'BIN') 
    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
-   run('(nohup %s/main/algos/node_task %s %d %d 1> %s 2>&1 < /dev/null &)'%(bin_dir, configFile, slave_index, numJobs, logfile), pty = False)
+   run('(nohup %s/main/algos/node_task %s %d %d %s %s %s 1> %s 2>&1 < /dev/null &)'%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], logfile), pty = False)
   
 
 @task
