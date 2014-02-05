@@ -22,7 +22,7 @@ public:
 	virtual bool afterIteration() = 0;
 	virtual void sender() = 0;
 	virtual void initFromMaster(string) = 0;
-	virtual void initData(string, long, long) = 0;
+	//virtual void initData(string, long, long) = 0;
 	virtual void final() = 0;
 	virtual void setPartitionIndex(int);
 	virtual void setSenderBuffer(SenderBuffer*);

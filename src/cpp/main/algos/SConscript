@@ -10,6 +10,8 @@ COMMON_OBJ += Glob('#/../bin/main/algos/simrank_odd_even/*.o')
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 
-env.Program('node_task', ['node_task.cpp', 'node_factory.o', 'algo_builder.o', 'node.o', 'algo.o'] + COMMON_OBJ)
+#COMMON_OBJ += [, ']
 
-env.Program('master_task', ['master_task.cpp', 'inner_master_factory.o', 'master_builder.o', 'master.o', 'node.o',  'algo.o', 'IMasterBuilder.o'] + COMMON_OBJ)
+env.Program('node_task', ['node_task.cpp', 'node_factory.o', 'algo_builder.o', 'node.o', 'algo.o','node_factory_helper.o', 'test_simrank_odd_even_node_fatory.o' ] + COMMON_OBJ)
+
+env.Program('master_task', ['master_task.cpp','IMasterBuilder.o', 'test_master_builder.o', 'inner_master_factory.o', 'master_builder.o', 'master.o', 'node.o',  'algo.o'] + COMMON_OBJ)

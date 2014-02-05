@@ -64,41 +64,13 @@ SimrankStoreFirstNode* NodeFactory::createSimrankStoreFirstNode(
 
 SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
 		unordered_map<string, string>* params) {
-	GeneratorType type = SRAND;
-  string fpStartName = (*params)["FP_START_NAME"];
+  NodeFactoryHelper helper;
+  SimrankOddEvenNode* node = helper.initSimrankOddEvenNode(params);
+
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
-
-  int seed;
-  short numPathes;
-	short pathLen;
-	long num_nodes, min_node;
-	sscanf((*params)["NUM_PATHES"].c_str(), "%hd", &numPathes);
-	sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
-
-	if (params->find(string("SEED")) == params->end()) {
-		seed = 13;
-	} else {
-		sscanf((*params)["SEED"].c_str(), "%d", &seed);
-	}
-
-	if (params->find(string("RANDOM_TYPE")) == params->end()) {
-		type = SRAND;
-	} else {
-		if ((*params)["RANDOM_TYPE"].compare("PSEUDO") == 0) {
-			type = PSEUDO_RANDOM;
-		} else if ((*params)["RANDOM_TYPE"].compare("SRAND") == 0) {
-			type = SRAND;
-		} else {
-			logger_->error("Error unknoyn tpye of random generator %s", (*params)["RANDOM_TYPE"].c_str());
-		}
-	}
-
-	sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes);
-	sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
-
-	SimrankOddEvenNode* node = new SimrankOddEvenNode(numPathes, pathLen, seed, type);
-	node->initData((*params)["INPUT_PARTITION"], min_node, num_nodes);
-
+  node->setOutputFile(string(outputFileN));
+  node->setFingerPrintFile((*params)["FP_START_NAME"]);
+	node->initData((*params)["INPUT_PARTITION"]);
   return node;
 }

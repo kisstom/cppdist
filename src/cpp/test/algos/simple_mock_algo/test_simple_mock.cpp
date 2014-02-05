@@ -67,21 +67,21 @@ TEST(SimpleMockTest, test) {
   char master_log[1024] = "/tmp/test_master_log";
 
 	Algo* algo1 = new Algo(localhost, 8000,
-			8001,  6000, 1000, 2, 0);
+			8001,  6000, 1000, 2, 0, 10, 0);
 	Algo* algo2 = new Algo(localhost, 8000,
-			8002,  6000, 1000, 2, 1);
+			8002,  6000, 1000, 2, 1, 10, 10);
 
 	vector<Slave> slaves;
 	Slave s;
 	strcpy(s.ip, localhost);
-	strcpy(s.path, test_input1);
+	//strcpy(s.path, test_input1);
 	s.minNode = 0;
 	s.port = 8001;
 
 	slaves.push_back(s);
 	s.port = 8002;
 	s.minNode = 10;
-	strcpy(s.path, test_input2);
+	//strcpy(s.path, test_input2);
 	slaves.push_back(s);
 
 	Master* master = new Master(8000, &slaves);

@@ -17,12 +17,14 @@ SimrankOddEvenNode::SimrankOddEvenNode() {
 }
 
 SimrankOddEvenNode::SimrankOddEvenNode(short numFingerprints, short pathLen,
-		int seed, GeneratorType genType) {
+		int seed, GeneratorType genType, long num_nodes, long min_node) {
 	logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenNode"));
 	fpIndex_ = 0;
 	pathIndex_ = 0;
 	numFingerprints_ = numFingerprints;
 	pathLen_ = pathLen;
+	numNodes_ = num_nodes;
+	minNode_ = min_node;
 	//fpStartFname_ = fpStartFname;
 	//outFileName_ = outFileName;
 	initRandomGenerator(seed, genType);
@@ -91,6 +93,7 @@ void SimrankOddEvenNode::incrementPathes() {
 		}
 	}
 }
+
 
 bool SimrankOddEvenNode::afterIteration() {
 	logger_->info("After iteration started.");
@@ -233,7 +236,7 @@ void SimrankOddEvenNode::senderOdd() {
 void SimrankOddEvenNode::initFromMaster(string) {
 }
 
-void SimrankOddEvenNode::initData(string partName, long minnode, long numnodes) {
+void SimrankOddEvenNode::initData(string partName) {
 	logger_->info("Initing data.");
 	matrix_ = new EdgelistContainer();
 	matrix_->initContainers();
@@ -243,12 +246,12 @@ void SimrankOddEvenNode::initData(string partName, long minnode, long numnodes) 
 	EdgeListBuilder builder;
 	builder.setContainer(matrix_);
 	builder.buildFromFile(partName);
-	matrix_->setMinnode(minnode);
+	matrix_->setMinnode(minNode_);
 
 	logger_->info("matrix data read");
 	if (fpStartFname_.compare("NULL") == 0) {
 		initStartForAll(algo_->getPartitionStartNode(partIndex_),
-				algo_->getPartitionStartNode(partIndex_ + 1), numnodes, numFingerprints_);
+				algo_->getPartitionStartNode(partIndex_ + 1), numNodes_, numFingerprints_);
 	} else {
 		FileUtil util(1024);
 	  util.readFingerprintStart(algo_->getPartitionStartNode(partIndex_),
@@ -327,6 +330,14 @@ void SimrankOddEvenNode::setNextNodes(unordered_map<long, long> nextNodes) {
 
 void SimrankOddEvenNode::initFinishedPathes(vector<vector<long*> > finishedPathes) {
 	finishedPathes_ = finishedPathes;
+}
+
+void SimrankOddEvenNode::setOutputFile(string outputFile) {
+	outFileName_ = outputFile;
+}
+
+void SimrankOddEvenNode::setFingerPrintFile(string fpStartFname) {
+	fpStartFname_ = fpStartFname;
 }
 
 vector<list<long*> >* SimrankOddEvenNode::getPathes() {
