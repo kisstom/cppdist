@@ -7,9 +7,10 @@
 
 #include "cluster.h"
 
-Cluster::Cluster(unordered_map<string, string>* params) {
+Cluster::Cluster(unordered_map<string, string>* params, INodeFactory* nodeFactory) {
 	//numSlaves_ = numSlaves;
 	params_ = params;
+	nodeFactory_ = nodeFactory;
 	logger_ = &log4cpp::Category::getInstance(std::string("Cluster"));
 }
 
@@ -45,6 +46,7 @@ void Cluster::initNode(int nodeId) {
 
 	(*params_)["SLAVE_INDEX"] = string(strNodeId);
 	AlgoBuilder* builder = new AlgoBuilder;
+	builder->setNodeFactory(nodeFactory_);
 	builder->buildFromConfig(params_);
 	builders_.push_back(builder);
 }

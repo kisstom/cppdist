@@ -24,7 +24,7 @@ using std::vector;
 
 class Cluster {
 public:
-	Cluster(unordered_map<string, string>* params);
+	Cluster(unordered_map<string, string>* params, INodeFactory*);
 	void init();
 	void start();
 	Node* getNode(int);
@@ -37,6 +37,7 @@ private:
 	unordered_map<string, string>* params_;
 	vector<AlgoBuilder*> builders_;
 	Master* master_;
+	INodeFactory* nodeFactory_;
 	log4cpp::Category* logger_;
 };
 

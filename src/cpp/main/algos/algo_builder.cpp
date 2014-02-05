@@ -10,11 +10,10 @@
 
 
 Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params) {
-	NodeFactory nodeFactory;
 	DeserializerFactory deserializerFactory;
 
 	algo_ = createAlgoFromConfig(params);
-  node_ = nodeFactory.createNodeFromConfig(params);
+  node_ = nodeFactory_->createNodeFromConfig(params);
 
   deserializer_ = deserializerFactory.createDeserializerFromConfig(params, node_);
   algo_->setNode(node_);
@@ -32,6 +31,10 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params) {
   algo_->setStoreFromBinary(storeFromBinary_);
 
   return algo_;
+}
+
+void AlgoBuilder::setNodeFactory(INodeFactory* nodeFactory) {
+	nodeFactory_ = nodeFactory;
 }
 
 Algo* AlgoBuilder::getAlgo() {

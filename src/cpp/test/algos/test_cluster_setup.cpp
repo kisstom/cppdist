@@ -110,10 +110,10 @@ TEST(ClusterSetupTest, test) {
 	algo1->setNode(node1);
 	algo2->setNode(node2);
 
-	EXPECT_CALL(*node1, setPartitionIndex(0)).Times(1);
-	EXPECT_CALL(*node2, setPartitionIndex(1)).Times(1);
-	EXPECT_CALL(*node1, initData("/tmp/test_input1", 0, 10)).Times(1);
-	EXPECT_CALL(*node2, initData("/tmp/test_input2", 10, 20)).Times(1);
+	//EXPECT_CALL(*node1, setPartitionIndex(0)).Times(1);
+	//EXPECT_CALL(*node2, setPartitionIndex(1)).Times(1);
+	//EXPECT_CALL(*node1, initData("/tmp/test_input1", 0, 10)).Times(1);
+	//EXPECT_CALL(*node2, initData("/tmp/test_input2", 10, 20)).Times(1);
 	EXPECT_CALL(*node1, initFromMaster("")).Times(1);
 	EXPECT_CALL(*node2, initFromMaster("")).Times(1);
 
