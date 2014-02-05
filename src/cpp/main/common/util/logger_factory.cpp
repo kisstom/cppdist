@@ -8,7 +8,7 @@
 #include "logger_factory.h"
 
 void LoggerFactory::initLogger(string debugLevel, string appenderType,
-		string logfile_name = "") {
+		string logfile_name) {
 	log4cpp::Category& root = log4cpp::Category::getRoot();
 
 	if (debugLevel.compare("INFO") == 0) {

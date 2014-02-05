@@ -153,7 +153,10 @@ void Algo::receiver() {
 	{
 		socket_index = selector.SelectIndex();
 
+		logger_->info("Remains size %d at index %d in %hd",
+				storeFromBinary_->getRemainsSize(socket_index), socket_index, part_index_);
 		size = socketManager_->recvFromNode(send_limit_, storeFromBinary_->getEndOfBufferAt(socket_index), socket_index);
+		logger_->info("Size of %d bytes store at %d", size, part_index_);
 		/*if (storeFromBinary_->getRemainsSize(socket_index) + size > 2 * send_limit_) {
 			logger_->error("Memory overlaping socket %d with size %d", socket_index,
 					storeFromBinary_->getRemainsSize(socket_index) + size - 2 * send_limit_);

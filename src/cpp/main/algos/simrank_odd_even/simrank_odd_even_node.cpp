@@ -60,7 +60,11 @@ void SimrankOddEvenNode::initRandomGenerator(int seed, GeneratorType type) {
 }
 
 void SimrankOddEvenNode::beforeIteration() {
-	logger_->info("\nBefore iteration.\nIter %d", oddIter_);
+	if (oddIter_) {
+	  logger_->info("\nBefore iteration.\nIter odd(paratlan) iter");
+	} else {
+	  logger_->info("\nBefore iteration.\nIter even(paros) iter");
+	}
 	logger_->info("Fingerprint %hd path %hd.", fpIndex_, pathIndex_);
 }
 

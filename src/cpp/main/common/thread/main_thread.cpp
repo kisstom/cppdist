@@ -13,7 +13,9 @@ MainThread::MainThread(Runnable* runnable) {
 }
 
 void MainThread::main() {
-	runnable_->run();
+	if (runnable_->setUp()) {
+	  runnable_->run();
+	}
 }
 
 

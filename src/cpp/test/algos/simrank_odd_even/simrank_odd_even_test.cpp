@@ -10,7 +10,8 @@
 #include "../../../main/algos/cluster.h"
 #include "../../../main/algos/test_master_builder.h"
 #include "../../../main/algos/test_simrank_odd_even_node_factory.h"
-
+#include "../../../main/common/util/logger_factory.h"
+#include <stdlib.h>
 
 using std::tr1::unordered_map;
 
@@ -37,15 +38,20 @@ protected:
   }
 
   void setUpFirst() {
+  	string slaveIndex = "0";
+  	string numNodes = "1";
+  	string minNode = "0";
+
 		EdgelistContainer* container = new EdgelistContainer;
-		container->setMinnode(0);
+		container->setMinnode(atol(minNode.c_str()));
 		container->initContainers();
 		container->addEdge(0, 1);
 		container->setFinish();
 
 		vector<list<long*> > fpStarts;
 		list<long*> pathes;
-		long* path = new long[11];
+		int pathLen = atol(pathLen_.c_str());
+		long* path = new long[pathLen + 1];
 		path[0] = 0;
 		path[1] = 0;
 		pathes.push_back(path);
@@ -57,18 +63,38 @@ protected:
 		nodeFactory->setFingerprints(fpStarts);
 
 		nodeFactories_.push_back(nodeFactory);
+		Slave slave;
+		slave.minNode = atol(minNode.c_str());
+		slave.numNode = atol(numNodes.c_str());
+		numNodes_ += slave.numNode;
+		slave.port = 7001;
+		slaves_.push_back(slave);
+
+		params_["SLAVE_INDEX"] = "0";
+		params_["NUM_NODES"] = numNodes;
+		params_["MIN_NODE"] = minNode;
+
+		nodeParams_.push_back(params_);
   }
 
   void setUpSecond() {
+  	string slaveIndex = "1";
+  	string numNodes = "3";
+  	string minNode = "1";
+
 		EdgelistContainer* container = new EdgelistContainer;
 		container->setMinnode(1);
 		container->initContainers();
-		container->addEdge(1, 0);
+		container->addEdge(1, 3);
+		container->addEdge(2, 1);
+		container->addEdge(3, 0);
+		container->addEdge(3, 2);
 		container->setFinish();
 
 		vector<list<long*> > fpStarts;
 		list<long*> pathes;
-		long* path = new long[11];
+		int pathLen = atoi(pathLen_.c_str());
+		long* path = new long[(pathLen+ 1)];
 		path[0] = 1;
 		path[1] = 1;
 		pathes.push_back(path);
@@ -80,56 +106,103 @@ protected:
 		nodeFactory->setFingerprints(fpStarts);
 
 		nodeFactories_.push_back(nodeFactory);
+
+		Slave slave;
+		slave.minNode = atol(minNode.c_str());
+		slave.numNode = atol(numNodes.c_str());
+		numNodes_ += slave.numNode;
+		slave.port = 7002;
+		slaves_.push_back(slave);
+
+		params_["SLAVE_INDEX"] = "1";
+		params_["NUM_NODES"] = numNodes;
+		params_["MIN_NODE"] = minNode;
+
+		nodeParams_.push_back(params_);
+  }
+
+  void setUpBuilder() {
+  	masterBuilder_ = new TestMasterBuilder;
+    masterBuilder_->setTestSlaveConfig(&slaves_);
+  }
+
+  void initParams() {
+  	pathLen_ = "3";
+  	numPathes_ = "1";
+  	numNodes_ = 0;
+
+		params_["MASTER_PORT"] = "7000";
+		params_["INIT_SLAVE_PORT"] = "7001";
+		params_["SEND_LIMIT"] = "6000";
+		params_["NUM_SLAVES"] = "2";
+		// numline variable
+
+		params_["MASTER_HOST"] = "localhost";
+
+		params_["NODE_TYPE"] = "SIMRANK_ODD_EVEN";
+		params_["NUM_PATHES"] = numPathes_;
+		params_["PATH_LEN"] = pathLen_;
+		params_["RANDOM_TYPE"] = "PSEUDO";
+		params_["SEED"] = "13";
+		params_["INNER_MASTER_TYPE"] = "SIMRANK_ODD_EVEN";
+	  params_["DESERIALIZER_TYPE"] = "SIMRANK_ODD_EVEN";
+  }
+
+  void finalSetup() {
+    char numline[1024];
+    sprintf(numline, "%ld", numNodes_);
+    params_["NUMLINE"] = string(numline);
+  }
+
+  void initLogger() {
+  	string debugLevel= "INFO";
+  	string appender = "CONSOLE";
+
+  	LoggerFactory::initLogger(debugLevel, appender, "");
+  	logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenTest"));
+  	logger_->info("Logger started. Level %s.", debugLevel.c_str());
   }
 
   virtual void SetUp() {
+  	initParams();
+  	initLogger();
   	setUpFirst();
   	setUpSecond();
+  	setUpBuilder();
+  	finalSetup();
   }
 
   virtual void TearDown() {
   }
 
   vector<INodeFactory*> nodeFactories_;
-  IMasterBuilder* masterBuilder_;
-
+  TestMasterBuilder* masterBuilder_;
+  vector<Slave> slaves_;
+  unordered_map<string, string> params_;
+  vector<unordered_map<string, string> > nodeParams_;
+  log4cpp::Category* logger_;
+  string pathLen_;
+  string numPathes_;
+  long numNodes_;
   // Objects declared here can be used by all tests in the test case for Foo.
 };
 
 TEST_F(SimrankOddEvenTest, testRun) {
-	unordered_map<string, string> params;
-  //long all_node, num_
-
-	params["MASTER_PORT"] = "7000";
-	params["INIT_SLAVE_PORT"] = "7001";
-	params["SEND_LIMIT"] = "6000";
-	params["NUM_SLAVES"] = "2";
-	// numline variable
-	params["NUMLINE"] = "2";
-	params["MASTER_HOST"] = "localhost";
-
-	params["NODE_TYPE"] = "SIMRANK_ODD_EVEN";
-	params["NUM_PATHES"] = "1";
-	params["PATH_LEN"] = "10";
-	params["RANDOM_TYPE"] = "PSEUDO";
-	params["SEED"] = "13";
-	//params["NUM_NODES"] = "1";
-	//params["MIN_NODE"] = "0";
-	//params["NEXT_MIN_NODE"] = "1";
-
-	params["INNER_MASTER_TYPE"] = "SIMRANK_ODD_EVEN";
-	params["APPENDER"] = "CONSOLE";
-
-
-
-	vector<Slave*> slaves;
-	//slaves.push_back;
-	TestMasterBuilder* masterBuilder = new TestMasterBuilder;
-  //masterBuilder->setSlaves();
-
-	Cluster cluster(&params, nodeFactories_, masterBuilder);
+	Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
 	cluster.init();
 	cluster.start();
+
+	SimrankOddEvenNode* node = static_cast<SimrankOddEvenNode*>(cluster.getNode(0));
+	vector<list<long*> >* pathes = node->getPathes();
+	for (int i = 0; i < pathes->size(); ++i) {
+		for (list<long*>::iterator it = (*pathes)[i].begin(); it != (*pathes)[i].end(); ++it) {
+			for (int j = 0; j < atoi(pathLen_.c_str()); ++j) {
+				printf("%d ", (*it)[j]);
+			}
+			printf("\n");
+		}
+	}
+
 }
 }
 

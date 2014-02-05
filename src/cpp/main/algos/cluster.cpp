@@ -7,10 +7,12 @@
 
 #include "cluster.h"
 
-Cluster::Cluster(unordered_map<string, string>* params, vector<INodeFactory*> nodeFactories,
-		IMasterBuilder* masterBuilder) {
+Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
+		vector<INodeFactory*> nodeFactories, IMasterBuilder* masterBuilder) {
 	//numSlaves_ = numSlaves;
+	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves_);
 	params_ = params;
+	nodeParams_ = nodeParams;
 	nodeFactories_ = nodeFactories;
 	masterBuilder_ = masterBuilder;
 	logger_ = &log4cpp::Category::getInstance(std::string("Cluster"));
@@ -30,29 +32,20 @@ Node* Cluster::getNode(int slaveIndex) {
 }
 
 void Cluster::initNodes() {
-	if (params_->find("NUM_SLAVES") == params_->end()) {
-    logger_->error("Number of slaves are not set.");
-    return;
-	}
-
-	sscanf((*params_)["NUM_SLAVES"].c_str(), "%d", &numSlaves_);
-
+  logger_->info("Initing nodes.");
 	for (int i = 0; i < numSlaves_; ++i) {
 		initNode(i);
 	}
 }
 
 void Cluster::initNode(int nodeId) {
-	char strNodeId[1024];
-	sprintf(strNodeId, "%d", nodeId);
-
-	(*params_)["SLAVE_INDEX"] = string(strNodeId);
+	logger_->info("Initing node %d.", nodeId);
 	AlgoBuilder* builder = new AlgoBuilder;
 
 	INodeFactory* nodeFactory = nodeFactories_[nodeId];
 
 	builder->setNodeFactory(nodeFactory);
-	builder->buildFromConfig(params_);
+	builder->buildFromConfig(&(nodeParams_->at(nodeId)));
 	builders_.push_back(builder);
 }
 
@@ -62,22 +55,22 @@ void Cluster::initMaster() {
 
 
 void Cluster::start() {
+	logger_->info("Starting cluster.");
 	MainThread* masterThread;
 	Algo* algo;
 
 	vector<MainThread*> nodes;
-  if (master_->setUp()) {
-  	masterThread = new MainThread(master_);
-  	masterThread->start();
-  }
+	masterThread = new MainThread(master_);
+	masterThread->start();
+	logger_->info("Master started.");
 
   for (int slaveIndex = 0; slaveIndex < numSlaves_; ++slaveIndex) {
+  	logger_->info("Starting node %d.", slaveIndex);
   	algo = builders_[slaveIndex]->getAlgo();
-  	if (algo->setUp()) {
-  	  MainThread* nodeThread = new MainThread(algo);
-  	  nodeThread->start();
-  	  nodes.push_back(nodeThread);
-  	}
+  	MainThread* nodeThread = new MainThread(algo);
+  	nodes.push_back(nodeThread);
+  	nodeThread->start();
+  	logger_->info("Node %d started.", slaveIndex);
   }
 
   for (int i = 0; i < nodes.size(); ++i) {

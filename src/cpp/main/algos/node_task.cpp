@@ -60,6 +60,9 @@ int main(int argc, char* argv[]) {
   initLogger(params);
 
   AlgoBuilder builder;
+  INodeFactory* nodeFactory = new NodeFactory;
+  builder.setNodeFactory(nodeFactory);
+
   Algo* algo = builder.buildFromConfig(params);
 
   if (algo->setUp()) {

@@ -23,9 +23,9 @@ Master::~Master()
 }
 
 void Master::InitServer() {
-	logger_->info("Creating client at port %d.", master_port_);
+	logger_->info("Creating master server at port %d.", master_port_);
   master_socket_ = ServerSocket::Create(master_port_);
-  logger_->info("Created client at port %d.", master_port_);
+  logger_->info("Created master server at port %d.", master_port_);
 }
 
 void Master::KillNodes() {
