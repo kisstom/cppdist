@@ -15,6 +15,7 @@
 #include "algo_builder.h"
 #include "master.h"
 #include "test_master_builder.h"
+#include "IMasterBuilder.h"
 #include "../common/thread/main_thread.h"
 #include "log4cpp/Category.hh"
 
@@ -24,7 +25,7 @@ using std::vector;
 
 class Cluster {
 public:
-	Cluster(unordered_map<string, string>* params, INodeFactory*);
+	Cluster(unordered_map<string, string>* params, vector<INodeFactory*>, IMasterBuilder*);
 	void init();
 	void start();
 	Node* getNode(int);
@@ -37,7 +38,8 @@ private:
 	unordered_map<string, string>* params_;
 	vector<AlgoBuilder*> builders_;
 	Master* master_;
-	INodeFactory* nodeFactory_;
+	vector<INodeFactory*> nodeFactories_;
+	IMasterBuilder* masterBuilder_;
 	log4cpp::Category* logger_;
 };
 
