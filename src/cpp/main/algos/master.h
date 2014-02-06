@@ -37,6 +37,7 @@ class Master : public Runnable {
     Master(int, vector<Slave>*);
     ~Master();
     void run();
+    bool setUp();
     void WaitForAccepts();
     void SendInfoToNodes();
     bool WaitForNodes();
@@ -48,7 +49,6 @@ class Master : public Runnable {
     void InitServer();
     void KillNodes();
     void setInnerMaster(InnerMaster*);
-    bool setUp();
   private:
     InnerMaster* innerMaster_;
     int master_port_;

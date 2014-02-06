@@ -16,7 +16,8 @@
 #include "../common/components/socket/socket_manager.h"
 #include "../common/components/deserializer.h"
 #include "../common/components/store_from_binary.h"
-#include "../common/thread/node_thread.h"
+#include "../common/thread/receiver_thread.h"
+#include "../common/thread/sender_thread.h"
 #include "../common/thread/thread_manager.h"
 #include <sstream>
 #include "log4cpp/PatternLayout.hh"

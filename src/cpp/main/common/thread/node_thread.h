@@ -4,6 +4,8 @@
 #include "../../algos/runnable.h"
 #include "thread_manager.h"
 #include <log4cpp/Category.hh>
+#include <exception>
+#include <functional>
 
 class NodeThread: public ThreadManager{
   public:

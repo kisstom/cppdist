@@ -210,9 +210,9 @@ void Algo::initFromMaster() {
 void Algo::runThreads() {
 	logger_->info("run threads");
 	char rec[1024] = "receiver";
-	NodeThread *receiver = new NodeThread(this, rec);
+	ReceiverThread *receiver = new ReceiverThread(this);
 	char sen[1024] = "sender";
-	NodeThread *sender = new NodeThread(node_, sen);
+	SenderThread *sender = new SenderThread(node_);
 	receiver->start();
 	sender->start();
 	receiver->waitForThread();

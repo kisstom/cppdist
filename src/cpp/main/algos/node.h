@@ -16,7 +16,7 @@ class Algo;
 
 using std::string;
 
-class Node : public Runnable {
+class Node {
 public:
 	virtual void beforeIteration() = 0;
 	virtual bool afterIteration() = 0;

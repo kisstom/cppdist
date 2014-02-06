@@ -323,6 +323,7 @@ void SimrankOddEvenNode::setMatrix(EdgelistContainer* matrix) {
 
 void SimrankOddEvenNode::setFingerprints(vector<list<long*> > fingerprints) {
 	fingerprints_ = fingerprints;
+	finishedPathes_.resize(fingerprints.size());
 }
 
 void SimrankOddEvenNode::setNextNodes(unordered_map<long, long> nextNodes) {
