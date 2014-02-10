@@ -1,5 +1,10 @@
 thisDir=$(dirname $0)
 
+if [ "$#" -ne 3 ]; then
+  echo "usage: input graf num_nodes output"
+  exit 1
+fi
+
 input=$1
 numNodes=$2
 output=$3
