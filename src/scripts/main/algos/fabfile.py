@@ -189,6 +189,7 @@ def getNumEdgePerPart():
 def compute():
   global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+    cleanup()
     env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
     copyCfg()
     startMaster()
