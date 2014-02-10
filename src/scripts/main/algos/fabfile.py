@@ -42,9 +42,7 @@ def readCfg():
   if not isConfReaded:
     conf = readConfig(configFile)
 
-    partitionDir = conf.get('ALGO', 'REMOTE_DIR')
-    partCfg = conf.get('ALGO', 'SLAVERY_CFG')
-    storePartitionCfg(partitionDir + '/' + partCfg)
+    #storePartitionCfg()
 
     isConfReaded = True
   env.user = 'kisstom'
@@ -58,8 +56,13 @@ def readConfig(configFile):
   return config
 
 
-def storePartitionCfg(cfg):
+def storePartitionCfg():
   global partCfg
+  
+  partitionDir = conf.get('ALGO', 'REMOTE_DIR')
+  partCfgName = conf.get('ALGO', 'SLAVERY_CFG')
+  cfg = partitionDir + '/' + partCfgName
+
   partCfgFile = open(cfg, 'r')
   for line in partCfgFile:
     spl = line.strip().split(' ')
@@ -193,12 +196,13 @@ def compute():
 
 @task
 def computeAll():
-  global conf
+  global conf, configFile
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
     cleanup()
-    copyCfg()
     makePartition()
+    storePartitionCfg()
+    copyCfg()
     env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
     startMaster()
     startNodes() 

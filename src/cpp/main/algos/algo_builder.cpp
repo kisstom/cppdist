@@ -63,6 +63,7 @@ Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {
 	sscanf((*params)["INIT_SLAVE_PORT"].c_str(), "%d", &init_slave_port);
 	sscanf((*params)["SEND_LIMIT"].c_str(), "%d", &send_limit);
 	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &num_slaves);
+	//logger_->info("number of dlaves ");
 	sscanf((*params)["NUMLINE"].c_str(), "%ld", &all_node);
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slave_index);
 	sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes);

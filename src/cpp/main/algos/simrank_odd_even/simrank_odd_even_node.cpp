@@ -19,6 +19,7 @@ SimrankOddEvenNode::SimrankOddEvenNode() {
 SimrankOddEvenNode::SimrankOddEvenNode(short numFingerprints, short pathLen,
 		int seed, GeneratorType genType, long num_nodes, long min_node, long nextMinNode) {
 	logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenNode"));
+	logger_->info("Next min node %ld",  nextMinNode);
 	fpIndex_ = 0;
 	pathIndex_ = 0;
 	numFingerprints_ = numFingerprints;

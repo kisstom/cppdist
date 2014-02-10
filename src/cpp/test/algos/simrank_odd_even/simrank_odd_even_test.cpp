@@ -38,10 +38,11 @@ protected:
   static void TearDownTestCase() {
   }
 
-  void addPartition(vector<string> partString, long minNode) {
+  void addPartition(vector<string> partString, long numSlaves) {
+  	long minNode = numNodes_;
   	vector<vector<long> > part = toMatrix(partString);
 
-  	long numNodes = (int) part.size();
+  	long numNodes = (long) part.size();
 
   	vector<list<long*> > fpStarts;
   	fpStarts.resize(numPathes_);
@@ -49,15 +50,16 @@ protected:
   	EdgelistContainer* container = new EdgelistContainer;
   	container->setMinnode(minNode);
   	container->initContainers();
-  	for (long start = 0; start < (long) part.size(); ++start) {
-  		for (int i = 0; (int) part[start].size(); ++i) {
-  			container->addEdge(start + minNode, part[(int)start][i]);
+  	for (int start = 0; start < (int) part.size(); ++start) {
+  		for (int i = 0; i < part[start].size(); ++i) {
+  			container->addEdge(start + minNode, part[start][i]);
   		}
 
   		for (int pathI = 0; pathI < numPathes_; ++pathI) {
   			long* path = new long[pathLen_ + 1];
-  			path[0] = start;
-  			path[1] = start;
+  			std::fill_n(path, pathLen_ + 1, -1);
+  			path[0] = start + minNode;
+  			path[1] = start + minNode;
   			fpStarts[pathI].push_back(path);
   		}
   	}
@@ -75,9 +77,28 @@ protected:
 		numNodes_ += slave.numNode;
 		slave.port = slavePort_++;
 		slaves_.push_back(slave);
-		params_["SLAVE_INDEX"] = slaveIndex_++;
-		params_["NUM_NODES"] = numNodes;
-		params_["MIN_NODE"] = minNode;
+
+		std::stringstream ss;
+		ss << numNodes;
+		params_["NUM_NODES"] = ss.str();
+		ss.str("");
+
+		ss << slaveIndex_;
+		params_["SLAVE_INDEX"] = ss.str();
+		ss.str("");
+		++slaveIndex_;
+
+		ss << numSlaves;
+		params_["NUM_SLAVES"] = ss.str();
+		ss.str("");
+
+		long nextMinNode = minNode + numNodes;
+		ss << nextMinNode;
+		params_["NEXT_MIN_NODE"] = ss.str();
+		ss.str("");
+
+		ss << minNode;
+		params_["MIN_NODE"] = ss.str();
 
 		nodeParams_.push_back(params_);
   }
@@ -88,8 +109,8 @@ protected:
   }
 
   void initParams() {
-  	pathLen_ = 2;
-  	numPathes_ = 1;
+  	pathLen_ = 5;
+  	numPathes_ = 2;
   	numNodes_ = 0;
   	slaveIndex_ = 0;
   	slavePort_ = 7001;
@@ -115,6 +136,7 @@ protected:
 		params_["SEED"] = "13";
 		params_["INNER_MASTER_TYPE"] = "SIMRANK_ODD_EVEN";
 	  params_["DESERIALIZER_TYPE"] = "SIMRANK_ODD_EVEN";
+	  expectedPathes_.resize(numPathes_);
   }
 
   void finalSetup() {
@@ -123,6 +145,7 @@ protected:
   	params_["NUMLINE"] = ss.str();
   	ss.str("");
 
+  	logger_->info("Setting number of slaves %d", slaveIndex_);
   	ss << slaveIndex_;
     params_["NUM_SLAVES"] = ss.str();
     ss.str("");
@@ -147,29 +170,129 @@ protected:
   		while (row.peek() != EOF) {
   			row >> node;
         retval[i].push_back(atol(node));
-        logger_->info("%ld ", atol(node));
+        //logger_->info("%ld ", atol(node));
   		}
   	}
 
   	return retval;
   }
 
+  void addExpectedPath(int fpIndex, string expected) {
+		std::stringstream row(expected);
+		long * path = new long[pathLen_ + 1];
+		std::fill_n(path, pathLen_ + 1, -1);
+		int index = 0;
+		long node;
+		while (row.peek() != EOF) {
+			row >> node;
+			path[index] = node;
+		}
+
+		expectedPathes_[fpIndex].push_back(path);
+  }
+
   virtual void SetUp() {
   	initParams();
   	initLogger();
-
   	vector<string> part1;
-    part1.push_back("");
-    part1.push_back("0 2");
-    addPartition(part1, 0);
-
   	vector<string> part2;
-    part2.push_back("0 3");
-    part2.push_back("0 1");
-    addPartition(part2, 2);
+  	part1.push_back("0 1 2 3");
+  	part1.push_back("");
+
+  	part2.push_back("0 1 2 3");
+  	part2.push_back("");
+  	addPartition(part1, 2);
+  	addPartition(part2, 2);
+
+  	addExpectedPath(0, "1");
+  	addExpectedPath(0, "0 1");
+  	addExpectedPath(0, "3");
+  	addExpectedPath(0, "2 0 0 2 3");
+  	addExpectedPath(1, "1");
+  	addExpectedPath(1, "0 1");
+  	addExpectedPath(1, "3");
+  	addExpectedPath(1, "2 3");
 
   	setUpBuilder();
   	finalSetup();
+  }
+
+  void concat(Cluster& cluster) {
+  	SimrankOddEvenNode* node = static_cast<SimrankOddEvenNode*>(cluster.getNode(0));
+
+  	concat_ = new vector<vector<long*> >;
+  	concat_->resize(numPathes_);
+
+  	vector<vector<long*> >* finished = node->getFinishedPathes();
+		for (int i = 0; i < finished->size(); ++i) {
+			for (vector<long*>::iterator it = (*finished)[i].begin();
+					it != (*finished)[i].end(); ++it) {
+				(*concat_)[i].push_back(*it);
+			}
+		}
+
+		vector<list<long*> >* pathes = node->getPathes();
+		for (int i = 0; i < pathes->size(); ++i) {
+			for (list<long*>::iterator it = (*pathes)[i].begin();
+					it != (*pathes)[i].end(); ++it) {
+				(*concat_)[i].push_back(*it);
+			}
+		}
+
+		SimrankOddEvenNode* node2 =
+				static_cast<SimrankOddEvenNode*>(cluster.getNode(1));
+		pathes = node2->getPathes();
+		for (int i = 0; i < pathes->size(); ++i) {
+			for (list<long*>::iterator it = (*pathes)[i].begin();
+					it != (*pathes)[i].end(); ++it) {
+				(*concat_)[i].push_back(*it);
+			}
+		}
+
+		finished = node2->getFinishedPathes();
+		for (int i = 0; i < finished->size(); ++i) {
+			for (vector<long*>::iterator it = (*finished)[i].begin();
+					it != (*finished)[i].end(); ++it) {
+				(*concat_)[i].push_back(*it);
+			}
+		}
+
+  }
+
+  bool eq(long* path, long* other) {
+  	int i = 0;
+  	while (i < pathLen_ + 1) {
+  		logger_->info("%ld %ld", path[i], other[i]);
+  		if (path[i] != other[i]) return false;
+
+  		if (path[i] < 0) return true;
+  		++i;
+  	}
+
+    return true;
+  }
+
+  bool in(long* path, vector<long*> fp) {
+  	for (vector<long*>::iterator it = fp.begin(); it != fp.end(); ++it) {
+  		bool isEq = eq(path, *it);
+  		logger_->info("eq %d", isEq);
+  		if (isEq) {
+  			return true;
+  		}
+  	}
+
+  	return false;
+  }
+
+  void checkEq(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
+  	for (int i = 0; i < th->size(); ++i) {
+  		for (vector<long*>::iterator it = (*th)[i].begin(); it != (*th)[i].end(); ++it) {
+  			logger_->info("checkin");
+
+  			ASSERT_TRUE(in(*it, (*oth)[i]));
+  		}
+
+  	}
   }
 
   virtual void TearDown() {
@@ -186,6 +309,9 @@ protected:
   long numNodes_;
   int slaveIndex_;
   int slavePort_;
+
+  vector<vector<long*> >* concat_;
+  vector<vector<long*> > expectedPathes_;
   // Objects declared here can be used by all tests in the test case for Foo.
 };
 
@@ -193,40 +319,9 @@ TEST_F(SimrankOddEvenTest, testRun) {
 	Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
 	cluster.init();
 	cluster.start();
+	concat(cluster);
 
-	/*HashPseudoRandom random(13);
-  for (short i = 0; i < pathLen_; ++i) {
-  	for (long node = 1; node < numNodes_; ++node) {
-  		printf("%d ", random.get(0, i, node));
-  	}
-  	printf("\n");
-  }*/
-
-
-  SimrankOddEvenNode* node = static_cast<SimrankOddEvenNode*>(cluster.getNode(0));
-	vector<list<long*> >* pathes = node->getPathes();
-	for (int i = 0; i < pathes->size(); ++i) {
-		for (list<long*>::iterator it = (*pathes)[i].begin(); it != (*pathes)[i].end(); ++it) {
-			for (int j = 0; j <= pathLen_; ++j) {
-				printf("%d ", (*it)[j]);
-			}
-			printf("\n");
-		}
-	}
-
-	SimrankOddEvenNode* node2 =
-			static_cast<SimrankOddEvenNode*>(cluster.getNode(1));
-	pathes = node2->getPathes();
-	for (int i = 0; i < pathes->size(); ++i) {
-		for (list<long*>::iterator it = (*pathes)[i].begin();
-				it != (*pathes)[i].end(); ++it) {
-			for (int j = 0; j <= pathLen_; ++j) {
-				printf("%d ", (*it)[j]);
-			}
-			printf("\n");
-		}
-	}
-
+	checkEq(concat_, &expectedPathes_);
 }
 }
 
