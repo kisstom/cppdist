@@ -60,6 +60,7 @@ bool Master::setUp() {
 
 void Master::run()
 {
+	logger_->info("Starting run.");
   bool cont = true;
   try {
     // Varunk.
@@ -82,6 +83,7 @@ void Master::run()
   }
   // Stopping nodes.
   Final();
+  logger_->info("Master run finished.");
   // TODO waiting for full destroy of nodes
   //WaitForNodes();
 }
