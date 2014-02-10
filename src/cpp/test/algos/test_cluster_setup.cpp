@@ -71,14 +71,14 @@ TEST(ClusterSetupTest, test) {
 	char master_log[1024] = "/tmp/test_master_log";
 
 	Algo* algo1 = new Algo(localhost, 8000,
-	  		8001, test_cluster1, 6000, 1000, 2, 0);
+	  		8001, 6000, 1000, 2, 0, 0, 10);
 	Algo* algo2 = new Algo(localhost, 8000,
-	  		8002, test_cluster2, 6000, 1000, 2, 1);
+	  		8002, 6000, 1000, 2, 1, 10, 10);
 
 	vector<Slave> slaves;
   Slave s;
   strcpy(s.ip, localhost);
-  strcpy(s.path, test_input1);
+ // strcpy(s.path, test_input1);
   s.minNode = 0;
   s.numNode = 10;
   s.port = 8001;
@@ -87,10 +87,10 @@ TEST(ClusterSetupTest, test) {
   s.port = 8002;
   s.minNode = 10;
   s.numNode = 20;
-  strcpy(s.path, test_input2);
+  //strcpy(s.path, test_input2);
   slaves.push_back(s);
 
-	Master* master = new Master(8000, &slaves, master_log);
+	Master* master = new Master(8000, &slaves);
 	MockInnerMaster* mockInnerMaster = new MockInnerMaster;
 	string info1("/tmp/test_cluster1 0 0 10");
 	string info2("/tmp/test_cluster2 10 0 10");
@@ -110,10 +110,10 @@ TEST(ClusterSetupTest, test) {
 	algo1->setNode(node1);
 	algo2->setNode(node2);
 
-	EXPECT_CALL(*node1, setPartitionIndex(0)).Times(1);
-	EXPECT_CALL(*node2, setPartitionIndex(1)).Times(1);
-	EXPECT_CALL(*node1, initData("/tmp/test_input1", 0, 10)).Times(1);
-	EXPECT_CALL(*node2, initData("/tmp/test_input2", 10, 20)).Times(1);
+	//EXPECT_CALL(*node1, setPartitionIndex(0)).Times(1);
+	//EXPECT_CALL(*node2, setPartitionIndex(1)).Times(1);
+	//EXPECT_CALL(*node1, initData("/tmp/test_input1", 0, 10)).Times(1);
+	//EXPECT_CALL(*node2, initData("/tmp/test_input2", 10, 20)).Times(1);
 	EXPECT_CALL(*node1, initFromMaster("")).Times(1);
 	EXPECT_CALL(*node2, initFromMaster("")).Times(1);
 

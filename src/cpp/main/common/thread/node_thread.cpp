@@ -14,13 +14,15 @@ void NodeThread::main()
 {
   if (!strcmp(msg_, "sender"))
   {
-  	logger_->info("Starting sender.");
-  	runnable->sender();
+  	logger_->error("Unsupported function exception.");
+  	throw "Unsupported function exception";
+  	//runnable->sender();
   }
   if (!strcmp(msg_, "receiver"))
   {
-  	logger_->info("Starting receiver.");
-  	runnable->receiver();
+  	logger_->error("Unsupported function exception.");
+  	throw "Unsupported function exception";
+  	//runnable->receiver();
   }
   if (!strcmp(msg_, "setup"))
   {

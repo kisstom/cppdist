@@ -6,6 +6,7 @@
 #define THREADMANAGER_H
 
 #include <pthread.h>
+#include <log4cpp/Category.hh>
 
 enum pExit {
   PE_CONT,
@@ -24,7 +25,7 @@ class ThreadManager {
 
   // This is called as the new thread.
   static void* static_main(void* arg);
-
+  log4cpp::Category* logger_;
  protected:
   // Overwrite this to implement your functionality.
   // It will be run in a separate thread.
@@ -32,6 +33,7 @@ class ThreadManager {
 
  public:
   // Call this to start the thread.
+  ThreadManager();
   void start();
 
   // Blocks the caller thread until the started thread terminates.

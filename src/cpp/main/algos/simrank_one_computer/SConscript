@@ -1,0 +1,8 @@
+Import('env' )
+env.Object(Glob('*.cpp'))
+
+COMMON_OBJ = Glob('#/../bin/main/common/util/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/random/*.o')
+
+
+env.Program('simrank_one_computer', ['simrank_one_computer.cpp', 'simrank.o', 'read_from_file.o',  'fingerprint_path_file.o', 'fingerprint_path_vector.o'] + COMMON_OBJ)

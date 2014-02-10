@@ -16,7 +16,8 @@
 #include "../common/components/socket/socket_manager.h"
 #include "../common/components/deserializer.h"
 #include "../common/components/store_from_binary.h"
-#include "../common/thread/node_thread.h"
+#include "../common/thread/receiver_thread.h"
+#include "../common/thread/sender_thread.h"
 #include "../common/thread/thread_manager.h"
 #include <sstream>
 #include "log4cpp/PatternLayout.hh"
@@ -34,10 +35,11 @@ using std::vector;
 
 class Algo : public Runnable {
 public:
-	Algo(char* master_host, int master_port, int slave_port, char* outfile_name,
-			int send_limit, long all_node, int num_slaves, int slave_index);
+	Algo(char* master_host, int master_port, int slave_port,
+			int send_limit, long all_node, int num_slaves, int slave_index,
+			long num_nodes, long min_node);
 	void run();
-	void startLogger();
+	//void startLogger();
 	void setIp();
 	void initClient();
 	void connectToMaster();
@@ -53,6 +55,7 @@ public:
   int getSlaveIndex();
   long getPartitionStartNode(int part_index);
   short getNumberOfPartitions();
+  void final();
 
 	void setNode(Node *);
   void setSocketManager(SocketManager*);
@@ -61,7 +64,6 @@ public:
   virtual ~Algo();
 private:
 	char ip_[1024];
-	char logfile_name_pref_[1024];
 	char master_host_[1024];
 	int master_port_;
 	int slave_port_;
@@ -69,7 +71,6 @@ private:
   long num_nodes_;
   int current_iteration_;
 
-	FILE* logfile_, *outfile_;
 	vector<long> partition_min_node_;
 	int num_slaves_;
 	int send_limit_;
@@ -82,7 +83,6 @@ private:
 	Node* node_;
 	StoreFromBinary* storeFromBinary_;
 	log4cpp::Category* logger_;
-	//tmp
 };
 
 

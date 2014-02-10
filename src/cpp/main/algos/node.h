@@ -16,13 +16,13 @@ class Algo;
 
 using std::string;
 
-class Node : public Runnable {
+class Node {
 public:
 	virtual void beforeIteration() = 0;
 	virtual bool afterIteration() = 0;
 	virtual void sender() = 0;
 	virtual void initFromMaster(string) = 0;
-	virtual void initData(string, long, long) = 0;
+	//virtual void initData(string, long, long) = 0;
 	virtual void final() = 0;
 	virtual void setPartitionIndex(int);
 	virtual void setSenderBuffer(SenderBuffer*);

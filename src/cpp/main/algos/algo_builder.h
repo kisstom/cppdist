@@ -17,6 +17,9 @@ class AlgoBuilder {
 public:
   Algo* buildFromConfig(unordered_map<string, string>* params);
   ~AlgoBuilder();
+  Algo* getAlgo();
+  Node* getNode();
+  void setNodeFactory(INodeFactory*);
 private:
   Algo* createAlgoFromConfig(unordered_map<string, string>* params);
   Algo* algo_;
@@ -25,6 +28,7 @@ private:
   SenderBuffer* senderBuffer_;
   SocketManager* socketManager_;
   StoreFromBinary* storeFromBinary_;
+  INodeFactory* nodeFactory_;
 };
 
 

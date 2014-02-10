@@ -10,10 +10,8 @@
 
 class Runnable {
 public:
-	virtual void receiver() {}
-	virtual void sender() {}
-	virtual bool setUp() {return false;}
-	virtual void run() {}
+	virtual bool setUp() = 0;
+	virtual void run() = 0;
 	virtual ~Runnable() {}
 };
 

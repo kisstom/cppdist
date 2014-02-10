@@ -1,0 +1,20 @@
+Import('env')
+
+COMMON_OBJ = Glob('#/../bin/main/common/components/*.o') + Glob('#/../bin/main/common/util/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/thread/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/random/*.o')
+COMMON_OBJ += ['#/../bin/main/algos/node.o', '#/../bin/main/algos/algo.o']
+
+COMMON_OBJ += ['#/../bin/main/algos/test_simrank_odd_even_node_fatory.o', '#/../bin/main/algos/node_factory.o']
+COMMON_OBJ += ['#/../bin/main/algos/cluster.o', '#/../bin/main/algos/node_factory_helper.o', '#/../bin/main/algos/algo_builder.o']
+
+COMMON_OBJ += ['#/../bin/main/algos/IMasterBuilder.o', '#/../bin/main/algos/test_master_builder.o']
+COMMON_OBJ += ['#/../bin/main/algos/master_builder.o', '#/../bin/main/algos/inner_master_factory.o']
+COMMON_OBJ += ['#/../bin/main/algos/master.o']
+
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_odd_even/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
+
+
+env.Program('simrank_odd_even_test', ['simrank_odd_even_test.cpp']  + COMMON_OBJ)

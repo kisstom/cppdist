@@ -8,10 +8,11 @@
 #include "algo.h"
 
 
-Algo::Algo(char* master_host, int master_port, int slave_port, char* logfile_name_pref,
-			int send_limit, long all_node, int num_slaves, int slave_index) {
+Algo::Algo(char* master_host, int master_port, int slave_port,
+			int send_limit, long all_node, int num_slaves, int slave_index,
+			long num_nodes, long min_node) {
 	strcpy(master_host_, master_host);
-	strcpy(logfile_name_pref_, logfile_name_pref);
+	//strcpy(logfile_name_pref_, logfile_name_pref);
 	master_port_ = master_port;
 	slave_port_ = slave_port;
 	send_limit_ = send_limit;
@@ -19,25 +20,14 @@ Algo::Algo(char* master_host, int master_port, int slave_port, char* logfile_nam
 	current_iteration_ = 0;
 	num_slaves_ = num_slaves;
   slave_index_ = slave_index;
-  startLogger();
+  num_nodes_ = num_nodes;
+  min_node_ = min_node;
+  logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
+  //startLogger();
 }
 
 int Algo::getSlaveIndex() {
 	return slave_index_;
-}
-
-void Algo::startLogger() {
-	char logfile_name[1024];
-	sprintf(logfile_name, "%s_%d", logfile_name_pref_, slave_index_);
-
-	log4cpp::Appender *appender = new log4cpp::FileAppender("default", string(logfile_name));
-	log4cpp::PatternLayout * fooo = new log4cpp::PatternLayout();
-	fooo->setConversionPattern("%d{%H:%M:%S,%l} %c %x: %m\n");
-	appender->setLayout(fooo);
-
-	log4cpp::Category& root = log4cpp::Category::getRoot();
-	root.addAppender(appender);
-	logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
 }
 
 int Algo::getPartitionIndex(long node) {
@@ -144,9 +134,13 @@ void Algo::run()
   }
 
   //log_info(logfile_, "Finished at iteration %d.", current_iteration_);
-  node_->final();
-  logger_->info("Algo finished.");
+
   // destructor should destroy and send to master
+}
+
+void Algo::final() {
+	 node_->final();
+	 logger_->info("Algo finished.");
 }
 
 void Algo::receiver() {
@@ -158,7 +152,6 @@ void Algo::receiver() {
 	while (1)
 	{
 		socket_index = selector.SelectIndex();
-
 		size = socketManager_->recvFromNode(send_limit_, storeFromBinary_->getEndOfBufferAt(socket_index), socket_index);
 		/*if (storeFromBinary_->getRemainsSize(socket_index) + size > 2 * send_limit_) {
 			logger_->error("Memory overlaping socket %d with size %d", socket_index,
@@ -187,13 +180,13 @@ bool Algo::storeFromBinary(int socket_index) {
 }
 
 void Algo::initFromMaster() {
-	char buf[send_limit_], path[1024];
+	char buf[send_limit_];
 	int size;
 	size = socketManager_->recvFromMaster(1024, buf);
+
 	if (strcmp(buf, "die") == 0) throw MasterException();
 	stringstream ss (stringstream::in | stringstream::out);
 	ss << buf;
-	ss >> path; ss >> min_node_; ss >> num_nodes_;
 	long actMin;
 	while (ss.peek() != EOF) {
 		ss >> actMin;
@@ -203,21 +196,19 @@ void Algo::initFromMaster() {
 
 	node_->setPartitionIndex(part_index_);
 
-	//node_->SetNumNode(num_nodes_);
 	if (ss.tellg() != -1) {
 		node_->initFromMaster(ss.str().substr(ss.tellg()));
 	} else {
 		node_->initFromMaster("");
 	}
-	node_->initData(string(path), min_node_, num_nodes_);
 }
 
 void Algo::runThreads() {
 	logger_->info("run threads");
 	char rec[1024] = "receiver";
-	NodeThread *receiver = new NodeThread(this, rec);
+	ReceiverThread *receiver = new ReceiverThread(this);
 	char sen[1024] = "sender";
-	NodeThread *sender = new NodeThread(node_, sen);
+	SenderThread *sender = new SenderThread(node_);
 	receiver->start();
 	sender->start();
 	receiver->waitForThread();

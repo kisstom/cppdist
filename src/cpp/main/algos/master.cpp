@@ -10,33 +10,22 @@
 
 using std::vector;
 
-Master::Master(int master_port, vector<Slave>* slaves, char* logfile)
+Master::Master(int master_port, vector<Slave>* slaves)
 {
   master_port_ = master_port;
   slaves_ = slaves;
-  strcpy(logfile_, logfile);
-
-  log4cpp::Appender *appender = new log4cpp::FileAppender("default", string(logfile_));
-  appender->setLayout(new log4cpp::BasicLayout());
-  log4cpp::Category& root = log4cpp::Category::getRoot();
-  root.addAppender(appender);
-
   logger_ = &log4cpp::Category::getInstance(std::string("Master"));
 }
 
 Master::~Master()
 {
-  /*for (unsigned int i = 0; i < slaves_->size(); ++i)
-  {
-    delete (*slaves_)[i].socket;
-  }*/
   delete master_socket_;
 }
 
 void Master::InitServer() {
-	logger_->info("Creating client at port %d.", master_port_);
+	logger_->info("Creating master server at port %d.", master_port_);
   master_socket_ = ServerSocket::Create(master_port_);
-  logger_->info("Created client at port %d.", master_port_);
+  logger_->info("Created master server at port %d.", master_port_);
 }
 
 void Master::KillNodes() {
@@ -129,12 +118,9 @@ void Master::SendInfoToNodes()
   char info[1024];
   for (unsigned int i = 0; i < slaves_->size(); ++i) {
     stringstream ss(stringstream::in | stringstream::out);
-    ss << (*slaves_)[i].path << " ";
-    //ss << string(1, file_format_) << " ";
-    ss <<  (*slaves_)[i].minNode << " ";
-    ss << (*slaves_)[i].numNode;
-    for (unsigned int j = 0; j < slaves_->size(); ++j) {
-      sprintf(info, " %ld", (*slaves_)[j].minNode);
+
+    ss << (*slaves_)[0].minNode;
+    for (unsigned int j = 1; j < slaves_->size(); ++j) {
       ss << " " << (*slaves_)[j].minNode;
     }
     //innerMaster_->addInfoForNodes(&ss);

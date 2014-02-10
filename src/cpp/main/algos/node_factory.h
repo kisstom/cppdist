@@ -14,8 +14,10 @@
 #include "simrank_store_first/simrank_store_first_node.h"
 #include "simrank_odd_even/simrank_odd_even_node.h"
 #include <log4cpp/Category.hh>
+#include "inode_factory.h"
+#include "node_factory_helper.h"
 
-class NodeFactory {
+class NodeFactory : public INodeFactory {
 public:
 	NodeFactory();
 	Node* createNodeFromConfig(unordered_map<string, string>* params);
