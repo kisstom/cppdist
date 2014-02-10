@@ -74,7 +74,7 @@ bool StoreFromBinary::storeFromIndex(int socket_index) {
   	}
 
     // +1 means ignoring seperator
-  	logger_->info("deser %d %d", stored + 1, remains_size_[socket_index] - stored - 1);
+  	//logger_->info("deser %d %d", stored + 1, remains_size_[socket_index] - stored - 1);
     success = deserializer_->storeFromBinary(
     		receiver_remains_[socket_index] + stored + 1, remains_size_[socket_index] - stored - 1);
 
