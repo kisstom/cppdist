@@ -186,8 +186,8 @@ protected:
 		while (row.peek() != EOF) {
 			row >> node;
 			path[index] = node;
+			++index;
 		}
-
 		expectedPathes_[fpIndex].push_back(path);
   }
 
@@ -218,7 +218,33 @@ protected:
   }
 
   void concat(Cluster& cluster) {
-  	SimrankOddEvenNode* node = static_cast<SimrankOddEvenNode*>(cluster.getNode(0));
+  	concat_ = new vector<vector<long*> >;
+  	concat_->resize(numPathes_);
+
+  	SimrankOddEvenNode* node;
+  	vector<vector<long*> >* finished;
+  	vector<list<long*> >* pathes;
+
+  	for (int i = 0; i < slaveIndex_; ++i) {
+  		node = static_cast<SimrankOddEvenNode*>(cluster.getNode(i));
+  		finished = node->getFinishedPathes();
+			for (int i = 0; i < finished->size(); ++i) {
+				for (vector<long*>::iterator it = (*finished)[i].begin();
+						it != (*finished)[i].end(); ++it) {
+					(*concat_)[i].push_back(*it);
+				}
+			}
+			vector<list<long*> >* pathes = node->getPathes();
+			for (int i = 0; i < pathes->size(); ++i) {
+				for (list<long*>::iterator it = (*pathes)[i].begin();
+						it != (*pathes)[i].end(); ++it) {
+					(*concat_)[i].push_back(*it);
+				}
+			}
+  	}
+
+
+  	/*SimrankOddEvenNode* node = static_cast<SimrankOddEvenNode*>(cluster.getNode(0));
 
   	concat_ = new vector<vector<long*> >;
   	concat_->resize(numPathes_);
@@ -255,14 +281,24 @@ protected:
 					it != (*finished)[i].end(); ++it) {
 				(*concat_)[i].push_back(*it);
 			}
-		}
+		}*/
 
   }
 
   bool eq(long* path, long* other) {
+		for (int j = 0; j <= pathLen_; ++j) {
+			if (path[j] < 0)
+				break;
+		}
+
+		for (int j = 0; j <= pathLen_; ++j) {
+			if (other[j] < 0)
+				break;
+		}
+
   	int i = 0;
   	while (i < pathLen_ + 1) {
-  		logger_->info("%ld %ld", path[i], other[i]);
+  		//logger_->info("%ld %ld", path[i], other[i]);
   		if (path[i] != other[i]) return false;
 
   		if (path[i] < 0) return true;
@@ -275,7 +311,6 @@ protected:
   bool in(long* path, vector<long*> fp) {
   	for (vector<long*>::iterator it = fp.begin(); it != fp.end(); ++it) {
   		bool isEq = eq(path, *it);
-  		logger_->info("eq %d", isEq);
   		if (isEq) {
   			return true;
   		}
@@ -287,11 +322,8 @@ protected:
   void checkEq(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
   	for (int i = 0; i < th->size(); ++i) {
   		for (vector<long*>::iterator it = (*th)[i].begin(); it != (*th)[i].end(); ++it) {
-  			logger_->info("checkin");
-
   			ASSERT_TRUE(in(*it, (*oth)[i]));
   		}
-
   	}
   }
 
