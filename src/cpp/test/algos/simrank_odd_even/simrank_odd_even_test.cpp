@@ -243,64 +243,12 @@ protected:
 			}
   	}
 
-
-  	/*SimrankOddEvenNode* node = static_cast<SimrankOddEvenNode*>(cluster.getNode(0));
-
-  	concat_ = new vector<vector<long*> >;
-  	concat_->resize(numPathes_);
-
-  	vector<vector<long*> >* finished = node->getFinishedPathes();
-		for (int i = 0; i < finished->size(); ++i) {
-			for (vector<long*>::iterator it = (*finished)[i].begin();
-					it != (*finished)[i].end(); ++it) {
-				(*concat_)[i].push_back(*it);
-			}
-		}
-
-		vector<list<long*> >* pathes = node->getPathes();
-		for (int i = 0; i < pathes->size(); ++i) {
-			for (list<long*>::iterator it = (*pathes)[i].begin();
-					it != (*pathes)[i].end(); ++it) {
-				(*concat_)[i].push_back(*it);
-			}
-		}
-
-		SimrankOddEvenNode* node2 =
-				static_cast<SimrankOddEvenNode*>(cluster.getNode(1));
-		pathes = node2->getPathes();
-		for (int i = 0; i < pathes->size(); ++i) {
-			for (list<long*>::iterator it = (*pathes)[i].begin();
-					it != (*pathes)[i].end(); ++it) {
-				(*concat_)[i].push_back(*it);
-			}
-		}
-
-		finished = node2->getFinishedPathes();
-		for (int i = 0; i < finished->size(); ++i) {
-			for (vector<long*>::iterator it = (*finished)[i].begin();
-					it != (*finished)[i].end(); ++it) {
-				(*concat_)[i].push_back(*it);
-			}
-		}*/
-
   }
 
   bool eq(long* path, long* other) {
-		for (int j = 0; j <= pathLen_; ++j) {
-			if (path[j] < 0)
-				break;
-		}
-
-		for (int j = 0; j <= pathLen_; ++j) {
-			if (other[j] < 0)
-				break;
-		}
-
   	int i = 0;
   	while (i < pathLen_ + 1) {
-  		//logger_->info("%ld %ld", path[i], other[i]);
   		if (path[i] != other[i]) return false;
-
   		if (path[i] < 0) return true;
   		++i;
   	}
@@ -310,8 +258,7 @@ protected:
 
   bool in(long* path, vector<long*> fp) {
   	for (vector<long*>::iterator it = fp.begin(); it != fp.end(); ++it) {
-  		bool isEq = eq(path, *it);
-  		if (isEq) {
+  		if (eq(path, *it)) {
   			return true;
   		}
   	}
@@ -319,12 +266,17 @@ protected:
   	return false;
   }
 
-  void checkEq(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
+  void checkContains(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
   	for (int i = 0; i < th->size(); ++i) {
   		for (vector<long*>::iterator it = (*th)[i].begin(); it != (*th)[i].end(); ++it) {
   			ASSERT_TRUE(in(*it, (*oth)[i]));
   		}
   	}
+  }
+
+  void check(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
+  	checkContains(th, oth);
+  	checkContains(oth, th);
   }
 
   virtual void TearDown() {
@@ -353,7 +305,7 @@ TEST_F(SimrankOddEvenTest, testRun) {
 	cluster.start();
 	concat(cluster);
 
-	checkEq(concat_, &expectedPathes_);
+  check(concat_, &expectedPathes_);
 }
 }
 
