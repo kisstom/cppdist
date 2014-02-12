@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     PseudoRandom* random = initRandomGenerator(atoi(argv[3]), gtype);
     FingerprintPath* fppath = initFingerprintPath(ftype, atoi(argv[3]), argv[2],  matrix, random);
     Simrank* simrank = new Simrank(matrix, random, fppath);
-    simrank->getFingerprint(atoi(argv[6]), atoi(argv[7]));
+    simrank->getFingerprint(0, atoi(argv[6]), atoi(argv[7]));
     
     time(&time2);
     cout << time1 << "  " << time2 <<endl;

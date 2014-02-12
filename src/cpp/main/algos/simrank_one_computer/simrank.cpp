@@ -9,18 +9,19 @@
 
 
 Simrank::Simrank( EdgelistContainer* matrix_,  PseudoRandom* random_, FingerprintPath* fppath_) {
-  logger = &log4cpp::Category::getInstance(std::string("SimrankOnOneComputer"));
+  logger = &log4cpp::Category::getInstance(std::string("Simrank"));
   matrix = matrix_;
   random = random_;
   fppath = fppath_;
 }
 
-void Simrank::getFingerprint(short fpnum, short pathlength ){
+
+void Simrank::getFingerprint( short fpmin, short fpmax, short pathlength ){
   logger->info("Start making fingerprint.");
   fppath->init();
   long numnodes =  matrix->getNumberOfNodes();
   for (long n = 0; n < numnodes; ++n) {
-    for (short i = 0; i < fpnum; ++i){
+    for (short i = fpmin; i < fpmax; ++i){
       fppath->make(n, i, pathlength);
     }
     if (n % 100000 == 0 &&  n != 0){
@@ -30,6 +31,4 @@ void Simrank::getFingerprint(short fpnum, short pathlength ){
   fppath->finish();
   logger->info("Fingerprints made.");
 }
-
-
 
