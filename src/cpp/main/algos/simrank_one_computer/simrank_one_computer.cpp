@@ -7,6 +7,7 @@
 
 #include <log4cpp/Category.hh>
 #include <iostream>
+#include <ctime>
 
 #include "read_from_file.h"
 #include "simrank.h"
@@ -71,10 +72,20 @@ int main(int argc, char *argv[]) {
     }else if(atoi(argv[5]) == 1){
       ftype = FINGERPRINT_VECTOR;
     }
+    
+    time_t time1;
+    time_t time2;
+    time(&time1);
+    
     PseudoRandom* random = initRandomGenerator(atoi(argv[3]), gtype);
     FingerprintPath* fppath = initFingerprintPath(ftype, atoi(argv[3]), argv[2],  matrix, random);
     Simrank* simrank = new Simrank(matrix, random, fppath);
     simrank->getFingerprint(atoi(argv[6]), atoi(argv[7]));
+    
+    time(&time2);
+    cout << time1 << "  " << time2 <<endl;
+    cout << ctime(&time1) << ctime(&time2) ;
+    cout <<"runtime: "<< difftime (time2, time1)<< " s" << endl;
   }
   return 0;
 }
