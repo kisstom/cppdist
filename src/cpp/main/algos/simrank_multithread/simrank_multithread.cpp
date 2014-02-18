@@ -80,6 +80,8 @@ int main(int argc, char *argv[]) {
     time_t time2;
     time(&time1);
    
+    cout << ctime(&time1) ;
+
     short pathlength = atoi(argv[7]);
     short numfppath = atoi(argv[6]);
     short numthread = atoi(argv[8]);
@@ -129,7 +131,7 @@ int main(int argc, char *argv[]) {
      
     time(&time2);
     cout << time1 << "  " << time2 <<endl;
-    cout << ctime(&time1) << ctime(&time2) ;
+    cout << ctime(&time2) ;
     cout <<"runtime: "<< difftime (time2, time1)<< " s" << endl;
   }
   return 0;
