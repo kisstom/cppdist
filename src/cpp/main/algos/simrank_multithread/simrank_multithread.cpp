@@ -121,14 +121,12 @@ int main(int argc, char *argv[]) {
     
     for (short s=0; s<numthread; s++){
       thread[s]->start();
-      thread[s]->waitForThread();
     }
 
-    //PseudoRandom* random = initRandomGenerator(seed, gtype);
-    //FingerprintPath* fppath = initFingerprintPath(ftype, seed, outFileName,  matrix, random);
-    //Simrank* simrank = new Simrank(matrix, random, fppath);
-    //simrank->getFingerprint(0, numfppath, atoi(argv[7]));
-    
+    for (short s=0; s<numthread; s++){
+      thread[s]->waitForThread();
+    }
+     
     time(&time2);
     cout << time1 << "  " << time2 <<endl;
     cout << ctime(&time1) << ctime(&time2) ;
