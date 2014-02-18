@@ -14,6 +14,7 @@ else
         echo $sor >> $newfile
       done < $file
       i=$(( i+1 )) ;
+      rm $file;
       file="$1"$i.txt;
   done 
 fi
