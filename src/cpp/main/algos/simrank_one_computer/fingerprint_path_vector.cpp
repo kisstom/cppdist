@@ -45,6 +45,7 @@ vector<string>* FingerprintPathVector::getVector(){
 long FingerprintPathVector::getRandomNeighbor(long node, short i, short j){
   long numneighbor = matrix->neighborhoodSize(node);
   if (numneighbor == 0) return -1;
+  if (numneighbor == -1) return -1;
   int hashValue = random->get(i, j, node);
   int index = hashValue % numneighbor;  
   if (index < 0) index+=numneighbor;
