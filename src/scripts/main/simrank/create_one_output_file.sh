@@ -10,9 +10,7 @@ else
     then rm $newfile; 
   fi
   while [ -e $file ] ; do
-      while read sor ; do
-        echo $sor >> $newfile
-      done < $file
+      cat $file1 >> $newfile
       i=$(( i+1 )) ;
       rm $file;
       file="$1"$i.txt;
