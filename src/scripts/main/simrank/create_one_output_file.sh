@@ -10,7 +10,7 @@ else
     then rm $newfile; 
   fi
   while [ -e $file ] ; do
-      cat $file1 >> $newfile
+      cat $file >> $newfile
       i=$(( i+1 )) ;
       rm $file;
       file="$1"$i.txt;
