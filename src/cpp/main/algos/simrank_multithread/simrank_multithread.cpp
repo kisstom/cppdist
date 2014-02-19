@@ -18,6 +18,7 @@
 #include "../../common/random/build_in_pseudo_random.h"
 #include "../simrank_one_computer/fingerprint_path_file.h"
 #include "../simrank_one_computer/fingerprint_path_vector.h"
+#include "../simrank_one_computer/fingerprint_path_none.h"
 #include "simrank_thread.h"
 
 
@@ -50,6 +51,9 @@ FingerprintPath* initFingerprintPath(FingerprintPathType ftype, int seed, string
    }else if(ftype ==FINGERPRINT_VECTOR){
     fppath = new FingerprintPathVector(seed, matrix, random); 
     logger->info(" FINGERPRINT_PATH_VECTOR is set.");
+  }else if(ftype ==FINGERPRINT_NONE){
+    fppath = new FingerprintPathNone(seed, matrix, random); 
+    logger->info(" FINGERPRINT_PATH_NONE is set.");
   }else{
     logger->info("Unknown type of random generator %d", ftype);
      }
@@ -59,7 +63,7 @@ FingerprintPath* initFingerprintPath(FingerprintPathType ftype, int seed, string
 int main(int argc, char *argv[]) {
   if(argc != 9){
     cout << "params are: graph input file, fingerprint output file, seed, type of random generator (0:HASH_PSEUDO_RANDOM, 1:BUILD_IN_PSEUDO_RANDOM)," <<
-      "type of fingerprint path (0:FINGERPRINT_FILE, 1:FINGERPRINT_VECTOR), how many fingerprints, length of paths, how many threads" << endl;
+      "type of fingerprint path (0:FINGERPRINT_FILE, 1:FINGERPRINT_VECTOR, 2:FINGERPRINT_NONE), how many fingerprints, length of paths, how many threads" << endl;
   }else{
     ReadFromFile* readUtil = new ReadFromFile();
     EdgelistContainer* matrix = readUtil->read(argv[1]);
@@ -74,6 +78,8 @@ int main(int argc, char *argv[]) {
       ftype = FINGERPRINT_FILE;
     }else if(atoi(argv[5]) == 1){
       ftype = FINGERPRINT_VECTOR;
+    }else if(atoi(argv[5]) == 2){
+      ftype = FINGERPRINT_NONE;
     }
 
     time_t time1;
