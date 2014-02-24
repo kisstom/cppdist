@@ -1,0 +1,8 @@
+Import('env' )
+env.Object(Glob('*.cpp'))
+
+COMMON_OBJ = Glob('#/../bin/main/common/util/*.o')+ Glob('#/../bin/main/common/thread/thread_manager.o')
+COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/random/*.o')
+
+
+env.Program('simrank_multithread', ['simrank_multithread.cpp', '../simrank_one_computer/simrank.o', '../simrank_one_computer/read_from_file.o',  '../simrank_one_computer/fingerprint_path_file.o', '../simrank_one_computer/fingerprint_path_vector.o', '../simrank_one_computer/fingerprint_path_none.o', 'simrank_thread.o'] + COMMON_OBJ)

@@ -5,4 +5,4 @@ COMMON_OBJ = Glob('#/../bin/main/common/util/*.o')
 COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/random/*.o')
 
 
-env.Program('simrank_one_computer', ['simrank_one_computer.cpp', 'simrank.o', 'read_from_file.o',  'fingerprint_path_file.o', 'fingerprint_path_vector.o'] + COMMON_OBJ)
+env.Program('simrank_one_computer', ['simrank_one_computer.cpp', 'simrank.o', 'read_from_file.o',  'fingerprint_path_file.o', 'fingerprint_path_vector.o','fingerprint_path_none.o'] + COMMON_OBJ)

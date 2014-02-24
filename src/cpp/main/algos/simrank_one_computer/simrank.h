@@ -27,7 +27,7 @@ class Simrank {
     FingerprintPath* fppath;
   public:
     Simrank(EdgelistContainer* matrix, PseudoRandom* random, FingerprintPath* fppath);
-    void getFingerprint(short fpnum, short pathlength); 
+    void getFingerprint(short fpmin, short fmax, short pathlength); 
 };
 
 #endif /* SIMRANK_H_ */
