@@ -1,10 +1,9 @@
 /*
- * simrank_odd_even_test.cpp
+ * simrank_test_builder.cpp
  *
- *  Created on: 2014.02.04.
+ *  Created on: 2014.02.24.
  *      Author: kisstom
  */
-
 #include <gtest/gtest.h>
 
 #include "../../../main/algos/cluster.h"
@@ -18,15 +17,15 @@ using std::tr1::unordered_map;
 
 namespace {
 
-class SimrankOddEvenTest: public ::testing::Test  {
+class SimrankTestBase: public ::testing::Test  {
 protected:
   // You can remove any or all of the following functions if its body
   // is empty.
 
-	SimrankOddEvenTest() {
+	SimrankTestBase() {
   }
 
-  virtual ~SimrankOddEvenTest() {
+  virtual ~SimrankTestBase() {
     // You can do clean-up work that doesn't throw exceptions here.
   }
 
@@ -108,37 +107,6 @@ protected:
     masterBuilder_->setTestSlaveConfig(&slaves_);
   }
 
-  void initParams() {
-  	pathLen_ = 5;
-  	numPathes_ = 2;
-  	numNodes_ = 0;
-  	slaveIndex_ = 0;
-  	slavePort_ = 7001;
-    std::stringstream ss;
-
-    ss << slavePort_;
-  	params_["INIT_SLAVE_PORT"] = ss.str();
-  	ss.str("");
-
-    ss << pathLen_;
-    params_["PATH_LEN"] = ss.str();
-    ss.str("");
-
-    ss << numPathes_;
-    params_["NUM_PATHES"] = ss.str();
-    ss.str("");
-
-		params_["MASTER_PORT"] = "7000";
-		params_["SEND_LIMIT"] = "6000";
-		params_["MASTER_HOST"] = "localhost";
-		params_["NODE_TYPE"] = "SIMRANK_ODD_EVEN";
-		params_["RANDOM_TYPE"] = "PSEUDO";
-		params_["SEED"] = "13";
-		params_["INNER_MASTER_TYPE"] = "SIMRANK_ODD_EVEN";
-	  params_["DESERIALIZER_TYPE"] = "SIMRANK_ODD_EVEN";
-	  expectedPathes_.resize(numPathes_);
-  }
-
   void finalSetup() {
   	std::stringstream ss;
   	ss << numNodes_;
@@ -191,30 +159,17 @@ protected:
 		expectedPathes_[fpIndex].push_back(path);
   }
 
-  virtual void SetUp() {
-  	initParams();
-  	initLogger();
-  	vector<string> part1;
-  	vector<string> part2;
-  	part1.push_back("0 1 2 3");
-  	part1.push_back("");
+  /*virtual void SetUp() {
 
-  	part2.push_back("0 1 2 3");
-  	part2.push_back("");
-  	addPartition(part1, 2);
-  	addPartition(part2, 2);
+  }*/
 
-  	addExpectedPath(0, "1");
-  	addExpectedPath(0, "0 1");
-  	addExpectedPath(0, "3");
-  	addExpectedPath(0, "2 0 0 2 3");
-  	addExpectedPath(1, "1");
-  	addExpectedPath(1, "0 1");
-  	addExpectedPath(1, "3");
-  	addExpectedPath(1, "2 3");
-
-  	setUpBuilder();
-  	finalSetup();
+  void printPath(long* path) {
+  	int i = 0;
+  	while (path[i] != -1) {
+  		printf(" %ld", path[i]);
+  		++i;
+  	}
+  	printf("\n");
   }
 
   void concat(Cluster& cluster) {
@@ -229,6 +184,7 @@ protected:
   		node = static_cast<SimrankOddEvenNode*>(cluster.getNode(i));
   		finished = node->getFinishedPathes();
 			for (int i = 0; i < finished->size(); ++i) {
+
 				for (vector<long*>::iterator it = (*finished)[i].begin();
 						it != (*finished)[i].end(); ++it) {
 					(*concat_)[i].push_back(*it);
@@ -236,6 +192,7 @@ protected:
 			}
 			vector<list<long*> >* pathes = node->getPathes();
 			for (int i = 0; i < pathes->size(); ++i) {
+
 				for (list<long*>::iterator it = (*pathes)[i].begin();
 						it != (*pathes)[i].end(); ++it) {
 					(*concat_)[i].push_back(*it);
@@ -267,7 +224,9 @@ protected:
   }
 
   void checkContains(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
+
   	for (int i = 0; i < th->size(); ++i) {
+  		//printf("%d\n", i);
   		for (vector<long*>::iterator it = (*th)[i].begin(); it != (*th)[i].end(); ++it) {
   			ASSERT_TRUE(in(*it, (*oth)[i]));
   		}
@@ -299,19 +258,9 @@ protected:
   // Objects declared here can be used by all tests in the test case for Foo.
 };
 
-TEST_F(SimrankOddEvenTest, testRun) {
-	Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
-	cluster.init();
-	cluster.start();
-	concat(cluster);
-
-  check(concat_, &expectedPathes_);
-}
 }
 
-int main (int argc, char **argv) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+
+
 
 

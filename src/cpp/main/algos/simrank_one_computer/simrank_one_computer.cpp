@@ -17,6 +17,7 @@
 #include "../../common/random/build_in_pseudo_random.h"
 #include "fingerprint_path_file.h"
 #include "fingerprint_path_vector.h"
+#include "fingerprint_path_none.h"
 
 using namespace std;
 
@@ -47,6 +48,9 @@ FingerprintPath* initFingerprintPath(FingerprintPathType ftype, int seed, string
    }else if(ftype ==FINGERPRINT_VECTOR){
     fppath = new FingerprintPathVector(seed, matrix, random); 
     logger->info(" FINGERPRINT_PATH_VECTOR is set.");
+  }else if(ftype ==FINGERPRINT_NONE){
+    fppath = new FingerprintPathNone(seed, matrix, random); 
+    logger->info(" FINGERPRINT_PATH_NONE is set.");
   }else{
     logger->info("Unknown type of random generator %d", ftype);
      }
@@ -56,7 +60,7 @@ FingerprintPath* initFingerprintPath(FingerprintPathType ftype, int seed, string
 int main(int argc, char *argv[]) {
   if(argc != 8){
     cout << "params are: graph input file, fingerprint output file, seed, type of random generator (0:HASH_PSEUDO_RANDOM, 1:BUILD_IN_PSEUDO_RANDOM)," <<
-      "type of fingerprint path (0:FINGERPRINT_FILE, 1:FINGERPRINT_VECTOR), how many fingerprints, length of paths" << endl;
+      "type of fingerprint path (0:FINGERPRINT_FILE, 1:FINGERPRINT_VECTOR, 2:FINGERPRINT_NONE), how many fingerprints, length of paths" << endl;
   }else{
     ReadFromFile* readUtil = new ReadFromFile();
     EdgelistContainer* matrix = readUtil->read(argv[1]);
@@ -71,12 +75,15 @@ int main(int argc, char *argv[]) {
       ftype = FINGERPRINT_FILE;
     }else if(atoi(argv[5]) == 1){
       ftype = FINGERPRINT_VECTOR;
+    }else if(atoi(argv[5]) == 2){
+      ftype = FINGERPRINT_NONE;
     }
     
     time_t time1;
     time_t time2;
     time(&time1);
-    
+    cout << ctime(&time1);
+
     PseudoRandom* random = initRandomGenerator(atoi(argv[3]), gtype);
     FingerprintPath* fppath = initFingerprintPath(ftype, atoi(argv[3]), argv[2],  matrix, random);
     Simrank* simrank = new Simrank(matrix, random, fppath);
@@ -84,7 +91,7 @@ int main(int argc, char *argv[]) {
     
     time(&time2);
     cout << time1 << "  " << time2 <<endl;
-    cout << ctime(&time1) << ctime(&time2) ;
+    cout << ctime(&time2) ;
     cout <<"runtime: "<< difftime (time2, time1)<< " s" << endl;
   }
   return 0;

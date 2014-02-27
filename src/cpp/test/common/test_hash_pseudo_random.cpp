@@ -14,7 +14,7 @@
 using namespace std;
 
 void test01(){
-  HashPseudoRandom random(12); 
+  HashPseudoRandom random(13); 
   ofstream myfile ("test_hash_output1.txt");
   if (myfile.is_open()){
     for(long n=1; n<1000000000000000000; n*=2){
@@ -87,7 +87,7 @@ int main (int argc, char **argv) {
   test01();
   test02();
   // test03();
-  test04();
+  // test04();
   test05();
   return 0;
 }
