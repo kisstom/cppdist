@@ -18,7 +18,7 @@ class NDCG:
     sys.stdout.flush()
     for u in users:
       try:
-        print u
+        #print u
         self.ndcgForOneUser(score1[u], score2[u])
       except KeyError:
         print 'error'
@@ -30,19 +30,19 @@ class NDCG:
     idcg = 0.0
     
     sort_by_simrank = sorted(d1.items(), key = lambda x: x[1], reverse = True)
-    print sort_by_simrank    
+#    print sort_by_simrank    
     rel = []
     for x in sort_by_simrank:
       if x[0] in d2:
         rel += [d2[x[0]]]
       else:
         rel += [0]
-      print 'Rel', x[0], rel[-1]
+#      print 'Rel', x[0], rel[-1]
 
     dcg = self.ndcg(rel)
     idcg = self.ndcg(sorted(d2.values(), reverse = True))
     
-    print dcg, idcg, dcg/idcg
+#    print dcg, idcg, dcg/idcg
     sys.stdout.flush()
 
 #    if dcg/idcg == 1.0: print d1, d2
@@ -57,7 +57,7 @@ class NDCG:
     return rel
 
   def readScores(self, userScores, fileN):
-    print 'Reading scores from ', fileN
+#    print 'Reading scores from ', fileN
     sys.stdout.flush()
     f = open(fileN, 'r')
 
