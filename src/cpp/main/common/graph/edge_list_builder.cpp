@@ -7,71 +7,15 @@
 
 #include "edge_list_builder.h"
 
-EdgeListBuilder::EdgeListBuilder() : fileUtil_(15000000) {
+EdgeListBuilder::EdgeListBuilder() {
 	logger_ = &log4cpp::Category::getInstance(std::string("EdgeListBuilder"));
 	//container_->setMinnode(0);
 }
 
-/*void EdgeListBuilder::buildFromFileOld(string fname) {
-  FILE* input = fopen(fname.c_str(), "r");
-  if (NULL == input) {
-  	logger_->error("Could noot open edge list container %s", fname.c_str());
-  	return;
-  }
-
-  char ** line = fileUtil_.getBufferPointer();
-  vector<long> edges;
-
-  long lineNumber = 0;
-  while (fileUtil_.readLine(input)) {
-  	util_.readEdges(*line, &edges);
-  	for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
-  		container_->addEdge(lineNumber, *it);
-  	}
-    edges.clear();
-    ++lineNumber;
-    if (lineNumber % 1000000 == 0) {
-    	logger_->info("%ld number of rows read from adj matrix.", lineNumber);
-    }
-  }
-
-  container_->setFinish();
-  fclose(input);
-}
-
-void EdgeListBuilder::buildFromFileOld2(string fname) {
-  FILE* input = fopen(fname.c_str(), "r");
-  if (NULL == input) {
-  	logger_->error("Could noot open edge list container %s", fname.c_str());
-  	return;
-  }
-
-  const int ROW_LEN = 15000000;
-  char* buffer = new char[ROW_LEN];
-  long lineNumber = 0;
-  vector<long> edges;
-
-  while (fgets(buffer, ROW_LEN, input)) {
-  	util_.readEdges(buffer, &edges);
-  	for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
-  		container_->addEdge(lineNumber, *it);
-  	}
-    edges.clear();
-    ++lineNumber;
-    if (lineNumber % 1000000 == 0) {
-    	logger_->info("%ld number of rows read from adj matrix.", lineNumber);
-    }
-  }
-
-  container_->setFinish();
-  fclose(input);
-  delete[] buffer;
-}*/
-
 void EdgeListBuilder::buildFromFile(string fname) {
   FILE* input = fopen(fname.c_str(), "r");
   if (NULL == input) {
-  	logger_->error("Could noot open edge list container %s", fname.c_str());
+  	logger_->error("Could not open edge list container %s", fname.c_str());
   	return;
   }
 

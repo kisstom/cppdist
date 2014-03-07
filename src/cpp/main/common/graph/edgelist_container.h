@@ -25,11 +25,11 @@ public:
 	void initContainers();
 	void setFinish();
 	long neighborhoodSize(long nodeId);
-  bool containsEdge(long, long);
-  bool operator==(EdgelistContainer& rhs)const;
-  void flush(FILE* f);
+    bool containsEdge(long, long);
+    bool operator==(EdgelistContainer& rhs)const;
+    void flush(FILE* f);
 
-  long getEdgeAtPos(long, int);
+    long getEdgeAtPos(long, int);
 	long getMinnode() const;
 	long getNumberOfNodes() const;
 	long getNumberOfEdges() const;

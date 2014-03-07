@@ -27,14 +27,11 @@ class EdgeListBuilder {
 public:
 	EdgeListBuilder();
 	void buildFromFile(string fname);
-	//void buildFromFileOld(string fname);
-	//void buildFromFileOld2(string fname);
-	EdgelistContainer* getContainer();
+	//EdgelistContainer* getContainer();
 	void split(char* line, vector<long>& edges);
 	void setContainer(EdgelistContainer* container);
 private:
 	EdgelistContainer* container_;
-	FileUtil fileUtil_;
 	Util util_;
 	log4cpp::Category* logger_;
 };

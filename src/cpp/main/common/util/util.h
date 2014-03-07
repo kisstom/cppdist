@@ -10,8 +10,10 @@
 
 #include <string.h>
 #include <vector>
+#include <sstream>
 
 using std::vector;
+using std::stringstream;
 
 class Util {
 public:
@@ -20,6 +22,7 @@ public:
 	static void readEdges(char* line, vector<long>* edges);
 	static bool search(long elem, vector<long>::iterator, int size);
 	static bool hasNext(char*, size_t from);
+	static void split(char* line, vector<long>& edges);
 };
 
 
