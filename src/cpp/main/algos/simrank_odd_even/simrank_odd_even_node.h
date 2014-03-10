@@ -64,6 +64,7 @@ public:
 	vector<vector<long*> >* getFinishedPathes();
 	bool* getOddIter() {return &oddIter_;}
 	void initRandomGenerator(int, GeneratorType);
+	void setEdgeListBuilder(IEdgeListBuilder*);
 private:
 	Mutex nextNodesMutex_;
 	unordered_map<long, long> nextNodes_;
@@ -86,6 +87,7 @@ private:
 	// TODO ebbol mock-ot csinalni
 	PseudoRandom* random_;
 	EdgelistContainer* matrix_;
+	IEdgeListBuilder* edgeListbuilder_;
 
 	log4cpp::Category* logger_;
 };

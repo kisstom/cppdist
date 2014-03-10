@@ -1,6 +1,6 @@
-. test_dir.sh
-
 thisDir=$(dirname $0)
+. $thisDir/test_dir.sh
+
 
 cd $thisDir/../../../../cpp
 scons -j4

@@ -114,8 +114,17 @@ bool EdgelistContainer::operator==(EdgelistContainer& rhs) const {
 
 void EdgelistContainer::flush(FILE* f = stdout) {
   for (int i = 0; i < (int) start_edges_->size() - 1; ++i) {
-  	for (int j = start_edges_->at(i); j < start_edges_->at(i + 1); ++j) {
-  		fprintf(f, "%ld ", edge_list_->at(j));
+    if (start_edges_->at(i) == start_edges_->at(i + 1)) {
+      fprintf(f, "\n");
+      continue;
+    }
+
+    if (start_edges_->at(i) < start_edges_->at(i + 1)) {
+      fprintf(f, "%ld", edge_list_->at(start_edges_->at(i)));
+    }
+
+  	for (int j = start_edges_->at(i) + 1; j < start_edges_->at(i + 1); ++j) {
+  		fprintf(f, " %ld", edge_list_->at(j));
   	}
   	fprintf(f, "\n");
   }

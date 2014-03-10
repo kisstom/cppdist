@@ -7,5 +7,5 @@ env.Program('sorted_vector_node_matrix_test', ['sorted_vector_node_matrix_test.c
 env.Program('edge_list_builder_test', ['edge_list_builder_test.cpp'] + COMMON_OBJ)
 env.Program('test_sorted_vector_reader', ['test_sorted_vector_reader.cpp'] + COMMON_OBJ)
 env.Program('file_util_test', ['file_util_test.cpp'] + COMMON_OBJ)
-
-
+env.Program('edge_list_builder_tool', ['edge_list_builder_tool.cpp', '../../../main/common/graph/edgelist_container.o',
+'../../../main/common/graph/edge_list_builder.o', '../../../main/common/util/util.o', '../../../main/common/util/logger_factory.o'])

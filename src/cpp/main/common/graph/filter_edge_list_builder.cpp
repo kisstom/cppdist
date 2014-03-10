@@ -13,6 +13,7 @@ FilterEdgeListBuilder::FilterEdgeListBuilder() {
 
 void FilterEdgeListBuilder::buildFromFile(string fname) {
   FILE* input = fopen(fname.c_str(), "r");
+  //printf("Hava helllo nagila!");
   if (NULL == input) {
     logger_->error("Could not open edge list container %s", fname.c_str());
     return;
@@ -24,6 +25,7 @@ void FilterEdgeListBuilder::buildFromFile(string fname) {
   vector<long> edges;
   long edgeNum = 0;
   long lastEdgeNum = 0;
+
 
   while (fgets(line, ROW_LEN, input)) {
     if (isDeletedNode(lineNumber + container_->getMinnode())) {
@@ -44,6 +46,7 @@ void FilterEdgeListBuilder::buildFromFile(string fname) {
 
     for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
       if (isDeletedNode(*it)) continue;
+      logger_->info("Hava nagila!");
       container_->addEdge(lineNumber, *it);
       ++edgeNum;
     }

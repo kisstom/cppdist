@@ -11,3 +11,4 @@ env.Program('deserialize_result', ['deserialize_result.cpp', '../util/ConfigPars
 env.Program('merge', ['merge_results.cpp', 'merge.o'] )
 env.Program('check_line_length', ['check_line_length.cpp'] )
 env.Program('host_graph_creator_job', ['host_graph_creator_job.cpp', 'host_graph_creator.o'] )
+env.Program('node_remover', ['node_remover.cpp', '../graph/filter_edge_list_builder.o', '../util/util.o', '../util/logger_factory.o',  '../graph/edgelist_container.o'])

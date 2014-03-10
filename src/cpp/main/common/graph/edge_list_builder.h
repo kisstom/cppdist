@@ -17,22 +17,24 @@ using std::vector;
 #include "edgelist_container.h"
 #include "../util/file_util.h"
 #include "../util/util.h"
+#include "iedge_list_builder.h"
 #include <log4cpp/Category.hh>
 #include <sstream>
 #include <algorithm>
 
+
 using std::stringstream;
 
-class EdgeListBuilder {
+class EdgeListBuilder : public IEdgeListBuilder {
 public:
 	EdgeListBuilder();
 	void buildFromFile(string fname);
 	//EdgelistContainer* getContainer();
-	void split(char* line, vector<long>& edges);
-	void setContainer(EdgelistContainer* container);
+	//void split(char* line, vector<long>& edges);
+	//void setContainer(EdgelistContainer* container);
 private:
-	EdgelistContainer* container_;
-	Util util_;
+	//EdgelistContainer* container_;
+	//Util util_;
 	log4cpp::Category* logger_;
 };
 

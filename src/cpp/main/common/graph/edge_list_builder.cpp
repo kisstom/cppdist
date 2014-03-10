@@ -35,7 +35,7 @@ void EdgeListBuilder::buildFromFile(string fname) {
   	}
 
   	line[strlen(line)-1] = '\0';
-  	split(line, edges);
+  	Util::split(line, edges);
 
   	std::sort (edges.begin(), edges.end());
 
@@ -55,7 +55,7 @@ void EdgeListBuilder::buildFromFile(string fname) {
   delete[] line;
 }
 
-void EdgeListBuilder::split(char* line, vector<long>& edges) {
+/*void EdgeListBuilder::split(char* line, vector<long>& edges) {
   edges.clear();
   stringstream ss(stringstream::in | stringstream::out);
   ss << line;
@@ -65,8 +65,9 @@ void EdgeListBuilder::split(char* line, vector<long>& edges) {
     ss >> edge;
     edges.push_back(edge);
   }
-}
-void EdgeListBuilder::setContainer(EdgelistContainer* container) {
+}*/
+
+/*void EdgeListBuilder::setContainer(EdgelistContainer* container) {
 	container_ = container;
-}
+}*/
 
