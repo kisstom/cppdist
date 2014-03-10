@@ -23,11 +23,11 @@ public class SortedTreeComputerMap extends
     }
     
     int fpIndex = Integer.parseInt(spl[0]);
-    long root = Long.parseLong(spl[1]);
+    long root = Long.parseLong(spl[spl.length - 1]);
         
-    for (int i = 2; i < spl.length - 1; ++i) {
-      context.write(new TreeKey(fpIndex, root, i - 2, Long.parseLong(spl[i]),
-              Long.parseLong(spl[i + 1])), new Edge(i - 2, Long.parseLong(spl[i]),
+    for (int i = 1; i < spl.length - 2; ++i) {
+      context.write(new TreeKey(fpIndex, root, i - 1, Long.parseLong(spl[i]),
+              Long.parseLong(spl[i + 1])), new Edge(i - 1, Long.parseLong(spl[i]),
               Long.parseLong(spl[i + 1])));
     }
   }

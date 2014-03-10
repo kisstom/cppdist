@@ -9,10 +9,12 @@
 #define NODE_FACTORY_H_
 
 #include "../common/util/cfg_reader.h"
+#include "../common/graph/filter_edge_list_builder.h"
 #include "node.h"
 #include "simrank_update/simrank_update_node.h"
 #include "simrank_store_first/simrank_store_first_node.h"
 #include "simrank_odd_even/simrank_odd_even_node.h"
+
 #include <log4cpp/Category.hh>
 #include "inode_factory.h"
 #include "node_factory_helper.h"

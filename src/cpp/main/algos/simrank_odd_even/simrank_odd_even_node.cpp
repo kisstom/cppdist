@@ -245,12 +245,11 @@ void SimrankOddEvenNode::initData(string partName) {
 	matrix_ = new EdgelistContainer();
 	matrix_->initContainers();
 	// Igy egyszerubb beolvasni, de igazabol egy hack.
-	matrix_->setMinnode(0);
-
-	EdgeListBuilder builder;
-	builder.setContainer(matrix_);
-	builder.buildFromFile(partName);
 	matrix_->setMinnode(minNode_);
+
+	edgeListbuilder_->setContainer(matrix_);
+	edgeListbuilder_->buildFromFile(partName);
+	//matrix_->setMinnode(minNode_);
 
 	logger_->info("matrix data read");
 	if (fpStartFname_.compare("NULL") == 0) {
@@ -349,5 +348,9 @@ vector<list<long*> >* SimrankOddEvenNode::getPathes() {
 
 vector<vector<long*> >* SimrankOddEvenNode::getFinishedPathes() {
 	return &finishedPathes_;
+}
+
+void SimrankOddEvenNode::setEdgeListBuilder(IEdgeListBuilder* builder) {
+  edgeListbuilder_ = builder;
 }
 

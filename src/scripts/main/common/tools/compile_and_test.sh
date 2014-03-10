@@ -1,4 +1,6 @@
 thisDir=$(dirname $0)
+. $thisDir/test_dir.sh
+
 
 cd $thisDir/../../../../cpp
 scons -j4
@@ -55,6 +57,9 @@ if [ $? != 0 ]; then
   echo Test failed. Exiting.
   exit
 fi
+
+
+test_dir ./bin/test/algos/simrank_odd_even/
 
 echo "File system tests passed."
 echo Successfully done building and testing.

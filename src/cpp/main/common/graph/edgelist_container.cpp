@@ -37,12 +37,23 @@ EdgelistContainer::~EdgelistContainer() {
 }
 
 void EdgelistContainer::addEdge(long nodeId, long edge) {
+  //long nodeIndex = nodeId;
+  long start = 0;
+
+  while (nodeId >= (long) start_edges_->size()) {
+    start = (long) edge_list_->size();
+  	start_edges_->push_back(start);
+  }
+  edge_list_->push_back(edge);
+}
+
+void EdgelistContainer::addEdgeWithMinnode(long nodeId, long edge) {
   long nodeIndex = nodeId - minnode_;
   long start = 0;
 
   while (nodeIndex >= (long) start_edges_->size()) {
     start = (long) edge_list_->size();
-  	start_edges_->push_back(start);
+    start_edges_->push_back(start);
   }
   edge_list_->push_back(edge);
 }
@@ -114,8 +125,17 @@ bool EdgelistContainer::operator==(EdgelistContainer& rhs) const {
 
 void EdgelistContainer::flush(FILE* f = stdout) {
   for (int i = 0; i < (int) start_edges_->size() - 1; ++i) {
-  	for (int j = start_edges_->at(i); j < start_edges_->at(i + 1); ++j) {
-  		fprintf(f, "%ld ", edge_list_->at(j));
+    if (start_edges_->at(i) == start_edges_->at(i + 1)) {
+      fprintf(f, "\n");
+      continue;
+    }
+
+    if (start_edges_->at(i) < start_edges_->at(i + 1)) {
+      fprintf(f, "%ld", edge_list_->at(start_edges_->at(i)));
+    }
+
+  	for (int j = start_edges_->at(i) + 1; j < start_edges_->at(i + 1); ++j) {
+  		fprintf(f, " %ld", edge_list_->at(j));
   	}
   	fprintf(f, "\n");
   }

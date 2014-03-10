@@ -65,4 +65,15 @@ bool Util::search(long elem, vector<long>::iterator it, int size) {
 	return res != (it + size);
 }
 
+void Util::split(char* line, vector<long>& edges) {
+   edges.clear();
+   stringstream ss(stringstream::in | stringstream::out);
+   ss << line;
+   long edge;
+
+   while (ss.good()) {
+     ss >> edge;
+     edges.push_back(edge);
+   }
+ }
 
