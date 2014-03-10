@@ -20,6 +20,7 @@ public:
 	void setStartEdges(vector<long>*);
 	void setEdgeList(vector<long>*);
 	void addEdge(long nodeId, long edge);
+	void addEdgeWithMinnode(long nodeId, long edge);
 	void setMinnode(long);
 	bool shouldDeleteContainers();
 	void initContainers();

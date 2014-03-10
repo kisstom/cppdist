@@ -26,7 +26,6 @@ void FilterEdgeListBuilder::buildFromFile(string fname) {
   long edgeNum = 0;
   long lastEdgeNum = 0;
 
-
   while (fgets(line, ROW_LEN, input)) {
     if (isDeletedNode(lineNumber + container_->getMinnode())) {
       ++lineNumber;

@@ -37,12 +37,23 @@ EdgelistContainer::~EdgelistContainer() {
 }
 
 void EdgelistContainer::addEdge(long nodeId, long edge) {
+  //long nodeIndex = nodeId;
+  long start = 0;
+
+  while (nodeId >= (long) start_edges_->size()) {
+    start = (long) edge_list_->size();
+  	start_edges_->push_back(start);
+  }
+  edge_list_->push_back(edge);
+}
+
+void EdgelistContainer::addEdgeWithMinnode(long nodeId, long edge) {
   long nodeIndex = nodeId - minnode_;
   long start = 0;
 
   while (nodeIndex >= (long) start_edges_->size()) {
     start = (long) edge_list_->size();
-  	start_edges_->push_back(start);
+    start_edges_->push_back(start);
   }
   edge_list_->push_back(edge);
 }

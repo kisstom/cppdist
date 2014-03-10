@@ -83,19 +83,19 @@ TEST(EdgeListBuilderTest, readMatrix2) {
 	expected->initContainers();
 	expected->setMinnode(0);
 
-	expected->addEdge(0, 1);
-	expected->addEdge(0, 2);
-	expected->addEdge(0, 3);
-	expected->addEdge(0, 4);
-	expected->addEdge(1, 5);
-	expected->addEdge(1, 6);
+	expected->addEdgeWithMinnode(0, 1);
+	expected->addEdgeWithMinnode(0, 2);
+	expected->addEdgeWithMinnode(0, 3);
+	expected->addEdgeWithMinnode(0, 4);
+	expected->addEdgeWithMinnode(1, 5);
+	expected->addEdgeWithMinnode(1, 6);
 
-	expected->addEdge(4, 7);
-	expected->addEdge(4, 8);
-	expected->addEdge(5, 9);
-	expected->addEdge(5, 11);
-	expected->addEdge(6, 23);
-	expected->addEdge(6, 45);
+	expected->addEdgeWithMinnode(4, 7);
+	expected->addEdgeWithMinnode(4, 8);
+	expected->addEdgeWithMinnode(5, 9);
+	expected->addEdgeWithMinnode(5, 11);
+	expected->addEdgeWithMinnode(6, 23);
+	expected->addEdgeWithMinnode(6, 45);
 
 	expected->setFinish();
 	//cont->flush(stdout);

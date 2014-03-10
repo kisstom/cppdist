@@ -66,11 +66,22 @@ SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
 		unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   SimrankOddEvenNode* node = helper.initSimrankOddEvenNode(params);
+  IEdgeListBuilder* edgeListBuilder;
+
+  if (params->find("FILTER_NODE_FILE") == params->end()) {
+    edgeListBuilder = new EdgeListBuilder;
+  } else {
+    FilterEdgeListBuilder* filterEdgeListBuilder = new FilterEdgeListBuilder;
+    string nodesToDeleteFile = (*params)["FILTER_NODE_FILE"];
+    filterEdgeListBuilder->readNodesToDelete(nodesToDeleteFile);
+    edgeListBuilder = filterEdgeListBuilder;
+  }
 
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setEdgeListBuilder(edgeListBuilder);
   node->setOutputFile(string(outputFileN));
   node->setFingerPrintFile((*params)["FP_START_NAME"]);
-	node->initData((*params)["INPUT_PARTITION"]);
+  node->initData((*params)["INPUT_PARTITION"]);
   return node;
 }

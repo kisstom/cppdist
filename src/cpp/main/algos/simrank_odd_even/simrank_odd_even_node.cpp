@@ -245,11 +245,11 @@ void SimrankOddEvenNode::initData(string partName) {
 	matrix_ = new EdgelistContainer();
 	matrix_->initContainers();
 	// Igy egyszerubb beolvasni, de igazabol egy hack.
-	matrix_->setMinnode(0);
+	matrix_->setMinnode(minNode_);
 
 	edgeListbuilder_->setContainer(matrix_);
 	edgeListbuilder_->buildFromFile(partName);
-	matrix_->setMinnode(minNode_);
+	//matrix_->setMinnode(minNode_);
 
 	logger_->info("matrix data read");
 	if (fpStartFname_.compare("NULL") == 0) {

@@ -247,21 +247,21 @@ void SortedVectorNodeMatrix::storeInUpdatedMatrix(vector<long>::iterator updated
 		if (updated == updated_end && prev == prev_end) {
 			break;
 		} else if (updated == updated_end) {
-			deletedMatrix_->addEdge(nodeId, *prev++);
+			deletedMatrix_->addEdgeWithMinnode(nodeId, *prev++);
 			continue;
 		} else if (prev == prev_end) {
-			newlyAddedMatrix_->addEdge(nodeId, *updated++);
+			newlyAddedMatrix_->addEdgeWithMinnode(nodeId, *updated++);
 			continue;
 		}
 
 		if (*prev < *updated) {
-			deletedMatrix_->addEdge(nodeId, *prev);
+			deletedMatrix_->addEdgeWithMinnode(nodeId, *prev);
 			++prev;
 		} else if (*prev > *updated) {
-			newlyAddedMatrix_->addEdge(nodeId, *updated);
+			newlyAddedMatrix_->addEdgeWithMinnode(nodeId, *updated);
 			++updated;
 		} else {
-			unchangedMatrix_->addEdge(nodeId, *prev);
+			unchangedMatrix_->addEdgeWithMinnode(nodeId, *prev);
 			++prev;
 			++updated;
 		}

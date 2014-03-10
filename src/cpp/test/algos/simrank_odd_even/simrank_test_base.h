@@ -51,7 +51,7 @@ protected:
   	container->initContainers();
   	for (int start = 0; start < (int) part.size(); ++start) {
   		for (int i = 0; i < part[start].size(); ++i) {
-  			container->addEdge(start + minNode, part[start][i]);
+  			container->addEdgeWithMinnode(start + minNode, part[start][i]);
   		}
 
   		for (int pathI = 0; pathI < numPathes_; ++pathI) {
