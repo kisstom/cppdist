@@ -45,7 +45,6 @@ void FilterEdgeListBuilder::buildFromFile(string fname) {
 
     for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
       if (isDeletedNode(*it)) continue;
-      logger_->info("Hava nagila!");
       container_->addEdge(lineNumber, *it);
       ++edgeNum;
     }
