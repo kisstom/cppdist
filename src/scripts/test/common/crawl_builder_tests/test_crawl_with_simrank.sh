@@ -10,7 +10,7 @@ numnode=10
 maxnodeToKeep=11
 nextMinnode=16
 
-$this_dir/../../../../bin/test/useFileSystem/common/crawl_edge_list_builder_with_simrank $input $output $minnode $numnode $maxnodeToKeep $nextMinnode
+$this_dir/../../../../bin/test/useFileSystem/common/edge_list_builder_tests/crawl_edge_list_builder_with_simrank $input $output $minnode $numnode $nextMinnode $maxnodeToKeep 
 
 output_diff=`diff $expected_file $output`
 
