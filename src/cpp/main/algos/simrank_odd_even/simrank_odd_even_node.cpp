@@ -240,27 +240,35 @@ void SimrankOddEvenNode::senderOdd() {
 void SimrankOddEvenNode::initFromMaster(string) {
 }
 
+void SimrankOddEvenNode::initEdgeListContainer(string partName) {
+  logger_->info("Initing edge list container.");
+
+  matrix_ = new EdgelistContainer();
+  matrix_->initContainers();
+  matrix_->setMinnode(minNode_);
+
+  edgeListbuilder_->setContainer(matrix_);
+  edgeListbuilder_->buildFromFile(partName);
+
+  logger_->info("Edge list container inited.");
+}
+
+void SimrankOddEvenNode::initFingerprints() {
+  logger_->info("Starting fingerprint read.");
+  if (fpStartFname_.compare("NULL") == 0) {
+    initStartForAll(minNode_, nextMinNode_, numNodes_, numFingerprints_);
+  } else {
+    FileUtil util(1024);
+    util.readFingerprintStart(minNode_, nextMinNode_, numFingerprints_, &fingerprints_,
+      fpStartFname_, pathLen_ + 1);
+  }
+  finishedPathes_.resize(fingerprints_.size());
+  logger_->info("Fingerprints read.");
+}
+
 void SimrankOddEvenNode::initData(string partName) {
-	logger_->info("Initing data.");
-	matrix_ = new EdgelistContainer();
-	matrix_->initContainers();
-	// Igy egyszerubb beolvasni, de igazabol egy hack.
-	matrix_->setMinnode(minNode_);
-
-	edgeListbuilder_->setContainer(matrix_);
-	edgeListbuilder_->buildFromFile(partName);
-	//matrix_->setMinnode(minNode_);
-
-	logger_->info("matrix data read");
-	if (fpStartFname_.compare("NULL") == 0) {
-		initStartForAll(minNode_, nextMinNode_, numNodes_, numFingerprints_);
-	} else {
-		FileUtil util(1024);
-	  util.readFingerprintStart(minNode_, nextMinNode_, numFingerprints_, &fingerprints_,
-			fpStartFname_, pathLen_ + 1);
-	}
-	finishedPathes_.resize(fingerprints_.size());
-	logger_->info("fingerprint read");
+  initEdgeListContainer(partName);
+  initFingerprints();
 }
 
 void SimrankOddEvenNode::initStartForAll(long from, long to, long numnodes, short numFingerPrints) {

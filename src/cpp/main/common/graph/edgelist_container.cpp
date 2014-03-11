@@ -37,7 +37,6 @@ EdgelistContainer::~EdgelistContainer() {
 }
 
 void EdgelistContainer::addEdge(long nodeId, long edge) {
-  //long nodeIndex = nodeId;
   long start = 0;
 
   while (nodeId >= (long) start_edges_->size()) {

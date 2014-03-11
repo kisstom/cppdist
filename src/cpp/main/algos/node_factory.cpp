@@ -26,27 +26,6 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 	return node;
 }
 
-/*SimrankUpdateNode* NodeFactory::createSimrankUpdateNode(unordered_map<string, string>* params) {
-  char fp_file[1024];
-  char old_slavery_config_file[1024];
-  char outputFileN[1024];
-  int numPathes;
-
-  strcpy(fp_file, (*params)["FP_FILE"].c_str());
-  strcpy(old_slavery_config_file, (*params)["OLD_SLAVERY_CFG"].c_str());
-
-  sscanf((*params)["NUM_PATHES"].c_str(), "%d", &numPathes);
-  sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
-  FILE* outputFile = fopen(outputFileN, "w");
-  if (outputFile == NULL) {
-  	logger_->error("ERROR opening file %s", outputFileN);
-  	return NULL;
-  }
-
-  SimrankUpdateNode* node = new SimrankUpdateNode(fp_file, old_slavery_config_file, numPathes, outputFile);
-  return node;
-}*/
-
 SimrankStoreFirstNode* NodeFactory::createSimrankStoreFirstNode(
 		unordered_map<string, string>* params) {
   string fpStartName = (*params)["FP_START_NAME"];
@@ -68,13 +47,23 @@ SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
   SimrankOddEvenNode* node = helper.initSimrankOddEvenNode(params);
   IEdgeListBuilder* edgeListBuilder;
 
-  if (params->find("FILTER_NODE_FILE") == params->end()) {
+  if (params->find("USE_PREPROCESS") == params->end()) {
     edgeListBuilder = new EdgeListBuilder;
   } else {
-    FilterEdgeListBuilder* filterEdgeListBuilder = new FilterEdgeListBuilder;
-    string nodesToDeleteFile = (*params)["FILTER_NODE_FILE"];
-    filterEdgeListBuilder->readNodesToDelete(nodesToDeleteFile);
-    edgeListBuilder = filterEdgeListBuilder;
+    if ((*params)["USE_PREPROCESS"].compare("CRAWL") == 0) {
+      long maxNodeToKeep;
+      sscanf((*params)["MAX_NODE_TO_KEEP"].c_str(), "%ld", &maxNodeToKeep);
+      CrawlEdgeListBuilder*  crawlEdgeListBuilder = new CrawlEdgeListBuilder(maxNodeToKeep);
+      edgeListBuilder = crawlEdgeListBuilder;
+    } else if ((*params)["USE_PREPROCESS"].compare("FILTER") == 0) {
+      FilterEdgeListBuilder* filterEdgeListBuilder = new FilterEdgeListBuilder;
+      string nodesToDeleteFile = (*params)["FILTER_NODE_FILE"];
+      filterEdgeListBuilder->readNodesToDelete(nodesToDeleteFile);
+      edgeListBuilder = filterEdgeListBuilder;
+    } else {
+      logger_->error("ERROR. Unknown type of preprcessing %s.\n", (*params)["USE_PREPROCESS"].c_str());
+      return NULL;
+    }
   }
 
   char outputFileN[1024];

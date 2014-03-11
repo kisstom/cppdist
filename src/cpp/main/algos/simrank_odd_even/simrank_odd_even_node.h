@@ -53,6 +53,8 @@ public:
 	void storeRequest(long from, short partIndex);
 	void storeRequestedEdge(long from, long to);
 	int hashToEdgeIndex(int hash, int length);
+	void initFingerprints();
+	void initEdgeListContainer(string partName);
 
 	void setFingerprints(vector<list<long*> >);
 	void setMatrix(EdgelistContainer* matrix);
