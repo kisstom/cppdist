@@ -6,6 +6,8 @@ class NDCG:
     self.file2 = file2
     self.topk = topk
     self.cum_ndcg = 0.0
+    self.userNotInOther = 0
+
  
   def run(self):
     score1 = dict()
@@ -17,11 +19,11 @@ class NDCG:
     print 'Counting ndcg'
     sys.stdout.flush()
     for u in users:
-      try:
-        #print u
-        self.ndcgForOneUser(score1[u], score2[u])
-      except KeyError:
-        print 'error'
+      if u not in score2.keys():
+        self.userNotInOther += 1
+        continue
+
+      self.ndcgForOneUser(score1[u], score2[u])
 
     print 'Average ndcg: %f'%(self.cum_ndcg / len(users))
 
@@ -81,3 +83,4 @@ if __name__ == "__main__":
   ndcg = NDCG(file1, file2, topk)
   ndcg.run()
 
+  print 'Number of users not found in other %d'%ndcg.userNotInOther

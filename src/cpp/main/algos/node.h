@@ -16,6 +16,7 @@ class Algo;
 
 using std::string;
 
+
 class Node {
 public:
 	virtual void beforeIteration() = 0;
