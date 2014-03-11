@@ -28,3 +28,4 @@ fi
 
 echo "FP tree counter test passed."
 rm -rf "$outputFS"
+exit 0

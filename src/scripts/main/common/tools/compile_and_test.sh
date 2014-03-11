@@ -13,6 +13,10 @@ fi
 cd ..
 for x in `find ./bin/test/common -name *test* |grep -v ".*\.o"` 
 do
+  if [ -d $x ]; then
+    continue
+  fi
+    
   $x
   if [ $? != 0 ]; then
     echo Test failed. Exiting.
@@ -42,6 +46,10 @@ fsTestFiles=`find  ./bin/test/useFileSystem/* -name "*test*"| grep -v ".*\.o"`
 
 for x in $fsTestFiles
 do
+  if [ -d $x ]; then
+    continue
+  fi
+
   $x $resourcePath
   if [ $? != 0 ]; then
     echo $x test failed. Exiting.
@@ -60,6 +68,7 @@ fi
 
 
 test_dir ./bin/test/algos/simrank_odd_even/
+test_scripts ./scripts/test/
 
 echo "File system tests passed."
 echo Successfully done building and testing.
