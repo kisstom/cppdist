@@ -10,6 +10,7 @@
 
 #include "../common/util/cfg_reader.h"
 #include "../common/graph/filter_edge_list_builder.h"
+#include "../common/graph/crawl_edge_list_builder.h"
 #include "node.h"
 #include "simrank_update/simrank_update_node.h"
 #include "simrank_store_first/simrank_store_first_node.h"
@@ -26,7 +27,6 @@ public:
 private:
 	SimrankStoreFirstNode* createSimrankStoreFirstNode(unordered_map<string, string>* params);
 	SimrankOddEvenNode* createSimrankOddEvenNode(unordered_map<string, string>* params);
-	//SimrankUpdateNode* createSimrankUpdateNode(unordered_map<string, string>* params);
 	log4cpp::Category* logger_;
 };
 

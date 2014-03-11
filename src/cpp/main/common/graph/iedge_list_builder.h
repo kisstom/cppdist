@@ -23,6 +23,10 @@ public:
     container_ = container;
   }
 
+  EdgelistContainer* getContainer() {
+    return container_;
+  }
+
   virtual ~IEdgeListBuilder() {}
 protected:
   EdgelistContainer* container_;
