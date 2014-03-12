@@ -32,22 +32,19 @@ class NDCG:
     idcg = 0.0
     
     sort_by_simrank = sorted(d1.items(), key = lambda x: x[1], reverse = True)
-#    print sort_by_simrank    
     rel = []
     for x in sort_by_simrank:
       if x[0] in d2:
         rel += [d2[x[0]]]
+#    rel += [1]
       else:
         rel += [0]
-#      print 'Rel', x[0], rel[-1]
 
     dcg = self.ndcg(rel)
     idcg = self.ndcg(sorted(d2.values(), reverse = True))
     
-#    print dcg, idcg, dcg/idcg
     sys.stdout.flush()
 
-#    if dcg/idcg == 1.0: print d1, d2
     self.cum_ndcg += dcg / idcg
 
   def ndcg(self, rels):
@@ -59,7 +56,6 @@ class NDCG:
     return rel
 
   def readScores(self, userScores, fileN):
-#    print 'Reading scores from ', fileN
     sys.stdout.flush()
     f = open(fileN, 'r')
 
@@ -67,7 +63,8 @@ class NDCG:
       spl = line.split()
       u1 = long(spl[0])
       u2 = long(spl[1])
-      sc = float(spl[2])
+#     sc = float(spl[2])
+      sc = 1.0
 
       if u1 not in userScores.keys():
         userScores[u1] = dict()
