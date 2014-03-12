@@ -10,3 +10,16 @@ function test_dir {
     echo -e "\n\n--------------------------------------------------"
   done
 }
+
+function test_scripts {
+  my_dir=$1
+  for x in `find $my_dir -name "*test*"|grep  "sh"`
+  do
+    $x
+    if [ $? != 0 ]; then
+      echo Test failed. Exiting.
+      exit 1
+    fi
+    echo -e "\n\n--------------------------------------------------"
+  done
+}

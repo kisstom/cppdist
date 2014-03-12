@@ -36,7 +36,6 @@ class NDCG:
     for x in sort_by_simrank:
       if x[0] in d2:
         rel += [d2[x[0]]]
-#    rel += [1]
       else:
         rel += [0]
 
@@ -44,7 +43,6 @@ class NDCG:
     idcg = self.ndcg(sorted(d2.values(), reverse = True))
     
     sys.stdout.flush()
-
     self.cum_ndcg += dcg / idcg
 
   def ndcg(self, rels):

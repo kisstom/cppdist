@@ -19,4 +19,4 @@ do
 done
 
 rm -rf "$work_dir"
-
+exit 0
