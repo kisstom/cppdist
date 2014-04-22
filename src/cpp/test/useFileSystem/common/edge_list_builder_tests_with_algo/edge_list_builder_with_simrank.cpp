@@ -28,6 +28,9 @@ int main (int argc, char* argv[]) {
   FILE* result = fopen(outputFile, "w");
   EdgelistContainer* container = builder.getContainer();
   container->flush(result);
+  std::cout << "number of nodes " << container->getNumberOfNodes() << "\n";
+
+
   fclose(result);
 
   return 0;

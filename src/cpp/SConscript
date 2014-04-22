@@ -44,6 +44,7 @@ SConscript([
     'test/dmoz/SConscript',
     'test/useFileSystem/common/SConscript',
     'test/useFileSystem/common/edge_list_builder_tests/SConscript',
+    'test/useFileSystem/common/edge_list_builder_tests_with_algo/SConscript',
     'test/shtest/SConscript',
     ],
     exports = ['env'])
