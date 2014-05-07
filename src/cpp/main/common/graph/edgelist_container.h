@@ -21,16 +21,17 @@ public:
 	void setEdgeList(vector<long>*);
 	void addEdge(long nodeId, long edge);
 	void addEdgeWithMinnode(long nodeId, long edge);
+	void addSink(long);
 	void setMinnode(long);
 	bool shouldDeleteContainers();
 	void initContainers();
 	void setFinish();
 	long neighborhoodSize(long nodeId);
-    bool containsEdge(long, long);
-    bool operator==(EdgelistContainer& rhs)const;
-    void flush(FILE* f);
+  bool containsEdge(long, long);
+  bool operator==(EdgelistContainer& rhs)const;
+  void flush(FILE* f);
 
-    long getEdgeAtPos(long, int);
+  long getEdgeAtPos(long, int);
 	long getMinnode() const;
 	long getNumberOfNodes() const;
 	long getNumberOfEdges() const;
