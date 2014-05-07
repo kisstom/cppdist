@@ -1,3 +1,5 @@
+#!/bin/bash -eu
+
 this_dir="$(dirname "$0")"
 input=$this_dir/../../../../../resources/crawl_test/part2
 expected_file=$this_dir/../../../../../resources/crawl_test/expectedPart2
@@ -10,7 +12,7 @@ numnode=10
 maxnodeToKeep=11
 nextMinnode=16
 
-$this_dir/../../../../bin/test/useFileSystem/common/edge_list_builder_tests/crawl_edge_list_builder_with_simrank $input $output $minnode $numnode $nextMinnode $maxnodeToKeep 
+$this_dir/../../../../bin/test/useFileSystem/common/edge_list_builder_tests_with_algo/crawl_edge_list_builder_with_simrank $input $output $minnode $numnode $nextMinnode $maxnodeToKeep 
 
 output_diff=`diff $expected_file $output`
 

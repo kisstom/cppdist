@@ -4,6 +4,6 @@ env.Object(Glob('*.cpp'))
 
 GRAPH_COMPONENTS = Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/util/*.o')
 
-env.Program('crawl_edge_list_builder', ['crawl_edge_list_builder.cpp'] + GRAPH_COMPONENTS)
-env.Program('filter_edge_list_builder', ['filter_edge_list_builder.cpp'] + GRAPH_COMPONENTS)
-env.Program('edge_list_builder', ['edge_list_builder.cpp'] + GRAPH_COMPONENTS)
+env.Program('crawl_edge_list_builder_main', ['crawl_edge_list_builder_main.cpp'] + GRAPH_COMPONENTS)
+env.Program('filter_edge_list_builder_main', ['filter_edge_list_builder_main.cpp'] + GRAPH_COMPONENTS)
+env.Program('edge_list_builder_main', ['edge_list_builder_main.cpp'] + GRAPH_COMPONENTS)
