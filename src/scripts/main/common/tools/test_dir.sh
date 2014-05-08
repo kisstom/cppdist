@@ -1,25 +1,45 @@
+#!/bin/bash -eu
+
 function test_dir {
+# set -o pipefail
+
   my_dir=$1
-  for x in `find $my_dir -name "*test*"|grep -v ".*\.o"`
+  
+  params=""
+  if [ "$#" == 2 ]; then
+    params=$2
+  fi
+
+  files=`find $my_dir -name "*test*"|grep -v ".*\.o"| grep -v "swp"`
+
+  for x in $files
   do
-    $x
-    if [ $? != 0 ]; then
-      echo Test failed. Exiting.
-      exit 1
+    if [ -d $x ]; then
+      continue
     fi
-    echo -e "\n\n--------------------------------------------------"
+
+    $x $params
+    echo -e "--------------------------------------------------\n\n"
   done
 }
 
 function test_scripts {
   my_dir=$1
-  for x in `find $my_dir -name "*test*"|grep  "sh"`
+
+  params=""
+  if [ "$#" == 2 ]; then
+    params=$2
+  fi
+  
+  files=`find $my_dir -name "*test*"|grep  "sh"|grep -v "swp"`
+
+  for x in $files
   do
-    $x
-    if [ $? != 0 ]; then
-      echo Test failed. Exiting.
-      exit 1
+    if [ -d $x ]; then
+      continue
     fi
-    echo -e "\n\n--------------------------------------------------"
+
+    $x $params
+    echo -e "--------------------------------------------------\n\n"
   done
 }

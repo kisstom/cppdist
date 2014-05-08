@@ -28,8 +28,8 @@ void EdgeListBuilder::buildFromFile(string fname) {
 
   while (fgets(line, ROW_LEN, input)) {
   	lastEdgeNum = edgeNum;
-
   	if (strlen(line) == 1) {
+  		container_->addSink(lineNumber);
   		++lineNumber;
   		continue;
   	}

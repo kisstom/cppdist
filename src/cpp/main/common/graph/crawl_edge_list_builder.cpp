@@ -34,6 +34,7 @@ void CrawlEdgeListBuilder::buildFromFile(string fname) {
     }
 
     if (strlen(line) == 1) {
+      container_->addSink(lineNumber);
       ++lineNumber;
       continue;
     }

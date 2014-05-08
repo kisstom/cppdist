@@ -46,6 +46,25 @@ void EdgelistContainer::addEdge(long nodeId, long edge) {
   edge_list_->push_back(edge);
 }
 
+void EdgelistContainer::addSink(long nodeId) {
+  long start = 0;
+
+  while (nodeId >= (long) start_edges_->size()) {
+    start = (long) edge_list_->size();
+    start_edges_->push_back(start);
+  }
+}
+
+void EdgelistContainer::addSinkWithMinnode(long nodeId) {
+  long nodeIndex = nodeId - minnode_;
+  long start = 0;
+
+  while (nodeIndex >= (long) start_edges_->size()) {
+    start = (long) edge_list_->size();
+    start_edges_->push_back(start);
+  }
+}
+
 void EdgelistContainer::addEdgeWithMinnode(long nodeId, long edge) {
   long nodeIndex = nodeId - minnode_;
   long start = 0;

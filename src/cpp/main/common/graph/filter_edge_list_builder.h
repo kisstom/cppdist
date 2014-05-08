@@ -16,7 +16,6 @@
 #include "iedge_list_builder.h"
 #include "../util/util.h"
 
-
 using std::fstream;
 using std::set;
 
@@ -30,7 +29,6 @@ private:
       return nodesShouldDelete_.find(node) != nodesShouldDelete_.end();
     }
 
-    //EdgelistContainer* container_;
     log4cpp::Category* logger_;
     set<long> nodesShouldDelete_;
 };

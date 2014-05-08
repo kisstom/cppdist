@@ -1,3 +1,5 @@
+#!/bin/bash -eu
+
 thisDir="$(cd "$(dirname $0)" && pwd)"
 
 hadoop_dir=/home/kisstom/git/cumulonimbus/repo/hadoop-0.20.2/hadoop-0.20.2
@@ -8,7 +10,6 @@ inputFSHad=$thisDir/../../../../resources/small_no_loop.path10.sort.rootback
 
 inputHad=file:///$inputFSHad
 
-echo $input
 outputFS=$thisDir/tmp.fptree
 output=file:///$outputFS
 
