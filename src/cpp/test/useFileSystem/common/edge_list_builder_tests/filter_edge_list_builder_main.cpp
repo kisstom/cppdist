@@ -12,9 +12,10 @@
 int main (int argc, char* argv[]) {
   FilterEdgeListBuilder builder;
   EdgelistContainer container;
+  long minnode = atol(argv[4]);
 
   container.initContainers();
-  container.setMinnode(0);
+  container.setMinnode(minnode);
   builder.readNodesToDelete(argv[1]);
   builder.setContainer(&container);
   builder.buildFromFile(argv[2]);

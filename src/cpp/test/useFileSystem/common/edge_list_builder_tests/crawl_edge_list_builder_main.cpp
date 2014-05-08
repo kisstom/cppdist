@@ -12,9 +12,10 @@
 int main (int argc, char* argv[]) {
   CrawlEdgeListBuilder builder(atol(argv[1]));
   EdgelistContainer container;
+  long minnode = atol(argv[4]);
 
   container.initContainers();
-  container.setMinnode(0);
+  container.setMinnode(minnode);
   builder.setContainer(&container);
   builder.buildFromFile(argv[2]);
 

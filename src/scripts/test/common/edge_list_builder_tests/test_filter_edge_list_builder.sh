@@ -6,11 +6,12 @@ this_dir="$(dirname "$0")"
 input=$this_dir/../../../../../resources/edge_list_builder_test/graph
 filterNodeFile=$this_dir/../../../../../resources/edge_list_builder_test/filterNode
 expectedFiltered=$this_dir/../../../../../resources/edge_list_builder_test/expectedFiltered
+minnode=10
 
 work_dir=`mktemp -d`
 output=$work_dir/outputGraph
 
-$this_dir/../../../../bin/test/useFileSystem/common/edge_list_builder_tests/filter_edge_list_builder_main $filterNodeFile  $input $output 
+$this_dir/../../../../bin/test/useFileSystem/common/edge_list_builder_tests/filter_edge_list_builder_main $filterNodeFile  $input $output $minnode
 output_diff=`diff $expectedFiltered $output`
 
 if [ "$output_diff" != "" ]; then

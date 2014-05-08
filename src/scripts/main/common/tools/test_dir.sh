@@ -1,6 +1,8 @@
 #!/bin/bash -eu
 
 function test_dir {
+# set -o pipefail
+
   my_dir=$1
   
   params=""
@@ -8,14 +10,16 @@ function test_dir {
     params=$2
   fi
 
-  for x in `find $my_dir -name "*test*"|grep -v ".*\.o"| grep -v "swp"`
+  files=`find $my_dir -name "*test*"|grep -v ".*\.o"| grep -v "swp"`
+
+  for x in $files
   do
     if [ -d $x ]; then
       continue
     fi
 
     $x $params
-    echo -e "\n\n--------------------------------------------------"
+    echo -e "--------------------------------------------------\n\n"
   done
 }
 
@@ -27,13 +31,15 @@ function test_scripts {
     params=$2
   fi
   
-  for x in `find $my_dir -name "*test*"|grep  "sh"|grep -v "swp"`
+  files=`find $my_dir -name "*test*"|grep  "sh"|grep -v "swp"`
+
+  for x in $files
   do
     if [ -d $x ]; then
       continue
     fi
 
     $x $params
-    echo -e "\n\n--------------------------------------------------"
+    echo -e "--------------------------------------------------\n\n"
   done
 }

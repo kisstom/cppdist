@@ -41,6 +41,7 @@ SConscript([
     'test/algos/simple_mock_algo/SConscript',
     'test/algos/simrank_update/SConscript',
     'test/algos/simrank_store_first/SConscript',
+    'test/algos/simrank_odd_even/SConscript',
     'test/dmoz/SConscript',
     'test/useFileSystem/common/SConscript',
     'test/useFileSystem/common/edge_list_builder_tests/SConscript',

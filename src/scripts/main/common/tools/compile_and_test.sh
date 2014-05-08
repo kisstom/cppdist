@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+set -o pipefail
+
 thisDir=$(dirname $0)
 . $thisDir/test_dir.sh
 

@@ -21,6 +21,7 @@ public:
 	void setEdgeList(vector<long>*);
 	void addEdge(long nodeId, long edge);
 	void addEdgeWithMinnode(long nodeId, long edge);
+	void addSinkWithMinnode(long nodeId);
 	void addSink(long);
 	void setMinnode(long);
 	bool shouldDeleteContainers();

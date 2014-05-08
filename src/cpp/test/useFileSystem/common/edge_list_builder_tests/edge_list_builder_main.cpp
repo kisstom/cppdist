@@ -12,9 +12,10 @@
 int main (int argc, char* argv[]) {
   EdgeListBuilder builder;
   EdgelistContainer container;
+  long minnode = atol(argv[3]);
 
   container.initContainers();
-  container.setMinnode(0);
+  container.setMinnode(minnode);
   builder.setContainer(&container);
   builder.buildFromFile(argv[1]);
 

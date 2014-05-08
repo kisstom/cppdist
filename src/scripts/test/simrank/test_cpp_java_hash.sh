@@ -1,3 +1,5 @@
+#!/bin/bash -eu
+
 this_dir="$(dirname "$0")"
 resource_dir=$this_dir/../../../../resources/pseudo_tests
 
