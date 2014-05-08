@@ -8,8 +8,8 @@
 # -pg gprof miatt?
 # -g valgrind mint ?
 
-#flags = ['-O3', '-g', '-ggdb', '-Wall']
-flags = [ '-g', '-ggdb', '-Wall']
+flags = ['-O3', '-g', '-ggdb', '-Wall']
+#flags = [ '-g', '-ggdb', '-Wall']
 
 GMOCK= "#../dep/gmock/"
 LOG4CPP = "#../dep/log4cpp"
@@ -21,8 +21,8 @@ env = Environment(
           GMOCK + '/include/',
 	  '#../dep/log4cpp/include/'],
         LIBPATH=['/usr/local/googlecode/lib', '#../dep/gmp/lib/',
-		'#../dep/log4cpp/lib/', GMOCK + 'build'] ,
-        LIBS=['gflags', 'gtest', 'pthread', 'liblog4cpp', 'libgmock']
+		'#../dep/log4cpp/lib/', GMOCK + 'build/'] ,
+        LIBS=['gflags', 'gtest', 'pthread', 'log4cpp', 'gmock']
         #LIBS=['gflags', 'gtest', 'gmp', 'gmpxx', 'pthread', 'liblog4cpp']
 )
 
@@ -35,15 +35,14 @@ SConscript([
     'main/algos/simrank_store_first/SConscript',
     'main/algos/simrank_update/SConscript', 
     'main/algos/SConscript',
-    'test/common/SConscript',
-    'test/common/graph_converter/SConscript',
-    'test/algos/SConscript',
-    'test/algos/simple_mock_algo/SConscript',
-    'test/algos/simrank_update/SConscript',
-    'test/algos/simrank_store_first/SConscript',
-    'test/dmoz/SConscript',
-    'test/useFileSystem/common/SConscript',
-    'test/useFileSystem/common/edge_list_builder_tests/SConscript',
-    'test/shtest/SConscript',
+'test/common/SConscript',
+#    'test/common/graph_converter/SConscript',
+#    'test/algos/SConscript',
+#    'test/algos/simple_mock_algo/SConscript',
+#    'test/algos/simrank_update/SConscript',
+#    'test/algos/simrank_store_first/SConscript',
+#    'test/dmoz/SConscript',
+#    'test/useFileSystem/common/SConscript',
+#    'test/shtest/SConscript',
     ],
     exports = ['env'])
