@@ -61,7 +61,7 @@ TEST(EdgelistContainerTest, testAddOne) {
 	container.setMinnode(5);
 	container.initContainers();
 
-	container.addEdgeWithMinnode(5, 3);
+	container.addEdge(5, 3);
 	container.setFinish();
 	ASSERT_EQ(1, container.getNumberOfNodes());
 	ASSERT_EQ(1, container.getNumberOfEdges());
@@ -74,10 +74,10 @@ TEST(EdgelistContainerTest, testAdd) {
 	container.setMinnode(5);
 	container.initContainers();
 
-	container.addEdgeWithMinnode(7, 3);
-	container.addEdgeWithMinnode(7, 5);
-	container.addEdgeWithMinnode(9, 1);
-	container.addEdgeWithMinnode(10, 2);
+	container.addEdge(7, 3);
+	container.addEdge(7, 5);
+	container.addEdge(9, 1);
+	container.addEdge(10, 2);
 	container.setFinish();
 
 	ASSERT_EQ(6, container.getNumberOfNodes());
@@ -108,7 +108,7 @@ TEST(EdgelistContainerTest, testArrayOut) {
 	EdgelistContainer container;
 	container.setMinnode(1);
 	container.initContainers();
-  container.addEdgeWithMinnode(2, 0);
+  container.addEdge(2, 0);
 	container.setFinish();
 
 	ASSERT_EQ(1, container.neighborhoodSize(2));
@@ -119,9 +119,9 @@ TEST(EdgelistContainerTest, testContainsEdge) {
 	EdgelistContainer container;
 	container.setMinnode(0);
 	container.initContainers();
-  container.addEdgeWithMinnode(2, 0);
-  container.addEdgeWithMinnode(2, 1);
-  container.addEdgeWithMinnode(2, 3);
+  container.addEdge(2, 0);
+  container.addEdge(2, 1);
+  container.addEdge(2, 3);
 	container.setFinish();
 
 	ASSERT_FALSE(container.containsEdge(3, 0));
@@ -134,9 +134,9 @@ TEST(EdgelistContainerTest, testEdgeAtPos) {
 	EdgelistContainer container;
 	container.setMinnode(1);
 	container.initContainers();
-	container.addEdgeWithMinnode(3, 0);
-	container.addEdgeWithMinnode(3, 1);
-	container.addEdgeWithMinnode(3, 3);
+	container.addEdge(3, 0);
+	container.addEdge(3, 1);
+	container.addEdge(3, 3);
 	container.setFinish();
 
 	ASSERT_EQ(1, container.getEdgeAtPos(3, 1));
@@ -147,17 +147,17 @@ TEST(EdgelistContainerTest, testEquals) {
 	EdgelistContainer container;
 	container.setMinnode(1);
 	container.initContainers();
-	container.addEdgeWithMinnode(3, 0);
-	container.addEdgeWithMinnode(3, 1);
-	container.addEdgeWithMinnode(3, 3);
+	container.addEdge(3, 0);
+	container.addEdge(3, 1);
+	container.addEdge(3, 3);
 	container.setFinish();
 
 	EdgelistContainer container2;
 	container2.setMinnode(1);
 	container2.initContainers();
-	container2.addEdgeWithMinnode(3, 0);
-	container2.addEdgeWithMinnode(3, 1);
-	container2.addEdgeWithMinnode(3, 3);
+	container2.addEdge(3, 0);
+	container2.addEdge(3, 1);
+	container2.addEdge(3, 3);
 	container2.setFinish();
 
 	ASSERT_TRUE(container == container2);
@@ -168,17 +168,17 @@ TEST(EdgelistContainerTest, testDiffMinnode) {
 	EdgelistContainer container;
 	container.setMinnode(3);
 	container.initContainers();
-	container.addEdgeWithMinnode(3, 0);
-	container.addEdgeWithMinnode(3, 1);
-	container.addEdgeWithMinnode(3, 3);
+	container.addEdge(3, 0);
+	container.addEdge(3, 1);
+	container.addEdge(3, 3);
 	container.setFinish();
 
 	EdgelistContainer container2;
 	container2.setMinnode(1);
 	container2.initContainers();
-	container2.addEdgeWithMinnode(3, 0);
-	container2.addEdgeWithMinnode(3, 1);
-	container2.addEdgeWithMinnode(3, 3);
+	container2.addEdge(3, 0);
+	container2.addEdge(3, 1);
+	container2.addEdge(3, 3);
 	container2.setFinish();
 
 	ASSERT_FALSE(container == container2);
@@ -188,17 +188,17 @@ TEST(EdgelistContainerTest, testDiffEdges) {
 	EdgelistContainer container;
 	container.setMinnode(3);
 	container.initContainers();
-	container.addEdgeWithMinnode(3, 0);
-	container.addEdgeWithMinnode(3, 2);
-	container.addEdgeWithMinnode(3, 3);
+	container.addEdge(3, 0);
+	container.addEdge(3, 2);
+	container.addEdge(3, 3);
 	container.setFinish();
 
 	EdgelistContainer container2;
 	container2.setMinnode(1);
 	container2.initContainers();
-	container2.addEdgeWithMinnode(3, 0);
-	container2.addEdgeWithMinnode(3, 1);
-	container2.addEdgeWithMinnode(3, 3);
+	container2.addEdge(3, 0);
+	container2.addEdge(3, 1);
+	container2.addEdge(3, 3);
 	container2.setFinish();
 
 	ASSERT_FALSE(container == container2);

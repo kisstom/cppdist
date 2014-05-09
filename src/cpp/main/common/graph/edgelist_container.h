@@ -10,8 +10,10 @@
 
 #include <vector>
 #include "../util/util.h"
-using std::vector;
 #include "log4cpp/Category.hh"
+
+using std::vector;
+
 
 class EdgelistContainer {
 public:
@@ -20,18 +22,23 @@ public:
 	void setStartEdges(vector<long>*);
 	void setEdgeList(vector<long>*);
 	void addEdge(long nodeId, long edge);
-	void addEdgeWithMinnode(long nodeId, long edge);
-	void addSinkWithMinnode(long nodeId);
+	//void addEdgeWithMinnode(long nodeId, long edge);
+	//void addSinkWithMinnode(long nodeId);
 	void addSink(long);
+
+	void addSinkPart(long nodeId);
+	void addEdgePart(long nodeId, long edge);
+
 	void setMinnode(long);
 	bool shouldDeleteContainers();
 	void initContainers();
 	void setFinish();
-	long neighborhoodSize(long nodeId);
+
   bool containsEdge(long, long);
   bool operator==(EdgelistContainer& rhs)const;
   void flush(FILE* f);
 
+  long neighborhoodSize(long nodeId);
   long getEdgeAtPos(long, int);
 	long getMinnode() const;
 	long getNumberOfNodes() const;

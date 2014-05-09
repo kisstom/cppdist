@@ -61,12 +61,12 @@ TEST(SortedVectorNodeMatrixReaderTest, testF) {
 	EdgelistContainer container;
 	container.setMinnode(0);
 	container.initContainers();
-	container.addEdgeWithMinnode(0, 1);
-	container.addEdgeWithMinnode(0, 2);
-	container.addEdgeWithMinnode(0, 3);
-	container.addEdgeWithMinnode(2, 9);
-	container.addEdgeWithMinnode(3, 10);
-	container.addEdgeWithMinnode(3, 8);
+	container.addEdge(0, 1);
+	container.addEdge(0, 2);
+	container.addEdge(0, 3);
+	container.addEdge(2, 9);
+	container.addEdge(3, 10);
+	container.addEdge(3, 8);
 	container.setFinish();
 
 	EdgelistContainer container2;
@@ -100,28 +100,28 @@ TEST(SortedVectorNodeMatrixReaderTest, testDifferentConfig) {
 	EdgelistContainer unchanged;
 	unchanged.setMinnode(0);
 	unchanged.initContainers();
-	unchanged.addEdgeWithMinnode(2, 9);
-	unchanged.addEdgeWithMinnode(3, 10);
-	unchanged.addEdgeWithMinnode(3, 8);
+	unchanged.addEdge(2, 9);
+	unchanged.addEdge(3, 10);
+	unchanged.addEdge(3, 8);
 	unchanged.setFinish();
 
 	EdgelistContainer deleted;
 	deleted.setMinnode(0);
 	deleted.initContainers();
-	deleted.addEdgeWithMinnode(0, 1);
-	deleted.addEdgeWithMinnode(0, 2);
-	deleted.addEdgeWithMinnode(0, 3);
+	deleted.addEdge(0, 1);
+	deleted.addEdge(0, 2);
+	deleted.addEdge(0, 3);
 	deleted.setFinish();
 
 	EdgelistContainer newlyAdded;
 	newlyAdded.setMinnode(0);
 	newlyAdded.initContainers();
-	newlyAdded.addEdgeWithMinnode(0, 9);
-	newlyAdded.addEdgeWithMinnode(0, 10);
-	newlyAdded.addEdgeWithMinnode(0, 11);
-	newlyAdded.addEdgeWithMinnode(2, 1);
-	newlyAdded.addEdgeWithMinnode(2, 2);
-	newlyAdded.addEdgeWithMinnode(2, 3);
+	newlyAdded.addEdge(0, 9);
+	newlyAdded.addEdge(0, 10);
+	newlyAdded.addEdge(0, 11);
+	newlyAdded.addEdge(2, 1);
+	newlyAdded.addEdge(2, 2);
+	newlyAdded.addEdge(2, 3);
 	newlyAdded.setFinish();
 
 	ASSERT_TRUE(unchanged == (*matrix.getUnchangedMatrix()));
@@ -155,9 +155,9 @@ TEST(SortedVectorNodeMatrixReaderTest, testDifferentConfig2) {
 	EdgelistContainer newlyAdded;
 	newlyAdded.setMinnode(12);
 	newlyAdded.initContainers();
-	newlyAdded.addEdgeWithMinnode(12, 0);
-	newlyAdded.addEdgeWithMinnode(12, 1);
-	newlyAdded.addEdgeWithMinnode(12, 2);
+	newlyAdded.addEdge(12, 0);
+	newlyAdded.addEdge(12, 1);
+	newlyAdded.addEdge(12, 2);
 	newlyAdded.setFinish();
 
 	ASSERT_TRUE(unchanged == (*matrix.getUnchangedMatrix()));

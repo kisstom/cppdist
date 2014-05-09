@@ -34,7 +34,7 @@ void CrawlEdgeListBuilder::buildFromFile(string fname) {
     }
 
     if (strlen(line) == 1) {
-      container_->addSink(lineNumber);
+      container_->addSinkPart(lineNumber);
       ++lineNumber;
       continue;
     }
@@ -45,7 +45,7 @@ void CrawlEdgeListBuilder::buildFromFile(string fname) {
 
     for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
       if (*it <= maxNodeId_) {
-        container_->addEdge(lineNumber, *it);
+        container_->addEdgePart(lineNumber, *it);
         ++edgeNum;
       }
     }
