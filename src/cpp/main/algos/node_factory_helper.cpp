@@ -4,6 +4,19 @@ NodeFactoryHelper::NodeFactoryHelper() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactoryHelper"));
 }
 
+PagerankNode* NodeFactoryHelper::initPagerankNode(unordered_map<string, string>* params) {
+  long allNode;
+  int maxIter;
+  double dump;
+
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
+  sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
+  sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
+
+  PagerankNode* node = new PagerankNode(maxIter, allNode, dump);
+  return node;
+}
+
 SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<string, string>* params) {
 	GeneratorType type = SRAND;
 	int seed;

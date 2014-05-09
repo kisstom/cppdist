@@ -29,7 +29,7 @@ void EdgeListBuilder::buildFromFile(string fname) {
   while (fgets(line, ROW_LEN, input)) {
   	lastEdgeNum = edgeNum;
   	if (strlen(line) == 1) {
-  		container_->addSink(lineNumber);
+  		container_->addSinkPart(lineNumber);
   		++lineNumber;
   		continue;
   	}
@@ -40,7 +40,7 @@ void EdgeListBuilder::buildFromFile(string fname) {
   	std::sort (edges.begin(), edges.end());
 
   	for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
-  	  container_->addEdge(lineNumber, *it);
+  	  container_->addEdgePart(lineNumber, *it);
   	  ++edgeNum;
   	}
 

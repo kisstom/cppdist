@@ -9,7 +9,7 @@
 #define INNER_MASTER_FACTORY_H_
 
 #include "../common/util/cfg_reader.h"
-//#include "simrank_update/simrank_update_master.h"
+#include "pagerank/pagerank_master.h"
 #include "simrank_store_first/simrank_store_first_master.h"
 #include "simrank_odd_even/simrank_odd_even_master.h"
 #include "inner_master.h"

@@ -29,7 +29,7 @@ void FilterEdgeListBuilder::buildFromFile(string fname) {
   while (fgets(line, ROW_LEN, input)) {
     if (isDeletedNode(lineNumber + container_->getMinnode()) ||
         strlen(line) == 1) {
-      container_->addSink(lineNumber);
+      container_->addSinkPart(lineNumber);
       ++lineNumber;
       continue;
     }
@@ -42,7 +42,7 @@ void FilterEdgeListBuilder::buildFromFile(string fname) {
 
     for (vector<long>::iterator it = edges.begin(); it != edges.end(); ++it) {
       if (isDeletedNode(*it)) continue;
-      container_->addEdge(lineNumber, *it);
+      container_->addEdgePart(lineNumber, *it);
       ++edgeNum;
     }
 

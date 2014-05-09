@@ -20,6 +20,8 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 		node = createSimrankStoreFirstNode(params);
 	} else if (nodeType.compare("SIMRANK_ODD_EVEN") == 0) {
 		node = createSimrankOddEvenNode(params);
+	} else if (nodeType.compare("PAGERANK") == 0) {
+	  node = createPagerankNode(params);
 	} else {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
@@ -74,3 +76,60 @@ SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
   node->initData((*params)["INPUT_PARTITION"]);
   return node;
 }
+
+PagerankNode* NodeFactory::createPagerankNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  EdgelistContainer* container = createEdgeListContainer(params);
+  PagerankNode* node = helper.initPagerankNode(params);
+  node->setEdgeListContainer(container);
+
+  char outputFileN[1024];
+  sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setOutputFile(string(outputFileN));
+  return node;
+}
+
+EdgelistContainer* NodeFactory::createEdgeListContainer(unordered_map<string, string>* params) {
+  IEdgeListBuilder* builder = createEdgeListBuilder(params);
+  long min_node;
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
+  logger_->info("Initing edge list container.");
+
+  EdgelistContainer* matrix = new EdgelistContainer();
+  matrix->initContainers();
+  matrix->setMinnode(min_node);
+
+  builder->setContainer(matrix);
+  builder->buildFromFile((*params)["INPUT_PARTITION"]);
+
+  logger_->info("Edge list container inited.");
+  return matrix;
+}
+
+IEdgeListBuilder* NodeFactory::createEdgeListBuilder(unordered_map<string, string>* params) {
+  IEdgeListBuilder* edgeListBuilder = NULL;
+
+  if (params->find("USE_PREPROCESS") == params->end()) {
+    edgeListBuilder = new EdgeListBuilder;
+  } else {
+    if ((*params)["USE_PREPROCESS"].compare("CRAWL") == 0) {
+      long maxNodeToKeep;
+      sscanf((*params)["MAX_NODE_TO_KEEP"].c_str(), "%ld", &maxNodeToKeep);
+      CrawlEdgeListBuilder* crawlEdgeListBuilder = new CrawlEdgeListBuilder(
+          maxNodeToKeep);
+      edgeListBuilder = crawlEdgeListBuilder;
+    } else if ((*params)["USE_PREPROCESS"].compare("FILTER") == 0) {
+      FilterEdgeListBuilder* filterEdgeListBuilder = new FilterEdgeListBuilder;
+      string nodesToDeleteFile = (*params)["FILTER_NODE_FILE"];
+      filterEdgeListBuilder->readNodesToDelete(nodesToDeleteFile);
+      edgeListBuilder = filterEdgeListBuilder;
+    } else {
+      logger_->error("ERROR. Unknown type of preprcessing %s.\n",
+          (*params)["USE_PREPROCESS"].c_str());
+      return NULL;
+    }
+  }
+
+  return edgeListBuilder;
+}
+

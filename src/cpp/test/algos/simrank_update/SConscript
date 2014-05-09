@@ -8,6 +8,7 @@ COMMON_OBJ += ['#/../bin/main/algos/node.o', '#/../bin/main/algos/algo.o']
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_odd_even/*.o')
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
 
 env.Program('test_node', ['test_node.cpp'] + COMMON_OBJ)
 env.Program('test_simrank_update', ['test_simrank_update.cpp'] + COMMON_OBJ)

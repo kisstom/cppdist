@@ -36,7 +36,7 @@ EdgelistContainer::~EdgelistContainer() {
 	}
 }
 
-void EdgelistContainer::addEdge(long nodeId, long edge) {
+void EdgelistContainer::addEdgePart(long nodeId, long edge) {
   long start = 0;
 
   while (nodeId >= (long) start_edges_->size()) {
@@ -46,7 +46,7 @@ void EdgelistContainer::addEdge(long nodeId, long edge) {
   edge_list_->push_back(edge);
 }
 
-void EdgelistContainer::addSink(long nodeId) {
+void EdgelistContainer::addSinkPart(long nodeId) {
   long start = 0;
 
   while (nodeId >= (long) start_edges_->size()) {
@@ -55,7 +55,7 @@ void EdgelistContainer::addSink(long nodeId) {
   }
 }
 
-void EdgelistContainer::addSinkWithMinnode(long nodeId) {
+void EdgelistContainer::addSink(long nodeId) {
   long nodeIndex = nodeId - minnode_;
   long start = 0;
 
@@ -65,7 +65,7 @@ void EdgelistContainer::addSinkWithMinnode(long nodeId) {
   }
 }
 
-void EdgelistContainer::addEdgeWithMinnode(long nodeId, long edge) {
+void EdgelistContainer::addEdge(long nodeId, long edge) {
   long nodeIndex = nodeId - minnode_;
   long start = 0;
 
@@ -81,6 +81,12 @@ long EdgelistContainer::neighborhoodSize(long nodeId) {
 	if (nodeIndex + 1 >= (long) start_edges_->size() || nodeIndex < 0) return -1;
 
 	return start_edges_->at(nodeIndex + 1) - start_edges_->at(nodeIndex);
+}
+
+long EdgelistContainer::neighborhoodSizePart(long nodeId) {
+  if (nodeId + 1 >= (long) start_edges_->size() || nodeId < 0) return -1;
+
+  return start_edges_->at(nodeId + 1) - start_edges_->at(nodeId);
 }
 
 void EdgelistContainer::setFinish() {
@@ -124,6 +130,12 @@ long EdgelistContainer::getEdgeAtPos(long node, int index) {
 	if (nodeIndex < 0) return -1;
 
   return edge_list_->at(start_edges_->at(nodeIndex) + index);
+}
+
+long EdgelistContainer::getEdgeAtPosPart(long node, int index) {
+  if (node < 0) return -1;
+
+  return edge_list_->at(start_edges_->at(node) + index);
 }
 
 bool EdgelistContainer::operator==(EdgelistContainer& rhs) const {

@@ -74,11 +74,11 @@ TEST(FingerprintPathTest, testmake) {
   EdgelistContainer* container = new EdgelistContainer();
   container->setMinnode(0);
   container->initContainers();
-  container->addEdgeWithMinnode(2, 0);
-  container->addEdgeWithMinnode(2, 1);
-  container->addEdgeWithMinnode(2, 4);
-  container->addEdgeWithMinnode(3, 0);
-  container->addEdgeWithMinnode(4, 0);
+  container->addEdge(2, 0);
+  container->addEdge(2, 1);
+  container->addEdge(2, 4);
+  container->addEdge(3, 0);
+  container->addEdge(4, 0);
   container->setFinish();
 
  
