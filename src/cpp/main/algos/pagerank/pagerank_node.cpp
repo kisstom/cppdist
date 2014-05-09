@@ -67,7 +67,8 @@ void PagerankNode::final() {
   }
 
   for (long node = 0; node < matrix_->getNumberOfNodes(); ++node) {
-    fprintf(outf, "%ld %lf\n", node + matrix_->getMinnode(), (*pagerankScore_)[node]);
+    fprintf(outf, "%ld %.10lf\n", node + matrix_->getMinnode(), (*pagerankScore_)[node]);
+    return;
   }
 
   fclose(outf);
