@@ -83,6 +83,12 @@ long EdgelistContainer::neighborhoodSize(long nodeId) {
 	return start_edges_->at(nodeIndex + 1) - start_edges_->at(nodeIndex);
 }
 
+long EdgelistContainer::neighborhoodSizePart(long nodeId) {
+  if (nodeId + 1 >= (long) start_edges_->size() || nodeId < 0) return -1;
+
+  return start_edges_->at(nodeId + 1) - start_edges_->at(nodeId);
+}
+
 void EdgelistContainer::setFinish() {
 	start_edges_->push_back((long) edge_list_->size());
 }
@@ -124,6 +130,12 @@ long EdgelistContainer::getEdgeAtPos(long node, int index) {
 	if (nodeIndex < 0) return -1;
 
   return edge_list_->at(start_edges_->at(nodeIndex) + index);
+}
+
+long EdgelistContainer::getEdgeAtPosPart(long node, int index) {
+  if (node < 0) return -1;
+
+  return edge_list_->at(start_edges_->at(node) + index);
 }
 
 bool EdgelistContainer::operator==(EdgelistContainer& rhs) const {

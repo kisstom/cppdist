@@ -20,6 +20,8 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
 		deserializer = createSimrankStoreFirstDeserializer(params, node);
 	} else if (nodeType.compare("SIMRANK_ODD_EVEN") == 0) {
 		deserializer = createSimrankOddEvenDeserializer(params, node);
+	} else if (nodeType.compare("PAGERANK") == 0) {
+	  deserializer = createPagerankDeserializer(params, node);
 	} else {
     logger_->error("Unknown tpye of deserializer %s", nodeType.c_str());
 	}
@@ -46,6 +48,13 @@ Deserializer* DeserializerFactory::createSimrankOddEvenDeserializer(unordered_ma
   SimrankOddEvenNode* simrankUpdateNode = static_cast<SimrankOddEvenNode*>(node);
   SimrankOddEvenDeserializer* deserializer = new SimrankOddEvenDeserializer;
   deserializer->setNode(simrankUpdateNode);
+  return deserializer;
+}
+
+Deserializer* DeserializerFactory::createPagerankDeserializer(unordered_map<string, string>*, Node* node) {
+  PagerankNode* pagerankNodeNode = static_cast<PagerankNode*>(node);
+  PagerankDeserializer* deserializer = new PagerankDeserializer;
+  deserializer->setNode(pagerankNodeNode);
   return deserializer;
 }
 

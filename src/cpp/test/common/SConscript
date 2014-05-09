@@ -10,6 +10,7 @@ COMMON_OBJ += ['#/../bin/main/algos/node.o']
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_odd_even/*.o')
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
+COMMON_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
 
 env.Program('tournament_test', ['tournament_test.cpp', '../../../bin/main/common/util/tournament_maker.o'] )
 env.Program('empty', ['empty.cpp'] )

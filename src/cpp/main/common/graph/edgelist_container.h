@@ -22,8 +22,6 @@ public:
 	void setStartEdges(vector<long>*);
 	void setEdgeList(vector<long>*);
 	void addEdge(long nodeId, long edge);
-	//void addEdgeWithMinnode(long nodeId, long edge);
-	//void addSinkWithMinnode(long nodeId);
 	void addSink(long);
 
 	void addSinkPart(long nodeId);
@@ -39,7 +37,9 @@ public:
   void flush(FILE* f);
 
   long neighborhoodSize(long nodeId);
+  long neighborhoodSizePart(long nodeId);
   long getEdgeAtPos(long, int);
+  long getEdgeAtPosPart(long, int);
 	long getMinnode() const;
 	long getNumberOfNodes() const;
 	long getNumberOfEdges() const;
