@@ -64,11 +64,11 @@ void PagerankNode::final() {
   FILE* outf = fopen(outfile.c_str(), "w");
   if (NULL == outf) {
     logger_->error("Error opening file %s for writing.", outfile.c_str());
+    return;
   }
 
   for (long node = 0; node < matrix_->getNumberOfNodes(); ++node) {
     fprintf(outf, "%ld %.10lf\n", node + matrix_->getMinnode(), (*pagerankScore_)[node]);
-    return;
   }
 
   fclose(outf);
