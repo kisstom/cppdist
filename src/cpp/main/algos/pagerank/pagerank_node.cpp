@@ -26,7 +26,7 @@ void PagerankNode::beforeIteration() {
 
 bool PagerankNode::afterIteration() {
   for (long node = 0; node < (long) tmpScore_->size(); ++node) {
-    logger_->info("tmp score %ld %lf", node, (*tmpScore_)[node]);
+    //logger_->info("tmp score %ld %lf", node, (*tmpScore_)[node]);
     (*pagerankScore_)[node] = (*tmpScore_)[node] * (1.0 - dump_) + dump_ / allNode_;
     (*tmpScore_)[node] = 0.0;
   }
@@ -34,7 +34,7 @@ bool PagerankNode::afterIteration() {
 }
 
 void PagerankNode::sender() {
-  long outEdge, numNeighbors, partitionNode;
+  long outEdge, numNeighbors;
   int partIndex;
 
   for (long partitionNode = 0; partitionNode < matrix_->getNumberOfNodes(); ++partitionNode) {
