@@ -3,7 +3,7 @@ from fabric.operations import local,put,get
 from fabric.utils import error
 from fabric.context_managers import shell_env
 import ConfigParser
-import time
+import time, os
 
 global configFile
 global isConfReaded
@@ -11,7 +11,10 @@ global conf
 global cfg_hosts
 global numJobs
 global partCfg
+global pids
+
 partCfg = []
+pids = dict()
 
 env.rolesdefs = {'server' : []}
 
@@ -84,10 +87,11 @@ def buildHosts(cfg):
 
 @task
 def cleanup():
-  global conf
+  global conf, pids
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
   run('rm -rf %s'%local_dir)
   run('mkdir -p %s'%local_dir) 
+  pids.clear()
  
 @task
 def copyCfg():
@@ -102,14 +106,49 @@ def createLocalDir():
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
   run('mkdir -p %s'%local_dir)
 
+def storePid(host, pid):
+  global pids
+  if host not in pids:
+    pids[host] = []
+
+  pids[host] += [pid]
+
+
 @task
 def startMaster():
-    global conf, configFile, numJobs
+    global conf, configFile, numJobs, pids
     bin_dir = conf.get('ALGO', 'BIN')
     master_log = conf.get('ALGO', 'MASTER_LOG')
     run('rm -f %s'%master_log)
-    run('(nohup %s/main/algos/master_task %s %d 1> /dev/null 2>&1 < /dev/null &)'%(bin_dir, configFile, numJobs), pty = False) 
+    pid = run('''(nohup %s/main/algos/master_task %s %d 1> /dev/null 2>&1 < /dev/null & 
+      echo $!)'''%(bin_dir, configFile, numJobs), pty = False)
+    storePid(env.host[0], pid)
     time.sleep(2)
+
+
+def isWorkFinished():
+  global pids
+  for host in pids.keys(): 
+    env.rolesdefs['server'] = [host]
+    for pid in pids[host]:
+      isRun = checkProcess(pid)
+      if isRun:
+        return False
+
+  return True
+
+def waitForFinish():
+  print 'Waiting for finish'
+  while 1 == 1:
+    isFinished = isWorkFinished()
+    if (isFinished):
+      break
+
+    os.system('sleep 2')
+
+  print 'Run finished.'
+
+
 
 @task
 def startNodes():
@@ -129,7 +168,9 @@ def startOnMachine(slave_index):
    global configFile, numJobs, conf
    bin_dir = conf.get('ALGO', 'BIN') 
    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
-   run('(nohup %s/main/algos/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &)'%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
+   pid = run('''(nohup %s/main/algos/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
+      echo $!)'''%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
+   storePid(env.host[0], pid)
   
 
 @task
@@ -185,16 +226,21 @@ def getNumEdgePerPart():
 
     return numEdgePerPart
 
+def checkProcess(pid):
+  return not bool(int(run('ps -p ' + pid + ' >/dev/null 2>&1; echo -n $?')))
+
 @task
 def compute():
   global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+
     cleanup()
     storePartitionCfg()
     env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
     copyCfg()
     startMaster()
     startNodes() 
+    waitForFinish()
 
 @task
 def computeAll():
@@ -208,3 +254,5 @@ def computeAll():
     env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
     startMaster()
     startNodes() 
+    waitForFinish()
+
