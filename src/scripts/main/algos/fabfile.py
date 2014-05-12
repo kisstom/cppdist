@@ -3,7 +3,7 @@ from fabric.operations import local,put,get
 from fabric.utils import error
 from fabric.context_managers import shell_env
 import ConfigParser
-import time, os
+import time, os, tempfile
 
 global configFile
 global isConfReaded
@@ -12,17 +12,19 @@ global cfg_hosts
 global numJobs
 global partCfg
 global pids
-
-partCfg = []
-pids = dict()
-
-env.rolesdefs = {'server' : []}
-
-cfg_hosts = []
-numJobs = 0
+global crawlMaxNodes
+global LOCAL_DIR
+global MASTER_LOG
 
 configFile = None
 isConfReaded = False
+cfg_hosts = []
+numJobs = 0
+partCfg = []
+pids = dict()
+crawlMaxNodes = []
+BASE_LOCAL_DIR = ""
+env.rolesdefs = {'server' : []}
 
 @task
 def yes():
@@ -40,6 +42,7 @@ def readCfg():
   global conf
   global isConfReaded
   global configFile
+  global BASE_LOCAL_DIR
   if configFile is None:
     error('Configfile of the deployment is missing! Use task "cfg"!')
   if not isConfReaded:
@@ -49,11 +52,12 @@ def readCfg():
 
     isConfReaded = True
   env.user = 'kisstom'
+  BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
   buildHosts(conf)
   return conf
 
 def readConfig(configFile):
-  config = ConfigParser.ConfigParser()
+  config = ConfigParser.RawConfigParser()
   config.optionxform = str
   config.read(configFile)
   return config
@@ -96,9 +100,16 @@ def cleanup():
 @task
 def copyCfg():
   global conf, configFile
-
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
-  put(configFile, local_dir)
+
+  tempf = tempfile.mktemp()
+  tempfO = open(tempf, 'w')
+  conf.write(tempfO)
+  tempfO.close()
+
+  put(tempf, local_dir)
+  os.system('rm ' + tempf)
+  
 
 @task
 def createLocalDir():
@@ -144,11 +155,9 @@ def waitForFinish():
     if (isFinished):
       break
 
-    os.system('sleep 2')
+    os.system('sleep 10')
 
   print 'Run finished.'
-
-
 
 @task
 def startNodes():
@@ -234,25 +243,52 @@ def compute():
   global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
-    cleanup()
+    # should be done after partitioning
     storePartitionCfg()
-    env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
-    copyCfg()
-    startMaster()
-    startNodes() 
-    waitForFinish()
+    mainCompute()
 
 @task
 def computeAll():
   global conf, configFile
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
-    cleanup()
     makePartition()
+    # should be done after partitioning
     storePartitionCfg()
+    mainCompute()
+
+def mainCompute():
+  global conf, configFile
+  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+
+    cleanup()
     copyCfg()
     env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
     startMaster()
     startNodes() 
     waitForFinish()
+
+
+@task
+def runCrawlExperiment():
+  global crawlMaxNodes, conf, BASE_LOCAL_DIR
+  buildCrawlMaxNodes()
+  for it, maxNode in enumerate(crawlMaxNodes):
+    local_dir = BASE_LOCAL_DIR + "_crawl_" + str(it) + "/"
+    master_log = local_dir + "master.log"
+    conf.set("ALGO", "LOCAL_DIR", LOCAL_DIR)
+    conf.set("ALGO", "MASTER_LOG", master_log)
+    conf.set("NODE", "MAX_NODE_TO_KEEP", maxNode)
+
+    mainCompute()
+
+def buildCrawlMaxNodes():
+  global crawlMaxNodes, conf
+  section = 'CRAWL_EXPERIMENT'
+  options = conf.options(section)
+  for option in options:
+    maxNodeToKeep = int(conf.get(section, option))
+    crawlMaxNodes += [maxNodeToKeep]
+
+
 
