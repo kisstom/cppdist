@@ -27,7 +27,7 @@ void LoggerFactory::initLogger(string debugLevel, string appenderType,
 	} else if (appenderType.compare("FILE") == 0) {
 		appender = new log4cpp::FileAppender("default", logfile_name);
 	} else {
-		// TODO
+		fprintf(stderr, "ERROR unknown type of appender %s\n", appenderType.c_str());
 	}
 
 	log4cpp::PatternLayout * layout = new log4cpp::PatternLayout();

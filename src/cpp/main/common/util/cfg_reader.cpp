@@ -14,6 +14,11 @@
 #include "cfg_reader.h"
 using std::find;
 
+void CfgReader::trim (string& input) {
+  input.erase(std::remove(input.begin(),input.end(),' '),input.end());
+  //std::replace_if(s.begin(), s.end(), " ", "");
+}
+
 void CfgReader::read(char* file) {
 	FILE* f = fopen(file, "r");
 	if (f == NULL) {
@@ -48,8 +53,17 @@ void CfgReader::read(char* file) {
 		strncpy(value, line + prevSize, size);
 		value[size] = '\0';
 
-		(*params_)[string(key)] = string(value);
-		printf("key-value %s %s\n", key, value);
+		string k = string(key);
+		string v = string(value);
+		trim(k);
+    trim(v);
+
+
+		(*params_)[k] = v;
+		//if (k.find("MASTER_LOG") != std::string::npos) {
+		  printf("key-value %s %s\n", k.c_str(), v.c_str());
+		  //printf("|%s|\n", k.c_str());
+		//}
 	}
 
 

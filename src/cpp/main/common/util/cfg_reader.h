@@ -16,7 +16,7 @@ using std::string;
 class CfgReader {
 public:
   void read(char* file);
-
+  void trim (string& s);
   unordered_map<string, string>* getParams();
 private:
   unordered_map<string, string>* params_;
