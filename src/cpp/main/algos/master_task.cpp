@@ -33,10 +33,12 @@ void initLogger(unordered_map<string, string>* params) {
 	}
 
 	logfileName = (*params)["MASTER_LOG"];
+	printf("logf %s\n", logfileName.c_str());
 	LoggerFactory::initLogger(debugLevel, appender, logfileName);
 
 	log4cpp::Category* logger = &log4cpp::Category::getInstance(std::string("MasterTask"));
 	logger->info("Logger started. Level %s.", debugLevel.c_str());
+
 }
 
 int main(int argc, char* argv[]) {
@@ -49,7 +51,9 @@ int main(int argc, char* argv[]) {
   initLogger(params);
   MasterBuilder builder;
   Master* master = builder.buildFromConfig(params);
-
+  if (NULL == master) {
+    fprintf(stderr, "Error creating master. Exiting.");
+  }
   master->setUp();
   master->run();
 }

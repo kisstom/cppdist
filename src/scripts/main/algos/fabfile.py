@@ -53,6 +53,7 @@ def readCfg():
     isConfReaded = True
   env.user = 'kisstom'
   BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
+  conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
   buildHosts(conf)
   return conf
 
@@ -96,18 +97,20 @@ def cleanup():
   run('rm -rf %s'%local_dir)
   run('mkdir -p %s'%local_dir) 
   pids.clear()
- 
+
+
 @task
 def copyCfg():
   global conf, configFile
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
+  configFile = local_dir + 'deploy.ini'
 
   tempf = tempfile.mktemp()
   tempfO = open(tempf, 'w')
   conf.write(tempfO)
   tempfO.close()
 
-  put(tempf, local_dir)
+  put(tempf, configFile)
   os.system('rm ' + tempf)
   
 
@@ -161,7 +164,7 @@ def waitForFinish():
 
 @task
 def startNodes():
-    global conf, configFile, numJobs
+    global conf, numJobs
     slave_index = 0
     for host in cfg_hosts:
       env.rolesdefs['server'] = [host]
@@ -240,27 +243,22 @@ def checkProcess(pid):
 
 @task
 def compute():
-  global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
-    # should be done after partitioning
-    storePartitionCfg()
     mainCompute()
 
 @task
 def computeAll():
-  global conf, configFile
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
     makePartition()
-    # should be done after partitioning
-    storePartitionCfg()
     mainCompute()
 
 def mainCompute():
-  global conf, configFile
+  global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
+    storePartitionCfg()
     cleanup()
     copyCfg()
     env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
@@ -270,13 +268,13 @@ def mainCompute():
 
 
 @task
-def runCrawlExperiment():
+def crawlExperiment():
   global crawlMaxNodes, conf, BASE_LOCAL_DIR
   buildCrawlMaxNodes()
   for it, maxNode in enumerate(crawlMaxNodes):
-    local_dir = BASE_LOCAL_DIR + "_crawl_" + str(it) + "/"
+    local_dir = BASE_LOCAL_DIR + "crawl_" + str(it) + "/"
     master_log = local_dir + "master.log"
-    conf.set("ALGO", "LOCAL_DIR", LOCAL_DIR)
+    conf.set("ALGO", "LOCAL_DIR", local_dir)
     conf.set("ALGO", "MASTER_LOG", master_log)
     conf.set("NODE", "MAX_NODE_TO_KEEP", maxNode)
 
@@ -289,6 +287,4 @@ def buildCrawlMaxNodes():
   for option in options:
     maxNodeToKeep = int(conf.get(section, option))
     crawlMaxNodes += [maxNodeToKeep]
-
-
 
