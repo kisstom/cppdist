@@ -41,7 +41,8 @@ class NDCG:
         rel += [0]
 
     dcg = self.ndcg(rel)
-    idcg = self.ndcg(sorted(d2.values(), reverse = True))
+    idcg = self.ndcg([1] * len(d2))
+
     
     sys.stdout.flush()
     self.cum_ndcg += dcg / idcg

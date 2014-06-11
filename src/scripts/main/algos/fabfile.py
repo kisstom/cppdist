@@ -13,7 +13,8 @@ global numJobs
 global partCfg
 global pids
 global crawlMaxNodes
-global LOCAL_DIR
+global BASE_LOCAL_DIR
+global BASE_CONCAT_DIR
 global MASTER_LOG
 
 configFile = None
@@ -24,6 +25,7 @@ partCfg = []
 pids = dict()
 crawlMaxNodes = []
 BASE_LOCAL_DIR = ""
+BASE_CONCAT_DIR = ""
 env.rolesdefs = {'server' : []}
 
 @task
@@ -53,6 +55,8 @@ def readCfg():
     isConfReaded = True
   env.user = 'kisstom'
   BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
+  BASE_CONCAT_DIR = conf.get('ALGO', 'CONCAT_DIR')
+
   conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
   buildHosts(conf)
   return conf
@@ -119,6 +123,13 @@ def createLocalDir():
   global conf
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
   run('mkdir -p %s'%local_dir)
+
+@task
+def createConcatDir():
+  global conf
+  concat_dir = conf.get('ALGO', 'CONCAT_DIR')
+  run('mkdir -p %s'%concat_dir)
+
 
 def storePid(host, pid):
   global pids
@@ -269,16 +280,21 @@ def mainCompute():
 
 @task
 def crawlExperiment():
-  global crawlMaxNodes, conf, BASE_LOCAL_DIR
+  global crawlMaxNodes, conf, BASE_LOCAL_DIR, BASE_CONCAT_DIR
   buildCrawlMaxNodes()
   for it, maxNode in enumerate(crawlMaxNodes):
     local_dir = BASE_LOCAL_DIR + "crawl_" + str(it) + "/"
+    concat_dir = BASE_CONCAT_DIR + "crawl_" + str(it) + "/"
+
     master_log = local_dir + "master.log"
     conf.set("ALGO", "LOCAL_DIR", local_dir)
+    conf.set("ALGO", "CONCAT_DIR", concat_dir)
     conf.set("ALGO", "MASTER_LOG", master_log)
     conf.set("NODE", "MAX_NODE_TO_KEEP", maxNode)
 
     mainCompute()
+
+  #concat()
 
 def buildCrawlMaxNodes():
   global crawlMaxNodes, conf
@@ -287,4 +303,24 @@ def buildCrawlMaxNodes():
   for option in options:
     maxNodeToKeep = int(conf.get(section, option))
     crawlMaxNodes += [maxNodeToKeep]
+
+
+@task
+def concat():
+  global conf, cfg_hosts
+  section = 'ALGO'
+  concat_dir = conf.get(section, 'CONCAT_DIR')
+  remote_local_dir = conf.get(section, 'LOCAL_DIR')
+  run('mkdir -p %s'%concat_dir)
+  for host in cfg_hosts:
+    env.rolesdefs['server'] = [host]
+    copyFromMachineTo(remote_local_dir, concat_dir)
+
+  run('cat %s/out* > %s/concat'%(concat_dir, concat_dir))
+#  run('rm %s/out*'%(concat_dir))
+
+def copyFromMachineTo(remote_local_dir, concat_dir):
+  get(remote_local_dir/out*, concat_dir)  
+
+
 
