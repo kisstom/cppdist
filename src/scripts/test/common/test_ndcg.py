@@ -1,6 +1,7 @@
-import sys
-sys.path.append('../../main/common/measures/')
+import sys, os
 
+base = os.path.dirname(os.path.abspath(__file__)) 
+sys.path.append(base + '/../../main/common/measures/')
 
 import ndcg
 import unittest

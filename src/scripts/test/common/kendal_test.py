@@ -1,7 +1,12 @@
-import kendal
 import random
 import unittest
 import math
+import os, sys
+
+base = os.path.dirname(os.path.abspath(__file__)) 
+sys.path.append(base + '/../../main/common/measures/')
+
+import kendal
 
 class TestKendal(unittest.TestCase):
 
