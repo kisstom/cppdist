@@ -1,5 +1,7 @@
 # "Ez egy test komment"
-SRCDIR=/home/kisstom/git/DistributedComp/DistributedFrame/src/
+thisDir=$(dirname $0)
+SRCDIR=$thisDir/../../../
+
 
 echo "Computes simrank and distance from root for pairs and measures with ndcg."
 

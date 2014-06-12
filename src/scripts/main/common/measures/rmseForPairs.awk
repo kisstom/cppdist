@@ -31,8 +31,9 @@ END{
     ++unionInstance
   }
 
-  printf "section %d union %d\n", supp, unionInstance
-  printf "first avg %f second avg %f\n", avg1, avg2/NR
-  printf "rmse on section %f rmse on union %f\n", sqrt(rmse/supp), sqrt(rmseAll/unionInstance)
+#  printf "section %d union %d\n", supp, unionInstance
+#  printf "first avg %f second avg %f\n", avg1, avg2/NR
+#  printf "rmse on section %f rmse on union %f\n", sqrt(rmse/supp), sqrt(rmseAll/unionInstance)
+  printf "%f\n", sqrt(rmse/supp)
 #  print sqrt(rmse/NR)
 }

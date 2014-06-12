@@ -22,7 +22,7 @@ env = Environment(
 	  '#../dep/log4cpp/include/'],
         LIBPATH=['/usr/local/googlecode/lib', '#../dep/gmp/lib/',
 		'#../dep/log4cpp/lib/', GMOCK + 'build/'] ,
-        LIBS=['gflags', 'gtest', 'pthread', 'log4cpp', 'gmock']
+        LIBS=['gflags', 'gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx']
         #LIBS=['gflags', 'gtest', 'gmp', 'gmpxx', 'pthread', 'liblog4cpp']
 )
 
