@@ -34,7 +34,7 @@ public:
 	~SimrankOddEvenNode();
 	SimrankOddEvenNode(short numFingerprints, short pathLen,
 			int seed, GeneratorType type, long num_nodes, long min_node, long nextMinNode);
-	void beforeIteration();
+	void beforeIteration(string msg);
 	bool afterIteration();
 	void sender();
 	void senderOdd();

@@ -46,7 +46,7 @@ SimrankStoreFirstNode::SimrankStoreFirstNode(short numFingerprints, short pathLe
 	logger_ = &log4cpp::Category::getInstance(std::string("SimrankStoreFirstNode"));
 }
 
-void SimrankStoreFirstNode::beforeIteration() {
+void SimrankStoreFirstNode::beforeIteration(string msg) {
 	receiverFinished_ = 0;
 	senderShouldStop_ = false;
 }

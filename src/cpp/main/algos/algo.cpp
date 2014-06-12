@@ -107,7 +107,7 @@ void Algo::run()
     		throw MasterException();
     	}
 
-    	node_->beforeIteration();
+    	node_->beforeIteration(instr);
     	runThreads();
     	bool cont = node_->afterIteration();
 

@@ -129,7 +129,7 @@ void SimrankUpdateNode::finishPath(RandomWalk* rw) {
 	threadLock_.unlock();
 }
 
-void SimrankUpdateNode::beforeIteration() {
+void SimrankUpdateNode::beforeIteration(string msg) {
 	/*logger_->info("Current fp size: %d", currentFp_->size());
 	logger_->info("Finished fp size: %d", finishedFp_.size());*/
 	logger_->info("Before iteration. Fp index %d edge in path %d", fpIndex_, edgeInPath_);

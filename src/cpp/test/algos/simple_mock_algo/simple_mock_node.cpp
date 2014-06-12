@@ -12,7 +12,7 @@ SimpleMockNode::SimpleMockNode () {
 	iteration_ = 0;
 }
 
-void SimpleMockNode::beforeIteration() {
+void SimpleMockNode::beforeIteration(string msg) {
   logger_->info("Before iteration %d", iteration_);
 }
 
