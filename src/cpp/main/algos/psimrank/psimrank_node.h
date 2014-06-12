@@ -20,7 +20,6 @@
 #include "../../common/graph/edge_list_builder.h"
 #include "../node.h"
 #include "../algo.h"
-#include "random_generator_type.h"
 #include "../../common/util/uint128_t.h"
 
 using std::string;
@@ -32,7 +31,7 @@ public:
   PSimrankNode();
   ~PSimrankNode();
   PSimrankNode(short numFingerprints, short pathLen,
-      int seed, GeneratorType type, long num_nodes, long min_node, long nextMinNode);
+      int seed, long num_nodes, long min_node, long nextMinNode);
   void beforeIteration(string msg);
   bool afterIteration();
   void sender();
@@ -54,6 +53,17 @@ public:
   int hashToEdgeIndex(int hash, int length);
   void initFingerprints();
   void initEdgeListContainer(string partName);
+
+  void setFingerprints(vector<list<long*> >);
+  void setMatrix(EdgelistContainer* matrix);
+  void setNextNodes(unordered_map<long, long>);
+  void setOutputFile(string fname);
+  void setFingerPrintFile(string fpStartFname);
+  void initFinishedPathes(vector<vector<long*> >);
+  vector<list<long*> >* getPathes();
+  vector<vector<long*> >* getFinishedPathes();
+  bool* getOddIter() {return &oddIter_;}
+  void setEdgeListBuilder(IEdgeListBuilder*);
 
 private:
   Mutex nextNodesMutex_;
