@@ -18,7 +18,7 @@ PagerankNode::PagerankNode(int maxIter, long allNode, double dump) {
   tmpScore_ = NULL;
 }
 
-void PagerankNode::beforeIteration() {
+void PagerankNode::beforeIteration(string msg) {
   logger_->info("Starting iteration %d", actIter);
   for (long node = 0; node < matrix_->getNumberOfNodes(); ++node) {
     (*tmpScore_)[node] = 0.0;

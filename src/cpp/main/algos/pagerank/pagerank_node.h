@@ -18,7 +18,7 @@
 class PagerankNode : public Node {
 public:
   PagerankNode(int maxIter, long allNode, double dump);
-  void beforeIteration();
+  void beforeIteration(string msg);
   bool afterIteration();
   void sender();
   void final();

@@ -37,7 +37,7 @@ public:
   void incrementRandomWalkSize(RandomWalk* rw, long edge);
   void finishPath(RandomWalk*);
 
-  void beforeIteration();
+  void beforeIteration(string msg);
   bool afterIteration();
   void sender();
   void initFromMaster(string);

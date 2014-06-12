@@ -1,8 +1,10 @@
 import unittest
-import sys
 import math
+import os, sys
 
-sys.path.append('../../main/simrank/')
+base = os.path.dirname(os.path.abspath(__file__)) 
+sys.path.append(base + '/../../main/simrank/')
+
 from count_tree_size import TreeCounter
 
 class TestTreeSize(unittest.TestCase):
@@ -20,6 +22,6 @@ class TestTreeSize(unittest.TestCase):
     print treeCounter.nodes 
     self.assertEqual(len(treeCounter.nodes), 7)
 
-if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+#if __name__ == '__main__':
+#    unittest.main(argv=[sys.argv[0]])
 

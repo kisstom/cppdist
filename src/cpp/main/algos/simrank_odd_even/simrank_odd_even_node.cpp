@@ -60,7 +60,7 @@ void SimrankOddEvenNode::initRandomGenerator(int seed, GeneratorType type) {
 	}
 }
 
-void SimrankOddEvenNode::beforeIteration() {
+void SimrankOddEvenNode::beforeIteration(string msg) {
 	if (oddIter_) {
 	  logger_->info("\nBefore iteration.\nIter odd(paratlan) iter");
 	} else {

@@ -31,9 +31,10 @@ function test_scripts {
     params=$2
   fi
   
-  files=`find $my_dir -name "*test*"|grep  "sh"|grep -v "swp"`
+  shfiles=`find $my_dir -name "*test*"|grep  "sh"|grep -v "swp"`
+  pyfiles=`find $my_dir -name "*test*"|grep  ".py"|grep -v "swp"`
 
-  for x in $files
+  for x in $shfiles
   do
     if [ -d $x ]; then
       continue
@@ -42,4 +43,15 @@ function test_scripts {
     $x $params
     echo -e "--------------------------------------------------\n\n"
   done
+
+  for x in $pyfiles
+  do
+    if [ -d $x ]; then
+      continue
+    fi
+
+    python $x $params
+    echo -e "--------------------------------------------------\n\n"
+  done
+
 }
