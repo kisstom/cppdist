@@ -20,7 +20,7 @@ PSimrankNode::PSimrankNode() {
 }
 
 PSimrankNode::PSimrankNode(short numFingerprints, short pathLen,
-    int seed, long num_nodes, long min_node, long nextMinNode) {
+    long num_nodes, long min_node, long nextMinNode) {
   logger_ = &log4cpp::Category::getInstance(std::string("PSimrankNode"));
   logger_->info("Next min node %ld",  nextMinNode);
   fpIndex_ = 0;

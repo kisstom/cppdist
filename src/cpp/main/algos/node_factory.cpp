@@ -22,7 +22,9 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 		node = createSimrankOddEvenNode(params);
 	} else if (nodeType.compare("PAGERANK") == 0) {
 	  node = createPagerankNode(params);
-	} else {
+	} else if (nodeType.compare("PSIMRANK") == 0) {
+    node = createPSimrankNode(params);
+  } else {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
 	return node;
@@ -86,6 +88,39 @@ PagerankNode* NodeFactory::createPagerankNode(unordered_map<string, string>* par
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   node->setOutputFile(string(outputFileN));
+  return node;
+}
+
+PSimrankNode* NodeFactory::createPSimrankNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  PSimrankNode* node = helper.initPSimrankNode(params);
+  IEdgeListBuilder* edgeListBuilder;
+
+  if (params->find("USE_PREPROCESS") == params->end()) {
+    edgeListBuilder = new EdgeListBuilder;
+  } else {
+    if ((*params)["USE_PREPROCESS"].compare("CRAWL") == 0) {
+      long maxNodeToKeep;
+      sscanf((*params)["MAX_NODE_TO_KEEP"].c_str(), "%ld", &maxNodeToKeep);
+      CrawlEdgeListBuilder*  crawlEdgeListBuilder = new CrawlEdgeListBuilder(maxNodeToKeep);
+      edgeListBuilder = crawlEdgeListBuilder;
+    } else if ((*params)["USE_PREPROCESS"].compare("FILTER") == 0) {
+      FilterEdgeListBuilder* filterEdgeListBuilder = new FilterEdgeListBuilder;
+      string nodesToDeleteFile = (*params)["FILTER_NODE_FILE"];
+      filterEdgeListBuilder->readNodesToDelete(nodesToDeleteFile);
+      edgeListBuilder = filterEdgeListBuilder;
+    } else {
+      logger_->error("ERROR. Unknown type of preprcessing %s.\n", (*params)["USE_PREPROCESS"].c_str());
+      return NULL;
+    }
+  }
+
+  char outputFileN[1024];
+  sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setEdgeListBuilder(edgeListBuilder);
+  node->setOutputFile(string(outputFileN));
+  node->setFingerPrintFile((*params)["FP_START_NAME"]);
+  node->initData((*params)["INPUT_PARTITION"]);
   return node;
 }
 
