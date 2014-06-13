@@ -10,4 +10,4 @@
 bool SimrankStoreFirstMaster::nextIter() {
 	return true;
 }
-void SimrankStoreFirstMaster::addInfoForNodes(string* ss) {}
+void SimrankStoreFirstMaster::addInfoForNodes(char* ss) {}

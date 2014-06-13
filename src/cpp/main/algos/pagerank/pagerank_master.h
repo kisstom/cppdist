@@ -13,7 +13,7 @@
 class PagerankMaster : public InnerMaster {
 public:
   bool nextIter();
-  void addInfoForNodes(string* ss);
+  void addInfoForNodes(char* ss);
 };
 
 

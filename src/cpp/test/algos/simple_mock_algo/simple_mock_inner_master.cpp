@@ -19,7 +19,7 @@ bool SimpleMockInnerMaster::nextIter() {
 	return true;
 }
 
-void SimpleMockInnerMaster::addInfoForNodes(string* ss) {
+void SimpleMockInnerMaster::addInfoForNodes(char* ss) {
 
 }
 

@@ -11,7 +11,7 @@ bool SimrankUpdateMaster::nextIter() {
   return true;
 }
 
-void SimrankUpdateMaster::addInfoForNodes(string* ss) {
+void SimrankUpdateMaster::addInfoForNodes(char* ss) {
 
 }
 

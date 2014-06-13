@@ -58,7 +58,7 @@ void PSimrankNode::beforeIteration(string msg) {
   if (oddIter_) {
     logger_->info("\nBefore iteration.\nIter odd(paratlan) iter");
     sscanf(msg.c_str(), "%ld %ld", &aCoef_, &bCoef_);
-    logger_->info("New coeffs %s %ld %ld", aCoef_, bCoef_);
+    logger_->info("New coeffs %ld %ld", aCoef_, bCoef_);
   } else {
     logger_->info("\nBefore iteration.\nIter even(paros) iter");
   }

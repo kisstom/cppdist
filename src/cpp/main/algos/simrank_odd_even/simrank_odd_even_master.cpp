@@ -10,6 +10,6 @@
 bool SimrankOddEvenMaster::nextIter() {
 	return true;
 }
-void SimrankOddEvenMaster::addInfoForNodes(string* ss) {}
+void SimrankOddEvenMaster::addInfoForNodes(char* ss) {}
 
 

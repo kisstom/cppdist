@@ -12,7 +12,7 @@
 
 class SimrankStoreFirstMaster : public InnerMaster {
 	bool nextIter();
-  void addInfoForNodes(string* ss);
+  void addInfoForNodes(char* ss);
 };
 
 

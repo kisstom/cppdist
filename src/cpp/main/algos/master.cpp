@@ -71,13 +71,18 @@ void Master::run()
     while (cont) {
       // Megmondjuk a node-oknak hogy futtassak
       // sender, receiver fuggvenyeiket 2 kulon szalban.
+      //cont = innerMaster_->nextIter();
+      //if (!cont) break;
       RunThreads();
-      // Bevarjuk oket.
+      WaitForNodes();
+
+      // Some special set up by the inner master
+      innerMaster_->nextIter();
+
+      // Waiting for finish.
       cont = WaitForNodes();
       if (!cont) break;
 
-      cont = innerMaster_->nextIter();
-      if (!cont) break;
     }
   } catch (ConnectionError& e) {
     //log_err(logfile_, "Error: %s.\n", e.what());
@@ -128,8 +133,10 @@ void Master::SendInfoToNodes()
     for (unsigned int j = 1; j < slaves_->size(); ++j) {
       ss << " " << (*slaves_)[j].minNode;
     }
-    //innerMaster_->addInfoForNodes(&ss);
+
     strcpy(info, ss.str().c_str());
+    innerMaster_->addInfoForNodes(info + strlen(info));
+
     logger_->info("Master sending %s", info);
     (*slaves_)[i].socket->Send(strlen(info)+1, info);
   }
@@ -231,7 +238,7 @@ void Master::sendMessageForAllNodes(char* msg) {
 }
 
 long Master::getNumNodes() {
-  return -1;
+  return numNodes_;
 }
 
 

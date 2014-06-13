@@ -107,6 +107,10 @@ void Algo::run()
     		throw MasterException();
     	}
 
+    	socketManager_->sendReadyToMaster();
+    	// Some initial step at the next iteration
+    	socketManager_->recvFromMaster(1024, instr);
+
     	node_->beforeIteration(instr);
     	runThreads();
     	bool cont = node_->afterIteration();

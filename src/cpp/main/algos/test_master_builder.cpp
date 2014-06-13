@@ -14,13 +14,13 @@ TestMasterBuilder::TestMasterBuilder() {
 
 Master* TestMasterBuilder::createMaster(unordered_map<string, string>* params) {
 	int master_port, num_slaves;
-	long numNodes;
+	long numLine;
 
 	sscanf((*params)["MASTER_PORT"].c_str(), "%d", &master_port);
 	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &num_slaves);
-	sscanf((*params)["NUM_NODES"].c_str(), "%ld", &numNodes);
+	sscanf((*params)["NUMLINE"].c_str(), "%ld", &numLine);
 
-	Master* master = new Master(master_port, slaves_, numNodes);
+	Master* master = new Master(master_port, slaves_, numLine);
 	return master;
 }
 

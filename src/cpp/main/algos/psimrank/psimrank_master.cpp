@@ -7,22 +7,39 @@
 
 #include "psimrank_master.h"
 
+PSimrankMaster::PSimrankMaster() {
+  logger_ = &log4cpp::Category::getInstance(std::string("PSimrankMaster"));
+  logger_->info("PSimrankMaster inited.");
+  iterNum_ = 0;
+}
+
 void PSimrankMaster::setMaster(Master* master) {
   master_ = master;
+  setPrime();
 }
 
 bool PSimrankMaster::nextIter() {
+  logger_->info("nextIter");
+
+  if (iterNum_++ % 2 == 1) {
+    return true;
+  }
+
   long aCoef = generateRandomCoeff();
   long bCoef = generateRandomCoeff();
 
   char msg[1024];
   sprintf(msg, "%ld %ld", aCoef, bCoef);
+  logger_->info("Sending msg %s.", msg);
   master_->sendMessageForAllNodes(msg);
 
   return true;
 }
 
-void PSimrankMaster::addInfoForNodes(string* ss) {}
+void PSimrankMaster::addInfoForNodes(char* ss) {
+  long long_prime = mpz_get_ui(prime_);
+
+}
 
 void PSimrankMaster::setPrime() {
   mpz_t mpz_num_nodes;

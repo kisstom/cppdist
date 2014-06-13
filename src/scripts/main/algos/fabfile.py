@@ -55,7 +55,7 @@ def readCfg():
     isConfReaded = True
   env.user = 'kisstom'
   BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
-  BASE_CONCAT_DIR = conf.get('ALGO', 'CONCAT_DIR')
+  #BASE_CONCAT_DIR = conf.get('ALGO', 'CONCAT_DIR')
 
   conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
   buildHosts(conf)
@@ -319,8 +319,8 @@ def concat():
   run('cat %s/out* > %s/concat'%(concat_dir, concat_dir))
 #  run('rm %s/out*'%(concat_dir))
 
-def copyFromMachineTo(remote_local_dir, concat_dir):
-  get(remote_local_dir/out*, concat_dir)  
+#def copyFromMachineTo(remote_local_dir, concat_dir):
+#  get(remote_local_dir/out*, concat_dir)  
 
 
 

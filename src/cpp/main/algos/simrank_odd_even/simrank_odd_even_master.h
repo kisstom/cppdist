@@ -13,7 +13,7 @@
 
 class SimrankOddEvenMaster : public InnerMaster {
 	bool nextIter();
-  void addInfoForNodes(string* ss);
+  void addInfoForNodes(char* ss);
 };
 
 #endif /* SIMRANK_ODD_EVEN_MASTER_H_ */
