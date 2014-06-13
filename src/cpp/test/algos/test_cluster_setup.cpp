@@ -90,7 +90,7 @@ TEST(ClusterSetupTest, test) {
   //strcpy(s.path, test_input2);
   slaves.push_back(s);
 
-	Master* master = new Master(8000, &slaves);
+	Master* master = new Master(8000, &slaves, 20);
 	MockInnerMaster* mockInnerMaster = new MockInnerMaster;
 	string info1("/tmp/test_cluster1 0 0 10");
 	string info2("/tmp/test_cluster2 10 0 10");

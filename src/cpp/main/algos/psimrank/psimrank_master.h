@@ -20,6 +20,7 @@ public:
   void addInfoForNodes(string* ss);
 
 private:
+  void setPrime();
   long generateRandomCoeff();
   Master* master;
   mpz_t prime_;

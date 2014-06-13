@@ -15,16 +15,18 @@ MasterBuilder::MasterBuilder() {
 
 Master* MasterBuilder::createMaster(unordered_map<string, string>* params) {
 	int master_port, num_slaves;
+	long numNodes;
 	char logfile_name[1024], slavery_cfg[1024];
 
 	sscanf((*params)["MASTER_PORT"].c_str(), "%d", &master_port);
 	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &num_slaves);
+	sscanf((*params)["NUM_NODES"].c_str(), "%ld", &numNodes);
 	strcpy(logfile_name, (*params)["LOGFILE_NAME"].c_str());
 	strcpy(slavery_cfg, (*params)["REMOTE_DIR"].c_str());
 	strcat(slavery_cfg, (*params)["SLAVERY_CFG"].c_str());
 
 	vector<Slave>* slaves = readSlaveConfigs(slavery_cfg, num_slaves);
-	Master* master = new Master(master_port, slaves);
+	Master* master = new Master(master_port, slaves, numNodes);
 	return master;
 }
 

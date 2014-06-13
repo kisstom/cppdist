@@ -10,11 +10,14 @@
 
 using std::vector;
 
-Master::Master(int master_port, vector<Slave>* slaves)
+Master::Master(int master_port, vector<Slave>* slaves, long numNodes)
 {
   master_port_ = master_port;
   slaves_ = slaves;
   logger_ = &log4cpp::Category::getInstance(std::string("Master"));
+  numNodes_ = numNodes;
+  master_socket_ = NULL;
+  innerMaster_ = NULL;
 }
 
 Master::~Master()
@@ -217,6 +220,18 @@ void Master::Final()
 
 void Master::setInnerMaster(InnerMaster* innerMaster) {
 	innerMaster_ = innerMaster;
+}
+
+void Master::sendMessageForAllNodes(char* msg) {
+  logger_->info("Sending msg to nodes.");
+
+  for (unsigned int i = 0; i < slaves_->size(); ++i) {
+    (*slaves_)[i].socket->Send(strlen(msg)+1, msg);
+  }
+}
+
+long Master::getNumNodes() {
+  return -1;
 }
 
 
