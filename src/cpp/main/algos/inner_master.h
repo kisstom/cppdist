@@ -11,10 +11,13 @@
 #include <string>
 using std::string;
 
+class Master;
+
 class InnerMaster {
 public:
 	virtual bool nextIter() = 0;
 	virtual void addInfoForNodes(string* ss) = 0;
+	virtual void setMaster(Master*) {}
 	virtual ~InnerMaster() {}
 };
 

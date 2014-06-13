@@ -15,14 +15,13 @@
 
 class PSimrankMaster : public InnerMaster {
 public:
-  PSimrankMaster(Master*);
   bool nextIter();
   void addInfoForNodes(string* ss);
-
+  void setMaster(Master*);
 private:
   void setPrime();
   long generateRandomCoeff();
-  Master* master;
+  Master* master_;
   mpz_t prime_;
 };
 

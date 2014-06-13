@@ -25,7 +25,9 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
 		innerMaster = new SimrankOddEvenMaster;
 	} else if (innerMasterType.compare("PAGERANK") == 0) {
 	  innerMaster = new PagerankMaster;
-	} else {
+	} else if (innerMasterType.compare("PSIMRANK") == 0) {
+    innerMaster = new PSimrankMaster;
+  } else {
 		logger_->error("Unknown inner master type %s", innerMasterType.c_str());
 	}
 

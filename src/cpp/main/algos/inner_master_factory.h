@@ -12,6 +12,7 @@
 #include "pagerank/pagerank_master.h"
 #include "simrank_store_first/simrank_store_first_master.h"
 #include "simrank_odd_even/simrank_odd_even_master.h"
+#include "psimrank/psimrank_master.h"
 #include "inner_master.h"
 #include <log4cpp/Category.hh>
 

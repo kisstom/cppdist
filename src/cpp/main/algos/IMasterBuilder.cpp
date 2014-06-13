@@ -16,6 +16,7 @@ Master* IMasterBuilder::buildFromConfig(unordered_map<string, string>* params) {
 
   innerMaster = innerMasterFactory.createInnerInnerMaster(params);
   master->setInnerMaster(innerMaster);
+  innerMaster->setMaster(master);
 
 	return master;
 }

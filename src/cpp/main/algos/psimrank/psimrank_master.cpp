@@ -7,13 +7,17 @@
 
 #include "psimrank_master.h"
 
+void PSimrankMaster::setMaster(Master* master) {
+  master_ = master;
+}
+
 bool PSimrankMaster::nextIter() {
   long aCoef = generateRandomCoeff();
   long bCoef = generateRandomCoeff();
 
   char msg[1024];
   sprintf(msg, "%ld %ld", aCoef, bCoef);
-  master->sendMessageForAllNodes(msg);
+  master_->sendMessageForAllNodes(msg);
 
   return true;
 }
@@ -23,7 +27,7 @@ void PSimrankMaster::addInfoForNodes(string* ss) {}
 void PSimrankMaster::setPrime() {
   mpz_t mpz_num_nodes;
   mpz_init(mpz_num_nodes);
-  mpz_set_ui(mpz_num_nodes, master->getNumNodes());
+  mpz_set_ui(mpz_num_nodes, master_->getNumNodes());
 
   mpz_init(prime_);
   mpz_nextprime(prime_, mpz_num_nodes);
