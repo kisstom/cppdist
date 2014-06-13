@@ -13,8 +13,7 @@ PSimrankMaster::PSimrankMaster() {
   iterNum_ = 0;
 }
 
-void PSimrankMaster::setMaster(Master* master) {
-  master_ = master;
+void PSimrankMaster::init() {
   setPrime();
 }
 
@@ -38,6 +37,7 @@ bool PSimrankMaster::nextIter() {
 
 void PSimrankMaster::addInfoForNodes(char* ss) {
   long long_prime = mpz_get_ui(prime_);
+  sprintf(ss, " %ld", long_prime);
 
 }
 

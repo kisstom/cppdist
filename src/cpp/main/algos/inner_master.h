@@ -9,6 +9,8 @@
 #define INNER_MASTER_H_
 
 #include <string>
+#include "master.h"
+
 using std::string;
 
 class Master;
@@ -16,9 +18,13 @@ class Master;
 class InnerMaster {
 public:
 	virtual bool nextIter() = 0;
-	virtual void addInfoForNodes(char* ss) = 0;
-	virtual void setMaster(Master*) {}
+	virtual void addInfoForNodes(char* ss);
+	void setMaster(Master*);
+	virtual void init() {}
 	virtual ~InnerMaster() {}
+
+private:
+	Master* master_;
 };
 
 

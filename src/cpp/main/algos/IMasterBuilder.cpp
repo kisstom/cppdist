@@ -11,12 +11,14 @@ Master* IMasterBuilder::buildFromConfig(unordered_map<string, string>* params) {
 	string masterType = (*params)["MASTER_TYPE"];
 	InnerMasterFactory innerMasterFactory;
 	Master* master = NULL;
+
 	master = createMaster(params);
-	InnerMaster* innerMaster;
+	InnerMaster* innerMaster = NULL;
 
   innerMaster = innerMasterFactory.createInnerInnerMaster(params);
   master->setInnerMaster(innerMaster);
   innerMaster->setMaster(master);
+  innerMaster->init();
 
 	return master;
 }

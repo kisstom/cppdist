@@ -98,7 +98,7 @@ void Algo::run()
     //bool exit = false;
     while (1)
     {
-
+      logger_->info("Algo waiting for msg from master.");
     	socketManager_->recvFromMaster(1024, instr);
     	if (!strcmp(instr, "exit")) {
     		break;
@@ -192,7 +192,7 @@ void Algo::initFromMaster() {
 	stringstream ss (stringstream::in | stringstream::out);
 	ss << buf;
 	long actMin;
-	while (ss.peek() != EOF) {
+	for (int i = 0; i < num_slaves_; ++i) {
 		ss >> actMin;
 		partition_min_node_.push_back(actMin);
 	}

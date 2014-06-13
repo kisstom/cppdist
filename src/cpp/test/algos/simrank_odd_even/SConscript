@@ -18,6 +18,7 @@ COMMON_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
 COMMON_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
 COMMON_OBJ += ['#/../bin/main/algos/psimrank/psimrank_node.o', '#/../bin/main/algos/psimrank/psimrank_deserializer.o']
 COMMON_OBJ += ['#/../bin/main/algos/psimrank/psimrank_master.o']
+COMMON_OBJ += ['#/../bin/main/algos/inner_master.o']
 
 env.Program('simrank_odd_even_test', ['simrank_odd_even_test.cpp']  + COMMON_OBJ)
 env.Program('simrank_test_small', ['simrank_test_small.cpp'] + COMMON_OBJ)

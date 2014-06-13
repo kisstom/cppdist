@@ -18,7 +18,7 @@ public:
   PSimrankMaster();
   bool nextIter();
   void addInfoForNodes(char* ss);
-  void setMaster(Master*);
+  void init();
 private:
   void setPrime();
   long generateRandomCoeff();

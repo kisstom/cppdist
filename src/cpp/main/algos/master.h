@@ -23,6 +23,8 @@
 
 using std::vector;
 
+class InnerMaster;
+
 struct Slave {
   int port;
   //char path[1024];

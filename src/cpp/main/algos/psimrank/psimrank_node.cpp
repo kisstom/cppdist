@@ -238,7 +238,8 @@ void PSimrankNode::senderEven() {
   logger_->info("Sender even finished.");
 }
 
-void PSimrankNode::initFromMaster(string) {
+void PSimrankNode::initFromMaster(string ss) {
+  sscanf(ss.c_str(), "%ld", &modulo_);
 }
 
 void PSimrankNode::initEdgeListContainer(string partName) {
