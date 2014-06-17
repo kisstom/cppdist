@@ -10,6 +10,7 @@
 
 #include <string>
 #include "master.h"
+#include "log4cpp/Category.hh"
 
 using std::string;
 
@@ -17,13 +18,15 @@ class Master;
 
 class InnerMaster {
 public:
-	virtual bool nextIter() = 0;
+  InnerMaster();
+	virtual bool nextIter();
 	virtual void addInfoForNodes(char* ss);
-	void setMaster(Master*);
+	virtual void setMaster(Master*);
 	virtual void init() {}
 	virtual ~InnerMaster() {}
 
-private:
+protected:
+	log4cpp::Category* logger_;
 	Master* master_;
 };
 

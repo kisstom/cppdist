@@ -53,6 +53,32 @@ void Cluster::initMaster() {
 	master_ = masterBuilder_->buildFromConfig(params_);
 }
 
+void Cluster::setUp() {
+  logger_->info("Starting cluster.");
+  SetupThread* masterThread = NULL;
+  Algo* algo = NULL;
+
+  vector<SetupThread*> nodes;
+  masterThread = new SetupThread(master_);
+  masterThread->start();
+  logger_->info("Master started.");
+
+  for (int slaveIndex = 0; slaveIndex < numSlaves_; ++slaveIndex) {
+    logger_->info("Starting node %d.", slaveIndex);
+    algo = builders_[slaveIndex]->getAlgo();
+    SetupThread* nodeThread = new SetupThread(algo);
+    nodes.push_back(nodeThread);
+    nodeThread->start();
+    logger_->info("Node %d started.", slaveIndex);
+  }
+
+  for (int i = 0; i < nodes.size(); ++i) {
+    nodes[i]->waitForThread();
+  }
+
+  masterThread->waitForThread();
+}
+
 
 void Cluster::start() {
 	logger_->info("Starting cluster.");

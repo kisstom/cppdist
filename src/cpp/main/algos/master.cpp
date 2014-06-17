@@ -65,6 +65,7 @@ void Master::run()
 {
 	logger_->info("Starting run.");
   bool cont = true;
+  bool retval = true;
   try {
     // Varunk.
     // WaitForNodes();
@@ -77,10 +78,12 @@ void Master::run()
       WaitForNodes();
 
       // Some special set up by the inner master
-      innerMaster_->nextIter();
+      retval = innerMaster_->nextIter();
+      if (!retval) cont = retval;
 
       // Waiting for finish.
-      cont = WaitForNodes();
+      retval = WaitForNodes();
+      if (!retval) cont = retval;
       if (!cont) break;
 
     }
@@ -209,7 +212,7 @@ void Master::MakeConnection(int i, int j)
 
 void Master::RunThreads()
 {
-  //log_info(logfile_, "Sending to nodes start threading.");
+  logger_->info("Sending to nodes start threading.");
   for (unsigned int i = 0; i < slaves_->size(); ++i) {
     (*slaves_)[i].socket->Send(7, "thread");
   }

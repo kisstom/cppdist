@@ -12,7 +12,7 @@
 #include "../inner_master.h"
 
 class SimrankOddEvenMaster : public InnerMaster {
-	bool nextIter();
+	//bool nextIter();
   void addInfoForNodes(char* ss);
 };
 

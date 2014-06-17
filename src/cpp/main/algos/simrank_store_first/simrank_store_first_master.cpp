@@ -7,7 +7,7 @@
 
 #include "simrank_store_first_master.h"
 
-bool SimrankStoreFirstMaster::nextIter() {
+/*bool SimrankStoreFirstMaster::nextIter() {
 	return true;
-}
+}*/
 void SimrankStoreFirstMaster::addInfoForNodes(char* ss) {}

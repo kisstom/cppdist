@@ -11,7 +11,7 @@
 #include "../inner_master.h"
 
 class SimrankStoreFirstMaster : public InnerMaster {
-	bool nextIter();
+	//bool nextIter();
   void addInfoForNodes(char* ss);
 };
 

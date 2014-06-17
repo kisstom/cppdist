@@ -12,7 +12,7 @@
 
 class SimrankUpdateMaster : public InnerMaster {
 public:
-  bool nextIter();
+  //bool nextIter();
   void addInfoForNodes(char* ss);
 };
 

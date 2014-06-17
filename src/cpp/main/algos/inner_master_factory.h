@@ -14,6 +14,7 @@
 #include "simrank_odd_even/simrank_odd_even_master.h"
 #include "psimrank/psimrank_master.h"
 #include "inner_master.h"
+#include "../../test/algos/simple_mock_algo/simple_mock_inner_master.h"
 #include <log4cpp/Category.hh>
 
 class InnerMasterFactory {

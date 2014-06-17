@@ -22,7 +22,7 @@ public:
 private:
   void setPrime();
   long generateRandomCoeff();
-  Master* master_;
+  //Master* master_;
   mpz_t prime_;
   int iterNum_;
   log4cpp::Category* logger_;

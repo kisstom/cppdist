@@ -7,9 +7,9 @@
 
 #include "simrank_update_master.h"
 
-bool SimrankUpdateMaster::nextIter() {
+/*bool SimrankUpdateMaster::nextIter() {
   return true;
-}
+}*/
 
 void SimrankUpdateMaster::addInfoForNodes(char* ss) {
 

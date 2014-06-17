@@ -17,6 +17,7 @@
 #include "test_master_builder.h"
 #include "IMasterBuilder.h"
 #include "../common/thread/main_thread.h"
+#include "../common/thread/setup_thread.h"
 #include "log4cpp/Category.hh"
 
 using std::tr1::unordered_map;
@@ -29,6 +30,7 @@ public:
 			vector<INodeFactory*>, IMasterBuilder*);
 	void init();
 	void start();
+	void setUp();
 	Node* getNode(int);
 	~Cluster();
 private:

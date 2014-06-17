@@ -86,6 +86,7 @@ bool Algo::setUp() {
     return false;
   }
 
+  logger_->info("Algo setup finished.");
   return true;
 }
 
@@ -107,10 +108,14 @@ void Algo::run()
     		throw MasterException();
     	}
 
+    	logger_->info("Recieving msg %s.", instr);
+    	logger_->info("Sending ready for master.");
     	socketManager_->sendReadyToMaster();
-    	// Some initial step at the next iteration
+
+    	logger_->info("Waiting for before iteration instr.");
     	socketManager_->recvFromMaster(1024, instr);
 
+    	logger_->info("Received instr %s.", instr);
     	node_->beforeIteration(instr);
     	runThreads();
     	bool cont = node_->afterIteration();

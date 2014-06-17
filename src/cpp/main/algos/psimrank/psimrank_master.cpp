@@ -36,7 +36,7 @@ bool PSimrankMaster::nextIter() {
 }
 
 void PSimrankMaster::addInfoForNodes(char* ss) {
-  long long_prime = mpz_get_ui(prime_);
+  long long_prime = mpz_get_si(prime_);
   sprintf(ss, " %ld", long_prime);
 
 }

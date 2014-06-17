@@ -15,7 +15,7 @@ class SimpleMockInnerMaster : public InnerMaster {
 public:
 	SimpleMockInnerMaster();
 	bool nextIter();
-	void addInfoForNodes(char* ss);
+	//void addInfoForNodes(char* ss);
 private:
 	int iteration_;
 	log4cpp::Category* logger_;

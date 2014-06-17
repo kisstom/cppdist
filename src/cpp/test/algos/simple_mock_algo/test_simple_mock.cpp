@@ -87,6 +87,7 @@ TEST(SimpleMockTest, test) {
 	Master* master = new Master(8000, &slaves, 20);
 	SimpleMockInnerMaster* mockInnerMaster = new SimpleMockInnerMaster;
 	master->setInnerMaster(mockInnerMaster);
+	mockInnerMaster->setMaster(master);
 
 	SimpleMockNode* node1 = new SimpleMockNode;
 	SimpleMockNode* node2 = new SimpleMockNode;
