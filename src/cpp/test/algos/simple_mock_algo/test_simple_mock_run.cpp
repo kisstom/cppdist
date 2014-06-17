@@ -62,7 +62,6 @@ protected:
     addPartition(part1, 2);
     addPartition(part2, 2);
 
-
     setUpBuilder();
     finalSetup();
   }

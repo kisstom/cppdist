@@ -42,7 +42,7 @@ protected:
 
 TEST(PSimrankMasterTest, testInit) {
   Master* master = new Master(0, NULL, 12);
-  PSimrankMaster* innerMaster = new PSimrankMaster;
+  PSimrankMaster* innerMaster = new PSimrankMaster(13);
   innerMaster->setMaster(master);
   innerMaster->init();
 

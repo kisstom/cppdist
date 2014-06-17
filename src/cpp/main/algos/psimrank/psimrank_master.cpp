@@ -7,20 +7,23 @@
 
 #include "psimrank_master.h"
 
-PSimrankMaster::PSimrankMaster() {
+PSimrankMaster::PSimrankMaster(long seed) {
   logger_ = &log4cpp::Category::getInstance(std::string("PSimrankMaster"));
   logger_->info("PSimrankMaster inited.");
   iterNum_ = 0;
+  seed_ = seed;
 }
 
 void PSimrankMaster::init() {
   setPrime();
+  setRandomState();
 }
 
 bool PSimrankMaster::nextIter() {
   logger_->info("nextIter");
 
   if (iterNum_++ % 2 == 1) {
+    InnerMaster::nextIter();
     return true;
   }
 
@@ -52,15 +55,19 @@ void PSimrankMaster::setPrime() {
   mpz_clear(mpz_num_nodes);
 }
 
+void PSimrankMaster::setRandomState() {
+  gmp_randinit_default (r_state_);
+  gmp_randseed_ui(r_state_, seed_);
+}
 
 long PSimrankMaster::generateRandomCoeff() {
-  gmp_randstate_t r_state;
-  gmp_randinit_default (r_state);
-  gmp_randseed_ui(r_state, 0);
-
   mpz_t random;
   mpz_init(random);
-  mpz_urandomm(random, r_state, prime_);
-  return mpz_get_ui(random);
+  mpz_urandomm(random, r_state_, prime_);
+
+  long r = mpz_get_ui(random);
+  mpz_clear(random);
+
+  return r;
 }
 

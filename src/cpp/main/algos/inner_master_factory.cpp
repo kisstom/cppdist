@@ -26,7 +26,9 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
 	} else if (innerMasterType.compare("PAGERANK") == 0) {
 	  innerMaster = new PagerankMaster;
 	} else if (innerMasterType.compare("PSIMRANK") == 0) {
-    innerMaster = new PSimrankMaster;
+	  long seed = -1;
+	  sscanf((*params)["SEED"].c_str(), "%ld", &seed);
+    innerMaster = new PSimrankMaster(seed);
   } else if (innerMasterType.compare("SIMPLE_MOCK") == 0) {
     innerMaster = new SimpleMockInnerMaster;
   } else {

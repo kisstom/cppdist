@@ -10,40 +10,9 @@
 namespace {
 
 class SimrankTestSmall : public SimrankTestBase {
-	void initParams() {
-		pathLen_ = 10;
-		numPathes_ = 2;
-		numNodes_ = 0;
-		slaveIndex_ = 0;
-		slavePort_ = 7001;
-		std::stringstream ss;
-
-		ss << slavePort_;
-		params_["INIT_SLAVE_PORT"] = ss.str();
-		ss.str("");
-
-		ss << pathLen_;
-		params_["PATH_LEN"] = ss.str();
-		ss.str("");
-
-		ss << numPathes_;
-		params_["NUM_PATHES"] = ss.str();
-		ss.str("");
-
-		params_["MASTER_PORT"] = "7000";
-		params_["SEND_LIMIT"] = "6000";
-		params_["MASTER_HOST"] = "localhost";
-		params_["NODE_TYPE"] = "SIMRANK_ODD_EVEN";
-		params_["RANDOM_TYPE"] = "PSEUDO";
-		params_["SEED"] = "13";
-		params_["INNER_MASTER_TYPE"] = "SIMRANK_ODD_EVEN";
-		params_["DESERIALIZER_TYPE"] = "SIMRANK_ODD_EVEN";
-		expectedPathes_.resize(numPathes_);
-	}
-
 
 	virtual void SetUp() {
-	    initParams();
+	    initParams("SIMRANK_ODD_EVEN");
 	  	initLogger();
 	  	vector<string> part1;
 	  	vector<string> part2;

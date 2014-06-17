@@ -37,6 +37,37 @@ protected:
   static void TearDownTestCase() {
   }
 
+  void initParams(string nodeType) {
+      pathLen_ = 10;
+      numPathes_ = 2;
+      numNodes_ = 0;
+      slaveIndex_ = 0;
+      slavePort_ = 7001;
+      std::stringstream ss;
+
+      ss << slavePort_;
+      params_["INIT_SLAVE_PORT"] = ss.str();
+      ss.str("");
+
+      ss << pathLen_;
+      params_["PATH_LEN"] = ss.str();
+      ss.str("");
+
+      ss << numPathes_;
+      params_["NUM_PATHES"] = ss.str();
+      ss.str("");
+
+      params_["MASTER_PORT"] = "7000";
+      params_["SEND_LIMIT"] = "6000";
+      params_["MASTER_HOST"] = "localhost";
+      params_["NODE_TYPE"] = nodeType;
+      params_["RANDOM_TYPE"] = "PSEUDO";
+      params_["SEED"] = "13";
+      params_["INNER_MASTER_TYPE"] = nodeType;
+      params_["DESERIALIZER_TYPE"] = nodeType;
+      expectedPathes_.resize(numPathes_);
+  }
+
   void addPartition(vector<string> partString, long numSlaves) {
   	long minNode = numNodes_;
   	vector<vector<long> > part = toMatrix(partString);
