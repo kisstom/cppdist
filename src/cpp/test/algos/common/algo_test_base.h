@@ -126,7 +126,7 @@ protected:
     string appender = "CONSOLE";
 
     LoggerFactory::initLogger(debugLevel, appender, "");
-    logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenTest"));
+    logger_ = &log4cpp::Category::getInstance(std::string("AlgoTestBase"));
     logger_->info("Logger started. Level %s.", debugLevel.c_str());
   }
 
