@@ -156,7 +156,7 @@ int SocketConnection::Recv(int limit, char* buf) {
   memset(buf, 0, limit);
 
   // status: the number of recieved bytes
-  int status = ::recv(socket_file_descriptor, buf, limit - 1 , 0);
+  int status = ::recv(socket_file_descriptor, buf, limit, 0);
 
   if (status == -1) {
     return -1;
