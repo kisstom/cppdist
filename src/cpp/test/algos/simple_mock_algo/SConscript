@@ -20,7 +20,7 @@ COMMON_OBJ += ['#/../bin/main/algos/test_master_builder.o', '#/../bin/main/algos
 COMMON_OBJ += ['#/../bin/main/algos/node_factory_helper.o']
 
 SIMPLE_MOCK_OBJ = Glob('#/../bin/test/algos/simple_mock_algo/simple*.o')
-
+COMMON_OBJ += ['#/../bin/main/algos/psimrank/psimrank_pseudo_random_generator.o', '#/../bin/main/algos/psimrank/psimrank_random_generator.o']
 
 env.Program('test_simple_mock', ['test_simple_mock.cpp', '../../../main/algos/algo.o', '../../../main/algos/master.o', '../../../main/algos/node.o'] + COMMON_OBJ + SIMPLE_MOCK_OBJ + DESER_OBJ)
 env.Program('test_simple_mock_run', ['test_simple_mock_run.cpp', '../../../main/algos/algo.o', '../../../main/algos/master.o', '../../../main/algos/node.o'] + COMMON_OBJ + SIMPLE_MOCK_OBJ + DESER_OBJ)

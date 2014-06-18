@@ -15,13 +15,12 @@ using std::vector;
 
 class PSimrankPseudoRandomGenerator : public PSimrankRandomGeneratorIFace {
 public:
-  PSimrankPseudoRandomGenerator(long, vector<long>*, vector<long>*);
+  PSimrankPseudoRandomGenerator(long, vector<long>, vector<long>);
   long generateRandomCoeff();
   void setPrime(mpz_t*, long n);
-
 private:
-  vector<long>* randomA_;
-  vector<long>* randomB_;
+  vector<long> randomA_;
+  vector<long> randomB_;
   long prime_;
   int numRequests_;
 };

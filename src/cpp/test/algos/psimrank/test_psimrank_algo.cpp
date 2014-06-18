@@ -45,24 +45,27 @@ protected:
     vector<string> part1;
     vector<string> part2;
     part1.push_back("1 2 3");
-    part1.push_back("");
-    part1.push_back("9");
-    part1.push_back("8 10");
-    part1.push_back("");
-    part1.push_back("2 4 6");
+    part1.push_back("3");
 
-    part2.push_back("");
-    part2.push_back("2 3 5");
-    part2.push_back("11");
-    part2.push_back("");
-    part2.push_back("");
-    part2.push_back("1 6 8");
+    part2.push_back("3");
+    part2.push_back("0 2");
 
     addPartition(part1, 2);
     addPartition(part2, 2);
 
     setUpBuilder();
     finalSetup();
+  }
+
+  void initParams(string nodeType) {
+    numPathes_ = 2;
+    pathLen_ = 2;
+    SimrankTestBase::initParams(nodeType);
+
+    params_["RANDOM_TYPE"] = "PSEUDO";
+    params_["RANDOM_A"] = "0,1,2,3";
+    params_["RANDOM_B"] = "3,4,5,6";
+    params_["RANDOM_PRIME"] = "5";
   }
 
   virtual void TearDown() {

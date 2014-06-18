@@ -13,7 +13,8 @@ COMMON_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
 COMMON_OBJ += ['#/../bin/main/algos/psimrank/psimrank_node.o', '#/../bin/main/algos/psimrank/psimrank_deserializer.o']
 COMMON_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_node.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o'] 
 
-env.Program('node_task', ['master.o', 'inner_master.o', 'node_task.cpp', 'node_factory.o', 'algo_builder.o', 'node.o', 'algo.o','node_factory_helper.o', 'test_simrank_odd_even_node_fatory.o' ] + COMMON_OBJ)
-
 COMMON_MASTER_OBJ = ['#/../bin/main/algos/psimrank/psimrank_master.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_inner_master.o']
+COMMON_MASTER_OBJ += ['#/../bin/main/algos/psimrank/psimrank_pseudo_random_generator.o', '#/../bin/main/algos/psimrank/psimrank_random_generator.o']
+
+env.Program('node_task', ['master.o', 'inner_master.o', 'node_task.cpp', 'node_factory.o', 'algo_builder.o', 'node.o', 'algo.o','node_factory_helper.o', 'test_simrank_odd_even_node_fatory.o' ] + COMMON_OBJ)
 env.Program('master_task', ['inner_master.o', 'master_task.cpp','IMasterBuilder.o', 'test_master_builder.o', 'inner_master_factory.o', 'master_builder.o', 'master.o', 'node.o',  'algo.o'] + COMMON_OBJ + COMMON_MASTER_OBJ)

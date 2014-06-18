@@ -37,9 +37,9 @@ protected:
   static void TearDownTestCase() {
   }
 
-  void initParams(string nodeType) {
-      pathLen_ = 10;
-      numPathes_ = 2;
+  virtual void initParams(string nodeType) {
+      //pathLen_ = 10;
+      //numPathes_ = 2;
       numNodes_ = 0;
       slaveIndex_ = 0;
       slavePort_ = 7001;

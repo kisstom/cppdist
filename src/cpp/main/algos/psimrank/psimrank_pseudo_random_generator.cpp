@@ -8,7 +8,7 @@
 #include "psimrank_pseudo_random_generator.h"
 
 PSimrankPseudoRandomGenerator::PSimrankPseudoRandomGenerator(
-    long prime, vector<long>* randomA, vector<long>* randomB) {
+    long prime, vector<long> randomA, vector<long> randomB) {
   numRequests_ = 0;
   prime_ = prime;
   randomA_ = randomA;
@@ -17,14 +17,13 @@ PSimrankPseudoRandomGenerator::PSimrankPseudoRandomGenerator(
 
 long PSimrankPseudoRandomGenerator::generateRandomCoeff() {
   long retval = -1;
+  //printf("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG %d\n", numRequests_);
   if (numRequests_ % 2 == 0) {
-    if (numRequests_ % 2 < (int) randomA_->size()) {
-      retval = (*randomA_)[numRequests_ % 2];
+    if (numRequests_ / 2 < (int) randomA_.size()) {
+      retval = randomA_[numRequests_ / 2];
     }
-  }
-
-  if (numRequests_ % 2 + 1 < (int) randomB_->size()) {
-    retval = (*randomB_)[numRequests_ % 2 + 1];
+  } else if ((numRequests_ - 1) / 2 < (int) randomB_.size()) {
+    retval = randomB_[(numRequests_ - 1) / 2];
   }
 
   ++numRequests_;

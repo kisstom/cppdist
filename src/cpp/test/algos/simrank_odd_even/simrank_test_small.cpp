@@ -62,6 +62,12 @@ class SimrankTestSmall : public SimrankTestBase {
 	  	setUpBuilder();
 	  	finalSetup();
 	}
+
+	void initParams(string nodeType) {
+	  numPathes_ = 2;
+	  pathLen_ = 10;
+	  SimrankTestBase::initParams(nodeType);
+	}
 };
 
 TEST_F(SimrankTestSmall, testRun) {

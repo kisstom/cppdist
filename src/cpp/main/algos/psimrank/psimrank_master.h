@@ -16,20 +16,18 @@
 
 class PSimrankMaster : public InnerMaster {
 public:
-  PSimrankMaster(long);
+  PSimrankMaster();
   bool nextIter();
   void addInfoForNodes(char* ss);
   void init();
+  void setRandomGenerator(PSimrankRandomGeneratorIFace*);
 private:
   void setPrime();
-  //void setRandomState();
   long generateRandomCoeff();
-  PSimrankRandomGeneratorIFace* randomGenerator_;
 
+  PSimrankRandomGeneratorIFace* randomGenerator_;
   mpz_t prime_;
-  //gmp_randstate_t r_state_;
   int iterNum_;
-  long seed_;
   log4cpp::Category* logger_;
 };
 

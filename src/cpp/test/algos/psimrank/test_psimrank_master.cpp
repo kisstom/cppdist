@@ -9,6 +9,7 @@
 #include "../../../main/algos/master.h"
 #include "../../../main/algos/inner_master.h"
 #include "../../../main/algos/psimrank/psimrank_master.h"
+#include "../../../main/algos/psimrank/psimrank_random_generator.h"
 
 namespace {
 
@@ -42,7 +43,11 @@ protected:
 
 TEST(PSimrankMasterTest, testInit) {
   Master* master = new Master(0, NULL, 12);
-  PSimrankMaster* innerMaster = new PSimrankMaster(13);
+  PSimrankMaster* innerMaster = new PSimrankMaster;
+
+  PSimrankRandomGeneratorIFace* randomGen = new PSimrankRandomGenerator(13);
+  innerMaster->setRandomGenerator(randomGen);
+
   innerMaster->setMaster(master);
   innerMaster->init();
 

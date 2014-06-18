@@ -18,6 +18,7 @@ COMMON_OBJ += ['#/../bin/main/algos/cluster.o', '#/../bin/main/algos/algo_builde
 COMMON_OBJ += ['#/../bin/main/algos/test_simrank_odd_even_node_fatory.o', '#/../bin/main/algos/test_master_builder.o']
 COMMON_OBJ += ['#/../bin/main/algos/node_factory_helper.o', '#/../bin/main/algos/inner_master_factory.o']
 COMMON_OBJ += Glob('#/../bin/test/algos/simple_mock_algo/simple*.o')
+COMMON_OBJ += ['#/../bin/main/algos/psimrank/psimrank_pseudo_random_generator.o', '#/../bin/main/algos/psimrank/psimrank_random_generator.o']
 
 env.Program('test_psimrank_master', ['test_psimrank_master.cpp'] + COMP_OBJECTS + COMMON_OBJ + DESER_OBJ + ALGO_OBJ)
 env.Program('test_psimrank_algo', ['test_psimrank_algo.cpp'] + COMP_OBJECTS + COMMON_OBJ + DESER_OBJ + ALGO_OBJ)

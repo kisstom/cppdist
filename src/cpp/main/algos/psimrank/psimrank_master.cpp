@@ -7,16 +7,18 @@
 
 #include "psimrank_master.h"
 
-PSimrankMaster::PSimrankMaster(long seed) {
+PSimrankMaster::PSimrankMaster() {
   logger_ = &log4cpp::Category::getInstance(std::string("PSimrankMaster"));
   logger_->info("PSimrankMaster inited.");
   iterNum_ = 0;
-  //seed_ = seed;
+}
+
+void PSimrankMaster::setRandomGenerator(PSimrankRandomGeneratorIFace* rgen) {
+  randomGenerator_ = rgen;
 }
 
 void PSimrankMaster::init() {
   setPrime();
-  //setRandomState();
 }
 
 bool PSimrankMaster::nextIter() {
@@ -45,32 +47,9 @@ void PSimrankMaster::addInfoForNodes(char* ss) {
 
 void PSimrankMaster::setPrime() {
   randomGenerator_->setPrime(&prime_, master_->getNumNodes());
-
-  /*mpz_t mpz_num_nodes;
-  mpz_init(mpz_num_nodes);
-  mpz_set_ui(mpz_num_nodes, master_->getNumNodes());
-
-  mpz_init(prime_);
-  mpz_nextprime(prime_, mpz_num_nodes);
-
-  mpz_clear(mpz_num_nodes);*/
 }
-
-/*void PSimrankMaster::setRandomState() {
-  gmp_randinit_default (r_state_);
-  gmp_randseed_ui(r_state_, seed_);
-}*/
 
 long PSimrankMaster::generateRandomCoeff() {
   return randomGenerator_->generateRandomCoeff();
-
-  /*mpz_t random;
-  mpz_init(random);
-  mpz_urandomm(random, r_state_, prime_);
-
-  long r = mpz_get_ui(random);
-  mpz_clear(random);
-
-  return r;*/
 }
 
