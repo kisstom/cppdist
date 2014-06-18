@@ -19,14 +19,15 @@ public:
   PSimrankMaster();
   bool nextIter();
   void addInfoForNodes(char* ss);
-  void init();
+  //void init();
   void setRandomGenerator(PSimrankRandomGeneratorIFace*);
 private:
-  void setPrime();
-  long generateRandomCoeff();
+  //void setPrime();
+  long generateRandomPrime();
+  long generateRandomAdd();
 
   PSimrankRandomGeneratorIFace* randomGenerator_;
-  mpz_t prime_;
+  //mpz_t prime_;
   int iterNum_;
   log4cpp::Category* logger_;
 };

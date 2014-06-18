@@ -13,8 +13,9 @@
 
 class PSimrankRandomGeneratorIFace {
 public:
-  virtual long generateRandomCoeff() = 0;
-  virtual void setPrime(mpz_t*, long n) = 0;
+  virtual long generateRandomAdd(long) = 0;
+  virtual long generateRandomPrime(long) = 0;
+  //virtual void setPrime(mpz_t*, long n) = 0;
 };
 
 

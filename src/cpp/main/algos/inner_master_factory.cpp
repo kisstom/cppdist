@@ -59,7 +59,7 @@ InnerMaster* InnerMasterFactory::createPSimrankMaster(unordered_map<string, stri
 }
 
 PSimrankRandomGeneratorIFace* InnerMasterFactory::getPSimrankPseudoRandom(unordered_map<string, string>* params) {
-  util_.checkParam(params, 3, "RANDOM_A", "RANDOM_B", "RANDOM_PRIME");
+  util_.checkParam(params, 2, "RANDOM_A", "RANDOM_B");
 
   string randomA = (*params)["RANDOM_A"];
   string randomB = (*params)["RANDOM_B"];
@@ -71,10 +71,7 @@ PSimrankRandomGeneratorIFace* InnerMasterFactory::getPSimrankPseudoRandom(unorde
   vector<string> rb = util_.split(randomB, ',');
   vector<long> rbl = util_.convertToLong(rb);
 
-  long prime;
-  sscanf((*params)["RANDOM_PRIME"].c_str(), "%ld", &prime);
-
-  PSimrankRandomGeneratorIFace* rv = new PSimrankPseudoRandomGenerator(prime, ral, rbl);
+  PSimrankRandomGeneratorIFace* rv = new PSimrankPseudoRandomGenerator(ral, rbl);
   return rv;
 }
 

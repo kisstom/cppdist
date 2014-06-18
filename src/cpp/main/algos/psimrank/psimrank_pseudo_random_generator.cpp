@@ -7,23 +7,17 @@
 
 #include "psimrank_pseudo_random_generator.h"
 
-PSimrankPseudoRandomGenerator::PSimrankPseudoRandomGenerator(
-    long prime, vector<long> randomA, vector<long> randomB) {
+PSimrankPseudoRandomGenerator::PSimrankPseudoRandomGenerator(vector<long> randomPrime, vector<long> randomAdd) {
   numRequests_ = 0;
-  prime_ = prime;
-  randomA_ = randomA;
-  randomB_ = randomB;
+  randomPrime_ = randomPrime;
+  randomAdd_ = randomAdd;
 }
 
-long PSimrankPseudoRandomGenerator::generateRandomCoeff() {
+long PSimrankPseudoRandomGenerator::generateRandomPrime(long) {
   long retval = -1;
-  //printf("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG %d\n", numRequests_);
-  if (numRequests_ % 2 == 0) {
-    if (numRequests_ / 2 < (int) randomA_.size()) {
-      retval = randomA_[numRequests_ / 2];
-    }
-  } else if ((numRequests_ - 1) / 2 < (int) randomB_.size()) {
-    retval = randomB_[(numRequests_ - 1) / 2];
+
+  if (numRequests_ / 2 < (int) randomPrime_.size()) {
+    retval = randomPrime_[numRequests_ / 2];
   }
 
   ++numRequests_;
@@ -31,8 +25,13 @@ long PSimrankPseudoRandomGenerator::generateRandomCoeff() {
 }
 
 
-void PSimrankPseudoRandomGenerator::setPrime(mpz_t* prime, long n) {
-  mpz_init(*prime);
-  mpz_set_ui(*prime, prime_);
+long PSimrankPseudoRandomGenerator::generateRandomAdd(long) {
+  long retval = -1;
+  if ((numRequests_ - 1) / 2 < (int) randomAdd_.size()) {
+    retval = randomAdd_[(numRequests_ - 1) / 2];
+  }
+
+  ++numRequests_;
+  return retval;
 }
 

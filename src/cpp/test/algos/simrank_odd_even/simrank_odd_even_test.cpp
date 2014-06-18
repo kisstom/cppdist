@@ -149,6 +149,11 @@ protected:
   	ss << slaveIndex_;
     params_["NUM_SLAVES"] = ss.str();
     ss.str("");
+
+    for (int i = 0; i < nodeParams_.size(); ++i) {
+      nodeParams_[i]["NUMLINE"] = params_["NUMLINE"];
+      nodeParams_[i]["NUM_SLAVES"] = params_["NUM_SLAVES"];
+    }
   }
 
   void initLogger() {

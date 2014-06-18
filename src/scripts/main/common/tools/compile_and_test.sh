@@ -30,6 +30,8 @@ echo "Hash function test."
 ./scripts/test/simrank/test_cpp_java_hash.sh
 
 test_dir ./bin/test/algos/simrank_odd_even/
+test_dir ./bin/test/algos/psimrank/
+
 test_scripts ./scripts/test/
 
 echo "File system tests passed."

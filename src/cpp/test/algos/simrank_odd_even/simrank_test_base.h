@@ -148,6 +148,11 @@ protected:
   	ss << slaveIndex_;
     params_["NUM_SLAVES"] = ss.str();
     ss.str("");
+
+    for (int i = 0; i < nodeParams_.size(); ++i) {
+      nodeParams_[i]["NUMLINE"] = params_["NUMLINE"];
+      nodeParams_[i]["NUM_SLAVES"] = params_["NUM_SLAVES"];
+    }
   }
 
   void initLogger() {
@@ -155,7 +160,7 @@ protected:
   	string appender = "CONSOLE";
 
   	LoggerFactory::initLogger(debugLevel, appender, "");
-  	logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenTest"));
+  	logger_ = &log4cpp::Category::getInstance(std::string("SimrankTestBase"));
   	logger_->info("Logger started. Level %s.", debugLevel.c_str());
   }
 
@@ -196,7 +201,7 @@ protected:
 
   void printPath(long* path) {
   	int i = 0;
-  	while (path[i] != -1) {
+  	while (path[i] != -1 && i <= pathLen_) {
   		printf(" %ld", path[i]);
   		++i;
   	}
@@ -207,27 +212,31 @@ protected:
   	concat_ = new vector<vector<long*> >;
   	concat_->resize(numPathes_);
 
-  	SimrankOddEvenNode* node;
+  	PSimrankNode* node;
   	vector<vector<long*> >* finished;
   	vector<list<long*> >* pathes;
 
   	for (int i = 0; i < slaveIndex_; ++i) {
-  		node = static_cast<SimrankOddEvenNode*>(cluster.getNode(i));
+  		node = static_cast<PSimrankNode*>(cluster.getNode(i));
   		finished = node->getFinishedPathes();
-			for (int i = 0; i < finished->size(); ++i) {
+			for (int i = 0; i < (int) finished->size(); ++i) {
 
 				for (vector<long*>::iterator it = (*finished)[i].begin();
 						it != (*finished)[i].end(); ++it) {
+				  //printPath(*it);
 					(*concat_)[i].push_back(*it);
 				}
+
 			}
 			vector<list<long*> >* pathes = node->getPathes();
-			for (int i = 0; i < pathes->size(); ++i) {
+			for (int i = 0; i < (int) pathes->size(); ++i) {
 
 				for (list<long*>::iterator it = (*pathes)[i].begin();
 						it != (*pathes)[i].end(); ++it) {
+				  //printPath(*it);
 					(*concat_)[i].push_back(*it);
 				}
+
 			}
   	}
 
@@ -257,7 +266,6 @@ protected:
   void checkContains(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
 
   	for (int i = 0; i < th->size(); ++i) {
-  		//printf("%d\n", i);
   		for (vector<long*>::iterator it = (*th)[i].begin(); it != (*th)[i].end(); ++it) {
   			ASSERT_TRUE(in(*it, (*oth)[i]));
   		}

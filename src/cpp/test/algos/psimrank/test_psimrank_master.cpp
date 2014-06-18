@@ -53,7 +53,7 @@ TEST(PSimrankMasterTest, testInit) {
 
   char msg[1024] = "start";
   innerMaster->addInfoForNodes(msg + strlen(msg));
-  ASSERT_EQ(0, strcmp(msg, "start 13"));
+  ASSERT_EQ(0, strcmp(msg, "start"));
 }
 
 }

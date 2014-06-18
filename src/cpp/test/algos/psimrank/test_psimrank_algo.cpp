@@ -53,6 +53,16 @@ protected:
     addPartition(part1, 2);
     addPartition(part2, 2);
 
+    addExpectedPath(0, "0 1 3");
+    addExpectedPath(0, "1 3 0");
+    addExpectedPath(0, "2 3 0");
+    addExpectedPath(0, "3 2 3");
+
+    addExpectedPath(1, "0 3 2");
+    addExpectedPath(1, "1 3 2");
+    addExpectedPath(1, "2 3 2");
+    addExpectedPath(1, "3 0 2");
+
     setUpBuilder();
     finalSetup();
   }
@@ -63,9 +73,8 @@ protected:
     SimrankTestBase::initParams(nodeType);
 
     params_["RANDOM_TYPE"] = "PSEUDO";
-    params_["RANDOM_A"] = "0,1,2,3";
+    params_["RANDOM_A"] = "5,11,7,5";
     params_["RANDOM_B"] = "3,4,5,6";
-    params_["RANDOM_PRIME"] = "5";
   }
 
   virtual void TearDown() {
@@ -82,6 +91,9 @@ TEST_F(PSimrankAlgoTest, test) {
   Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
   cluster.init();
   cluster.start();
+
+  concat(cluster);
+  check(concat_, &expectedPathes_);
 }
 
 }

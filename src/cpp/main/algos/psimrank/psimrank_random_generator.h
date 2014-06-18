@@ -13,12 +13,13 @@
 class PSimrankRandomGenerator : public PSimrankRandomGeneratorIFace {
 public:
   PSimrankRandomGenerator(int seed);
-  long generateRandomCoeff();
-  void setPrime(mpz_t*, long n);
+  long generateRandomAdd(long n);
+  long generateRandomPrime(long n);
+  //void setPrime(mpz_t*, long n);
 
 private:
   int seed_;
-  mpz_t prime_;
+  //mpz_t prime_;
   gmp_randstate_t r_state_;
 };
 

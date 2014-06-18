@@ -17,9 +17,9 @@ void PSimrankMaster::setRandomGenerator(PSimrankRandomGeneratorIFace* rgen) {
   randomGenerator_ = rgen;
 }
 
-void PSimrankMaster::init() {
+/*void PSimrankMaster::init() {
   setPrime();
-}
+}*/
 
 bool PSimrankMaster::nextIter() {
   logger_->info("nextIter");
@@ -29,11 +29,11 @@ bool PSimrankMaster::nextIter() {
     return true;
   }
 
-  long aCoef = generateRandomCoeff();
-  long bCoef = generateRandomCoeff();
+  long randomPrime = generateRandomPrime();
+  long randomAdd = generateRandomAdd();
 
   char msg[1024];
-  sprintf(msg, "%ld %ld", aCoef, bCoef);
+  sprintf(msg, "%ld %ld", randomPrime, randomAdd);
   logger_->info("Sending msg %s.", msg);
   master_->sendMessageForAllNodes(msg);
 
@@ -41,15 +41,18 @@ bool PSimrankMaster::nextIter() {
 }
 
 void PSimrankMaster::addInfoForNodes(char* ss) {
-  long long_prime = mpz_get_si(prime_);
-  sprintf(ss, " %ld", long_prime);
+//  long long_prime = mpz_get_si(prime_);
+//  sprintf(ss, " %ld", long_prime);
 }
 
-void PSimrankMaster::setPrime() {
-  randomGenerator_->setPrime(&prime_, master_->getNumNodes());
+/*void PSimrankMaster::setPrime() {
+//  randomGenerator_->setPrime(&prime_, master_->getNumNodes());
+}*/
+
+long PSimrankMaster::generateRandomPrime() {
+  return randomGenerator_->generateRandomPrime(master_->getNumNodes());
 }
 
-long PSimrankMaster::generateRandomCoeff() {
-  return randomGenerator_->generateRandomCoeff();
+long PSimrankMaster::generateRandomAdd() {
+  return randomGenerator_->generateRandomAdd(master_->getNumNodes());
 }
-

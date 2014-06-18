@@ -260,6 +260,10 @@ void Algo::sendAndSignal(int self_index) {
 	}
 }
 
+long Algo::getAllNodes() {
+  return all_node_;
+}
+
 Algo::~Algo() {
 	//delete storeFromBinary_;
 }

@@ -125,14 +125,18 @@ long PSimrankNode::genEdge(long from) {
 
   for (int i = 0; i < numNeighbors; ++i) {
     uint128_t ui128_node(matrix_->getEdgeAtPos(from, i));
-    hash = (ui128_node * aCoef_ + bCoef_) % modulo_;
+    logger_->info("bef %ld %ld %ld %ld", aCoef_, (uint64_t)ui128_node, bCoef_, algo_->getAllNodes());
+    hash = (ui128_node * aCoef_ + bCoef_) % algo_->getAllNodes();
 
+    logger_->info("ind %d pl %d from %ld to %ld hash %ld", fpIndex_, pathIndex_, from , matrix_->getEdgeAtPos(from, i), (uint64_t) hash);
     if (hash < min) {
       min = hash;
       arg_min = matrix_->getEdgeAtPos(from, i);
     }
 
   }
+  //logger_->info("ind %d pl %d from %ld to %ld", fpIndex_, pathIndex_, from , arg_min);
+
 
   return arg_min;
 }
@@ -239,7 +243,7 @@ void PSimrankNode::senderEven() {
 }
 
 void PSimrankNode::initFromMaster(string ss) {
-  sscanf(ss.c_str(), "%ld", &modulo_);
+  //sscanf(ss.c_str(), "%ld", &modulo_);
 }
 
 void PSimrankNode::initEdgeListContainer(string partName) {
