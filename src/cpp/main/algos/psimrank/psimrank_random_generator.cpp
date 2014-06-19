@@ -11,13 +11,14 @@
 PSimrankRandomGenerator::PSimrankRandomGenerator(int seed) {
   seed_ = seed;
   gmp_randinit_default (r_state_);
-  gmp_randseed_ui(r_state_, seed_);
+  gmp_randseed_ui(r_state_, (long) seed_);
 }
 
 long PSimrankRandomGenerator::generateRandomAdd(long n) {
   mpz_t random, mpz_num_nodes;
   mpz_init(random);
   mpz_init(mpz_num_nodes);
+  mpz_set_ui(mpz_num_nodes, n);
 
   mpz_urandomm(random, r_state_, mpz_num_nodes);
 
@@ -40,18 +41,3 @@ long PSimrankRandomGenerator::generateRandomPrime(long n) {
 
   return retval;
 }
-
-
-/*void PSimrankRandomGenerator::setPrime(mpz_t* prime, long n) {
-  mpz_t mpz_num_nodes;
-  mpz_init(mpz_num_nodes);
-  mpz_set_ui(mpz_num_nodes, n);
-
-  mpz_init(prime_);
-  mpz_init(*prime);
-
-  mpz_nextprime(prime_, mpz_num_nodes);
-  mpz_set_ui(*prime, mpz_get_ui(prime_));
-
-  mpz_clear(mpz_num_nodes);
-}*/

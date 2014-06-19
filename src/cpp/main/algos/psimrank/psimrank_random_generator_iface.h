@@ -1,5 +1,5 @@
 /*
- * psimrank_random_generator_iface.h
+ * psimrank_random_generator_iface.hgenerateRandomAdd
  *
  *  Created on: 2014.06.17.
  *      Author: kisstom

@@ -145,8 +145,9 @@ def startMaster():
     bin_dir = conf.get('ALGO', 'BIN')
     master_log = conf.get('ALGO', 'MASTER_LOG')
     run('rm -f %s'%master_log)
-    pid = run('''(nohup %s/main/algos/master_task %s %d 1> /dev/null 2>&1 < /dev/null & 
-      echo $!)'''%(bin_dir, configFile, numJobs), pty = False)
+    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
+    pid = run('''(nohup %s/main/algos/master_task %s %d 1> %s 2>&1 < /dev/null & 
+      echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
     storePid(env.host[0], pid)
     time.sleep(2)
 

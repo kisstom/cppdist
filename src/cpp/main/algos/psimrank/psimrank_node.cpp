@@ -74,6 +74,7 @@ bool PSimrankNode::incrementIndices() {
       ++pathIndex_;
       logger_->info("Incrementing path index %hd", pathIndex_);
     } else {
+      logger_->info("increment can not be done");
       return false;
     }
   }

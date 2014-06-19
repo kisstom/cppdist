@@ -17,6 +17,7 @@ void InnerMaster::addInfoForNodes(char* ss) {
 }
 
 bool InnerMaster::nextIter() {
+  logger_->info("Default inner master nextIter");
   master_->sendMessageForAllNodes("");
   return true;
 }

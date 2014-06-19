@@ -54,5 +54,6 @@ long PSimrankMaster::generateRandomPrime() {
 }
 
 long PSimrankMaster::generateRandomAdd() {
+  //logger_->info("nn %ld", master_->getNumNodes());
   return randomGenerator_->generateRandomAdd(master_->getNumNodes());
 }
