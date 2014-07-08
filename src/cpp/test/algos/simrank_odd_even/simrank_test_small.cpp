@@ -10,7 +10,7 @@
 namespace {
 
 class SimrankTestSmall : public SimrankTestBase {
-
+protected:
 	virtual void SetUp() {
 	    initParams("SIMRANK_ODD_EVEN");
 	  	initLogger();
@@ -61,6 +61,38 @@ class SimrankTestSmall : public SimrankTestBase {
 
 	  	setUpBuilder();
 	  	finalSetup();
+	}
+
+	void concat(Cluster& cluster) {
+	  concat_ = new vector<vector<long*> >;
+	  concat_->resize(numPathes_);
+
+	  SimrankOddEvenNode* node;
+	  vector<vector<long*> >* finished;
+	  vector<list<long*> >* pathes;
+
+	  for (int i = 0; i < slaveIndex_; ++i) {
+	    node = static_cast<SimrankOddEvenNode*>(cluster.getNode(i));
+	    finished = node->getFinishedPathes();
+	    for (int i = 0; i < (int) finished->size(); ++i) {
+
+	      for (vector<long*>::iterator it = (*finished)[i].begin();
+	          it != (*finished)[i].end(); ++it) {
+	        (*concat_)[i].push_back(*it);
+	      }
+
+	    }
+	    vector<list<long*> >* pathes = node->getPathes();
+	    for (int i = 0; i < (int) pathes->size(); ++i) {
+
+	      for (list<long*>::iterator it = (*pathes)[i].begin();
+	          it != (*pathes)[i].end(); ++it) {
+	        (*concat_)[i].push_back(*it);
+	      }
+
+	    }
+	  }
+
 	}
 
 	void initParams(string nodeType) {

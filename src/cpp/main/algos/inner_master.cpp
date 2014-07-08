@@ -13,11 +13,10 @@ InnerMaster::InnerMaster() {
 
 void InnerMaster::addInfoForNodes(char* ss) {
   logger_->info("Default inner master addinfo");
-  //master_->sendMessageForAllNodes("");
 }
 
 bool InnerMaster::nextIter() {
-  logger_->info("Default inner master nextIter");
+  logger_->info("Default inner master nextIter.");
   master_->sendMessageForAllNodes("");
   return true;
 }

@@ -1,7 +1,7 @@
 INPUT=$1
 OUTPUTDIR=$2
 thisDir=$(dirname $0)
-SRCDIR=$thisDir/../../../
+SRCDIR=$thisDir/../../../../
 
 #export LD_LIBRARY_PATH=/mnt/nessi4/home/kisstom/mylibs/
 

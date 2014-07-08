@@ -17,10 +17,6 @@ void PSimrankMaster::setRandomGenerator(PSimrankRandomGeneratorIFace* rgen) {
   randomGenerator_ = rgen;
 }
 
-/*void PSimrankMaster::init() {
-  setPrime();
-}*/
-
 bool PSimrankMaster::nextIter() {
   logger_->info("nextIter");
 
@@ -39,15 +35,6 @@ bool PSimrankMaster::nextIter() {
 
   return true;
 }
-
-void PSimrankMaster::addInfoForNodes(char* ss) {
-//  long long_prime = mpz_get_si(prime_);
-//  sprintf(ss, " %ld", long_prime);
-}
-
-/*void PSimrankMaster::setPrime() {
-//  randomGenerator_->setPrime(&prime_, master_->getNumNodes());
-}*/
 
 long PSimrankMaster::generateRandomPrime() {
   return randomGenerator_->generateRandomPrime(master_->getNumNodes());

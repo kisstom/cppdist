@@ -67,6 +67,38 @@ protected:
     finalSetup();
   }
 
+  void concat(Cluster& cluster) {
+    concat_ = new vector<vector<long*> >;
+    concat_->resize(numPathes_);
+
+    PSimrankNode* node;
+    vector<vector<long*> >* finished;
+    vector<list<long*> >* pathes;
+
+    for (int i = 0; i < slaveIndex_; ++i) {
+      node = static_cast<PSimrankNode*>(cluster.getNode(i));
+      finished = node->getFinishedPathes();
+      for (int i = 0; i < (int) finished->size(); ++i) {
+
+        for (vector<long*>::iterator it = (*finished)[i].begin();
+            it != (*finished)[i].end(); ++it) {
+          (*concat_)[i].push_back(*it);
+        }
+
+      }
+      vector<list<long*> >* pathes = node->getPathes();
+      for (int i = 0; i < (int) pathes->size(); ++i) {
+
+        for (list<long*>::iterator it = (*pathes)[i].begin();
+            it != (*pathes)[i].end(); ++it) {
+          (*concat_)[i].push_back(*it);
+        }
+
+      }
+    }
+
+  }
+
   void initParams(string nodeType) {
     numPathes_ = 2;
     pathLen_ = 2;
