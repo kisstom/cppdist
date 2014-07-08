@@ -25,6 +25,8 @@ fi
 
 mkdir -p $outdir
 echo "computing fp pathes"
+
+#sort by node node then by fp inswx
 sort -gk2,2 -gk1,1 $fp_with_pathindex| awk '{for (i=2; i < NF; ++i) printf("%s ", $i); printf "%s\n",$NF}' > $outdir/fingerprints.txt
 
 echo "computing number of lines in output"
