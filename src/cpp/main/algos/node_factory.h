@@ -16,6 +16,7 @@
 #include "simrank_store_first/simrank_store_first_node.h"
 #include "simrank_odd_even/simrank_odd_even_node.h"
 #include "pagerank/pagerank_node.h"
+#include "psimrank/psimrank_node.h"
 
 #include <log4cpp/Category.hh>
 #include "inode_factory.h"
@@ -31,6 +32,7 @@ private:
 	SimrankStoreFirstNode* createSimrankStoreFirstNode(unordered_map<string, string>* params);
 	SimrankOddEvenNode* createSimrankOddEvenNode(unordered_map<string, string>* params);
 	PagerankNode* createPagerankNode(unordered_map<string, string>* params);
+	PSimrankNode* createPSimrankNode(unordered_map<string, string>* params);
 	log4cpp::Category* logger_;
 };
 

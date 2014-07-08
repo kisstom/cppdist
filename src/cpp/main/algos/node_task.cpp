@@ -22,7 +22,8 @@
 void initLogger(unordered_map<string, string>* params) {
 	string debugLevel, appender, logfileName;
 
-	if (params->find(string("DEBUG_LEVEL")) != params->end()) {
+	string debugLev("DEBUG_LEVEL");
+	if (params->find(debugLev) != params->end()) {
 		debugLevel = (*params)["DEBUG_LEVEL"];
 	} else {
 		debugLevel = string("INFO");

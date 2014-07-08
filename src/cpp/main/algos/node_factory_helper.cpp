@@ -54,3 +54,20 @@ SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<stri
 	return node;
 }
 
+PSimrankNode* NodeFactoryHelper::initPSimrankNode(unordered_map<string, string>* params) {
+  GeneratorType type = SRAND;
+  int seed;
+  short numPathes;
+  short pathLen;
+  long num_nodes, min_node, next_min_node;
+  sscanf((*params)["NUM_PATHES"].c_str(), "%hd", &numPathes);
+  sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
+
+  sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes);
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
+  sscanf((*params)["NEXT_MIN_NODE"].c_str(), "%ld", &next_min_node);
+
+  PSimrankNode* node = new PSimrankNode(numPathes, pathLen, num_nodes, min_node, next_min_node);
+  return node;
+}
+

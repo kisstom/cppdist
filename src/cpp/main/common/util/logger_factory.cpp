@@ -17,7 +17,9 @@ void LoggerFactory::initLogger(string debugLevel, string appenderType,
 		root.setPriority(log4cpp::Priority::DEBUG);
 	} else if (debugLevel.compare("ERROR") == 0) {
 		root.setPriority(log4cpp::Priority::ERROR);
-	} else {
+	} else if (debugLevel.compare("EMERG") == 0) {
+    root.setPriority(log4cpp::Priority::EMERG);
+  } else {
 		root.setPriority(log4cpp::Priority::INFO);
 	}
 	log4cpp::Appender *appender;

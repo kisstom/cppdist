@@ -85,7 +85,7 @@ void SocketManager::sendReadyToMaster(){
 }
 
 void SocketManager::sendEmptyToMaster(){
-	//logger_->info("Sending empty to master.");
+	logger_->info("Sending empty to master.");
   master_socket_->Send(6, "empty");
 }
 

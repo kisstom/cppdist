@@ -11,4 +11,4 @@ bool PagerankMaster::nextIter() {
   return true;
 }
 
-void PagerankMaster::addInfoForNodes(string* ss) {}
+void PagerankMaster::addInfoForNodes(char* ss) {}

@@ -55,6 +55,9 @@ AlgoBuilder::~AlgoBuilder() {
 }
 
 Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {
+  util_.checkParam(params, 4, "MASTER_PORT", "INIT_SLAVE_PORT","SEND_LIMIT", "NUM_SLAVES");
+  util_.checkParam(params, 4, "NUMLINE", "SLAVE_INDEX", "NUM_NODES", "MIN_NODE");
+
 	int master_port, init_slave_port, send_limit, num_slaves, slave_index, slave_port;
 	string debugLevel;
 

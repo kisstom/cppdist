@@ -86,6 +86,7 @@ bool Algo::setUp() {
     return false;
   }
 
+  logger_->info("Algo setup finished.");
   return true;
 }
 
@@ -98,7 +99,7 @@ void Algo::run()
     //bool exit = false;
     while (1)
     {
-
+      logger_->info("Algo waiting for msg from master.");
     	socketManager_->recvFromMaster(1024, instr);
     	if (!strcmp(instr, "exit")) {
     		break;
@@ -107,6 +108,14 @@ void Algo::run()
     		throw MasterException();
     	}
 
+    	logger_->info("Recieving msg %s.", instr);
+    	logger_->info("Sending ready for master.");
+    	socketManager_->sendReadyToMaster();
+
+    	logger_->info("Waiting for before iteration instr.");
+    	socketManager_->recvFromMaster(1024, instr);
+
+    	logger_->info("Received instr %s.", instr);
     	node_->beforeIteration(instr);
     	runThreads();
     	bool cont = node_->afterIteration();
@@ -188,7 +197,7 @@ void Algo::initFromMaster() {
 	stringstream ss (stringstream::in | stringstream::out);
 	ss << buf;
 	long actMin;
-	while (ss.peek() != EOF) {
+	for (int i = 0; i < num_slaves_; ++i) {
 		ss >> actMin;
 		partition_min_node_.push_back(actMin);
 	}
@@ -249,6 +258,10 @@ void Algo::sendAndSignal(int self_index) {
     senderBuffer_->setFinish(part_index);
     senderBuffer_->emptyBuffer(part_index);
 	}
+}
+
+long Algo::getAllNodes() {
+  return all_node_;
 }
 
 Algo::~Algo() {

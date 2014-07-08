@@ -115,6 +115,84 @@ TEST(TestUtil, testSearch) {
 	ASSERT_FALSE(Util::search(3, longs.begin() + 2, 1));
 }
 
+TEST(TestUtil, testCheckParams) {
+  unordered_map<string, string> params;
+  params["par1"] = "foo1";
+  params["par2"] = "foo2";
+
+  Util util;
+  bool found = false;
+  try {
+    util.checkParam(&params, 3, "par1", "par2", "par3");
+  } catch (ParamMissException &) {
+    found = true;
+  }
+
+  ASSERT_TRUE(found);
+}
+
+TEST(TestUtil, testCheckParams2) {
+  unordered_map<string, string> params;
+  params["par1"] = "foo1";
+  params["par2"] = "foo2";
+
+  Util util;
+  bool found = false;
+  try {
+    util.checkParam(&params, 2, "par3", "par1");
+  } catch (ParamMissException &) {
+    found = true;
+  }
+
+  ASSERT_TRUE(found);
+}
+
+TEST(TestUtil, testCheckParams3) {
+  unordered_map<string, string> params;
+  params["par1"] = "foo1";
+  params["par2"] = "foo2";
+
+  Util util;
+  bool found = false;
+  try {
+    util.checkParam(&params, 2, "par2", "par1");
+  } catch (ParamMissException &) {
+    found = true;
+  }
+
+  ASSERT_FALSE(found);
+}
+
+TEST(TestUtil, testSplit) {
+  Util util;
+
+  vector<string> spl = util.split("0,1,2,3,4", ',');
+  ASSERT_EQ(0, spl[0].compare("0"));
+  ASSERT_EQ(0, spl[1].compare("1"));
+  ASSERT_EQ(0, spl[2].compare("2"));
+  ASSERT_EQ(0, spl[3].compare("3"));
+  ASSERT_EQ(0, spl[4].compare("4"));
+}
+
+TEST(TestUtil, testConvert) {
+  Util util;
+
+  vector<string> str;
+  str.push_back("0");
+  str.push_back("1");
+  str.push_back("2");
+  str.push_back("3");
+  str.push_back("4");
+
+  vector<long> longs = util.convertToLong(str);
+  ASSERT_EQ(0, longs[0]);
+  ASSERT_EQ(1, longs[1]);
+  ASSERT_EQ(2, longs[2]);
+  ASSERT_EQ(3, longs[3]);
+  ASSERT_EQ(4, longs[4]);
+
+}
+
 }
 
 int main (int argc, char **argv) {

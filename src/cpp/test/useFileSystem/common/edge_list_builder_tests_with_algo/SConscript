@@ -5,9 +5,14 @@ env.Object(Glob('*.cpp'))
 COMMON_OBJ = Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/util/*.o')
 NODE_OBJ = ['#../bin/main/algos/simrank_odd_even/simrank_odd_even_node.o', '#../bin/main/algos/node.o', '#../bin/main/algos/algo.o',
 '#../bin/main/algos/simrank_odd_even/simrank_odd_even_deserializer.o', "#../bin/main/algos/pagerank/pagerank_deserializer.o",  "#../bin/main/algos/pagerank/pagerank_node.o"]
+NODE_OBJ += ['#/../bin/main/algos/psimrank/psimrank_deserializer.o', '#/../bin/main/algos/psimrank/psimrank_node.o']
+
 
 COMPONENTS = Glob('#/../bin/main/common/thread/*.o') + Glob('#/../bin/main/common/components/*.o') + Glob('#/../bin/main/common/random/*.o') + Glob('#/../bin/main/common/components/socket/*.o')
 COMPONENTS += Glob('#/../bin/main/algos/simrank_store_first/*.o') + Glob('#/../bin/main/algos/simrank_update/*.o')
+COMPONENTS += ['#/../bin/main/algos/inner_master.o', '#/../bin/main/algos/master.o']
+COMMON_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o']
+COMMON_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_node.o']
 
 env.Program('crawl_edge_list_builder_with_simrank', ['crawl_edge_list_builder_with_simrank.cpp'] + NODE_OBJ + COMMON_OBJ + COMPONENTS)
 env.Program('filter_edge_list_builder_with_simrank', ['filter_edge_list_builder_with_simrank.cpp'] + COMMON_OBJ + NODE_OBJ + COMPONENTS)

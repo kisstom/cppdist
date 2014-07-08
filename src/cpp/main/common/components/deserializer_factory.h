@@ -19,6 +19,11 @@
 #include "../../algos/simrank_odd_even/simrank_odd_even_node.h"
 #include "../../algos/pagerank/pagerank_deserializer.h"
 #include "../../algos/pagerank/pagerank_node.h"
+#include "../../algos/psimrank/psimrank_node.h"
+#include "../../algos/psimrank/psimrank_deserializer.h"
+#include "../../../test/algos/simple_mock_algo/simple_mock_deserializer.h"
+#include "../../../test/algos/simple_mock_algo/simple_mock_node.h"
+
 #include <log4cpp/Category.hh>
 
 class DeserializerFactory {
@@ -30,6 +35,8 @@ private:
 	Deserializer* createSimrankStoreFirstDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createSimrankOddEvenDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createPagerankDeserializer(unordered_map<string, string>*, Node* node);
+	Deserializer* createPSimrankDeserializer(unordered_map<string, string>*, Node* node);
+	Deserializer* createSimpleMockDeserializer(unordered_map<string, string>* params, Node* node);
 	log4cpp::Category* logger_;
 };
 

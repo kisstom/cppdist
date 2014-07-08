@@ -23,6 +23,8 @@
 
 using std::vector;
 
+class InnerMaster;
+
 struct Slave {
   int port;
   //char path[1024];
@@ -34,7 +36,7 @@ struct Slave {
 
 class Master : public Runnable {
   public:
-    Master(int, vector<Slave>*);
+    Master(int, vector<Slave>*, long);
     ~Master();
     void run();
     bool setUp();
@@ -49,7 +51,10 @@ class Master : public Runnable {
     void InitServer();
     void KillNodes();
     void setInnerMaster(InnerMaster*);
+    void sendMessageForAllNodes(char* msg);
+    long getNumNodes();
   private:
+    long numNodes_;
     InnerMaster* innerMaster_;
     int master_port_;
     char master_host_[1024];

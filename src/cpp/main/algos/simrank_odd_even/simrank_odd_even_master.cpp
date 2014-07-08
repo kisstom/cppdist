@@ -7,9 +7,10 @@
 
 #include "simrank_odd_even_master.h"
 
-bool SimrankOddEvenMaster::nextIter() {
+/*bool SimrankOddEvenMaster::nextIter() {
 	return true;
-}
-void SimrankOddEvenMaster::addInfoForNodes(string* ss) {}
+}*/
+
+void SimrankOddEvenMaster::addInfoForNodes(char* ss) {}
 
 

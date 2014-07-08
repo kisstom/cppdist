@@ -11,8 +11,6 @@
 #include <stdio.h>
 #include <algorithm>
 
-using std::string;
-
 size_t Util::nextLong(char* line, size_t from, long& element) {
 	sscanf(line + from, "%ld", &element);
 	for (unsigned i = from; i < strlen(line); ++i) {
@@ -66,14 +64,62 @@ bool Util::search(long elem, vector<long>::iterator it, int size) {
 }
 
 void Util::split(char* line, vector<long>& edges) {
-   edges.clear();
-   stringstream ss(stringstream::in | stringstream::out);
-   ss << line;
-   long edge;
+  edges.clear();
+  stringstream ss(stringstream::in | stringstream::out);
+  ss << line;
+  long edge;
 
-   while (ss.good()) {
-     ss >> edge;
-     edges.push_back(edge);
-   }
- }
+  while (ss.good()) {
+    ss >> edge;
+    edges.push_back(edge);
+  }
+}
+
+vector<string> Util::split(string str, char sep) {
+  stringstream ss(str);
+  std::string token;
+  vector<string> retval;
+  while(std::getline(ss, token, sep)) {
+    retval.push_back(token);
+  }
+
+  return retval;
+}
+
+vector<long> Util::convertToLong(vector<string> strs) {
+  vector<long> retval;
+  long tmp;
+
+  for (int i = 0; i < strs.size(); ++i) {
+    sscanf(strs[i].c_str(), "%ld", &tmp);
+    retval.push_back(tmp);
+  }
+
+  return retval;
+}
+
+void Util::checkParam(vector<string> shouldContain, unordered_map<string, string>* params) {
+  for (int i = 0; i < shouldContain.size(); ++i) {
+    if (params->find(shouldContain[i]) == params->end()) {
+      throw ParamMissException(shouldContain[i] + " is missing.");
+    }
+  }
+}
+
+void Util::checkParam(unordered_map<string, string>* params, int argc, ...) {
+  va_list ap;
+  va_start(ap, argc);
+
+  for(int i = 0; i < argc; i++) {
+    char* a = va_arg(ap, char*);
+    string str_par(a);
+
+    if (params->find(str_par) == params->end()) {
+      throw ParamMissException(str_par + " is missing.");
+    }
+  }
+  va_end(ap);
+}
+
+
 

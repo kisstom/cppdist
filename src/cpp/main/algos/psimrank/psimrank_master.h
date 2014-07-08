@@ -12,17 +12,21 @@
 #include "../master.h"
 #include "gmp.h"
 #include "gmpxx.h"
+#include "psimrank_random_generator_iface.h"
 
 class PSimrankMaster : public InnerMaster {
 public:
-  PSimrankMaster(Master*);
+  PSimrankMaster();
   bool nextIter();
-  void addInfoForNodes(string* ss);
-
+  void setRandomGenerator(PSimrankRandomGeneratorIFace*);
 private:
-  long generateRandomCoeff();
-  Master* master;
-  mpz_t prime_;
+  long generateRandomPrime();
+  long generateRandomAdd();
+
+  PSimrankRandomGeneratorIFace* randomGenerator_;
+
+  int iterNum_;
+  log4cpp::Category* logger_;
 };
 
 

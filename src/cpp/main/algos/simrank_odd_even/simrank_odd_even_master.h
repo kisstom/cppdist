@@ -12,8 +12,8 @@
 #include "../inner_master.h"
 
 class SimrankOddEvenMaster : public InnerMaster {
-	bool nextIter();
-  void addInfoForNodes(string* ss);
+	//bool nextIter();
+  void addInfoForNodes(char* ss);
 };
 
 #endif /* SIMRANK_ODD_EVEN_MASTER_H_ */

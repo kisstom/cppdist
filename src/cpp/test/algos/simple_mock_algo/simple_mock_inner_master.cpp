@@ -15,12 +15,14 @@ SimpleMockInnerMaster::SimpleMockInnerMaster() {
 bool SimpleMockInnerMaster::nextIter() {
   logger_->info("Next iteration.");
 	++iteration_;
+	InnerMaster::nextIter();
 	if (iteration_ >= 2) return false;
+
 	return true;
 }
 
-void SimpleMockInnerMaster::addInfoForNodes(string* ss) {
+/*void SimpleMockInnerMaster::addInfoForNodes(char* ss) {
 
-}
+}*/
 
 

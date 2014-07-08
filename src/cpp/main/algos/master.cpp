@@ -10,11 +10,14 @@
 
 using std::vector;
 
-Master::Master(int master_port, vector<Slave>* slaves)
+Master::Master(int master_port, vector<Slave>* slaves, long numNodes)
 {
   master_port_ = master_port;
   slaves_ = slaves;
   logger_ = &log4cpp::Category::getInstance(std::string("Master"));
+  numNodes_ = numNodes;
+  master_socket_ = NULL;
+  innerMaster_ = NULL;
 }
 
 Master::~Master()
@@ -62,19 +65,27 @@ void Master::run()
 {
 	logger_->info("Starting run.");
   bool cont = true;
+  bool retval = true;
   try {
     // Varunk.
     // WaitForNodes();
     while (cont) {
       // Megmondjuk a node-oknak hogy futtassak
       // sender, receiver fuggvenyeiket 2 kulon szalban.
+      //cont = innerMaster_->nextIter();
+      //if (!cont) break;
       RunThreads();
-      // Bevarjuk oket.
-      cont = WaitForNodes();
+      WaitForNodes();
+
+      // Some special set up by the inner master
+      retval = innerMaster_->nextIter();
+      if (!retval) cont = retval;
+
+      // Waiting for finish.
+      retval = WaitForNodes();
+      if (!retval) cont = retval;
       if (!cont) break;
 
-      cont = innerMaster_->nextIter();
-      if (!cont) break;
     }
   } catch (ConnectionError& e) {
     //log_err(logfile_, "Error: %s.\n", e.what());
@@ -125,8 +136,10 @@ void Master::SendInfoToNodes()
     for (unsigned int j = 1; j < slaves_->size(); ++j) {
       ss << " " << (*slaves_)[j].minNode;
     }
-    //innerMaster_->addInfoForNodes(&ss);
+
     strcpy(info, ss.str().c_str());
+    innerMaster_->addInfoForNodes(info + strlen(info));
+
     logger_->info("Master sending %s", info);
     (*slaves_)[i].socket->Send(strlen(info)+1, info);
   }
@@ -199,7 +212,7 @@ void Master::MakeConnection(int i, int j)
 
 void Master::RunThreads()
 {
-  //log_info(logfile_, "Sending to nodes start threading.");
+  logger_->info("Sending to nodes start threading.");
   for (unsigned int i = 0; i < slaves_->size(); ++i) {
     (*slaves_)[i].socket->Send(7, "thread");
   }
@@ -217,6 +230,18 @@ void Master::Final()
 
 void Master::setInnerMaster(InnerMaster* innerMaster) {
 	innerMaster_ = innerMaster;
+}
+
+void Master::sendMessageForAllNodes(char* msg) {
+  logger_->info("Sending msg to nodes.");
+
+  for (unsigned int i = 0; i < slaves_->size(); ++i) {
+    (*slaves_)[i].socket->Send(strlen(msg)+1, msg);
+  }
+}
+
+long Master::getNumNodes() {
+  return numNodes_;
 }
 
 

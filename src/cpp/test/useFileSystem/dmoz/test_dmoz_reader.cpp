@@ -1,10 +1,14 @@
+
 #include <gtest/gtest.h>
-#include "../../main/dmoz/dmoz_reader.h"
+#include "../../../main/dmoz/dmoz_reader.h"
+#include "../../common/gtest_environment.h"
 
 TEST(DmozReader, all1) {
   DmozReader reader;
 
-  FILE* input = fopen("/home/kisstom/git/DistributedComp/DistributedFrame/src/cpp/test/dmoz/data/test_content_xml", "r");
+  string testContentXml =  testResourceDir + "test_content_xml";
+
+  FILE* input = fopen(testContentXml.c_str(), "r");
   reader.Init(input);
   reader.Read();
   fclose(input);
@@ -35,7 +39,10 @@ TEST(DmozReader, all1) {
 }
 
 int main (int argc, char **argv) {
+  std::string testResourceDir(argc == 2 ? argv[1] : "");
   testing::InitGoogleTest(&argc, argv);
+  testing::AddGlobalTestEnvironment(new MyTestEnvironment(testResourceDir));
+
   return RUN_ALL_TESTS();
 }
 

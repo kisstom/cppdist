@@ -37,6 +37,37 @@ protected:
   static void TearDownTestCase() {
   }
 
+  virtual void initParams(string nodeType) {
+      //pathLen_ = 10;
+      //numPathes_ = 2;
+      numNodes_ = 0;
+      slaveIndex_ = 0;
+      slavePort_ = 7001;
+      std::stringstream ss;
+
+      ss << slavePort_;
+      params_["INIT_SLAVE_PORT"] = ss.str();
+      ss.str("");
+
+      ss << pathLen_;
+      params_["PATH_LEN"] = ss.str();
+      ss.str("");
+
+      ss << numPathes_;
+      params_["NUM_PATHES"] = ss.str();
+      ss.str("");
+
+      params_["MASTER_PORT"] = "7000";
+      params_["SEND_LIMIT"] = "6000";
+      params_["MASTER_HOST"] = "localhost";
+      params_["NODE_TYPE"] = nodeType;
+      params_["RANDOM_TYPE"] = "PSEUDO";
+      params_["SEED"] = "13";
+      params_["INNER_MASTER_TYPE"] = nodeType;
+      params_["DESERIALIZER_TYPE"] = nodeType;
+      expectedPathes_.resize(numPathes_);
+  }
+
   void addPartition(vector<string> partString, long numSlaves) {
   	long minNode = numNodes_;
   	vector<vector<long> > part = toMatrix(partString);
@@ -117,14 +148,19 @@ protected:
   	ss << slaveIndex_;
     params_["NUM_SLAVES"] = ss.str();
     ss.str("");
+
+    for (int i = 0; i < nodeParams_.size(); ++i) {
+      nodeParams_[i]["NUMLINE"] = params_["NUMLINE"];
+      nodeParams_[i]["NUM_SLAVES"] = params_["NUM_SLAVES"];
+    }
   }
 
   void initLogger() {
-  	string debugLevel= "INFO";
+  	string debugLevel= "EMERG";
   	string appender = "CONSOLE";
 
   	LoggerFactory::initLogger(debugLevel, appender, "");
-  	logger_ = &log4cpp::Category::getInstance(std::string("SimrankOddEvenTest"));
+  	logger_ = &log4cpp::Category::getInstance(std::string("SimrankTestBase"));
   	logger_->info("Logger started. Level %s.", debugLevel.c_str());
   }
 
@@ -165,41 +201,11 @@ protected:
 
   void printPath(long* path) {
   	int i = 0;
-  	while (path[i] != -1) {
+  	while (path[i] != -1 && i <= pathLen_) {
   		printf(" %ld", path[i]);
   		++i;
   	}
   	printf("\n");
-  }
-
-  void concat(Cluster& cluster) {
-  	concat_ = new vector<vector<long*> >;
-  	concat_->resize(numPathes_);
-
-  	SimrankOddEvenNode* node;
-  	vector<vector<long*> >* finished;
-  	vector<list<long*> >* pathes;
-
-  	for (int i = 0; i < slaveIndex_; ++i) {
-  		node = static_cast<SimrankOddEvenNode*>(cluster.getNode(i));
-  		finished = node->getFinishedPathes();
-			for (int i = 0; i < finished->size(); ++i) {
-
-				for (vector<long*>::iterator it = (*finished)[i].begin();
-						it != (*finished)[i].end(); ++it) {
-					(*concat_)[i].push_back(*it);
-				}
-			}
-			vector<list<long*> >* pathes = node->getPathes();
-			for (int i = 0; i < pathes->size(); ++i) {
-
-				for (list<long*>::iterator it = (*pathes)[i].begin();
-						it != (*pathes)[i].end(); ++it) {
-					(*concat_)[i].push_back(*it);
-				}
-			}
-  	}
-
   }
 
   bool eq(long* path, long* other) {
@@ -226,7 +232,6 @@ protected:
   void checkContains(vector<vector<long*> >* th, vector<vector<long*> >* oth) {
 
   	for (int i = 0; i < th->size(); ++i) {
-  		//printf("%d\n", i);
   		for (vector<long*>::iterator it = (*th)[i].begin(); it != (*th)[i].end(); ++it) {
   			ASSERT_TRUE(in(*it, (*oth)[i]));
   		}

@@ -31,7 +31,7 @@ public:
   PSimrankNode();
   ~PSimrankNode();
   PSimrankNode(short numFingerprints, short pathLen,
-      int seed, long num_nodes, long min_node, long nextMinNode);
+      long num_nodes, long min_node, long nextMinNode);
   void beforeIteration(string msg);
   bool afterIteration();
   void sender();

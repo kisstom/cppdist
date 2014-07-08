@@ -61,7 +61,7 @@ void CfgReader::read(char* file) {
 
 		(*params_)[k] = v;
 		//if (k.find("MASTER_LOG") != std::string::npos) {
-		  printf("key-value %s %s\n", k.c_str(), v.c_str());
+		printf("key-value %s %s\n", k.c_str(), v.c_str());
 		  //printf("|%s|\n", k.c_str());
 		//}
 	}

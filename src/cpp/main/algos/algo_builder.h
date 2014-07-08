@@ -21,6 +21,7 @@ public:
   Node* getNode();
   void setNodeFactory(INodeFactory*);
 private:
+  Util util_;
   Algo* createAlgoFromConfig(unordered_map<string, string>* params);
   Algo* algo_;
   Node* node_;

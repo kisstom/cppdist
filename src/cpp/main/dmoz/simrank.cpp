@@ -50,7 +50,7 @@ void SimRank::needSR (fstream& f) {
     ss >> egyik;
     ss >> masik;
     //f >> s;
-    if (egyik == 76357 && masik == 77343) printf("Beolvassukuk: 76357 77343\n");
+    //if (egyik == 76357 && masik == 77343) printf("Beolvassukuk: 76357 77343\n");
     need_score.push_back(std::make_pair<long, long>(egyik, masik));
   }
 }
@@ -81,7 +81,7 @@ double SimRank::score (long self, long other) {
       }
       double est = 0.0;
       for (int pos = 0; pos < path_len_; ++pos) {
-        est += positions[pos] * pow(const_, pos+1) / num_pathes_;
+        est += positions[pos] * pow(const_, pos) / num_pathes_;
       }
       return est;
 }

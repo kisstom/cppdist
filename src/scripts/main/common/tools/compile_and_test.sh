@@ -11,7 +11,11 @@ scons -j4
 
 
 cd ..
+echo common tests
 test_dir ./bin/test/common
+
+echo dmoz tests
+test_dir ./bin/test/dmoz
 
 #./bin/test/algos/simrank_update/test_node
 
@@ -23,13 +27,14 @@ else
   resourcePath=${1}
 fi
 
+echo filesystem tests
 test_dir ./bin/test/useFileSystem/ $resourcePath
 
-echo "Hash function test."
-./scripts/test/simrank/test_cpp_java_hash.sh
-
+echo algo tests
 test_dir ./bin/test/algos/simrank_odd_even/
+test_dir ./bin/test/algos/psimrank/
+
+echo script tests
 test_scripts ./scripts/test/
 
-echo "File system tests passed."
 echo Successfully done building and testing.
