@@ -13,6 +13,7 @@ scons -j4
 cd ..
 echo common tests
 test_dir ./bin/test/common
+test_dir ./bin/test/dmoz
 
 #./bin/test/algos/simrank_update/test_node
 

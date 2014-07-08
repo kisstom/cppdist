@@ -62,6 +62,7 @@ SConscript([
     'test/useFileSystem/common/socket/SConscript',
     'test/useFileSystem/common/edge_list_builder_tests/SConscript',
     'test/useFileSystem/common/edge_list_builder_tests_with_algo/SConscript',
+    'test/useFileSystem/dmoz/SConscript',
     'test/shtest/SConscript',
     ],
     exports = ['env', 'COMMON_OBJ', 'DESER_OBJ', 'ALGO_OBJ'])

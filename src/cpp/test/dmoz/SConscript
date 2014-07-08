@@ -2,8 +2,7 @@ Import('env')
 
 env.Object(Glob('*.cpp'))
 
-env.Program('test_dmoz_reader', ['test_dmoz_reader.cpp', '../../main/dmoz/dmoz_reader.o'])
 env.Program('test_distanc_calculator', ['test_distanc_calculator.cpp', '../../main/dmoz/dmoz_reader.o'])
-env.Program('test_fileter_trusted_url', ['test_fileter_trusted_url.cpp'])
+env.Program('fileter_trusted_url', ['fileter_trusted_url.cpp'])
 env.Program('test_ndcg', ['test_ndcg.cpp', '../../main/dmoz/ndcg.o'])
 env.Program('test_simrank_score', ['test_simrank_score.cpp', '../../main/dmoz/simrank.o'])
