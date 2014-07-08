@@ -1,0 +1,6 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+
+env.Program('test_dmoz_reader', ['test_dmoz_reader.cpp', '../../../main/dmoz/dmoz_reader.o'])
+
