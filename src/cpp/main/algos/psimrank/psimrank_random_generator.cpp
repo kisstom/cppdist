@@ -30,14 +30,18 @@ long PSimrankRandomGenerator::generateRandomAdd(long n) {
 }
 
 long PSimrankRandomGenerator::generateRandomPrime(long n) {
-  mpz_t mpz_num_nodes, prime;
-  mpz_init(mpz_num_nodes);
-  mpz_set_ui(mpz_num_nodes, n);
+  mpz_t prime, mpzRandom;
+
+  long randomNode = generateRandomAdd(n);
+  mpz_init(mpzRandom);
+  mpz_set_ui(mpzRandom, randomNode);
 
   mpz_init(prime);
-  mpz_nextprime(prime, mpz_num_nodes);
+  mpz_nextprime(prime, mpzRandom);
   long retval = mpz_get_ui(prime);
-  mpz_clear(mpz_num_nodes);
+
+  mpz_clear(prime);
+  mpz_clear(mpzRandom);
 
   return retval;
 }
