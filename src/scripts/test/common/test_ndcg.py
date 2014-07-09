@@ -11,7 +11,7 @@ class TestNDCG(unittest.TestCase):
     myndcg = ndcg.NDCG("foo1", "foo2", 3)
     rel = [2, 1]
     dcg = myndcg.ndcg(rel) 
-    self.assertAlmostEqual(dcg, 3.6309, 3)
+    self.assertAlmostEqual(dcg, 4.4426, 3)
 
   def test_ndcg_user(self):
     myndcg = ndcg.NDCG("foo1", "foo2", 3)
@@ -54,7 +54,8 @@ class TestNDCG(unittest.TestCase):
     other_d["user"] = other_score
 
     myndcg.ndcgForOneUser(simrank_score, other_score) 
-    self.assertAlmostEqual(myndcg.cum_ndcg, 0.5307, 3)
+    self.assertAlmostEqual(myndcg.cum_ndcg, 0.5697, 3)
+    #self.assertAlmostEqual(myndcg.cum_ndcg, 1.5697, 3)
 
 
 

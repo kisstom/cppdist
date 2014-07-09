@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
 function test_dir {
-# set -o pipefail
+  set -eu
 
   my_dir=$1
   
@@ -24,6 +24,8 @@ function test_dir {
 }
 
 function test_scripts {
+  set -eu
+
   my_dir=$1
 
   params=""

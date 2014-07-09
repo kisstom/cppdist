@@ -52,7 +52,7 @@ SConscript([
 #    'test/common/SConscript',
 #    'test/common/graph_converter/SConscript',
 #    'test/algos/SConscript',
-#    'test/algos/simple_mock_algo/SConscript',
+    'test/algos/simple_mock_algo/SConscript',
 #    'test/algos/simrank_update/SConscript',
 #    'test/algos/simrank_store_first/SConscript',
 #    'test/algos/simrank_odd_even/SConscript',

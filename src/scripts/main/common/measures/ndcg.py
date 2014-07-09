@@ -16,7 +16,7 @@ class NDCG:
     self.readScores(score2, self.file2)
 
     users = score1.keys()
-    print 'Counting ndcg'
+    #print 'Counting ndcg'
     sys.stdout.flush()
     for u in users:
       if u not in score2.keys():
@@ -31,11 +31,11 @@ class NDCG:
     dcg = 0.0
     idcg = 0.0
     
-    sort_by_simrank = sorted(d1.items(), key = lambda x: x[1], reverse = True)
+    sort_by_simrank = sorted(d2.items(), key = lambda x: x[1], reverse = True)
     rel = []
     for x in sort_by_simrank:
-      if x[0] in d2:
-        rel += [d2[x[0]]]
+      if x[0] in d1:
+        rel += [1]
       else:
         rel += [0]
 
@@ -50,7 +50,10 @@ class NDCG:
     rel = 0.0
 
     for i, x in enumerate(rels):
-      rel += (2**x - 1.0) / math.log(i+2, 2)
+      if i == 0:
+        rel += 2**x - 1.0
+      else:
+        rel += (2**x - 1.0) / math.log(i+1)
 
     return rel
 
@@ -79,4 +82,4 @@ if __name__ == "__main__":
   ndcg = NDCG(file1, file2, topk)
   ndcg.run()
 
-  print 'Number of users not found in other %d'%ndcg.userNotInOther
+  #print 'Number of users not found in other %d'%ndcg.userNotInOther
