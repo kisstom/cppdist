@@ -16,7 +16,7 @@ class NDCG:
     self.readScores(score2, self.file2)
 
     users = score1.keys()
-    print 'Counting ndcg'
+    #print 'Counting ndcg'
     sys.stdout.flush()
     for u in users:
       if u not in score2.keys():
@@ -82,4 +82,4 @@ if __name__ == "__main__":
   ndcg = NDCG(file1, file2, topk)
   ndcg.run()
 
-  print 'Number of users not found in other %d'%ndcg.userNotInOther
+  #print 'Number of users not found in other %d'%ndcg.userNotInOther
