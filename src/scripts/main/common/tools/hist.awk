@@ -17,6 +17,7 @@ BEGIN {
 END{
   size = int ((end - st) / buck)
   for (i = 0; i < size; ++i) {
+    if (!(i in hist)) hist[i] = 0
     print i * buck, hist[i]
   }
 }
