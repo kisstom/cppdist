@@ -323,5 +323,13 @@ def concat():
 #def copyFromMachineTo(remote_local_dir, concat_dir):
 #  get(remote_local_dir/out*, concat_dir)  
 
+@task
+def gitInfo():
+  global conf
+  localDir = conf.get('ALGO', 'LOCAL_DIR')
+  print run("""git diff --quiet --exit-code ||""" +
+    """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
+
+  print run("""git log -1 --pretty=format:%H""")
 
 
