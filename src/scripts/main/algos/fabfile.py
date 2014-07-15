@@ -333,7 +333,6 @@ def gitInfo():
     run('pwd')
     print run("""git diff --quiet --exit-code""")
     print run("""git log -1 --pretty=format:%H""")
-    run('popd')
   
   run('pwd')
 
