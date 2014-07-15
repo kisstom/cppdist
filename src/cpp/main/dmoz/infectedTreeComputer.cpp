@@ -18,14 +18,20 @@ void InfectedTreeComputer::computeInfectedTrees() {
 
   for (std::tr1::unordered_map<long, std::set<long> >::iterator rootIt = fpTreeNodes->begin();
       rootIt != fpTreeNodes->end(); ++rootIt) {
-    for (int infectedLevelInd = 1; infectedLevelInd <= infectedNodes->size(); ++infectedLevelInd) {
+    for (int infectedLevelInd = 1; infectedLevelInd < (int) infectedNodes->size(); ++infectedLevelInd) {
       hasSection = util.hasSection(rootIt->second, (*infectedNodes)[infectedLevelInd]);
 
       if (hasSection) {
-        for (int j = infectedLevelInd; j <= infectedNodes->size(); ++j) {
+        for (int j = infectedLevelInd; j < (int) infectedNodes->size(); ++j) {
           infectedTreeCount[j]++;
         }
       }
     }
+  }
+}
+
+void InfectedTreeComputer::flush(FILE* output) {
+  for (int j = 1; j < (int) infectedTreeCount.size(); ++j) {
+    fprintf(output, "%d %d\n", j, infectedTreeCount[j]);
   }
 }

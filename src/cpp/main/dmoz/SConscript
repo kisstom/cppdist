@@ -2,6 +2,8 @@ Import('env')
 
 env.Object(Glob('*.cpp'))
 
+utils = Glob('#/../bin/main/common/util/*.o')
+
 env.Program('filter_trusted_url', ['filter_trusted_url.cpp'] )
 env.Program('tag_with_rownum', ['tag_with_rownum.cpp'] )
 env.Program('dmoz_reader_job', ['dmoz_reader_job.cpp', 'dmoz_reader.o'] )
@@ -9,3 +11,4 @@ env.Program('distance_calculator', ['distance_calculator.cpp', 'dmoz_reader.o'] 
 env.Program('distance_calculator_from_root', ['distance_calculator_from_root.cpp', 'dmoz_reader.o'] )
 env.Program('ndcg_counter', ['ndcg_counter.cpp', 'ndcg.o'])
 env.Program('get_simrank', ['get_simrank.cpp', 'simrank.o'])
+env.Program('infectedTreeComputerJob', ['infectedTreeComputerJob.cpp', 'infectedTreeComputer.o', 'infectedNodeComputer.o', 'fpTreeLeaves.o'] + utils)

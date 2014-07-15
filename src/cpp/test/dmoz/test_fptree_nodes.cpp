@@ -44,17 +44,10 @@ protected:
 };
 
 
-TEST(FPTreeNodesTest, getRoot) {
-  char line[] = "0 1 2 3 4 5";
-  FpTreeLeaves fpTreeLeaves;
-  long root = fpTreeLeaves.getRoot(line);
-  ASSERT_EQ(5, root);
-}
-
 TEST(FPTreeNodesTest, addInner) {
   char line[] = "0 1 2 3 4 5";
   FpTreeLeaves fpTreeLeaves;
-  fpTreeLeaves.addInnerNodes(line, 5);
+  fpTreeLeaves.addInnerNodes(line);
 
   ASSERT_FALSE(fpTreeLeaves.nodes.find(5) == fpTreeLeaves.nodes.end());
 

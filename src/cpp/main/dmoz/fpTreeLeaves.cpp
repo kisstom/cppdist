@@ -6,50 +6,31 @@
  */
 
 #include "fpTreeLeaves.h"
+#include "../common/util/util.h"
 
 FpTreeLeaves::FpTreeLeaves() {
-  tmpStream = new std::stringstream;
 }
 
 FpTreeLeaves::~FpTreeLeaves() {
-  delete tmpStream;
+  //delete tmpStream;
 }
 
 void FpTreeLeaves::run(FILE* f) {
   char line [1024];
-  long root;
 
   while (fgets(line, 1024, f) != NULL) {
-    root = getRoot(line);
-    addInnerNodes(line, root);
+    line[strlen(line)-1] = '\0';
+    addInnerNodes(line);
   }
 }
 
-long FpTreeLeaves::getRoot(char * line) {
-  long path, fpIndex;
 
-  tmpStream->str("");
-  (*tmpStream) << line;
-  (*tmpStream) >> fpIndex;
-  while (!tmpStream->eof()) {
-    (*tmpStream) >> path;
-  }
-
-  return path;
-}
-
-void FpTreeLeaves::addInnerNodes(char* line, long root) {
-  long path, fpIndex;
-
-  tmpStream->str("");
-  (*tmpStream) << line;
-  (*tmpStream) >> fpIndex;
-
-  while (!tmpStream->eof()) {
-    (*tmpStream) >> path;
-    if (!tmpStream->eof()) {
-      nodes[root].insert(path);
-    }
+void FpTreeLeaves::addInnerNodes(char* line) {
+  std::vector<long> edges;
+  Util::split(line, edges);
+  long root = edges[edges.size() - 1];
+  for (int i = 1; i < (int) edges.size() - 1; ++i) {
+    nodes[root].insert(edges[i]);
   }
 }
 

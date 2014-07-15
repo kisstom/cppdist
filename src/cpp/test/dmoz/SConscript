@@ -7,6 +7,6 @@ env.Program('test_distanc_calculator', ['test_distanc_calculator.cpp', '../../ma
 env.Program('fileter_trusted_url', ['fileter_trusted_url.cpp'])
 env.Program('test_ndcg', ['test_ndcg.cpp', '../../main/dmoz/ndcg.o'])
 env.Program('test_simrank_score', ['test_simrank_score.cpp', '../../main/dmoz/simrank.o'])
-env.Program('test_fptree_nodes', ['test_fptree_nodes.cpp', '../../main/dmoz/fpTreeLeaves.o'])
+env.Program('test_fptree_nodes', ['test_fptree_nodes.cpp', '../../main/dmoz/fpTreeLeaves.o'] + utils)
 env.Program('test_infected_node_computer', ['test_infected_node_computer.cpp', '../../main/dmoz/infectedNodeComputer.o'] + utils)
 env.Program('test_infected_tree_computer', ['test_infected_tree_computer.cpp', '../../main/dmoz/infectedTreeComputer.o'])

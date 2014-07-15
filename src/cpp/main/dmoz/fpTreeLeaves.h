@@ -17,12 +17,10 @@ class FpTreeLeaves {
 public:
   FpTreeLeaves();
   void run(FILE* f);
-  long getRoot(char * s);
-  void addInnerNodes(char* s, long root);
+  void addInnerNodes(char* s);
   ~FpTreeLeaves();
 
   std::tr1::unordered_map<long, std::set<long> > nodes;
-  std::stringstream* tmpStream;
 };
 
 
