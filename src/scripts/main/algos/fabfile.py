@@ -332,7 +332,7 @@ def gitInfo():
   with cd(scriptDir):
     print run("""git diff --quiet --exit-code || """ +
       """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
-    print run("""git log -1 --pretty=format:%H""")
+    out = run("""git log -1 --pretty=format:%H""")
 
 
 
