@@ -328,11 +328,16 @@ def gitInfo():
   global conf
   localDir = conf.get('ALGO', 'LOCAL_DIR')
   scriptDir = conf.get('ALGO', 'SCRIPTDIR')
-  
+  gitLog = localDir + '/gitlog.txt'
+  f = open(gitlog, 'w')
+
   with cd(scriptDir):
     print run("""git diff --quiet --exit-code || """ +
       """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
     out = run("""git log -1 --pretty=format:%H""")
+    f.write(out)
+
+  f.close()
 
 
 
