@@ -14,11 +14,13 @@
 #include <tr1/unordered_map>
 #include "param_miss_exception.h"
 #include <stdarg.h>
+#include <set>
 
 using std::vector;
 using std::stringstream;
 using std::string;
 using std::tr1::unordered_map;
+
 
 class Util {
 public:
@@ -32,7 +34,26 @@ public:
 	vector<long> convertToLong(vector<string>);
 	void checkParam(vector<string> , unordered_map<string, string>*);
 	void checkParam(unordered_map<string, string>*, int argc, ...);
+
+	template<typename T>
+	bool hasSection(std::set<T>, std::set<T>);
 };
 
+template<typename T>
+bool Util::hasSection(std::set<T> x, std::set<T> y) {
+  typename std::set<T>::const_iterator i = x.begin();
+  typename std::set<T>::const_iterator j = y.begin();
+
+  while (i != x.end() && j != y.end())
+  {
+    if (*i == *j)
+      return true;
+    else if (*i < *j)
+      ++i;
+    else
+      ++j;
+  }
+  return false;
+}
 
 #endif /* UTIL_H_ */

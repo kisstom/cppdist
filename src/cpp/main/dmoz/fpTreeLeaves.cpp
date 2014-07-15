@@ -28,6 +28,7 @@ void FpTreeLeaves::run(FILE* f) {
 long FpTreeLeaves::getRoot(char * line) {
   long path, fpIndex;
 
+  tmpStream->str("");
   (*tmpStream) << line;
   (*tmpStream) >> fpIndex;
   while (!tmpStream->eof()) {
@@ -40,6 +41,7 @@ long FpTreeLeaves::getRoot(char * line) {
 void FpTreeLeaves::addInnerNodes(char* line, long root) {
   long path, fpIndex;
 
+  tmpStream->str("");
   (*tmpStream) << line;
   (*tmpStream) >> fpIndex;
 

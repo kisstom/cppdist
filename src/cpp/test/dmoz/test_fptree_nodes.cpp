@@ -67,6 +67,16 @@ TEST(FPTreeNodesTest, addInner) {
   ASSERT_EQ(4, fpTreeLeaves.nodes[5].size());
 }
 
+/*TEST(FPTreeNodesTest, addInnerTwice) {
+  char line[] = "0 1 2 3 4 5";
+  char line2[] = "10 11 12 13 14 15";
+  FpTreeLeaves fpTreeLeaves;
+  fpTreeLeaves.addInnerNodes(line, 5);
+  fpTreeLeaves.addInnerNodes(line2, 15);
+
+
+}*/
+
 }
 
 int main (int argc, char **argv) {
