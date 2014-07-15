@@ -327,9 +327,15 @@ def concat():
 def gitInfo():
   global conf
   localDir = conf.get('ALGO', 'LOCAL_DIR')
+  scriptDir = conf.get('ALGO', 'SCRIPTDIR')
   # """(echo "ERROR: the current state of the git repository is not committed"; exit 42)"""
-  print run("""git diff --quiet --exit-code""")
+  with cd(scriptDir):
+    run('pwd')
+    print run("""git diff --quiet --exit-code""")
+    print run("""git log -1 --pretty=format:%H""")
+    run('popd')
+  
+  run('pwd')
 
-  print run("""git log -1 --pretty=format:%H""")
 
 
