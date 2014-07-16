@@ -32,6 +32,7 @@ void InfectedTreeComputer::computeInfectedTrees() {
         for (int j = infectedLevelInd; j <= (int) infectedNodes->size(); ++j) {
           infectedTreeCount[j]++;
         }
+        break;
       }
     }
   }

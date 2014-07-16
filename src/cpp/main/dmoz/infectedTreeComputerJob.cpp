@@ -16,8 +16,6 @@
 #include "fpTreeLeaves.h"
 
 int main (int argc, char* argv[]) {
-  //Util util;
-
   string inputGraphN(argv[1]);
   string fingerprintN(argv[2]);
   string outputN(argv[3]);
@@ -31,21 +29,20 @@ int main (int argc, char* argv[]) {
   FILE* inputGraph = fopen(inputGraphN.c_str(), "r");
   InfectedNodeComputer infectedNodeComputer(crawlMaxes);
   infectedNodeComputer.buildFromFile(inputGraph);
-  //std::cout << "infectedNodes\n";
-  //util.printHashSet(infectedNodeComputer.infectedNodes);
+  std::cout << "Finished reading graph.\n";
+  fflush(stdout);
 
   FILE* fingerprints = fopen(fingerprintN.c_str(), "r");
   FpTreeLeaves fpTreeNodes;
   fpTreeNodes.run(fingerprints);
-  //std::cout << "fpTreeNodes\n";
-  //util.printHashSet(fpTreeNodes.nodes);
+  std::cout << "Finished reading fingerprints. FpTreeNodes size " << fpTreeNodes.nodes.size() << "\n";
+  fflush(stdout);
 
   InfectedTreeComputer treeComputer(&fpTreeNodes.nodes, &infectedNodeComputer.infectedNodes);
   treeComputer.computeInfectedTrees();
 
   FILE* infectedTrees = fopen(outputN.c_str(), "w");
   treeComputer.flush(infectedTrees);
-  //std::cout << treeComputer.infectedTreeCount.size() << "\n";
 
   fclose(inputGraph);
   fclose(fingerprints);
