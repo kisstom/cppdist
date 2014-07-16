@@ -105,6 +105,32 @@ TEST(InfectedTreeComputerTest, testSmallMx) {
   ASSERT_EQ(2, computer.infectedTreeCount[1]);
 }
 
+TEST(InfectedTreeComputerTest, testBreakLevel) {
+  std::tr1::unordered_map<long, std::set<long> > fpTreeNodes;
+  std::tr1::unordered_map<int, std::set<long> > infectedNodes;
+
+  std::set<long> root0;
+  root0.insert(1);
+  root0.insert(2);
+
+  fpTreeNodes[0] = root0;
+
+  std::set<long> infectedLev1;
+  infectedLev1.insert(1);
+
+  std::set<long> infectedLev2;
+  infectedLev2.insert(2);
+
+  infectedNodes[1] = infectedLev1;
+  infectedNodes[2] = infectedLev2;
+
+  InfectedTreeComputer computer(&fpTreeNodes, &infectedNodes);
+  computer.computeInfectedTrees();
+
+  ASSERT_EQ(1, computer.infectedTreeCount[1]);
+  ASSERT_EQ(1, computer.infectedTreeCount[2]);
+}
+
 }
 
 int main (int argc, char **argv) {

@@ -37,7 +37,7 @@ int main (int argc, char* argv[]) {
   FILE* fingerprints = fopen(fingerprintN.c_str(), "r");
   FpTreeLeaves fpTreeNodes;
   fpTreeNodes.run(fingerprints);
-  //std::cout << "fpTreeNodes\n";
+  std::cout << "fpTreeNodes size " << fpTreeNodes.nodes.size() << "\n";
   //util.printHashSet(fpTreeNodes.nodes);
 
   InfectedTreeComputer treeComputer(&fpTreeNodes.nodes, &infectedNodeComputer.infectedNodes);
