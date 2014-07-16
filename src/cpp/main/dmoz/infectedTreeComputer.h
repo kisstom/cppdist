@@ -12,6 +12,7 @@
 #include <set>
 #include <tr1/unordered_map>
 #include <stdio.h>
+#include <iostream>
 
 class InfectedTreeComputer {
 public:
@@ -20,6 +21,7 @@ public:
 
   void computeInfectedTrees();
   void flush(FILE*);
+  void printSet(std::set<long>, string);
   std::tr1::unordered_map<long, int> infectedTreeCount;
 private:
   std::tr1::unordered_map<long, std::set<long> >* fpTreeNodes;

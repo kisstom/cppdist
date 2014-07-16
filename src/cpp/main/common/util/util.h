@@ -35,6 +35,9 @@ public:
 	void checkParam(vector<string> , unordered_map<string, string>*);
 	void checkParam(unordered_map<string, string>*, int argc, ...);
 
+	void printHashSet(unordered_map<long, std::set<long> >);
+	void printHashSet(unordered_map<int, std::set<long> >);
+
 	template<typename T>
 	bool hasSection(std::set<T>, std::set<T>);
 };

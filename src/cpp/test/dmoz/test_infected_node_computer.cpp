@@ -134,6 +134,51 @@ TEST(InfectedNodeComputerTest, addInfectedNodes4) {
   ASSERT_TRUE(computer.infectedNodes[3].find(0) == computer.infectedNodes[3].end());
 }
 
+TEST(InfectedNodeComputerTest, testRedSmallMx) {
+  vector<long> crawlMaxes;
+  crawlMaxes.push_back(5);
+  crawlMaxes.push_back(12);
+  InfectedNodeComputer computer(crawlMaxes);
+
+  vector<long> edges;
+  edges.push_back(1);
+  edges.push_back(2);
+  edges.push_back(3);
+  computer.addInfectedNodes(edges);
+  computer.incrementNumLine();
+
+  edges.clear();
+  computer.addInfectedNodes(edges);
+  computer.incrementNumLine();
+
+  edges.clear();
+  edges.push_back(9);
+  computer.addInfectedNodes(edges);
+  computer.incrementNumLine();
+
+  edges.clear();
+  edges.push_back(8);
+  edges.push_back(10);
+  computer.addInfectedNodes(edges);
+  computer.incrementNumLine();
+
+  edges.clear();
+  computer.addInfectedNodes(edges);
+  computer.incrementNumLine();
+
+  edges.clear();
+  edges.push_back(2);
+  edges.push_back(4);
+  edges.push_back(6);
+  computer.addInfectedNodes(edges);
+  computer.incrementNumLine();
+
+  ASSERT_FALSE(computer.infectedNodes[1].find(2) == computer.infectedNodes[1].end());
+  ASSERT_FALSE(computer.infectedNodes[1].find(3) == computer.infectedNodes[1].end());
+  ASSERT_FALSE(computer.infectedNodes[1].find(5) == computer.infectedNodes[1].end());
+  ASSERT_EQ(3, computer.infectedNodes[1].size());
+}
+
 }
 
 int main (int argc, char **argv) {

@@ -14,7 +14,7 @@
 
 InfectedNodeComputer::InfectedNodeComputer(std::vector<long> _crawlMaxes) {
   crawlMaxes = _crawlMaxes;
-  maxNodeId = crawlMaxes[crawlMaxes.size() - 1];
+  maxNodeId = crawlMaxes[0];
   lineNumber = 0;
 }
 
@@ -29,6 +29,7 @@ void InfectedNodeComputer::buildFromFile(FILE* input) {
     }
 
     if (strlen(line) == 1) {
+      incrementNumLine();
       continue;
     }
 
@@ -38,11 +39,14 @@ void InfectedNodeComputer::buildFromFile(FILE* input) {
     std::sort (edges.begin(), edges.end());
     addInfectedNodes(edges);
 
-    ++lineNumber;
+    incrementNumLine();
   }
 
-  fclose(input);
   delete[] line;
+}
+
+void InfectedNodeComputer::incrementNumLine() {
+  ++lineNumber;
 }
 
 void InfectedNodeComputer::addInfectedNodes(const std::vector<long>& edges) {

@@ -19,7 +19,7 @@ public:
   void buildFromFile(FILE*);
   int findInfectedIndex(long);
   void addInfectedNodes(const std::vector<long>& edges);
-
+  void incrementNumLine();
   std::tr1::unordered_map<int, std::set<long> > infectedNodes;
 private:
   std::vector<long> crawlMaxes;

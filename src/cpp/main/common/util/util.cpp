@@ -121,7 +121,25 @@ void Util::checkParam(unordered_map<string, string>* params, int argc, ...) {
   va_end(ap);
 }
 
+void Util::printHashSet(unordered_map<long, std::set<long> > hashSet) {
+  for (unordered_map<long, std::set<long> >::iterator it = hashSet.begin(); it != hashSet.end(); ++it) {
+    printf("%ld ", it->first);
+    for (std::set<long>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt) {
+      printf (" %ld", *jt);
+    }
+    printf("\n");
+  }
+}
 
+void Util::printHashSet(unordered_map<int, std::set<long> > hashSet) {
+  for (unordered_map<int, std::set<long> >::iterator it = hashSet.begin(); it != hashSet.end(); ++it) {
+    printf("%d ", it->first);
+    for (std::set<long>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt) {
+      printf (" %ld", *jt);
+    }
+    printf("\n");
+  }
+}
 
 
 

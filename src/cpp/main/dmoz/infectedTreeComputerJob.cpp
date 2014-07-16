@@ -9,13 +9,14 @@
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
+#include "../common/util/util.h"
 
 #include "infectedTreeComputer.h"
 #include "infectedNodeComputer.h"
 #include "fpTreeLeaves.h"
 
 int main (int argc, char* argv[]) {
-  std::cout << argc << "\n";
+  //Util util;
 
   string inputGraphN(argv[1]);
   string fingerprintN(argv[2]);
@@ -30,19 +31,21 @@ int main (int argc, char* argv[]) {
   FILE* inputGraph = fopen(inputGraphN.c_str(), "r");
   InfectedNodeComputer infectedNodeComputer(crawlMaxes);
   infectedNodeComputer.buildFromFile(inputGraph);
-  std::cout << infectedNodeComputer.infectedNodes.size() << "\n";
+  //std::cout << "infectedNodes\n";
+  //util.printHashSet(infectedNodeComputer.infectedNodes);
 
   FILE* fingerprints = fopen(fingerprintN.c_str(), "r");
   FpTreeLeaves fpTreeNodes;
   fpTreeNodes.run(fingerprints);
-  std::cout << fpTreeNodes.nodes.size() << "\n";
+  //std::cout << "fpTreeNodes\n";
+  //util.printHashSet(fpTreeNodes.nodes);
 
   InfectedTreeComputer treeComputer(&fpTreeNodes.nodes, &infectedNodeComputer.infectedNodes);
   treeComputer.computeInfectedTrees();
 
   FILE* infectedTrees = fopen(outputN.c_str(), "w");
   treeComputer.flush(infectedTrees);
-  std::cout << treeComputer.infectedTreeCount.size() << "\n";
+  //std::cout << treeComputer.infectedTreeCount.size() << "\n";
 
   fclose(inputGraph);
   fclose(fingerprints);
