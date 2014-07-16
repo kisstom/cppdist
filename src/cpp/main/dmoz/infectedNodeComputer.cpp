@@ -40,6 +40,10 @@ void InfectedNodeComputer::buildFromFile(FILE* input) {
     addInfectedNodes(edges);
 
     incrementNumLine();
+
+    if (lineNumber % 100000000 == 0) {
+      printf("%ld number of line read.\n", lineNumber);
+    }
   }
 
   delete[] line;
