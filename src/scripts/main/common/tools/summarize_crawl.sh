@@ -8,7 +8,7 @@ fi
 thisDir=$(dirname $0)
 SRCDIR=$thisDir/../../../../
 
-export LD_LIBRARY_PATH=$SRCDIR/dep/log4cpp/lib/
+#export LD_LIBRARY_PATH=$SRCDIR/dep/log4cpp/lib/
 resultDir=$1
 num=`ls "$resultDir"|grep crawl|wc -l` 
 
