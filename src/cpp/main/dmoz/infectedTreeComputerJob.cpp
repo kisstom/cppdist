@@ -6,11 +6,11 @@
  */
 
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
 #include "../common/util/util.h"
-
 #include "infectedTreeComputer.h"
 #include "infectedNodeComputer.h"
 #include "fpTreeLeaves.h"
