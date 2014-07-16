@@ -193,6 +193,27 @@ TEST(TestUtil, testConvert) {
 
 }
 
+TEST(TestUtil, testHasSection) {
+  std::set<long> a;
+  a.insert(1);
+  a.insert(2);
+  a.insert(3);
+
+  std::set<long> b;
+  b.insert(4);
+  b.insert(5);
+  b.insert(3);
+
+  std::set<long> c;
+  b.insert(7);
+  b.insert(5);
+  b.insert(4);
+
+  Util util;
+  ASSERT_TRUE(util.hasSection(a, b));
+  ASSERT_FALSE(util.hasSection(a, c));
+}
+
 }
 
 int main (int argc, char **argv) {
