@@ -13,6 +13,7 @@
 #include <tr1/unordered_map>
 #include <stdio.h>
 #include <iostream>
+#include "log4cpp/Category.hh"
 
 class InfectedTreeComputer {
 public:
@@ -21,12 +22,14 @@ public:
 
   void computeInfectedTrees();
   void flush(FILE*);
-  void printSet(std::set<long>, string);
+
   std::tr1::unordered_map<long, int> infectedTreeCount;
+  std::tr1::unordered_map<long, int> infectedTreeSize;
 private:
   std::tr1::unordered_map<long, std::set<long> >* fpTreeNodes;
   std::tr1::unordered_map<int, std::set<long> >* infectedNodes;
   Util util;
+  log4cpp::Category* logger_;
 };
 
 

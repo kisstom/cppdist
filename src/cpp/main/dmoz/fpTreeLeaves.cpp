@@ -12,7 +12,6 @@ FpTreeLeaves::FpTreeLeaves() {
 }
 
 FpTreeLeaves::~FpTreeLeaves() {
-  //delete tmpStream;
 }
 
 void FpTreeLeaves::run(FILE* f) {
@@ -23,7 +22,6 @@ void FpTreeLeaves::run(FILE* f) {
     addInnerNodes(line);
   }
 }
-
 
 void FpTreeLeaves::addInnerNodes(char* line) {
   std::vector<long> edges;
