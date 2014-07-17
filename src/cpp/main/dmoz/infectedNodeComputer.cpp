@@ -16,6 +16,7 @@ InfectedNodeComputer::InfectedNodeComputer(std::vector<long> _crawlMaxes) {
   crawlMaxes = _crawlMaxes;
   maxNodeId = crawlMaxes[0];
   lineNumber = 0;
+  logger_ = &log4cpp::Category::getInstance(std::string("InfectedNodeComputer"));
 }
 
 void InfectedNodeComputer::buildFromFile(FILE* input) {
@@ -45,6 +46,11 @@ void InfectedNodeComputer::buildFromFile(FILE* input) {
       printf("%ld number of line read.\n", lineNumber);
       fflush(stdout);
     }
+  }
+
+  for (int i = 1; i <= (int) infectedNodes.size(); ++i) {
+    logger_->info("At crawl %d number of infected nodes: %d", i, infectedNodes[i].size());
+    fflush(stdout);
   }
 
   delete[] line;

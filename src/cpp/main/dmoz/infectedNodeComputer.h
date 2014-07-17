@@ -12,6 +12,7 @@
 #include <vector>
 #include <tr1/unordered_map>
 #include <set>
+#include "log4cpp/Category.hh"
 
 class InfectedNodeComputer {
 public:
@@ -25,6 +26,7 @@ private:
   std::vector<long> crawlMaxes;
   long maxNodeId;
   long lineNumber;
+  log4cpp::Category* logger_;
 };
 
 
