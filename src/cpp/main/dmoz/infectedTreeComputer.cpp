@@ -18,6 +18,7 @@ void InfectedTreeComputer::computeInfectedTrees() {
   bool hasSection;
 
   logger_->info("Starting infected tree count.");
+  fflush(stdout);
   int numTreesChecked = 0;
   for (std::tr1::unordered_map<long, std::set<long> >::iterator rootIt = fpTreeNodes->begin();
       rootIt != fpTreeNodes->end(); ++rootIt) {

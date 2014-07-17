@@ -12,6 +12,7 @@
 #include <tr1/unordered_map>
 #include <stdio.h>
 #include <sstream>
+#include "log4cpp/Category.hh"
 
 class FpTreeLeaves {
 public:
@@ -21,6 +22,9 @@ public:
   ~FpTreeLeaves();
 
   std::tr1::unordered_map<long, std::set<long> > nodes;
+
+private:
+  log4cpp::Category* logger;
 };
 
 
