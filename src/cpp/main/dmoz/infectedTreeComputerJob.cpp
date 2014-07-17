@@ -18,6 +18,7 @@
 
 int main (int argc, char* argv[]) {
   LoggerFactory::initLogger("INFO", "CONSOLE", "");
+  log4cpp::Category* logger =  &log4cpp::Category::getInstance(std::string("InfectedTreeComputerJob"));
 
   string inputGraphN(argv[1]);
   string fingerprintN(argv[2]);
@@ -32,13 +33,13 @@ int main (int argc, char* argv[]) {
   FILE* inputGraph = fopen(inputGraphN.c_str(), "r");
   InfectedNodeComputer infectedNodeComputer(crawlMaxes);
   infectedNodeComputer.buildFromFile(inputGraph);
-  std::cout << "Finished reading graph.\n";
+  logger->info("Finished reading graph.\n");
   fflush(stdout);
 
   FILE* fingerprints = fopen(fingerprintN.c_str(), "r");
   FpTreeLeaves fpTreeNodes;
   fpTreeNodes.run(fingerprints);
-  std::cout << "Finished reading fingerprints. FpTreeNodes size " << fpTreeNodes.nodes.size() << "\n";
+  logger->info("Finished reading fingerprints. FpTreeNodes size %d \n", fpTreeNodes.nodes.size());
   fflush(stdout);
 
   InfectedTreeComputer treeComputer(&fpTreeNodes.nodes, &infectedNodeComputer.infectedNodes);

@@ -34,8 +34,9 @@ void InfectedTreeComputer::computeInfectedTrees() {
     }
 
     ++numTreesChecked;
-    if (numTreesChecked % 1000 == 0) {
+    if (numTreesChecked % 10 == 0) {
       logger_->info("%d trees checked.", numTreesChecked);
+      fflush(stdout);
     }
   }
 }
