@@ -20,6 +20,8 @@ export LD_LIBRARY_PATH=/home/kisstom/git/Cppdist/src/dep/gmp/lib/:/home/kisstom/
 
 pythonbrew venv use fabos
 
+fab cfg:$cfg
+
 exit 0
 
 fab cfg:$cfg compute
