@@ -1,10 +1,31 @@
 #!/bin/bash -eu
 
 thisDir=$(dirname $0)
+
+if [ $# != 5 ]; then
+  echo "params: outdir cfg numCrawls startCrawl nodeInCrawl"
+  exit 1
+fi
+
 outdir=$1
+cfg=$2
+num=$3
+start=$4
+gap=$5
+crawls=$(for x in `seq 0 $((num-1))`; do echo -ne " "$((gap*x+start)); done)
 
 . $thisDir/../tools/create_experiment_info.sh
 
 export LD_LIBRARY_PATH=/home/kisstom/git/Cppdist/src/dep/gmp/lib/:/home/kisstom/git/Cppdist/src/dep/log4cpp/lib/
 
-"$thisDir"/../../../../bin/main/dmoz/infectedTreeComputerJob /mnt/idms/_bck/store/kisstom/data/portugal/reindexed.nopara.inv /mnt/idms/kisstom/run/distributed/portugal/simrank_odd_even/fptree_infection/simrank_on_top200M/concat.txt "$outdir"/output.txt 10 200000000 205000000 210000000 215000000 220000000 225000000 230000000 235000000 240000000 245000000
+pythonbrew venv use fabos
+
+exit 0
+
+fab cfg:$cfg compute
+
+# fab cfg default output
+cat "$outdir"/outdir/out* > "$outdir"/concat.txt
+
+"$thisDir"/../../../../bin/main/dmoz/infectedTreeComputerJob /mnt/idms/_bck/store/kisstom/data/portugal/reindexed.nopara.inv \
+"$outdir"/concat.txt "$outdir"/output.txt $num $crawls
