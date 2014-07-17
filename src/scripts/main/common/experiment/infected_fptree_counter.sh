@@ -18,12 +18,6 @@ crawls=$(for x in `seq 0 $((num-1))`; do echo -ne " "$((gap*x+start)); done)
 
 export LD_LIBRARY_PATH=/home/kisstom/git/Cppdist/src/dep/gmp/lib/:/home/kisstom/git/Cppdist/src/dep/log4cpp/lib/
 
-pythonbrew venv use fabos
-
-fab cfg:$cfg
-
-exit 0
-
 fab cfg:$cfg compute
 
 # fab cfg default output
