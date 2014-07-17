@@ -11,18 +11,14 @@ InfectedTreeComputer::InfectedTreeComputer(std::tr1::unordered_map<long, std::se
       std::tr1::unordered_map<int, std::set<long> >* _infectedNodes) {
   fpTreeNodes = _fpTreeNode;
   infectedNodes = _infectedNodes;
-}
-
-void InfectedTreeComputer::printSet(std::set<long> s, string name) {
-  std::cout << name << "\n";
-  for (std::set<long>::iterator it = s.begin(); it != s.end(); ++it) {
-    std::cout << *it << "\n";
-  }
+  logger_ = &log4cpp::Category::getInstance(std::string("InfectedTreeComputer"));
 }
 
 void InfectedTreeComputer::computeInfectedTrees() {
   bool hasSection;
 
+  logger_->info("Starting infected tree count.");
+  int numTreesChecked = 0;
   for (std::tr1::unordered_map<long, std::set<long> >::iterator rootIt = fpTreeNodes->begin();
       rootIt != fpTreeNodes->end(); ++rootIt) {
     for (int infectedLevelInd = 1; infectedLevelInd <= (int) infectedNodes->size(); ++infectedLevelInd) {
@@ -30,16 +26,23 @@ void InfectedTreeComputer::computeInfectedTrees() {
 
       if (hasSection) {
         for (int j = infectedLevelInd; j <= (int) infectedNodes->size(); ++j) {
-          infectedTreeCount[j]++;
+          ++infectedTreeCount[j];
+          infectedTreeSize[j] += rootIt->second.size();
         }
         break;
       }
+    }
+
+    ++numTreesChecked;
+    if (numTreesChecked % 1000 == 0) {
+      logger_->info("%d trees checked.", numTreesChecked);
     }
   }
 }
 
 void InfectedTreeComputer::flush(FILE* output) {
   for (int j = 1; j <= (int) infectedTreeCount.size(); ++j) {
-    fprintf(output, "%d %d\n", j, infectedTreeCount[j]);
+    fprintf(output, "crawl level: %d tree count: %d\n", j, infectedTreeCount[j]);
+    fprintf(output, "crawl level: %d tree sizes: %d\n", j, infectedTreeSize[j]);
   }
 }

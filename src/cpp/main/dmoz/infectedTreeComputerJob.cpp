@@ -14,8 +14,11 @@
 #include "infectedTreeComputer.h"
 #include "infectedNodeComputer.h"
 #include "fpTreeLeaves.h"
+#include "../common/util/logger_factory.h"
 
 int main (int argc, char* argv[]) {
+  LoggerFactory::initLogger("INFO", "CONSOLE", "");
+
   string inputGraphN(argv[1]);
   string fingerprintN(argv[2]);
   string outputN(argv[3]);
