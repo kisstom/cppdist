@@ -42,8 +42,8 @@ void InfectedNodeComputer::buildFromFile(FILE* input) {
 
     incrementNumLine();
 
-    if (lineNumber % 10000000 == 0) {
-      printf("%ld number of line read.\n", lineNumber);
+    if (lineNumber % 100000000 == 0) {
+      logger_->info("%ld number of line read.\n", lineNumber);
       fflush(stdout);
     }
   }
