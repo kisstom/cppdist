@@ -1,0 +1,58 @@
+apply plugin: 'java'
+apply from: 'repos.gradle'
+
+dependencies {
+  // runtime ('hu.sztaki.ilab:work:latest.integration') {changing = true}
+  // testRuntime ('checkstyle:checkstyle.checkstyle-5.6.checkstyle-5.6-all.jar:latest.integration') {changing = true}
+  testRuntime ('hu.sztaki.ilab:tester:latest.integration') {changing = true}
+}
+
+task copyDeps(type: Copy) {
+  from configurations.all
+  into 'repo'
+}
+
+task untar(dependsOn: copyDeps) << {
+  // untarFile('repo/checkstyle.checkstyle-5.6.checkstyle-5.6-all.jar-1.0.tar')
+}
+
+task resolve(dependsOn: untar) << {}
+
+task install(type:Exec, dependsOn: untar) {
+  commandLine 'manage/install.sh'
+}
+
+// if artifacts need something to run
+// task buildProject(type:Exec) {
+//   commandLine 'deploy/fab.sh', 'build'
+// }
+
+def artifactLocation = buildDir
+
+// example runtime artifacts
+def projectArtifacts = ([
+//  [l: 'java/build/output/lib/'],
+//  [l: 'java/*gradle*', d: false],
+].collect {it -> glob(file("."), it.l, it.d == null || it.d)}).flatten()
+
+
+// example src artifacts
+def projectSrcArtifacts = ([
+//  [l: 'java/src/main'], 
+//  [l: 'java/**/*.sh'],
+  [l: 'README'],
+].collect {it -> glob(file("."), it.l, it.d == null || it.d)}).flatten()
+
+artifacts {
+  runtime file: file("$artifactLocation/recSys2014.tar"),
+      name: 'Cppdist', type: 'tar' , extension: 'tar'
+}
+
+//task tarArtifacts(type: Tar, dependsOn: buildProject) {
+task tarArtifacts(type: Tar) {
+  configure tarConfiguration('Cppdist', projectArtifacts, artifactLocation)
+}
+
+task publishLocal(dependsOn: [tarArtifacts, uploadToLocal]) << {}
+task publish(dependsOn: [tarArtifacts, uploadToArtifactory]) << {}
+

@@ -1,2 +1,9 @@
 /src/bin
 /src/dep/
+
+/repo/
+/log
+/.gradle/
+/path_config.sh
+/repos.properties
+

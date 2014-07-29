@@ -1,0 +1,188 @@
+
+def artifactory
+def reposProperties
+
+def ivyPattern = '/[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]'
+def repo1Pattern = 'repo1/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]'
+
+task readReposProperties {
+  reposProperties = new Properties()
+  if (new File('repos.properties').exists()) {
+    reposProperties.load(new FileInputStream("repos.properties"))
+  } else {
+    reposProperties.load(new FileInputStream("../repos.properties"))
+  }
+  artifactory = 'http://' + reposProperties.get('artifactory.host') + ':' +
+    reposProperties.get('artifactory.port') + '/artifactory'
+}
+
+if (project.hasProperty('get_deps_from_local')) {
+  repositories {
+   ivy {
+      url reposProperties.get('ivy.local.root')
+      layout "pattern", {
+        artifact 'libs-snapshot-local' + ivyPattern
+        ivy 'libs-snapshot-local' + ivyPattern
+        m2compatible = false
+      }
+    }
+  }
+} 
+
+repositories {
+  ivy {
+    credentials {
+      username reposProperties.get('artifactory.download.username')
+      password reposProperties.get('artifactory.download.passwd')
+    }
+    url artifactory
+    layout "pattern", {
+      artifact 'libs-snapshot-local' + ivyPattern
+      ivy 'libs-snapshot-local' + ivyPattern
+      m2compatible = false
+    }
+  }
+  ivy {
+    credentials {
+      username reposProperties.get('artifactory.download.username')
+      password reposProperties.get('artifactory.download.passwd')
+    }
+    url artifactory
+    layout "pattern", {
+      artifact 'resources' + ivyPattern
+      ivy 'resources' + ivyPattern
+      m2compatible = false
+    }
+  }
+  ivy {
+    credentials {
+      username reposProperties.get('artifactory.download.username')
+      password reposProperties.get('artifactory.download.passwd')
+    }
+    url artifactory
+    layout "pattern", {
+      artifact 'third-party' + ivyPattern
+      ivy 'third-party' + ivyPattern
+      m2compatible = false
+    }
+  }
+  ivy {
+    credentials {
+      username reposProperties.get('artifactory.download.username')
+      password reposProperties.get('artifactory.download.passwd')
+    }
+    url artifactory
+    layout "pattern", {
+      artifact repo1Pattern
+      ivy repo1Pattern
+      m2compatible = true
+    }
+  }
+  // TODO elvileg ez nem kellene az artifactory repo1 proxija miatt, de most megis kell
+  mavenCentral()
+}
+
+configurations.runtime.artifacts.removeAll { it.archiveTask.is jar }
+configurations.archives.artifacts.removeAll { it.archiveTask.is jar }
+
+configurations {
+  toArtifactory
+  toLocal.extendsFrom(toArtifactory)
+}
+
+configurations.toArtifactory.extendsFrom = (configurations.all as Set).minus(
+    [configurations.toArtifactory, configurations.toLocal])
+
+//configurations.default.extendsFrom = [configurations.toArtifactory] as Set
+
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+group = 'hu.sztaki.ilab'
+version = '1.0-SNAPSHOT'
+
+uploadToArtifactory {
+  repositories {
+    ivy {
+      name 'artifactory_upload'
+      credentials {
+        username reposProperties.get('artifactory.upload.username')
+        password reposProperties.get('artifactory.upload.passwd')
+      }
+      url artifactory
+      layout "pattern", {
+        artifact 'libs-snapshot-local' + ivyPattern
+        ivy 'libs-snapshot-local' + ivyPattern
+        m2compatible = false
+      }
+    }
+  }
+}
+
+uploadToLocal {
+  repositories {
+   ivy {
+      url reposProperties.get('ivy.local.root')
+      layout "pattern", {
+        artifact 'libs-snapshot-local' + ivyPattern
+        ivy 'libs-snapshot-local' + ivyPattern
+        m2compatible = false
+      }
+    }
+  }
+}
+
+project(':').ext {
+
+  untarFile = { file ->
+    copy {
+      from tarTree(file)
+      into 'repo/'
+    }
+  }
+
+  relativize = { path ->
+    return new File(new File('.').toURI().relativize(path.toURI()).toString())
+  }
+
+//  def glob(File dir, String pat, boolean withDirectories = true) {
+  glob = { dir,pat,withDirectories = true ->
+    assert dir instanceof File && pat instanceof String
+    def scanner = new groovy.util.AntBuilder().fileScanner {
+       fileset(dir:dir, includes:pat)
+    }
+    def files = scanner.collect {relativize(it).toString()}
+    def directories = scanner.directories().collect {relativize(it).toString()}
+    if (withDirectories) {
+      return [files, directories].flatten()
+    }
+    return files
+  }
+
+tarConfiguration = { artifactName, artifactList, artifactLocation ->
+  return {
+    archiveName = artifactName + '.tar'
+    destinationDir = artifactLocation
+    classifier = 'src'
+    artifactList.each {fileName ->
+      from(fileName) {
+        if (new File(fileName).isDirectory()) {
+          into(artifactName + "/" + fileName) 
+        } else {
+          def index = fileName.lastIndexOf(File.separator)
+          if (index == -1) {
+            into(artifactName + "/")
+          } else {
+            into(artifactName + "/" + fileName.substring(0, index))
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+}
