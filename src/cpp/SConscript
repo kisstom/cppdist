@@ -14,16 +14,14 @@ flags = ['-O3', '-g', '-ggdb', '-Wall']
 GMOCK= "#../dep/gmock/"
 LOG4CPP = "#../dep/log4cpp"
 GMP = "#../dep/gmp/"
+GTEST = "#../dep/gtest/"
 
 env = Environment(
         CXX = 'g++',
         CCFLAGS = flags,
-        CPPPATH=[ '#.',
-          GMOCK + '/include/', '#../dep/log4cpp/include/', GMP + 'include/'],
-        LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/',
-		'#../dep/log4cpp/lib/', GMOCK + 'build'] ,
-        LIBS=['gflags', 'gtest', 'pthread', 'liblog4cpp', 'libgmock', 'gmp', 'gmpxx']
-        #LIBS=['gflags', 'gtest', 'gmp', 'gmpxx', 'pthread', 'liblog4cpp']
+        CPPPATH=[ '#.', GMOCK + '/include/', LOG4CPP + '/include/', GMP + 'include/', GTEST + 'include/'],
+        LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/', LOG4CPP + '/lib/', GMOCK + 'build/', GTEST + 'build/'],
+        LIBS=['gflags', 'gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx']
 )
 
 testCompile = ARGUMENTS.get('test', False)
