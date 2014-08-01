@@ -10,7 +10,7 @@
 
 #include <string>
 #include "runnable.h"
-#include "../common/components/sender_buffer.h"
+#include "../../common/components/sender_buffer.h"
 
 class Algo;
 

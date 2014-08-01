@@ -7,7 +7,7 @@ thisDir=$(dirname $0)
 
 
 cd $thisDir/../../../../cpp
-scons -j4
+scons -Q test=True -j4
 
 
 cd ..

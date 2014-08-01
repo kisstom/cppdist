@@ -18,8 +18,8 @@
 #include "../../common/random/hash_pseudo_random.h"
 #include "../../common/components/mutex.h"
 #include "../../common/graph/edge_list_builder.h"
-#include "../node.h"
-#include "../algo.h"
+#include "../algo_components/node.h"
+#include "../algo_components/algo.h"
 
 #include "random_generator_type.h"
 

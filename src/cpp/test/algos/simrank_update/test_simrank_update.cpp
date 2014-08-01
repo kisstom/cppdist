@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
-#include "../../../main/algos/algo.h"
-#include "../../../main/algos/master.h"
+#include "../../../main/algos/algo_components/algo.h"
+#include "../../../main/algos/algo_components/master.h"
 #include "../../../main/common/thread/node_thread.h"
-#include "../../algos/simple_mock_algo/simple_mock_node.h"
-#include "../../algos/simple_mock_algo/simple_mock_deserializer.h"
-#include "../../algos/simple_mock_algo/simple_mock_inner_master.h"
+#include "../../../main/algos/simple_mock_algo/simple_mock_node.h"
+#include "../../../main/algos/simple_mock_algo/simple_mock_deserializer.h"
+#include "../../../main/algos/simple_mock_algo/simple_mock_inner_master.h"
 
 
 #include "log4cpp/Category.hh"

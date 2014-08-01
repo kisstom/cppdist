@@ -8,7 +8,7 @@
 #ifndef SIMRANK_STORE_FIRST_MASTER_H_
 #define SIMRANK_STORE_FIRST_MASTER_H_
 
-#include "../inner_master.h"
+#include "../algo_components/inner_master.h"
 
 class SimrankStoreFirstMaster : public InnerMaster {
 	//bool nextIter();

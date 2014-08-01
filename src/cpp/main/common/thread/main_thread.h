@@ -8,7 +8,7 @@
 #ifndef MAIN_THREAD_H_
 #define MAIN_THREAD_H_
 
-#include "../../algos/runnable.h"
+#include "../../algos/algo_components/runnable.h"
 #include "thread_manager.h"
 #include <log4cpp/Category.hh>
 

@@ -1,16 +1,3 @@
-Import('env')
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
 
-COMMON_OBJ = Glob('#/../bin/main/common/components/*.o') + Glob('#/../bin/main/common/util/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/thread/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/random/*.o')
-
-DESER_OBJ = Glob('../../main/algos/simrank_odd_even/*.o')
-DESER_OBJ += Glob('../../main/algos/simrank_update/*.o')
-DESER_OBJ += Glob('../../main/algos/simrank_store_first/*.o')
-DESER_OBJ += Glob('../../main/algos/pagerank/*.o')
-DESER_OBJ += ['#/../bin/main/algos/psimrank/psimrank_deserializer.o', '#/../bin/main/algos/psimrank/psimrank_node.o']
-COMMON_OBJ += ['#/../bin/main/algos/inner_master.o', '#/../bin/main/algos/master.o']
-COMMON_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o']
-COMMON_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_node.o']
-
-env.Program('test_cluster_setup', ['test_cluster_setup.cpp', '../../main/algos/node.o', '../../main/algos/algo.o'] + COMMON_OBJ + DESER_OBJ)
+env.Program('test_cluster_setup', ['test_cluster_setup.cpp'] + COMMON_OBJ + ALGO_OBJ)

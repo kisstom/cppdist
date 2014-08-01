@@ -14,7 +14,7 @@
 #include "inode_factory.h"
 #include "node_factory_helper.h"
 #include <log4cpp/Category.hh>
-#include "simple_mock_algo/simple_mock_node.h"
+#include "../simple_mock_algo/simple_mock_node.h"
 
 using std::vector;
 using std::list;

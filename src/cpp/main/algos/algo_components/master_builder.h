@@ -8,7 +8,7 @@
 #ifndef MASTER_BUILDER_H_
 #define MASTER_BUILDER_H_
 
-#include "../common/util/cfg_reader.h"
+#include "../../common/util/cfg_reader.h"
 #include "master.h"
 #include "IMasterBuilder.h"
 #include <log4cpp/Category.hh>

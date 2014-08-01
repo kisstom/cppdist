@@ -8,7 +8,7 @@
 #ifndef SENDER_THREAD_H_
 #define SENDER_THREAD_H_
 
-#include "../../algos/node.h"
+#include "../../algos/algo_components/node.h"
 #include "thread_manager.h"
 #include <log4cpp/Category.hh>
 

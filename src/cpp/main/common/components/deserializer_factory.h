@@ -12,7 +12,7 @@
 #include "deserializer.h"
 #include "../../algos/simrank_update/simrank_update_deserializer.h"
 #include "../../algos/simrank_store_first/simrank_store_first_deserializer.h"
-#include "../../algos/node.h"
+#include "../../algos/algo_components/node.h"
 #include "../../algos/simrank_update/simrank_update_node.h"
 #include "../../algos/simrank_store_first/simrank_store_first_node.h"
 #include "../../algos/simrank_odd_even/simrank_odd_even_deserializer.h"

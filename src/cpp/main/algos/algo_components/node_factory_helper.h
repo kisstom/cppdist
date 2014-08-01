@@ -9,9 +9,9 @@
 #define NODE_FACTORY_HELPER_H_
 
 #include <tr1/unordered_map>
-#include "simrank_odd_even/simrank_odd_even_node.h"
-#include "pagerank/pagerank_node.h"
-#include "psimrank/psimrank_node.h"
+#include "../simrank_odd_even/simrank_odd_even_node.h"
+#include "../pagerank/pagerank_node.h"
+#include "../psimrank/psimrank_node.h"
 #include "inode_factory.h"
 
 using std::tr1::unordered_map;

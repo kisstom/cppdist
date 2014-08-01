@@ -5,7 +5,7 @@
  *      Author: kisstom
  */
 
-#include "master_builder.h"
+#include "../algo_components/master_builder.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -15,7 +15,7 @@
 #include "log4cpp/BasicLayout.hh"
 #include "log4cpp/Priority.hh"
 
-#include "../common/util/logger_factory.h"
+#include "../../common/util/logger_factory.h"
 
 void initLogger(unordered_map<string, string>* params) {
 	string debugLevel, appender, logfileName;
