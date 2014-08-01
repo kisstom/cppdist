@@ -146,7 +146,7 @@ def startMaster():
     master_log = conf.get('ALGO', 'MASTER_LOG')
     run('rm -f %s'%master_log)
     logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
-    pid = run('''(nohup %s/main/algos/master_task %s %d 1> %s 2>&1 < /dev/null & 
+    pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
       echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
     storePid(env.host[0], pid)
     time.sleep(2)
@@ -192,7 +192,7 @@ def startOnMachine(slave_index):
    global configFile, numJobs, conf
    bin_dir = conf.get('ALGO', 'BIN') 
    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
-   pid = run('''(nohup %s/main/algos/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
+   pid = run('''(nohup %s/main/algos/task/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
       echo $!)'''%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
    storePid(env.host[0], pid)
   

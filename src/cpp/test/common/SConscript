@@ -13,4 +13,4 @@ env.Program('test_store_from_binary', ['test_store_from_binary.cpp'] + COMMON_OB
 env.Program('test_serializer', ['test_serializer.cpp'])
 env.Program('test_fp_read', ['test_fp_read.cpp'] + COMMON_OBJ + ALGO_OBJ)
 env.Program('test_random_generator', ['test_random_generator.cpp'] + COMMON_OBJ + ALGO_OBJ)
-env.Program('test_hash_pseudo_random', ['test_hash_pseudo_random.cpp', '../../../bin/main/common/random/hash_pseudo_random.o'] )
+env.Program('hash_pseudo_random_main', ['hash_pseudo_random_main.cpp', '../../../bin/main/common/random/hash_pseudo_random.o'] )
