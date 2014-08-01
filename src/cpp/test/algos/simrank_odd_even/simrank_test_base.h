@@ -6,9 +6,9 @@
  */
 #include <gtest/gtest.h>
 
-#include "../../../main/algos/cluster.h"
-#include "../../../main/algos/test_master_builder.h"
-#include "../../../main/algos/test_simrank_odd_even_node_factory.h"
+#include "../../../main/algos/algo_components/cluster.h"
+#include "../../../main/algos/algo_components/test_master_builder.h"
+#include "../../../main/algos/algo_components/test_simrank_odd_even_node_factory.h"
 #include "../../../main/common/util/logger_factory.h"
 #include <stdlib.h>
 #include <sstream>

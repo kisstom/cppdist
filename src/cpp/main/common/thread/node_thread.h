@@ -1,7 +1,7 @@
 #ifndef NODE_THREAD_H
 #define NODE_THREAD_H
 
-#include "../../algos/runnable.h"
+#include "../../algos/algo_components/runnable.h"
 #include "thread_manager.h"
 #include <log4cpp/Category.hh>
 #include <exception>

@@ -9,7 +9,7 @@
 #define SIMRANK_ODD_EVEN_MASTER_H_
 
 
-#include "../inner_master.h"
+#include "../algo_components/inner_master.h"
 
 class SimrankOddEvenMaster : public InnerMaster {
 	//bool nextIter();

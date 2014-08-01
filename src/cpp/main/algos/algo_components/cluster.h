@@ -16,8 +16,8 @@
 #include "master.h"
 #include "test_master_builder.h"
 #include "IMasterBuilder.h"
-#include "../common/thread/main_thread.h"
-#include "../common/thread/setup_thread.h"
+#include "../../common/thread/main_thread.h"
+#include "../../common/thread/setup_thread.h"
 #include "log4cpp/Category.hh"
 
 using std::tr1::unordered_map;

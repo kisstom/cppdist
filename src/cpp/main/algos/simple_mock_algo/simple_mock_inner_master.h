@@ -8,7 +8,7 @@
 #ifndef SIMPLE_MOCK_INNER_MASTER_H_
 #define SIMPLE_MOCK_INNER_MASTER_H_
 
-#include "../../../main/algos/inner_master.h"
+#include "../algo_components/inner_master.h"
 #include "log4cpp/Category.hh"
 
 class SimpleMockInnerMaster : public InnerMaster {

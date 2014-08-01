@@ -8,7 +8,7 @@
 #ifndef RECEIVER_THREAD_H_
 #define RECEIVER_THREAD_H_
 
-#include "../../algos/algo.h"
+#include "../../algos/algo_components/algo.h"
 #include "thread_manager.h"
 #include <log4cpp/Category.hh>
 

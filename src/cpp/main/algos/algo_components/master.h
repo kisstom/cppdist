@@ -10,8 +10,8 @@
 
 #include <iostream>
 #include <vector>
-#include "../common/components/socket/socket.h"
-#include "../common/util/log.h"
+#include "../../common/components/socket/socket.h"
+#include "../../common/util/log.h"
 #include "inner_master.h"
 #include "runnable.h"
 

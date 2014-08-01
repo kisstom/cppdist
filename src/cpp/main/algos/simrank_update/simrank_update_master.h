@@ -8,7 +8,7 @@
 #ifndef SIMANK_UPDATE_MASTER_H_
 #define SIMANK_UPDATE_MASTER_H_
 
-#include "../inner_master.h"
+#include "../algo_components/inner_master.h"
 
 class SimrankUpdateMaster : public InnerMaster {
 public:

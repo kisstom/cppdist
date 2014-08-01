@@ -12,10 +12,10 @@
 #include "../../common/graph/sorted_vector_node_matrix.h"
 #include "../../common/random/random_generator.h"
 #include "../../common/old/random_walk.h"
-#include "../node.h"
+#include "../algo_components/node.h"
 //#include "simrank_update_deserializer.h"
 #include "../../common/components/mutex.h"
-#include "../algo.h"
+#include "../algo_components/algo.h"
 #include "../../common/components/fingerprint_reader.h"
 
 #include "log4cpp/Category.hh"

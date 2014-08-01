@@ -1,0 +1,7 @@
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
+
+env.Object(Glob('*.cpp'))
+
+
+env.Program('node_task', ['node_task.cpp'] + COMMON_OBJ + ALGO_OBJ)
+env.Program('master_task', ['master_task.cpp'] + COMMON_OBJ + ALGO_OBJ)

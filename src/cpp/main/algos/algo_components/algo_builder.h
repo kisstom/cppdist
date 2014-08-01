@@ -9,9 +9,9 @@
 #define ALGO_BUILDER_H_
 
 #include "algo.h"
-#include "../common/util/cfg_reader.h"
+#include "../../common/util/cfg_reader.h"
 #include "node_factory.h"
-#include "../common/components/deserializer_factory.h"
+#include "../../common/components/deserializer_factory.h"
 
 class AlgoBuilder {
 public:

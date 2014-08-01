@@ -6,8 +6,8 @@
  */
 
 #include <gtest/gtest.h>
-#include "../../../main/algos/master.h"
-#include "../../../main/algos/inner_master.h"
+#include "../../../main/algos/algo_components/master.h"
+#include "../../../main/algos/algo_components/inner_master.h"
 #include "../../../main/algos/psimrank/psimrank_master.h"
 #include "../../../main/algos/psimrank/psimrank_random_generator.h"
 

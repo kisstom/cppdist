@@ -8,8 +8,8 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-#include "../../main/algos/algo.h"
-#include "../../main/algos/master.h"
+#include "../../main/algos/algo_components/algo.h"
+#include "../../main/algos/algo_components/master.h"
 #include "../../main/common/thread/node_thread.h"
 #include "../common/mock_store_from_binary.h"
 #include "mock_node.h"

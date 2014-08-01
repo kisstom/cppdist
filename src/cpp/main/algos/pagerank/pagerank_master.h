@@ -8,7 +8,7 @@
 #ifndef PAGERANK_MASTER_H_
 #define PAGERANK_MASTER_H_
 
-#include "../inner_master.h"
+#include "../algo_components/inner_master.h"
 
 class PagerankMaster : public InnerMaster {
 public:

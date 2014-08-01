@@ -8,9 +8,9 @@
 #ifndef SIMPLE_MOCK_NODE_H_
 #define SIMPLE_MOCK_NODE_H_
 
-#include "../../../main/algos/node.h"
+#include "../algo_components/node.h"
 #include "../../../main/common/components/sender_buffer.h"
-#include "../../../main/algos/algo.h"
+#include "../algo_components/algo.h"
 #include "log4cpp/Category.hh"
 
 class SimpleMockNode : public Node {
