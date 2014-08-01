@@ -26,9 +26,9 @@ env = Environment(
         #LIBS=['gflags', 'gtest', 'gmp', 'gmpxx', 'pthread', 'liblog4cpp']
 )
 
-COMMON_OBJ = Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/util/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/thread/*.o') + Glob('#/../bin/main/common/components/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o')  + Glob('#/../bin/main/common/random/*.o')
+
+
+"""
 ALGO_OBJ = ['#/../bin/main/algos/algo.o', '#/../bin/main/algos/master.o', '#/../bin/main/algos/node.o', '#/../bin/main/algos/inner_master.o']
 
 DESER_OBJ = Glob('#/../bin/main/algos/simrank_odd_even/*.o')
@@ -36,18 +36,38 @@ DESER_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 DESER_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
 DESER_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
 DESER_OBJ += ['#/../bin/main/algos/psimrank/psimrank_deserializer.o', '#/../bin/main/algos/psimrank/psimrank_node.o']
-DESER_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_node.o']
+DESER_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_node.o']"""
+
+DESER_OBJ = ''
+SConscript([
+    'main/common/SConscript'],
+    exports = ['env'])
+    
+COMMON_OBJ = Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/util/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/thread/*.o') + Glob('#/../bin/main/common/components/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o')  + Glob('#/../bin/main/common/random/*.o')
 
 SConscript([
-    'main/common/SConscript',
-    'main/dmoz/SConscript',
-    'main/algos/simrank_one_computer/SConscript',
+	'main/algos/simrank_one_computer/SConscript',
     'main/algos/simrank_multithread/SConscript',			
     'main/algos/simrank_odd_even/SConscript',
     'main/algos/simrank_store_first/SConscript',
     'main/algos/simrank_update/SConscript',
     'main/algos/pagerank/SConscript',
-    'main/algos/psimrank/SConscript', 
+    'main/algos/psimrank/SConscript',
+     ],
+    exports = ['env', 'COMMON_OBJ'])
+
+
+ALGO_OBJ = Glob('#/../bin/main/algos/simrank_odd_even/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
+ALGO_OBJ += ['#/../bin/main/algos/psimrank/psimrank_node.o', '#/../bin/main/algos/psimrank/psimrank_deserializer.o']
+ALGO_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_node.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o']
+ 
+SConscript([
+    'main/dmoz/SConscript',
     'main/algos/SConscript',
     'test/common/SConscript',
     'test/common/graph_converter/SConscript',
