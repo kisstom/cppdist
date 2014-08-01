@@ -26,7 +26,7 @@ env = Environment(
         #LIBS=['gflags', 'gtest', 'gmp', 'gmpxx', 'pthread', 'liblog4cpp']
 )
 
-
+testCompile = ARGUMENTS.get('test', False)
 
 """
 ALGO_OBJ = ['#/../bin/main/algos/algo.o', '#/../bin/main/algos/master.o', '#/../bin/main/algos/node.o', '#/../bin/main/algos/inner_master.o']
@@ -53,6 +53,7 @@ SConscript([
     'main/algos/simrank_odd_even/SConscript',
     'main/algos/simrank_store_first/SConscript',
     'main/algos/simrank_update/SConscript',
+    'main/algos/simple_mock_algo/SConscript',
     'main/algos/pagerank/SConscript',
     'main/algos/psimrank/SConscript',
      ],
@@ -63,12 +64,24 @@ ALGO_OBJ = Glob('#/../bin/main/algos/simrank_odd_even/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
-ALGO_OBJ += ['#/../bin/main/algos/psimrank/psimrank_node.o', '#/../bin/main/algos/psimrank/psimrank_deserializer.o']
-ALGO_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_node.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o']
- 
+ALGO_OBJ += Glob('#/../bin/main/algos/psimrank/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/simple_mock_algo/*.o')
+
+#ALGO_OBJ += ['#/../bin/test/algos/simple_mock_algo/simple_mock_node.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_deserializer.o', '#/../bin/test/algos/simple_mock_algo/simple_mock_inner_master.o']
+
 SConscript([
     'main/dmoz/SConscript',
     'main/algos/SConscript',
+	],
+    exports = ['env', 'COMMON_OBJ', 'DESER_OBJ', 'ALGO_OBJ'])
+
+ALGO_OBJ += ['#/../bin/main/algos/master.o', '#/../bin/main/algos/inner_master.o', 
+'#/../bin/main/algos/node_factory.o', '#/../bin/main/algos/algo_builder.o', '#/../bin/main/algos/node.o',
+'#/../bin/main/algos/algo.o','#/../bin/main/algos/node_factory_helper.o', '#/../bin/main/algos/test_simrank_odd_even_node_fatory.o',
+'#/../bin/main/algos/cluster.o', '#/../bin/main/algos/test_master_builder.o', '#/../bin/main/algos/IMasterBuilder.o', '#/../bin/main/algos/inner_master_factory.o']
+
+if testCompile: 
+  SConscript([
     'test/common/SConscript',
     'test/common/graph_converter/SConscript',
     'test/algos/SConscript',

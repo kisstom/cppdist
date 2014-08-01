@@ -1,27 +1,6 @@
-Import('env')
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
 
-COMMON_OBJ = Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/util/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/thread/*.o') + Glob('#/../bin/main/common/components/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o')  + Glob('#/../bin/main/common/random/*.o')
 
-env.Object(Glob('*.cpp'))
-
-#SIMPLE_MOCK_OBJ = Glob('../../algos/simple_mock_algo/*.o')
-DESER_OBJ = Glob('#/../bin/main/algos/simrank_odd_even/*.o')
-DESER_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
-DESER_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
-DESER_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
-DESER_OBJ += ['#/../bin/main/algos/psimrank/psimrank_deserializer.o', '#/../bin/main/algos/psimrank/psimrank_node.o', '#/../bin/main/algos/psimrank/psimrank_master.o']
-
-COMMON_OBJ += ['#/../bin/main/algos/inner_master.o']
-COMMON_OBJ += ['#/../bin/main/algos/cluster.o', '#/../bin/main/algos/algo_builder.o', '#/../bin/main/algos/IMasterBuilder.o']
-COMMON_OBJ += ['#/../bin/main/algos/inner_master_factory.o']
-COMMON_OBJ += ['#/../bin/main/algos/test_master_builder.o', '#/../bin/main/algos/test_simrank_odd_even_node_fatory.o']
-COMMON_OBJ += ['#/../bin/main/algos/node_factory_helper.o']
-
-SIMPLE_MOCK_OBJ = Glob('#/../bin/test/algos/simple_mock_algo/simple*.o')
-COMMON_OBJ += ['#/../bin/main/algos/psimrank/psimrank_pseudo_random_generator.o', '#/../bin/main/algos/psimrank/psimrank_random_generator.o']
-
-env.Program('test_simple_mock', ['test_simple_mock.cpp', '../../../main/algos/algo.o', '../../../main/algos/master.o', '../../../main/algos/node.o'] + COMMON_OBJ + SIMPLE_MOCK_OBJ + DESER_OBJ)
-env.Program('test_simple_mock_run', ['test_simple_mock_run.cpp', '../../../main/algos/algo.o', '../../../main/algos/master.o', '../../../main/algos/node.o'] + COMMON_OBJ + SIMPLE_MOCK_OBJ + DESER_OBJ)
-env.Program('test_simple_mock_setup', ['test_simple_mock_setup.cpp', '../../../main/algos/algo.o', '../../../main/algos/master.o', '../../../main/algos/node.o'] + COMMON_OBJ + SIMPLE_MOCK_OBJ + DESER_OBJ)
+env.Program('test_simple_mock', ['test_simple_mock.cpp'] + COMMON_OBJ + ALGO_OBJ)
+env.Program('test_simple_mock_run', ['test_simple_mock_run.cpp'] + COMMON_OBJ + ALGO_OBJ)
+env.Program('test_simple_mock_setup', ['test_simple_mock_setup.cpp'] + COMMON_OBJ + ALGO_OBJ)

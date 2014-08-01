@@ -18,7 +18,7 @@
 #include "psimrank/psimrank_pseudo_random_generator.h"
 #include "psimrank/psimrank_random_generator.h"
 #include "inner_master.h"
-#include "../../test/algos/simple_mock_algo/simple_mock_inner_master.h"
+#include "simple_mock_algo/simple_mock_inner_master.h"
 #include <log4cpp/Category.hh>
 
 class InnerMasterFactory {

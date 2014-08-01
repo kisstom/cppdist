@@ -21,8 +21,8 @@
 #include "../../algos/pagerank/pagerank_node.h"
 #include "../../algos/psimrank/psimrank_node.h"
 #include "../../algos/psimrank/psimrank_deserializer.h"
-#include "../../../test/algos/simple_mock_algo/simple_mock_deserializer.h"
-#include "../../../test/algos/simple_mock_algo/simple_mock_node.h"
+#include "../../algos/simple_mock_algo/simple_mock_deserializer.h"
+#include "../../algos/simple_mock_algo/simple_mock_node.h"
 
 #include <log4cpp/Category.hh>
 
