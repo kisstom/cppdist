@@ -29,11 +29,20 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
 	  innerMaster = createPSimrankMaster(params);
   } else if (innerMasterType.compare("SIMPLE_MOCK") == 0) {
     innerMaster = new SimpleMockInnerMaster;
+  } else if (innerMasterType.compare("BITPROP") == 0) {
+    innerMaster = createBitpropMaster(params);
   } else {
 		logger_->error("Unknown inner master type %s", innerMasterType.c_str());
 	}
 
 	return innerMaster;
+}
+
+InnerMaster* InnerMasterFactory::createBitpropMaster(unordered_map<string, string>* params) {
+  util_.checkParam(params, 1, "NEIGHBORHOOD_SIZE");
+  short neighborhoodSize;
+  sscanf((*params)["NEIGHBORHOOD_SIZE"].c_str(), "%hd", &neighborhoodSize);
+  return new BitpropMaster(neighborhoodSize);
 }
 
 InnerMaster* InnerMasterFactory::createPSimrankMaster(unordered_map<string, string>* params) {

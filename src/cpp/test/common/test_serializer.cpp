@@ -77,6 +77,19 @@ TEST(SerializerTest, test) {
   ASSERT_FALSE(serializer.hasNext(a + s));
 }
 
+TEST(SerializerTest, testBytes) {
+  Serializer serializer;
+  unsigned char ser[1024];
+  char buffer[1024];
+
+  ser[0] = 20;
+  ser[1] = 155;
+
+  serializer.store(buffer, ser, 2);
+
+  ASSERT_EQ(20, buffer[0]);
+  ASSERT_EQ(155, (unsigned char) buffer[1]);
+}
 
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);

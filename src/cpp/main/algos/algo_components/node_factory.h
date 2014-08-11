@@ -17,6 +17,8 @@
 #include "../simrank_odd_even/simrank_odd_even_node.h"
 #include "../pagerank/pagerank_node.h"
 #include "../psimrank/psimrank_node.h"
+#include "../bitprop/bitprop_node.h"
+#include "../../common/util/util.h"
 
 #include <log4cpp/Category.hh>
 #include "inode_factory.h"
@@ -26,6 +28,7 @@ class NodeFactory : public INodeFactory {
 public:
 	NodeFactory();
 	Node* createNodeFromConfig(unordered_map<string, string>* params);
+	std::vector<FailedEstimate>* readFailedEstimations(unordered_map<string, string>* params);
 private:
 	EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params);
 	IEdgeListBuilder* createEdgeListBuilder(unordered_map<string, string>* params);
@@ -33,7 +36,9 @@ private:
 	SimrankOddEvenNode* createSimrankOddEvenNode(unordered_map<string, string>* params);
 	PagerankNode* createPagerankNode(unordered_map<string, string>* params);
 	PSimrankNode* createPSimrankNode(unordered_map<string, string>* params);
+	BitpropNode* createBitpropNode(unordered_map<string, string>* params);
 	log4cpp::Category* logger_;
+	Util util;
 };
 
 

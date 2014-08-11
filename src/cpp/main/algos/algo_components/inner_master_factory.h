@@ -19,6 +19,7 @@
 #include "../psimrank/psimrank_random_generator.h"
 #include "inner_master.h"
 #include "../simple_mock_algo/simple_mock_inner_master.h"
+#include "../bitprop/bitprop_master.h"
 #include <log4cpp/Category.hh>
 
 class InnerMasterFactory {
@@ -26,6 +27,7 @@ public:
 	InnerMasterFactory();
 	InnerMaster* createInnerInnerMaster(unordered_map<string, string>*);
 private:
+	InnerMaster* createBitpropMaster(unordered_map<string, string>* params);
 	InnerMaster* createPSimrankMaster(unordered_map<string, string>* params);
 	PSimrankRandomGeneratorIFace* getPSimrankPseudoRandom(unordered_map<string, string>* params);
 	PSimrankRandomGeneratorIFace* getPSimrankRandom(unordered_map<string, string>* params);

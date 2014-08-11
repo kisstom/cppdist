@@ -21,6 +21,10 @@ public:
 	~SenderBuffer();
 	template <class T>
 	void store(int index, T a);
+
+	template <class T>
+	void store(int index, T* bytes, unsigned size);
+
 	int getBufferSize(int);
 	int getBufferNum();
 	void setBreak(int);
@@ -78,6 +82,11 @@ inline int SenderBuffer::getBufferSize(int index) {
 template <class T>
 inline void SenderBuffer::store(int index, T a) {
 	pack_size_[index] += serializer_.store(pack_[index] + pack_size_[index], a);
+}
+
+template <class T>
+inline void SenderBuffer::store(int index, T* bytes, unsigned size) {
+  pack_size_[index] += serializer_.store(pack_[index] + pack_size_[index], bytes, size);
 }
 
 inline void SenderBuffer::setBreak(int index) {
