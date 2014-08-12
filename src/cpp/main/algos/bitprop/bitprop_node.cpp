@@ -182,7 +182,7 @@ void BitpropNode::findFirstLastIndices(std::vector<FailedEstimate>* failedEstima
 void BitpropNode::getEstimation(int ones, double* est, bool* sing) {
   if (ones == 8 * numCodingBytes) {
     *sing = true;
-    *est = 1.0;
+    *est = -1.0;
   } else {
     *sing = false;
     *est = log(1.0 - (double)ones / (8 * numCodingBytes)) / log(1.0 - epsilon);

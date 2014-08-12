@@ -6,7 +6,6 @@
  */
 
 #include "node_factory.h"
-#include "../bitprop/estimation_handler.h"
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -97,7 +96,7 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
 
   node->setEdgeListBuilder(edgeListBuilder);
 
-  EstimationHandler* estimationHandler = createEstimationHandler(unordered_map<string, string>* params);
+  EstimationHandler* estimationHandler = createEstimationHandler(params);
   node->setEstimatonHandler(estimationHandler);
   node->setFailedEstimateNodes(failedEstimatedNodes);
   // TODO ezt ki lehetne emelni a node-bol
@@ -106,11 +105,13 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
 }
 
 EstimationHandler* NodeFactory::createEstimationHandler(unordered_map<string, string>* params) {
-  util.checkParam(params, 1, "BASE_OUTDIR");
-  string baseDir = (*params)["BASE_OUTDIR"];
+  util.checkParam(params, 2, "OUTDIR", "NEIGHBORHOOD_SIZE");
+  string baseDir = (*params)["OUTDIR"];
+  short neighborhoodSize;
+  sscanf((*params)["NEIGHBORHOOD_SIZE"].c_str(), "%hd", &neighborhoodSize);
 
-  string currentOutput, failedEstimationOut;
-  EstimationHandler* estimationHandler = new EstimationHandler();
+  EstimationHandler* estimationHandler = new EstimationHandler(baseDir, neighborhoodSize);
+  return estimationHandler;
 }
 
 
@@ -163,7 +164,7 @@ std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<st
   int estIndex;
   short neighborhoodSize;
   string prevOutdir;
-  sscanf((*params)["EST_INDEX"].c_str(), "%d", &estIndex);
+
   sscanf((*params)["NEIGHBORHOOD_SIZE"].c_str(), "%hd", &neighborhoodSize);
   prevOutdir = (*params)["PREV_OUTDIR"];
 
@@ -175,7 +176,7 @@ std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<st
   std::vector<FailedEstimate>* failedEstimations = new std::vector<FailedEstimate>();
   for (short currentDistance = 1; currentDistance <= neighborhoodSize; ++currentDistance) {
     stringstream s;
-    s << prevOutdir << "failed_estimate_" << estIndex - 1 << "_distance_" << currentDistance;
+    s << prevOutdir << "failed_estimates_distance_" << currentDistance;
     string last_failed_estimate_file = s.str();
 
     FILE* last_failed_estimate = fopen(last_failed_estimate_file.c_str(), "r");
@@ -185,7 +186,6 @@ std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<st
 
     int numLastSingular = 0;
     while (fscanf(last_failed_estimate, "%ld %lf\n", &nodeId, &value) != EOF) {
-
       failedEstimations->push_back(FailedEstimate(value, nodeId, currentDistance));
       if (value == -1) ++numLastSingular;
     }

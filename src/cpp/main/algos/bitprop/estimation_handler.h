@@ -16,7 +16,8 @@ using std::vector;
 
 class EstimationHandler {
 public:
-  EstimationHandler(unordered_map<string, string>* params);
+  EstimationHandler(string outdir, short neighborhoodSize);
+  void init(string outdir, short neighborhoodSize);
   void failedEstimation(long node, double est, short atDistance);
   void acceptedEstimation(long node, double est, short atDistance);
 

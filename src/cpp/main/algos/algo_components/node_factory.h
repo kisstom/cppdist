@@ -19,6 +19,7 @@
 #include "../psimrank/psimrank_node.h"
 #include "../bitprop/bitprop_node.h"
 #include "../../common/util/util.h"
+#include "../bitprop/estimation_handler.h"
 
 #include <log4cpp/Category.hh>
 #include "inode_factory.h"
@@ -29,6 +30,7 @@ public:
 	NodeFactory();
 	Node* createNodeFromConfig(unordered_map<string, string>* params);
 	std::vector<FailedEstimate>* readFailedEstimations(unordered_map<string, string>* params);
+	EstimationHandler* createEstimationHandler(unordered_map<string, string>* params);
 private:
 	EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params);
 	IEdgeListBuilder* createEdgeListBuilder(unordered_map<string, string>* params);
