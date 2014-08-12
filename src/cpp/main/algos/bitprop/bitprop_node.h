@@ -16,7 +16,7 @@
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
 #include "failed_estimate.h"
-#include "estimation_handler.h"
+#include "IEstimationHandler.h"
 #include "../../common/graph/iedge_list_builder.h"
 
 using std::string;
@@ -41,12 +41,12 @@ public:
   int numCodingOnes(long node);
   void findFirstLastIndices(std::vector<FailedEstimate>* failedEstimatedNodes, int* first, int* second);
   void getEstimation(int ones, double* est, bool* sing);
-
+  void initContainers();
   // setters
   void setFailedEstimateNodes(std::vector<FailedEstimate>*);
   void setEdgeListBuilder(IEdgeListBuilder*);
-  void setEstimatonHandler(EstimationHandler*);
-
+  void setEstimatonHandler(IEstimationHandler*);
+  void setContainer(EdgelistContainer*);
   ~BitpropNode() {}
 
 private:
@@ -64,7 +64,7 @@ private:
   short neighborhoodDistance;
 
   std::vector<FailedEstimate>* failedEstimatedNodes;
-  EstimationHandler* estimationHandler;
+  IEstimationHandler* estimationHandler;
 
   log4cpp::Category* logger;
 };

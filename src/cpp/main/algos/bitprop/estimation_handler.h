@@ -14,7 +14,9 @@
 using std::string;
 using std::vector;
 
-class EstimationHandler {
+#include "IEstimationHandler.h"
+
+class EstimationHandler : public IEstimationHandler {
 public:
   EstimationHandler(string outdir, short neighborhoodSize);
   void init(string outdir, short neighborhoodSize);

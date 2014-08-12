@@ -8,8 +8,8 @@
 # -pg gprof miatt?
 # -g valgrind mint ?
 
-flags = ['-O3', '-g', '-ggdb', '-Wall']
-#flags = [ '-g', '-ggdb', '-Wall']
+#flags = ['-O3', '-g', '-ggdb', '-Wall']
+flags = [ '-g', '-ggdb', '-Wall']
 
 GMOCK= "#../dep/gmock/"
 LOG4CPP = "#../dep/log4cpp"
@@ -79,6 +79,7 @@ if testCompile:
     'test/algos/simrank_store_first/SConscript',
     'test/algos/simrank_odd_even/SConscript',
     'test/algos/psimrank/SConscript',
+    'test/algos/bitprop/SConscript',
     'test/dmoz/SConscript',
     'test/useFileSystem/common/SConscript',
     'test/useFileSystem/common/socket/SConscript',

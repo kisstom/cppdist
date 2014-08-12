@@ -70,12 +70,17 @@ void BitpropNode::setEdgeListBuilder(IEdgeListBuilder* _edgeListBuilder) {
   edgeListBuilder = _edgeListBuilder;
 }
 
-void BitpropNode::setEstimatonHandler(EstimationHandler* _estimationHandler) {
+void BitpropNode::setEstimatonHandler(IEstimationHandler* _estimationHandler) {
   estimationHandler = _estimationHandler;
+}
+
+void BitpropNode::setContainer(EdgelistContainer* _container) {
+  matrix = _container;
 }
 
 void BitpropNode::beforeIteration(string msg) {
   ++neighborhoodDistance;
+  logger->info("Starting neighbor distance %hd", neighborhoodDistance);
 }
 
 bool BitpropNode::afterIteration() {
@@ -90,6 +95,11 @@ void BitpropNode::initFromMaster(string) {
 
 void BitpropNode::initData(string partName) {
   initEdgeListContainer(partName);
+  initRandomBits();
+  initBuffers();
+}
+
+void BitpropNode::initContainers() {
   initRandomBits();
   initBuffers();
 }

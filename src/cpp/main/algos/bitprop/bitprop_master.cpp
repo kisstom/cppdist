@@ -13,6 +13,7 @@ BitpropMaster::BitpropMaster(short _neighborhoodSize) {
 }
 
 bool BitpropMaster::nextIter() {
+  master_->sendMessageForAllNodes("");
   neighborhoodDistance++;
 
   if (neighborhoodDistance >= neighborhoodSize) {
