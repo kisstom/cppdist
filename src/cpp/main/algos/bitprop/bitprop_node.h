@@ -29,24 +29,23 @@ public:
   void sender();
   void initFromMaster(string);
   void final();
-  void initEdgeListContainer(string partName);
   void initData(string);
 
   void serializeRandomBits(long, long, int);
   void estimate();
   void initBuffers();
   void updateBuffers();
-  void initRandomBits();
   void updateBits(long outdge, unsigned char*);
   int numCodingOnes(long node);
   void findFirstLastIndices(std::vector<FailedEstimate>* failedEstimatedNodes, int* first, int* second);
   void getEstimation(int ones, double* est, bool* sing);
-  void initContainers();
+
   // setters
   void setFailedEstimateNodes(std::vector<FailedEstimate>*);
-  void setEdgeListBuilder(IEdgeListBuilder*);
   void setEstimatonHandler(IEstimationHandler*);
   void setContainer(EdgelistContainer*);
+  void setRandomBits(unsigned char*);
+
   ~BitpropNode() {}
 
 private:

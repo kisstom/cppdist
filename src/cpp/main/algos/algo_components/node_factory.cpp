@@ -6,6 +6,8 @@
  */
 
 #include "node_factory.h"
+#include "../bitprop/random_bitvector_generator.h"
+#include "../../common/graph/edge_list_container_factory.h"
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -91,17 +93,40 @@ PSimrankNode* NodeFactory::createPSimrankNode(unordered_map<string, string>* par
 BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   BitpropNode* node = helper.initBitpropNode(params);
-  IEdgeListBuilder* edgeListBuilder = createEdgeListBuilder(params);
-  std::vector<FailedEstimate>* failedEstimatedNodes = readFailedEstimations(params);
 
-  node->setEdgeListBuilder(edgeListBuilder);
+  EdgeListContainerFactory edgeListContainerFactory;
+  EdgelistContainer* container = edgeListContainerFactory.createEdgeListContainer(params);
+  node->setContainer(container);
+
+  std::vector<FailedEstimate>* failedEstimatedNodes = readFailedEstimations(params);
+  node->setFailedEstimateNodes(failedEstimatedNodes);
 
   EstimationHandler* estimationHandler = createEstimationHandler(params);
   node->setEstimatonHandler(estimationHandler);
-  node->setFailedEstimateNodes(failedEstimatedNodes);
-  // TODO ezt ki lehetne emelni a node-bol
-  node->initData((*params)["INPUT_PARTITION"]);
+
+  util.checkParam(params, 2, "NUM_NODES", "NUM_CODING_BYTES");
+  long numNodes;
+  int numCodingBytes;
+
+  sscanf((*params)["NUM_NODES"].c_str(), "%ld", &numNodes);
+  sscanf((*params)["NUM_CODING_BYTES"].c_str(), "%d", &numCodingBytes);
+
+  unsigned char* randomVectorBits = initRandomVectorBits(numNodes, numCodingBytes);
+  node->setRandomBits(randomVectorBits);
+  node->initBuffers();
+
   return node;
+}
+
+unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingBytes) {
+  RandomBitvectorGenerator rvbgen;
+
+  unsigned char* randomVectorBits = new unsigned char[numNodes * numCodingBytes];
+  for (long node = 0; node < numNodes; ++node) {
+    rvbgen.gen(numCodingBytes, randomVectorBits + node * numCodingBytes);
+  }
+
+  return randomVectorBits;
 }
 
 EstimationHandler* NodeFactory::createEstimationHandler(unordered_map<string, string>* params) {

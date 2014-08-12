@@ -57,7 +57,7 @@ inline int Serializer::store(char* buf, T a) {
 template <class T>
 inline int Serializer::store(char* buf, T* a, int size) {
   memcpy(buf, reinterpret_cast<char*>(a), size);
-  return sizeof(a);
+  return size;
 }
 
 inline bool Serializer::hasNext(char *buf) {

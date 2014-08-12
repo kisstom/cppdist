@@ -37,6 +37,7 @@ void BitpropNode::sender() {
       outEdge = matrix->getEdgeAtPosPart(partitionNode, i);
       partIndex = algo_->getPartitionIndex(outEdge);
 
+      //logger->info("my part %d target part %d", partIndex_, partIndex);
       if (partIndex == partIndex_) {
         mutex.lock();
 
@@ -56,18 +57,18 @@ void BitpropNode::sender() {
 }
 
 void BitpropNode::updateBits(long outEdge, unsigned char* bits) {
+  mutex.lock();
+
   for (int byteIndex = 0; byteIndex < numCodingBytes; ++byteIndex) {
     *(temp + (outEdge - matrix->getMinnode()) * numCodingBytes + byteIndex) |=
         *(bits + byteIndex);
   }
+
+  mutex.unlock();
 }
 
 void BitpropNode::setFailedEstimateNodes(std::vector<FailedEstimate>* _failedEstimatedNodes) {
   failedEstimatedNodes = _failedEstimatedNodes;
-}
-
-void BitpropNode::setEdgeListBuilder(IEdgeListBuilder* _edgeListBuilder) {
-  edgeListBuilder = _edgeListBuilder;
 }
 
 void BitpropNode::setEstimatonHandler(IEstimationHandler* _estimationHandler) {
@@ -94,30 +95,7 @@ void BitpropNode::initFromMaster(string) {
 }
 
 void BitpropNode::initData(string partName) {
-  initEdgeListContainer(partName);
-  initRandomBits();
-  initBuffers();
 }
-
-void BitpropNode::initContainers() {
-  initRandomBits();
-  initBuffers();
-}
-
-
-void BitpropNode::initEdgeListContainer(string partName) {
-  logger->info("Initing edge list container.");
-
-  matrix = new EdgelistContainer();
-  matrix->initContainers();
-  matrix->setMinnode(minnode);
-
-  edgeListBuilder->setContainer(matrix);
-  edgeListBuilder->buildFromFile(partName);
-
-  logger->info("Edge list container inited.");
-}
-
 
 void BitpropNode::initBuffers() {
   aux = new unsigned char[matrix->getNumberOfNodes() * numCodingBytes];
@@ -132,13 +110,8 @@ void BitpropNode::final() {
 
 }
 
-void BitpropNode::initRandomBits() {
-  RandomBitvectorGenerator rvbgen;
-
-  randomVectorBits = new unsigned char[matrix->getNumberOfNodes() * numCodingBytes];
-  for (long node = 0; node < matrix->getNumberOfNodes(); ++node) {
-    rvbgen.gen(numCodingBytes, randomVectorBits + node * numCodingBytes);
-  }
+void BitpropNode::setRandomBits(unsigned char* rvb) {
+  randomVectorBits = rvb;
 }
 
 void BitpropNode::updateBuffers() {
@@ -147,6 +120,8 @@ void BitpropNode::updateBuffers() {
 }
 
 void BitpropNode::serializeRandomBits(long from, long to, int partIndex) {
+  logger->info("Serializing %ld %ld", from + matrix->getMinnode(), to);
+
   int shouldAdd = 1 + sizeof(long) + numCodingBytes;
 
   if (!senderBuffer_->canAdd(partIndex, shouldAdd)) {

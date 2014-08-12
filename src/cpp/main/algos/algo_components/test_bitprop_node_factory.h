@@ -18,11 +18,13 @@ public:
   void setContainer(EdgelistContainer*);
   void setFailedEstimateNodes(std::vector<FailedEstimate>*);
   void setEstimatonHandler(IEstimationHandler*);
+  void setRandomBits(unsigned char* _randomBits);
 
 private:
   std::vector<FailedEstimate>* failedEstimatedNodes;
   IEstimationHandler* estimationHandler;
   EdgelistContainer* container;
+  unsigned char* randomBits;
 };
 
 

@@ -83,12 +83,22 @@ TEST(SerializerTest, testBytes) {
   char buffer[1024];
 
   ser[0] = 20;
-  ser[1] = 155;
+  ser[1] = 40;
+  ser[2] = 60;
+  ser[3] = 80;
+  ser[4] = 100;
+  ser[5] = 160;
 
   serializer.store(buffer, ser, 2);
+  serializer.store(buffer + 2, ser + 2, 2);
+  serializer.store(buffer + 4, ser + 4, 2);
 
   ASSERT_EQ(20, buffer[0]);
-  ASSERT_EQ(155, (unsigned char) buffer[1]);
+  ASSERT_EQ(40, buffer[1]);
+  ASSERT_EQ(60, buffer[2]);
+  ASSERT_EQ(80, buffer[3]);
+  ASSERT_EQ(100, buffer[4]);
+  ASSERT_EQ(160, (unsigned char) buffer[5]);
 }
 
 int main (int argc, char **argv) {

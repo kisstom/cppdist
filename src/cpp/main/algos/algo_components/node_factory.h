@@ -31,6 +31,7 @@ public:
 	Node* createNodeFromConfig(unordered_map<string, string>* params);
 	std::vector<FailedEstimate>* readFailedEstimations(unordered_map<string, string>* params);
 	EstimationHandler* createEstimationHandler(unordered_map<string, string>* params);
+	unsigned char* initRandomVectorBits(long, int);
 private:
 	EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params);
 	IEdgeListBuilder* createEdgeListBuilder(unordered_map<string, string>* params);

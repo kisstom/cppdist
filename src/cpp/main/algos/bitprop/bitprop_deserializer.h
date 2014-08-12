@@ -28,6 +28,7 @@ private:
   int numCodingBytes;
   long to;
   unsigned char* codingBytes;
+  log4cpp::Category* logger;
 };
 
 

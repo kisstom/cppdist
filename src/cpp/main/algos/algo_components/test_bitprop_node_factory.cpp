@@ -14,7 +14,8 @@ Node* TestBitpropNodeFactory::createNodeFromConfig(unordered_map<string, string>
   node->setFailedEstimateNodes(failedEstimatedNodes);
   node->setEstimatonHandler(estimationHandler);
   node->setContainer(container);
-  node->initContainers();
+  node->setRandomBits(randomBits);
+  node->initBuffers();
 
   return node;
 }
@@ -29,4 +30,8 @@ void TestBitpropNodeFactory::setFailedEstimateNodes(std::vector<FailedEstimate>*
 
 void TestBitpropNodeFactory::setEstimatonHandler(IEstimationHandler* _estimationHandler) {
   estimationHandler = _estimationHandler;
+}
+
+void TestBitpropNodeFactory::setRandomBits(unsigned char* _randomBits) {
+  randomBits = _randomBits;
 }

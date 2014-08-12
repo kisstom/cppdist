@@ -10,6 +10,7 @@
 BitpropDeserializer::BitpropDeserializer(int _numCodingBytes) {
   numCodingBytes = _numCodingBytes;
   codingBytes = new unsigned char[numCodingBytes];
+  logger = &log4cpp::Category::getInstance(std::string("BitpropDeserializer"));
 }
 
 void BitpropDeserializer::update(short partindex) {
@@ -22,9 +23,12 @@ int BitpropDeserializer::storeFromBinary(char* buffer, unsigned length) {
 
   int stored = 0;
   memcpy(&to, buffer + stored, sizeof(long));
+
   stored += sizeof(long);
   memcpy(codingBytes, buffer + stored, numCodingBytes);
   stored += numCodingBytes;
+
+  logger->info("To %ld receiving char %u", to, *codingBytes);
 
   return stored;
 }
