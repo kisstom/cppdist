@@ -340,5 +340,26 @@ def gitInfo():
 
   f.close()
 
+@task
+def bitpropExperiment():
+  global conf
+  est_index = 0
+  epsilon = float(conf.get('NODE', 'EPSILON'))
+  BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
+
+  for i in xrange(3):
+    local_dir = BASE_LOCAL_DIR + '/est' + str(est_index) + '/'
+    prev_dir = BASE_LOCAL_DIR + '/est' + str(int(est_index - 1)) + '/'
+
+    conf.set("ALGO", "LOCAL_DIR", local_dir)
+    conf.set("NODE", "PREV_OUTDIR", prev_dir)
+    conf.set('NODE', 'EST_INDEX', est_index)
+    conf.set('NODE', 'EPSILON', epsilon)
+
+    epsilon /= 2
+    est_index += 1
+
+    mainCompute()
+
 
 

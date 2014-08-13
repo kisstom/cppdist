@@ -135,8 +135,8 @@ unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingByt
 EstimationHandler* NodeFactory::createEstimationHandler(unordered_map<string, string>* params) {
   logger_->info("Creating estimation handler.");
 
-  util.checkParam(params, 3, "EST_DIR", "NEIGHBORHOOD_SIZE", "SLAVE_INDEX");
-  string baseDir = (*params)["EST_DIR"];
+  util.checkParam(params, 3, "LOCAL_DIR", "NEIGHBORHOOD_SIZE", "SLAVE_INDEX");
+  string baseDir = (*params)["LOCAL_DIR"];
   int slaveIndex;
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
 
