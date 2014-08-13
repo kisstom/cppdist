@@ -59,18 +59,23 @@ int main(int argc, char* argv[]) {
   (*params)["NEXT_MIN_NODE"] = string(argv[7]);
 
   initLogger(params);
+  log4cpp::Category* logger = &log4cpp::Category::getInstance(std::string("NodeTask"));
 
   AlgoBuilder builder;
   INodeFactory* nodeFactory = new NodeFactory;
   builder.setNodeFactory(nodeFactory);
 
-  Algo* algo = builder.buildFromConfig(params);
+  try {
+    Algo* algo = builder.buildFromConfig(params);
 
-  if (algo->setUp()) {
-    algo->run();
+    if (algo->setUp()) {
+      algo->run();
+    }
+
+    algo->final();
+  } catch (ConnectionError& e) {
+    logger->info("Exception: %s", e.what());
   }
-
-  algo->final();
   delete params;
 }
 

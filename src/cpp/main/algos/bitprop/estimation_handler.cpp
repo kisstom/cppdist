@@ -11,17 +11,26 @@
 #include <cstdio>
 
 
-EstimationHandler::EstimationHandler(string outdir, short neighborhoodSize) {
-  init(outdir, neighborhoodSize);
+EstimationHandler::EstimationHandler(string outdir, short neighborhoodSize, int partIndex) {
+  logger = &log4cpp::Category::getInstance(std::string("EstimationHandler"));
+  init(outdir, neighborhoodSize, partIndex);
+  logger->info("Estimation handler inited.");
 }
 
-void EstimationHandler::init(string outdir, short neighborhoodSize) {
-  failedEstimationFiles.resize(neighborhoodSize);
-  outputFiles.resize(neighborhoodSize);
+EstimationHandler::~EstimationHandler() {
+  for (int i = 0; i < failedEstimationFiles.size(); ++i) {
+    fclose(failedEstimationFiles[i]);
+    fclose(outputFiles[i]);
+  }
+}
+
+
+void EstimationHandler::init(string outdir, short neighborhoodSize, int partIndex) {
+  logger->info("Initing estimation handler.");
 
   for (short i = 0; i < neighborhoodSize; ++i) {
      stringstream failed;
-     failed << outdir << "failed_estimates_distance_" << i;
+     failed << outdir << "failed_estimates_distance_" << i << "_part_" << partIndex;
      FILE* outputF = fopen(failed.str().c_str(), "w");
      if (NULL == outputF) {
        throw IOError("Failed opening failed estimate file: " + failed.str());
@@ -30,7 +39,7 @@ void EstimationHandler::init(string outdir, short neighborhoodSize) {
      failedEstimationFiles.push_back(outputF);
 
      stringstream succed;
-     succed << outdir << "estimates_distance_" << i;
+     succed << outdir << "estimates_distance_" << i << "_part_" << partIndex;
      outputF = fopen(succed.str().c_str(), "w");
 
      if (NULL == outputF) {

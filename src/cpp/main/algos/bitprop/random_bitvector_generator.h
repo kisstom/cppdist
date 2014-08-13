@@ -10,9 +10,11 @@
 
 class RandomBitvectorGenerator {
 public:
+  RandomBitvectorGenerator(double posProb, int seed);
   void gen(int numBytes, unsigned char* dest);
 private:
   double posProb;
+  int seed;
 };
 
 #endif /* RANDOM_BITVECTOR_GENERATOR_H_ */

@@ -104,22 +104,25 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
   EstimationHandler* estimationHandler = createEstimationHandler(params);
   node->setEstimatonHandler(estimationHandler);
 
-  util.checkParam(params, 2, "NUM_NODES", "NUM_CODING_BYTES");
+  util.checkParam(params, 3, "NUM_NODES", "NUM_CODING_BYTES", "EPSILON");
   long numNodes;
   int numCodingBytes;
+  double epsilon;
 
   sscanf((*params)["NUM_NODES"].c_str(), "%ld", &numNodes);
   sscanf((*params)["NUM_CODING_BYTES"].c_str(), "%d", &numCodingBytes);
+  sscanf((*params)["EPSILON"].c_str(), "%lf", &epsilon);
 
-  unsigned char* randomVectorBits = initRandomVectorBits(numNodes, numCodingBytes);
+  logger_->info("epsilon %lf", epsilon);
+  unsigned char* randomVectorBits = initRandomVectorBits(numNodes, numCodingBytes, epsilon);
   node->setRandomBits(randomVectorBits);
   node->initBuffers();
 
   return node;
 }
 
-unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingBytes) {
-  RandomBitvectorGenerator rvbgen;
+unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingBytes, double epsilon) {
+  RandomBitvectorGenerator rvbgen(epsilon, 13);
 
   unsigned char* randomVectorBits = new unsigned char[numNodes * numCodingBytes];
   for (long node = 0; node < numNodes; ++node) {
@@ -130,12 +133,17 @@ unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingByt
 }
 
 EstimationHandler* NodeFactory::createEstimationHandler(unordered_map<string, string>* params) {
-  util.checkParam(params, 2, "OUTDIR", "NEIGHBORHOOD_SIZE");
-  string baseDir = (*params)["OUTDIR"];
+  logger_->info("Creating estimation handler.");
+
+  util.checkParam(params, 3, "EST_DIR", "NEIGHBORHOOD_SIZE", "SLAVE_INDEX");
+  string baseDir = (*params)["EST_DIR"];
+  int slaveIndex;
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+
   short neighborhoodSize;
   sscanf((*params)["NEIGHBORHOOD_SIZE"].c_str(), "%hd", &neighborhoodSize);
 
-  EstimationHandler* estimationHandler = new EstimationHandler(baseDir, neighborhoodSize);
+  EstimationHandler* estimationHandler = new EstimationHandler(baseDir, neighborhoodSize, slaveIndex);
   return estimationHandler;
 }
 
@@ -185,12 +193,15 @@ IEdgeListBuilder* NodeFactory::createEdgeListBuilder(unordered_map<string, strin
 }
 
 std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<string, string>* params) {
-  util.checkParam(params, 3, "PREV_OUTDIR", "EST_INDEX", "NEIGHBORHOOD_SIZE");
-  int estIndex;
+  logger_->info("Reading previous failed estimationns.");
+  util.checkParam(params, 4, "PREV_OUTDIR", "EST_INDEX", "NEIGHBORHOOD_SIZE", "SLAVE_INDEX");
+  int estIndex, slaveIndex;
   short neighborhoodSize;
   string prevOutdir;
 
   sscanf((*params)["NEIGHBORHOOD_SIZE"].c_str(), "%hd", &neighborhoodSize);
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  sscanf((*params)["EST_INDEX"].c_str(), "%d", &estIndex);
   prevOutdir = (*params)["PREV_OUTDIR"];
 
   if (estIndex == 0) return NULL;
@@ -199,9 +210,10 @@ std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<st
   double value;
 
   std::vector<FailedEstimate>* failedEstimations = new std::vector<FailedEstimate>();
-  for (short currentDistance = 1; currentDistance <= neighborhoodSize; ++currentDistance) {
+  for (short currentDistance = 0; currentDistance < neighborhoodSize; ++currentDistance) {
+    logger_->info("Reading previous failed estimations at distance %hd", currentDistance);
     stringstream s;
-    s << prevOutdir << "failed_estimates_distance_" << currentDistance;
+    s << prevOutdir << "failed_estimates_distance_" << currentDistance << "_part_" << slaveIndex;
     string last_failed_estimate_file = s.str();
 
     FILE* last_failed_estimate = fopen(last_failed_estimate_file.c_str(), "r");

@@ -40,6 +40,8 @@ IEdgeListBuilder* EdgeListContainerFactory::createEdgeListBuilder(unordered_map<
 }
 
 EdgelistContainer* EdgeListContainerFactory::createEdgeListContainer(unordered_map<string, string>* params) {
+  util.checkParam(params, 2, "INPUT_PARTITION", "MIN_NODE");
+
   IEdgeListBuilder* builder = createEdgeListBuilder(params);
   long min_node;
   sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);

@@ -15,7 +15,7 @@ using namespace std;
 class ConnectionError: public exception {
   public:
     ConnectionError() {};
-    const char* what();
+    virtual const char* what();
   protected:
     void getIp(char *ip);
     char error_msg_[1024];

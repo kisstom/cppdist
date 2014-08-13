@@ -115,6 +115,7 @@ void BitpropNode::setRandomBits(unsigned char* rvb) {
 }
 
 void BitpropNode::updateBuffers() {
+  logger->info("Updating buffers.");
   memcpy(aux, temp, numCodingBytes * matrix->getNumberOfNodes());
   memcpy(temp, randomVectorBits, numCodingBytes * matrix->getNumberOfNodes());
 }
@@ -150,14 +151,15 @@ void BitpropNode::findFirstLastIndices(std::vector<FailedEstimate>* failedEstima
   bool foundLast = false;
 
   for (int index = 0; index < (int) failedEstimatedNodes->size(); ++index) {
-    if (!foundStart && (*failedEstimatedNodes)[index].neighborhoodDistance == neighborhoodDistance) {
+    if (!foundStart && (*failedEstimatedNodes)[index].neighborhoodDistance == neighborhoodDistance - 1) {
       foundStart = true;
       *first = index;
     }
 
-    if (foundStart && (*failedEstimatedNodes)[index].neighborhoodDistance != neighborhoodDistance) {
+    if (foundStart && (*failedEstimatedNodes)[index].neighborhoodDistance != neighborhoodDistance - 1) {
       foundLast = true;
       *last = index;
+      break;
     }
   }
 

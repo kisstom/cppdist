@@ -13,6 +13,7 @@
 #include "../../common/graph/crawl_edge_list_builder.h"
 #include "../../common/graph/filter_edge_list_builder.h"
 #include "../../common/graph/edge_list_builder.h"
+#include "../../common/util/util.h"
 
 class EdgeListContainerFactory {
 public:
@@ -21,6 +22,7 @@ public:
   EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params);
 private:
   log4cpp::Category* logger_;
+  Util util;
 };
 
 
