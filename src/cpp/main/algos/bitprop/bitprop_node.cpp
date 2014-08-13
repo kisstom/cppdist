@@ -130,7 +130,7 @@ void BitpropNode::serializeRandomBits(long from, long to, int partIndex) {
 
   senderBuffer_->setBreak(partIndex);
   senderBuffer_->store(partIndex, to);
-  senderBuffer_->store(partIndex, randomVectorBits + from * numCodingBytes, numCodingBytes);
+  senderBuffer_->store(partIndex, aux + from * numCodingBytes, numCodingBytes);
 }
 
 int BitpropNode::numCodingOnes(long node) {
@@ -188,6 +188,10 @@ void BitpropNode::estimate() {
 
       getEstimation(ones, &est, &sing);
 
+      if (neighborhoodDistance == 2) {
+        logger->info("currentNode %ld neighborhoodDistance %hd ones %d", currentNode, neighborhoodDistance, ones);
+      }
+
       if ((double)ones <= (1.0 - 1.0 / exp(1)) * 8 * numCodingBytes) {
         estimationHandler->acceptedEstimation(currentNode, est, neighborhoodDistance);
       } else {
@@ -198,10 +202,11 @@ void BitpropNode::estimate() {
     int firstIndex, lastIndex;
     findFirstLastIndices(failedEstimatedNodes, &firstIndex, &lastIndex);
 
+    logger->info("first %d %d last", firstIndex, lastIndex);
     for (int index = firstIndex; index < lastIndex; ++index) {
       failedEstimateNode = &((*failedEstimatedNodes)[index]);
-      ones = numCodingOnes(failedEstimateNode->node);
-      currentNode = failedEstimateNode->node + matrix->getMinnode();
+      ones = numCodingOnes(failedEstimateNode->node - matrix->getMinnode());
+      currentNode = failedEstimateNode->node;
 
       getEstimation(ones, &est, &sing);
 

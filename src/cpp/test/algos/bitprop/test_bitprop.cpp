@@ -5,23 +5,22 @@
  *      Author: kisstom
  */
 
-//#include <gtest/gtest.h>
-
 #include "../../../main/algos/algo_components/cluster.h"
 #include "../algo_test_base.h"
 #include "../../../main/algos/algo_components/test_bitprop_node_factory.h"
+#include "../../../main/algos/bitprop/thread_safe_memory_estimation_handler.h"
 
 namespace {
 
-class BitpropTest :public AlgoTestBase {
+class BitpropTest2 :public AlgoTestBase {
 protected:
   // You can remove any or all of the following functions if its body
   // is empty.
 
-  BitpropTest() {
+  BitpropTest2() {
   }
 
-  virtual ~BitpropTest() {
+  virtual ~BitpropTest2() {
     // You can do clean-up work that doesn't throw exceptions here.
   }
 
@@ -32,6 +31,8 @@ protected:
   }
 
   virtual void SetUp() {
+     estimationHandler = new ThreadSafeMemoryEstimationHandler;
+
      initParams("BITPROP");
      initLogger();
 
@@ -80,7 +81,7 @@ protected:
   void initParams(string nodeType) {
     AlgoTestBase::initParams(nodeType);
 
-    params_["NEIGHBORHOOD_SIZE"] = "4";
+    params_["NEIGHBORHOOD_SIZE"] = "3";
     params_["EPSILON"] = "0.05";
     params_["EST_INDEX"] = "0";
   }
@@ -95,18 +96,62 @@ protected:
     failedEstimatedNodes->push_back(FailedEstimate(0.5, 0, 0));
 
     nodeFactory->setFailedEstimateNodes(failedEstimatedNodes);
-    nodeFactory->setEstimatonHandler(new IEstimationHandler);
+    nodeFactory->setEstimatonHandler(estimationHandler);
     nodeFactory->setRandomBits(rvb);
 
     AlgoTestBase::addNodeFactory(nodeFactory, partString, numSlaves);
   }
+
+  ThreadSafeMemoryEstimationHandler* estimationHandler;
 };
 
 
-TEST_F(BitpropTest, test) {
+TEST_F(BitpropTest2, test) {
   Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
   cluster.init();
   cluster.start();
+
+  ASSERT_NEAR(0.0, estimationHandler->acceptedEstimations[1][0], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[1][1], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[1][2], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[1][3], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[1][4], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[1][5], 0.001);
+
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[1][6], 0.001);
+  ASSERT_NEAR(2.603, estimationHandler->acceptedEstimations[1][7], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[1][8], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[1][9], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[1][10], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[1][11], 0.001);
+
+  ASSERT_NEAR(0.0, estimationHandler->acceptedEstimations[2][0], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[2][1], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[2][2], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[2][3], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[2][4], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[2][5], 0.001);
+
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[2][6], 0.001);
+  ASSERT_NEAR(2.603, estimationHandler->acceptedEstimations[2][7], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[2][8], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[2][9], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[2][10], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[2][11], 0.001);
+
+  ASSERT_NEAR(0.0, estimationHandler->acceptedEstimations[3][0], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[3][1], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[3][2], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[3][3], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[3][4], 0.001);
+  ASSERT_NEAR(5.608, estimationHandler->acceptedEstimations[3][5], 0.001);
+
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[3][6], 0.001);
+  ASSERT_NEAR(2.603, estimationHandler->acceptedEstimations[3][7], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[3][8], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[3][9], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[3][10], 0.001);
+  ASSERT_NEAR(9.163, estimationHandler->acceptedEstimations[3][11], 0.001);
 }
 
 }
