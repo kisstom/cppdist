@@ -26,6 +26,8 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
     deserializer = createPSimrankDeserializer(params, node);
   } else if (nodeType.compare("SIMPLE_MOCK") == 0) {
     deserializer = createSimpleMockDeserializer(params, node);
+  } else if (nodeType.compare("BITPROP") == 0) {
+    deserializer = createBitpropDeserializer(params, node);
   } else {
     logger_->error("Unknown tpye of deserializer %s", nodeType.c_str());
 	}
@@ -72,6 +74,17 @@ Deserializer* DeserializerFactory::createPagerankDeserializer(unordered_map<stri
 Deserializer* DeserializerFactory::createPSimrankDeserializer(unordered_map<string, string>* params, Node* node) {
   PSimrankNode* simrankUpdateNode = static_cast<PSimrankNode*>(node);
   PSimrankDeserializer* deserializer = new PSimrankDeserializer;
+  deserializer->setNode(simrankUpdateNode);
+  return deserializer;
+}
+
+Deserializer* DeserializerFactory::createBitpropDeserializer(unordered_map<string, string>* params, Node* node) {
+  util_.checkParam(params, 1, "NUM_CODING_BYTES");
+  short numCodingBytes = -1;
+  sscanf((*params)["NUM_CODING_BYTES"].c_str(), "%hd", &numCodingBytes);
+
+  BitpropNode* simrankUpdateNode = static_cast<BitpropNode*>(node);
+  BitpropDeserializer* deserializer = new BitpropDeserializer(numCodingBytes);
   deserializer->setNode(simrankUpdateNode);
   return deserializer;
 }

@@ -12,6 +12,8 @@
 #include "../simrank_odd_even/simrank_odd_even_node.h"
 #include "../pagerank/pagerank_node.h"
 #include "../psimrank/psimrank_node.h"
+#include "../bitprop/bitprop_node.h"
+#include "../../common/util/util.h"
 #include "inode_factory.h"
 
 using std::tr1::unordered_map;
@@ -23,8 +25,10 @@ public:
 	SimrankOddEvenNode* initSimrankOddEvenNode(unordered_map<string, string>* params);
 	PSimrankNode* initPSimrankNode(unordered_map<string, string>* params);
 	PagerankNode* initPagerankNode(unordered_map<string, string>* params);
+	BitpropNode* initBitpropNode(unordered_map<string, string>* params);
 private:
 	log4cpp::Category* logger_;
+	Util util;
 };
 
 

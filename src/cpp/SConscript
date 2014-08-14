@@ -43,6 +43,7 @@ SConscript([
     'main/algos/simple_mock_algo/SConscript',
     'main/algos/pagerank/SConscript',
     'main/algos/psimrank/SConscript',
+    'main/algos/bitprop/SConscript'
      ],
     exports = ['env', 'COMMON_OBJ'])
 
@@ -53,6 +54,7 @@ ALGO_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/psimrank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simple_mock_algo/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/bitprop/*.o')
 
 SConscript([
     'main/dmoz/SConscript',
@@ -77,6 +79,7 @@ if testCompile:
     'test/algos/simrank_store_first/SConscript',
     'test/algos/simrank_odd_even/SConscript',
     'test/algos/psimrank/SConscript',
+    'test/algos/bitprop/SConscript',
     'test/dmoz/SConscript',
     'test/useFileSystem/common/SConscript',
     'test/useFileSystem/common/socket/SConscript',

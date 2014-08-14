@@ -1,0 +1,7 @@
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
+
+env.Program('test_bitprop', ['test_bitprop.cpp']  + COMMON_OBJ + ALGO_OBJ)
+env.Program('test_use_failed_est', ['test_use_failed_est.cpp']  + COMMON_OBJ + ALGO_OBJ)
+env.Program('test_failed_est', ['test_failed_est.cpp']  + COMMON_OBJ + ALGO_OBJ)
+env.Program('test_failed_est_use_prev', ['test_failed_est_use_prev.cpp']  + COMMON_OBJ + ALGO_OBJ)
+env.Program('test_random_bit_vector', ['test_random_bit_vector.cpp'] + ALGO_OBJ + COMMON_OBJ)

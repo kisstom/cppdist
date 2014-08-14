@@ -4,6 +4,22 @@ NodeFactoryHelper::NodeFactoryHelper() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactoryHelper"));
 }
 
+BitpropNode* NodeFactoryHelper::initBitpropNode(unordered_map<string, string>* params) {
+  util.checkParam(params, 4, "NUM_CODING_BYTES", "EPSILON", "EST_INDEX", "MIN_NODE");
+  int numCodingBytes;
+  double epsilon;
+  int estIndex;
+  long min_node;
+
+  sscanf((*params)["NUM_CODING_BYTES"].c_str(), "%d", &numCodingBytes);
+  sscanf((*params)["EPSILON"].c_str(), "%lf", &epsilon);
+  sscanf((*params)["EST_INDEX"].c_str(), "%d", &estIndex);
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
+
+  return new BitpropNode(numCodingBytes, estIndex, epsilon, min_node);
+}
+
+
 PagerankNode* NodeFactoryHelper::initPagerankNode(unordered_map<string, string>* params) {
   long allNode;
   int maxIter;

@@ -20,6 +20,9 @@ public:
 	template <class T>
 	int store(char* buf, T a);
 
+	template <class T>
+	int store(char* buf, T* bytes, int size);
+
 	bool hasNext(char *);
 	int setFinish(char*);
 	int setBreak(char*);
@@ -49,6 +52,12 @@ template <class T>
 inline int Serializer::store(char* buf, T a) {
   memcpy(buf, reinterpret_cast<char*>(&(a)), sizeof(a));
   return sizeof(a);
+}
+
+template <class T>
+inline int Serializer::store(char* buf, T* a, int size) {
+  memcpy(buf, reinterpret_cast<char*>(a), size);
+  return size;
 }
 
 inline bool Serializer::hasNext(char *buf) {

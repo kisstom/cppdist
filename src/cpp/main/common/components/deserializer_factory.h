@@ -9,6 +9,7 @@
 #define DESERIALIZER_FACTORY_H_
 
 #include "../util/cfg_reader.h"
+#include "../util/util.h"
 #include "deserializer.h"
 #include "../../algos/simrank_update/simrank_update_deserializer.h"
 #include "../../algos/simrank_store_first/simrank_store_first_deserializer.h"
@@ -23,6 +24,8 @@
 #include "../../algos/psimrank/psimrank_deserializer.h"
 #include "../../algos/simple_mock_algo/simple_mock_deserializer.h"
 #include "../../algos/simple_mock_algo/simple_mock_node.h"
+#include "../../algos/bitprop/bitprop_deserializer.h"
+#include "../../algos/bitprop/bitprop_node.h"
 
 #include <log4cpp/Category.hh>
 
@@ -37,7 +40,9 @@ private:
 	Deserializer* createPagerankDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createPSimrankDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createSimpleMockDeserializer(unordered_map<string, string>* params, Node* node);
+	Deserializer* createBitpropDeserializer(unordered_map<string, string>* params, Node* node);
 	log4cpp::Category* logger_;
+	Util util_;
 };
 
 
