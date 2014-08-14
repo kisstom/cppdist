@@ -28,7 +28,7 @@ int BitpropDeserializer::storeFromBinary(char* buffer, unsigned length) {
   memcpy(codingBytes, buffer + stored, numCodingBytes);
   stored += numCodingBytes;
 
-  logger->info("To %ld receiving char %u", to, *codingBytes);
+  //logger->info("To %ld receiving char %u", to, *codingBytes);
 
   return stored;
 }
