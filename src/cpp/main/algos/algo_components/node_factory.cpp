@@ -210,7 +210,7 @@ std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<st
   double value;
 
   std::vector<FailedEstimate>* failedEstimations = new std::vector<FailedEstimate>();
-  for (short currentDistance = 0; currentDistance < neighborhoodSize; ++currentDistance) {
+  for (short currentDistance = 1; currentDistance <= neighborhoodSize; ++currentDistance) {
     logger_->info("Reading previous failed estimations at distance %hd", currentDistance);
     stringstream s;
     s << prevOutdir << "failed_estimates_distance_" << currentDistance << "_part_" << slaveIndex;

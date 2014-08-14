@@ -18,6 +18,7 @@
 #include "failed_estimate.h"
 #include "IEstimationHandler.h"
 #include "../../common/graph/iedge_list_builder.h"
+#include <gtest/gtest_prod.h>
 
 using std::string;
 
@@ -46,6 +47,7 @@ public:
   void setContainer(EdgelistContainer*);
   void setRandomBits(unsigned char*);
 
+
   ~BitpropNode() {}
 
 private:
@@ -66,6 +68,12 @@ private:
   IEstimationHandler* estimationHandler;
 
   log4cpp::Category* logger;
+
+  // TEST CASES
+  FRIEND_TEST(FindFirstAndLastTest, test);
+  FRIEND_TEST(FindFirstAndLastTest, test2);
+  FRIEND_TEST(FindFirstAndLastTest, test3);
+  FRIEND_TEST(FindFirstAndLastTest, test4);
 };
 
 #endif /* BITPROP_NODE_H_ */

@@ -28,7 +28,7 @@ EstimationHandler::~EstimationHandler() {
 void EstimationHandler::init(string outdir, short neighborhoodSize, int partIndex) {
   logger->info("Initing estimation handler.");
 
-  for (short i = 0; i < neighborhoodSize; ++i) {
+  for (short i = 1; i <= neighborhoodSize; ++i) {
      stringstream failed;
      failed << outdir << "failed_estimates_distance_" << i << "_part_" << partIndex;
      FILE* outputF = fopen(failed.str().c_str(), "w");
