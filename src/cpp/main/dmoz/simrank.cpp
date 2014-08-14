@@ -61,7 +61,7 @@ double SimRank::score (long self, long other) {
       }
       double est = 0.0;
       for (int pos = 0; pos < path_len_; ++pos) {
-        est += positions[pos] * pow(const_, pos) / num_pathes_;
+        est += positions[pos] * pow(const_, pos + 1) / num_pathes_;
       }
       return est;
 }
