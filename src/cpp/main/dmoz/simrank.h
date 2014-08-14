@@ -9,7 +9,7 @@
 #include <time.h>
 #include <string.h>
 
-//using namespace std;
+using namespace std;
 using std::vector;
 using std::tr1::unordered_map;
 using std::stringstream;
@@ -26,10 +26,7 @@ class SimRank {
           num_pages_(npg), path_len_(pl), num_pathes_(npt), const_(c),
           max_random_compute_(mrc){} 
       void read(fstream& f);
-      void compute();
-      void randomCompute();
       void computeNeedScore();
-      //void flush();
       void needSR(fstream& f);
       double score(long self, long other);
       void setOutputStream(char* fname);
