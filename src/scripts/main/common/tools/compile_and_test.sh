@@ -33,6 +33,7 @@ test_dir ./bin/test/useFileSystem/ $resourcePath
 echo algo tests
 test_dir ./bin/test/algos/simrank_odd_even/
 test_dir ./bin/test/algos/psimrank/
+test_dir ./bin/test/algos/bitprop/
 
 echo script tests
 test_scripts ./scripts/test/

@@ -98,8 +98,9 @@ TEST_F(BitpropTest4, test) {
   cluster.init();
   cluster.start();
 
-  ASSERT_NEAR(-1.0, estimationHandler->failedEstimations[1][2], 0.001);
   ASSERT_NEAR(27.026, estimationHandler->failedEstimations[1][3], 0.001);
+  ASSERT_NEAR(-1.0, estimationHandler->failedEstimations[1][2], 0.001);
+
 
 }
 
