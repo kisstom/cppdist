@@ -114,15 +114,21 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
   sscanf((*params)["EPSILON"].c_str(), "%lf", &epsilon);
 
   logger_->info("epsilon %lf", epsilon);
-  unsigned char* randomVectorBits = initRandomVectorBits(numNodes, numCodingBytes, epsilon);
+
+  int seed = 13;
+  if (params->find("SEED") != params->end()) {
+    sscanf((*params)["SEED"].c_str(), "%d", &seed);
+  }
+
+  unsigned char* randomVectorBits = initRandomVectorBits(numNodes, numCodingBytes, epsilon, seed);
   node->setRandomBits(randomVectorBits);
   node->initBuffers();
 
   return node;
 }
 
-unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingBytes, double epsilon) {
-  RandomBitvectorGenerator rvbgen(epsilon, 13);
+unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingBytes, double epsilon, int seed) {
+  RandomBitvectorGenerator rvbgen(epsilon, seed);
 
   unsigned char* randomVectorBits = new unsigned char[numNodes * numCodingBytes];
   for (long node = 0; node < numNodes; ++node) {

@@ -14,7 +14,6 @@ class RandomGenerator : public IRandomGenerator {
 public:
 	RandomGenerator(int);
 	double uniRand(long);
-	//void setSeed(int);
 };
 
 

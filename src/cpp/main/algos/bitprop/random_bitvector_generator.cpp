@@ -22,17 +22,14 @@ void RandomBitvectorGenerator::gen(int numBytes, unsigned char* dest) {
   for (int b = 0; b < numBytes; ++b) {
     r = rand();
     p = r / (double) RAND_MAX;
-    //cout << "random " << p << "\n";
     v = (p < posProb);
     for (int i = 0; i < 7; ++i) {
       v <<= 1;
       r = rand();
       p = r / (double) RAND_MAX;
-      //cout << "random " << p << "\n";
       v |= (p < posProb);
     }
     *(dest + b) = v;
-    //cout << "random byte " << v << "\n";
   }
 }
 

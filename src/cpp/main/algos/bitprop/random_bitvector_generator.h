@@ -8,6 +8,8 @@
 #ifndef RANDOM_BITVECTOR_GENERATOR_H_
 #define RANDOM_BITVECTOR_GENERATOR_H_
 
+//#include ""
+
 class RandomBitvectorGenerator {
 public:
   RandomBitvectorGenerator(double posProb, int seed);
