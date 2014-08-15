@@ -211,7 +211,7 @@ long SimrankUpdateNode::generateRandomNeighbour(long node, EdgelistContainer* co
 	int neighborSize = container->neighborhoodSize(node);
 	if (neighborSize <= 0) return -1;
 
-	double uniR = randomGenerator_->uniRand(node);
+	double uniR = randomGenerator_->uniRand();
 
 	int index = (int) (neighborSize * uniR);
 	return container->getEdgeAtPos(node, index);
@@ -229,7 +229,7 @@ long SimrankUpdateNode::generateRandomNeighbour(long node, EdgelistContainer* co
 	if (neighborSize1 < 0) neighborSize1 = 0;
 	if (neighborSize2 < 0) neighborSize2 = 0;
 
-	double uniR = randomGenerator_->uniRand(node);
+	double uniR = randomGenerator_->uniRand();
 
 	int index = (int) ((neighborSize1 + neighborSize2) * uniR);
 	if (index < neighborSize1) {
@@ -246,7 +246,7 @@ bool SimrankUpdateNode::flipCoinToStay(long node) {
 	if (updated < 0 || unchanged < 0) return true;
 	if (updated + unchanged == 0) return true;
 
-	double uniR = randomGenerator_->uniRand(node);
+	double uniR = randomGenerator_->uniRand();
 	if (uniR < (double) unchanged / (updated + unchanged)) return true;
 	return false;
 }

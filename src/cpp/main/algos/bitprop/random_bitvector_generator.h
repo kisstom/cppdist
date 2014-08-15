@@ -8,13 +8,14 @@
 #ifndef RANDOM_BITVECTOR_GENERATOR_H_
 #define RANDOM_BITVECTOR_GENERATOR_H_
 
-//#include ""
+#include "../../common/random/irandom_generator.h"
 
 class RandomBitvectorGenerator {
 public:
-  RandomBitvectorGenerator(double posProb, int seed);
+  RandomBitvectorGenerator(double posProb, IRandomGenerator*);
   void gen(int numBytes, unsigned char* dest);
 private:
+  IRandomGenerator* randomGenerator;
   double posProb;
   int seed;
 };

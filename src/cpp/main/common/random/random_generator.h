@@ -13,7 +13,7 @@
 class RandomGenerator : public IRandomGenerator {
 public:
 	RandomGenerator(int);
-	double uniRand(long);
+	double uniRand();
 };
 
 

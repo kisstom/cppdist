@@ -10,7 +10,7 @@
 
 class IRandomGenerator {
 public:
-	virtual double uniRand(long node) = 0;
+	virtual double uniRand() = 0;
 	virtual ~IRandomGenerator() {}
 };
 

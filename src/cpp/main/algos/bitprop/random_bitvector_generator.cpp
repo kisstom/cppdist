@@ -11,9 +11,9 @@
 
 using std::cout;
 
-RandomBitvectorGenerator::RandomBitvectorGenerator(double _posProb, int _seed) {
+RandomBitvectorGenerator::RandomBitvectorGenerator(double _posProb, IRandomGenerator* _randomGenerator) {
   posProb = _posProb;
-  seed = _seed;
+  randomGenerator = _randomGenerator;
 }
 
 void RandomBitvectorGenerator::gen(int numBytes, unsigned char* dest) {
@@ -21,12 +21,14 @@ void RandomBitvectorGenerator::gen(int numBytes, unsigned char* dest) {
   double p;
   for (int b = 0; b < numBytes; ++b) {
     r = rand();
-    p = r / (double) RAND_MAX;
+    //p = r / (double) RAND_MAX;
+    p = randomGenerator->uniRand();
     v = (p < posProb);
     for (int i = 0; i < 7; ++i) {
       v <<= 1;
       r = rand();
-      p = r / (double) RAND_MAX;
+      //p = r / (double) RAND_MAX;
+      p = randomGenerator->uniRand();
       v |= (p < posProb);
     }
     *(dest + b) = v;

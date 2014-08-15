@@ -7,6 +7,7 @@
 
 #include "node_factory.h"
 #include "../bitprop/random_bitvector_generator.h"
+#include "../../common/random/random_generator.h"
 #include "../../common/graph/edge_list_container_factory.h"
 
 NodeFactory::NodeFactory() {
@@ -116,7 +117,7 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
   logger_->info("epsilon %lf", epsilon);
 
   int seed = 13;
-  if (params->find("SEED") != params->end()) {
+  if (params->find(string("SEED")) != params->end()) {
     sscanf((*params)["SEED"].c_str(), "%d", &seed);
   }
 
@@ -128,7 +129,8 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
 }
 
 unsigned char* NodeFactory::initRandomVectorBits(long numNodes, int numCodingBytes, double epsilon, int seed) {
-  RandomBitvectorGenerator rvbgen(epsilon, seed);
+  IRandomGenerator* randomGenerator = new RandomGenerator(seed);
+  RandomBitvectorGenerator rvbgen(epsilon, randomGenerator);
 
   unsigned char* randomVectorBits = new unsigned char[numNodes * numCodingBytes];
   for (long node = 0; node < numNodes; ++node) {

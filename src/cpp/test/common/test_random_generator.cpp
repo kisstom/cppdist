@@ -48,34 +48,34 @@ TEST(TestRandomGenerator, showRandoms) {
   RandomGenerator generator(13);
   //generator.setSeed(13);
 
-  double rnm = generator.uniRand(1);
+  double rnm = generator.uniRand();
   ASSERT_NEAR(0.632643, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.341416, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.904110, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.130035, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.608363, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.334507, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.155829, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.794827, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.928201, rnm, 0.0001);
 
-  rnm = generator.uniRand(1);
+  rnm = generator.uniRand();
   ASSERT_NEAR(0.556065, rnm, 0.0001);
 }
 

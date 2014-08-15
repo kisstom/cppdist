@@ -9,6 +9,8 @@
 #include <iostream>
 
 #include "../../../main/algos/bitprop/random_bitvector_generator.h"
+#include "../../../main/common/random/fake_random_generator.h"
+
 using std::cout;
 
 namespace {
@@ -35,17 +37,36 @@ protected:
 
 
 TEST_F(RandomBitVectorGeneratorTest, test) {
-  RandomBitvectorGenerator rvbgen(0.1, 13);
-  long nodes = 4;
+  vector<double> fakeUniRand;
+  fakeUniRand.push_back(0.01);
+  fakeUniRand.push_back(0.11);
+  fakeUniRand.push_back(0.11);
+  fakeUniRand.push_back(0.01);
+  fakeUniRand.push_back(0.11);
+  fakeUniRand.push_back(0.11);
+  fakeUniRand.push_back(0.01);
+  fakeUniRand.push_back(0.01);
+
+  fakeUniRand.push_back(0.01);
+  fakeUniRand.push_back(0.11);
+  fakeUniRand.push_back(0.01);
+  fakeUniRand.push_back(0.01);
+  fakeUniRand.push_back(0.11);
+  fakeUniRand.push_back(0.11);
+  fakeUniRand.push_back(0.01);
+  fakeUniRand.push_back(0.01);
+
+  FakeRandomGenerator* generator = new FakeRandomGenerator(fakeUniRand);
+  RandomBitvectorGenerator rvbgen(0.1, generator);
+
+  long nodes = 2;
   int bytes = 1;
 
   unsigned char* rvb = new unsigned char[nodes * bytes];
-  rvbgen.gen(1, rvb + 0);
-  rvbgen.gen(1, rvb + 1);
-  rvbgen.gen(1, rvb + 2);
-  rvbgen.gen(1, rvb + 3);
+  rvbgen.gen(2, rvb);
 
-  cout << (int)*(rvb + 0) << "|" <<  (int)*(rvb + 1) << "|" <<  (int)*(rvb + 2) << "|" <<  (int)*(rvb + 3) << "\n";
+  ASSERT_EQ(147, (int)*(rvb + 0));
+  ASSERT_EQ(179, (int)*(rvb + 1));
 }
 
 }

@@ -22,7 +22,7 @@ RandomGenerator::RandomGenerator(int seed) {
 	srand(seed);
 }
 
-double RandomGenerator::uniRand(long from) {
+double RandomGenerator::uniRand() {
 	return rand() / (double) RAND_MAX;
 }
 
