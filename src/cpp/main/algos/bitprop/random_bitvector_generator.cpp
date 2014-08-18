@@ -17,17 +17,14 @@ RandomBitvectorGenerator::RandomBitvectorGenerator(double _posProb, IRandomGener
 }
 
 void RandomBitvectorGenerator::gen(int numBytes, unsigned char* dest) {
-  int v, r;
+  int v;
   double p;
   for (int b = 0; b < numBytes; ++b) {
-    r = rand();
-    //p = r / (double) RAND_MAX;
     p = randomGenerator->uniRand();
     v = (p < posProb);
     for (int i = 0; i < 7; ++i) {
       v <<= 1;
-      r = rand();
-      //p = r / (double) RAND_MAX;
+
       p = randomGenerator->uniRand();
       v |= (p < posProb);
     }
