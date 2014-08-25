@@ -1,7 +1,8 @@
 #!/bin/bash -eu
 
 if [ "$#" != 1 ]; then
-	echo "args: outdir" 
+	echo "args: outdir"
+	exit 1
 fi
 
 thisDir=$(dirname $0)
