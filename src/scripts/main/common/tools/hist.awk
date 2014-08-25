@@ -1,19 +1,20 @@
 # st
-# end
 # buck
-# col
-
+# xcol
+# ycol
+# expected sorted inut on xcol field
 
 BEGIN {
   if (st == "") st = 0.0
   if (buck == "") buck = 0.01
-  if (col == "") col = 1 
+  if (xcol == "") xcol = 1 
+  if (ycol == "") ycol = 2
   max = st
 }
 {
-  hist[int(($col - st) / buck)] ++
+  hist[int(($xcol - st) / buck)] += $ycol
 
-  if (max < $col) max = $col
+  if (max < $xcol) max = $xcol
 }
 END{
   size = int ((max - st) / buck)

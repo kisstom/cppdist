@@ -21,6 +21,6 @@ fi
 
 awk -f $thisDir/../../simrank/histogramms/degree.awk $inversePortugal > $outdir/degree_dist.txt
 
-sort -gk2,2 $outdir/degree_dist.txt > $outdir/degree_dist.sort
+sort -gk1,1 $outdir/degree_dist.txt > $outdir/degree_dist.sort
 
-awk -v st=0 -v buck=10 -v col=2 -f $thisDir/../tools/hist.awk  $outdir/degree_dist.sort > $outdir/degree_hist_b10.txt
+awk -v st=0 -v buck=1000 -v xcol=1 -v ycol=2 -f $thisDir/../tools/hist.awk  $outdir/degree_dist.sort > $outdir/degree_hist_b1000.txt
