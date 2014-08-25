@@ -347,7 +347,11 @@ def bitpropExperiment():
   epsilon = float(conf.get('NODE', 'EPSILON'))
   BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
 
-  for i in xrange(8):
+  numEstimations = 1
+  if conf.has_option('NODE', 'NUM_ESTIMATIONS'):
+    numEstimations = conf.get('NODE', 'NUM_ESTIMATIONS')
+
+  for i in xrange(numEstimations):
     local_dir = BASE_LOCAL_DIR + '/est' + str(est_index) + '/'
     prev_dir = BASE_LOCAL_DIR + '/est' + str(int(est_index - 1)) + '/'
 

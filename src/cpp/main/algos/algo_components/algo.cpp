@@ -99,7 +99,8 @@ void Algo::run()
     //bool exit = false;
     while (1)
     {
-      logger_->info("Algo waiting for msg from master.");
+      logger_->info("Algo waiting for instruction from master.");
+      // Sync with run threads in master.
     	socketManager_->recvFromMaster(1024, instr);
     	if (!strcmp(instr, "exit")) {
     		break;
@@ -108,10 +109,11 @@ void Algo::run()
     		throw MasterException();
     	}
 
-    	logger_->info("Recieving msg %s.", instr);
+    	logger_->info("Recieving instruction %s.", instr);
     	logger_->info("Sending ready for master.");
     	socketManager_->sendReadyToMaster();
 
+    	// Sync with inner master nextIter.
     	logger_->info("Waiting for before iteration instr.");
     	socketManager_->recvFromMaster(1024, instr);
 

@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     client->Send(7, "finish");
   } catch (SocketError& e) {
     fprintf(stderr, "ERROR: %s\n", e.what());
-    return 1;
+    return 2;
   }
   return 0;
 }

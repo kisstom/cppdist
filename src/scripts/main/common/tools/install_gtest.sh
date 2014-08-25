@@ -1,15 +1,16 @@
 #!/bin/bash -eu
 
 SCRIPT_DIR=$(dirname "$0")
-INSTALL_DIR=$SCRIPT_DIR/../../../../dep
+#INSTALL_DIR=$SCRIPT_DIR/../../../../dep
+INSTALL_DIR=/home/kisstom/sandbox/
 
 mkdir -p $INSTALL_DIR
 cd $INSTALL_DIR
 
-wget http://googletest.googlecode.com/files/gtest-1.6.0.zip
+wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
 
-unzip gtest-1.6.0.zip
-mv gtest-1.6.0 gtest
+unzip gtest-1.7.0.zip
+mv gtest-1.7.0 gtest
 
 cd gtest
 

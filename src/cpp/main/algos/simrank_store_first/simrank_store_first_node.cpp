@@ -92,7 +92,7 @@ long SimrankStoreFirstNode::genEdge(long from) {
   	return -1;
   }
 
-  double uniR = generator_->uniRand(from);
+  double uniR = generator_->uniRand();
 
   int index = (int) (numNeighbors * uniR);
   return matrix_->getEdgeAtPos(from, index);

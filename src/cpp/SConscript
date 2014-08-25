@@ -15,7 +15,7 @@ GMOCK= "#../dep/gmock/"
 LOG4CPP = "#../dep/log4cpp"
 GMP = "#../dep/gmp/"
 GTEST = "#../dep/gtest/"
-
+#GTEST = '/home/kisstom/sandbox/gtest/'
 env = Environment(
         CXX = 'g++',
         CCFLAGS = flags,

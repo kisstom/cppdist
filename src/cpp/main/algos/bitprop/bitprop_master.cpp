@@ -12,6 +12,7 @@ BitpropMaster::BitpropMaster(short _neighborhoodSize) {
   neighborhoodDistance = 0;
 }
 
+// This logic could be moved to nodes.
 bool BitpropMaster::nextIter() {
   master_->sendMessageForAllNodes("");
   neighborhoodDistance++;

@@ -46,7 +46,7 @@ TEST(SimrankScoreTest, testScore) {
   vector<vector<long> > pathesfor2;
 
   vector<long> path1;
-  path1.push_back(11247);
+  //path1.push_back(11247);
   path1.push_back(2980);
   path1.push_back(0);
   path1.push_back(1);
@@ -60,7 +60,7 @@ TEST(SimrankScoreTest, testScore) {
   path1.push_back(0);
 
   vector<long> path2;
-  path2.push_back(365);
+  //path2.push_back(365);
   path2.push_back(0);
   path2.push_back(1);
   path2.push_back(0);

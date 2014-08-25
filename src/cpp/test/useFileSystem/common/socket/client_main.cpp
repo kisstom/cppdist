@@ -36,7 +36,8 @@ int main(int argc, char* argv[]) {
     }
 
   } catch (SocketError& e) {
-    retval = 1;
+    fprintf(stderr, "ERROR: %s\n", e.what());
+    retval = 2;
   }
 
   if (NULL != outputFile) {
