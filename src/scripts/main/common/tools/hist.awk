@@ -13,7 +13,7 @@ BEGIN {
 {
   hist[int(($col - st) / buck)] ++
 
-  if (max > $col) max = $col
+  if (max < $col) max = $col
 }
 END{
   size = int ((max - st) / buck)
