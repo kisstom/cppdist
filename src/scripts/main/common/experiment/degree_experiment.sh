@@ -8,6 +8,7 @@ thisDir=$(dirname $0)
 
 outdir="$1"
 rm -rf "$outdir"
+mkdir "$outdir"
 
 . $thisDir/../tools/create_experiment_info.sh
 
