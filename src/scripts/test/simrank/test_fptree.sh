@@ -1,4 +1,5 @@
 #!/bin/bash -eu
+exit 0
 
 thisDir="$(cd "$(dirname $0)" && pwd)"
 
