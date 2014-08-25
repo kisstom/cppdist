@@ -10,7 +10,7 @@ function warnMsg() {
 }
 
 connect_error=false
-trap 'cleanup; if [ "$connect_error" == true ]; then warnMsg; exit 0; else exit 1; fi' EXIT
+trap 'cleanup; if [ "$connect_error" == true ]; then warnMsg; exit 0; fi' EXIT
 
 echo Starting socket test
 this_dir="$(dirname "$0")"
