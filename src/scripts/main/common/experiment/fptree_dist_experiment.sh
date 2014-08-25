@@ -20,7 +20,7 @@ if [ ! -f "$fptreeFile" ]; then
 	exit 1
 fi
 
-awk -f $thisDir/../simrank/histogramms/tree_size.awk $fptreeFile > $outdir/fptree_deg_dist.txt
+awk -f $thisDir/../../simrank/histogramms/tree_size.awk $fptreeFile > $outdir/fptree_deg_dist.txt
 
 sort -gk1,1 $outdir/fptree_deg_dist.txt > $outdir/fptree_deg_dist.sort
 
