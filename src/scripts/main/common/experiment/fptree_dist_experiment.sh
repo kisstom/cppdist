@@ -1,13 +1,15 @@
 #!/bin/bash -eu
 
 if [ "$#" != 2 ]; then
-	echo "args: outdir fptreefile" 
+	echo "args: outdir fptreefile"
+	exit 1
 fi
 
 thisDir=$(dirname $0)
 
 outdir="$1"
 rm -rf "$outdir"
+mkdir "$outdir"
 
 . $thisDir/../tools/create_experiment_info.sh
 
