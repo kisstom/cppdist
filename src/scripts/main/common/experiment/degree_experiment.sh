@@ -19,7 +19,7 @@ if [ ! -f $inversePortugal ]; then
 	exit 1
 fi
 
-awk -f $thisDir/../simrank/histogramms/degree.awk $inversePortugal > $outdir/degree_dist.txt
+awk -f $thisDir/../../simrank/histogramms/degree.awk $inversePortugal > $outdir/degree_dist.txt
 
 sort -gk2,2 $outdir/degree_dist.txt > $outdir/degree_dist.sort
 
