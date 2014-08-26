@@ -29,13 +29,20 @@ public:
 
 	char endOfRecord_[1];
 	char endOfMessage_[1];
+
+  const char transmissionEnd;
+  const char transmissionBlockEnd;
 private:
 	log4cpp::Category* logger_;
 };
 
-inline Serializer::Serializer() {
-	endOfRecord_[0] = '\30';
-	endOfMessage_[0] = '\4';
+/*const char Serializer::transmissionEnd = 4;
+const char Serializer::transmissionBlockEnd = 23;*/
+
+inline Serializer::Serializer() : transmissionEnd(4), transmissionBlockEnd(23) {
+	endOfRecord_[0] = transmissionBlockEnd;
+	endOfMessage_[0] = transmissionEnd;
+	logger_ = &log4cpp::Category::getInstance(std::string("Serializer"));
 }
 
 inline int Serializer::setBreak(char* buf) {
@@ -61,7 +68,7 @@ inline int Serializer::store(char* buf, T* a, int size) {
 }
 
 inline bool Serializer::hasNext(char *buf) {
-	return *buf == '\30';
+	return *buf == transmissionBlockEnd;
 }
 
 #endif /* SERIALIZER_H_ */

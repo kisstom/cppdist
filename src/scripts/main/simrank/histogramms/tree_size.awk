@@ -1,3 +1,7 @@
+# Computes the number of edges in each fingerprint tree
+# and counts it.
+
+
 BEGIN{
   FS="|"
 }
