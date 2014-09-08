@@ -141,5 +141,16 @@ void Util::printHashSet(unordered_map<int, std::set<long> > hashSet) {
   }
 }
 
+void Util::splitByToken(char* str, vector<long>& edges) {
+  char * pch = str;
+  long num = 0;
+
+  while (pch != NULL) {
+    sscanf(pch, "&ld", &num);
+    edges.push_back(num);
+    pch = strtok (NULL, " ");
+  }
+}
+
 
 
