@@ -9,23 +9,26 @@
 #include <cstring>
 #include <sstream>
 
-#include "../util/util.h"
 #include "inverse_partition_maker.h"
 
 using std::stringstream;
 
-InversePartitionMaker::InversePartitionMaker(string _inputFile, string _dirPrefix,
+InversePartitionMaker::InversePartitionMaker(string _inputFile, string _dirPrefix, string _slaveryFile,
     int _numslaves, int _rowLen) {
   inputFileName = _inputFile;
+  slaveryFile = _slaveryFile;
   dirPrefix = _dirPrefix;
   numslaves = _numslaves;
   ROWLEN = _rowLen;
+
+  edgeListPrefix = "edges.txt";
+  boundPrefix = "bound.txt";
 }
 
 void InversePartitionMaker::readPartitionBounds(FILE* slaveryFile) {
   long lowerBound = 0, numNodes = 0, upperBound = 0;
   for (int i = 0; i < numslaves; ++i) {
-    fscanf(slaveryFile,"%*d %*s %ld %ld %*ld", &lowerBound,  &numNodes);
+    fscanf(slaveryFile,"%*d %*s %ld %*ld %ld", &numNodes, &lowerBound);
     upperBound = lowerBound + numNodes;
     partitionBounds.push_back(std::make_pair<int, int>(lowerBound, upperBound));
   }
@@ -41,6 +44,8 @@ int InversePartitionMaker::getPartitionIndex(long node) {
 }
 
 void InversePartitionMaker::initBoundFiles() {
+  edgeListBoundPointers.resize(numslaves);
+
   for (int i = 0; i < numslaves; ++i) {
     std::stringstream ss(std::stringstream::in | std::stringstream::out);
     ss << dirPrefix << "/" << "part_" << i << "/" + boundPrefix;
@@ -53,6 +58,8 @@ void InversePartitionMaker::initBoundFiles() {
 }
 
 void InversePartitionMaker::initEdgelistFiles() {
+  edgeListPartitions.resize(numslaves);
+
   for (int i = 0; i < numslaves; ++i) {
     std::stringstream ss(std::stringstream::in | std::stringstream::out);
     ss << dirPrefix << "/" << "part_" << i << "/" + edgeListPrefix;
@@ -77,6 +84,14 @@ void InversePartitionMaker::run() {
     fprintf(stderr, "Error opening file: %s\n", inputFileName.c_str());
   }
 
+  FILE* slaver = fopen(slaveryFile.c_str(),  "r");
+  if (slaver == NULL) {
+    fprintf(stderr, "Error opening file %s\n", slaveryFile.c_str());
+  }
+
+  readPartitionBounds(slaver);
+  fclose(slaver);
+
   initBoundFiles();
   initEdgelistFiles();
 
@@ -91,7 +106,7 @@ void InversePartitionMaker::process(FILE* inputFile) {
   char* line = new char[ROWLEN];
   long current_row = 0;
   vector<long> edges;
-  vector<int> edgesToPartition;
+  vector<long> edgesToPartition;
 
   edgesToPartition.resize(numslaves);
   for (int i = 0; i < numslaves; ++i) {
@@ -113,11 +128,7 @@ void InversePartitionMaker::process(FILE* inputFile) {
 
     for (int i = 0; i < (int) edges.size(); ++i) {
       partIndex = getPartitionIndex(edges[i]);
-      if (edgesToPartition[partIndex] == 0) {
-        fprintf(edgeListPartitions[partIndex], "%ld\n", edges[i]);
-      } else {
-        fprintf(edgeListPartitions[partIndex], " %ld\n", edges[i]);
-      }
+      fprintf(edgeListPartitions[partIndex], "%ld\n", edges[i]);
       ++edgesToPartition[partIndex];
     }
 

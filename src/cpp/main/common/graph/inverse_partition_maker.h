@@ -10,13 +10,14 @@
 
 #include <string>
 #include <vector>
+#include "../util/util.h"
 
 using std::vector;
 using std::string;
 
 class InversePartitionMaker {
 public:
-  InversePartitionMaker(string inputF, string dirPrefix, int numslaves, int rowlen);
+  InversePartitionMaker(string inputF, string dirPrefix, string slaveryFile, int numslaves, int rowlen);
   void run();
   void process(FILE*);
 private:
@@ -33,6 +34,7 @@ private:
 
   string dirPrefix;
   string inputFileName;
+  string slaveryFile;
   string edgeListPrefix;
   string boundPrefix;
 };

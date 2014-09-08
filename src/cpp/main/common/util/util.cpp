@@ -145,6 +145,7 @@ void Util::splitByToken(char* str, vector<long>& edges) {
   char * pch = str;
   long num = 0;
 
+  pch = strtok (str, " ");
   while (pch != NULL) {
     sscanf(pch, "&ld", &num);
     edges.push_back(num);

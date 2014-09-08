@@ -214,6 +214,19 @@ TEST(TestUtil, testHasSection) {
   ASSERT_FALSE(util.hasSection(a, c));
 }
 
+TEST(TestUtil, splitByToken) {
+  Util util;
+
+  vector<long> edges;
+  char* line = "0 1 2 3 4";
+  util.splitByToken(line, edges);
+  ASSERT_EQ(0, edges[0]);
+  ASSERT_EQ(1, edges[1]);
+  ASSERT_EQ(2, edges[2]);
+  ASSERT_EQ(3, edges[3]);
+  ASSERT_EQ(4, edges[4]);
+}
+
 }
 
 int main (int argc, char **argv) {
