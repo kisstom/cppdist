@@ -124,8 +124,6 @@ TEST(SenderBufferTest, testSep) {
 
   senderBuffer.setFinish(0);
   ASSERT_EQ(10, senderBuffer.pack_size_[0]);
-
-  //senderBuffer.emptyBuffer(0);
 }
 
 int main (int argc, char **argv) {

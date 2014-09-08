@@ -10,7 +10,7 @@ function warnMsg() {
 }
 
 connect_error=false
-trap 'cleanup; if [ "$connect_error" == true ]; then warnMsg; exit 0; fi' EXIT
+trap 'cleanup; if [ "$connect_error" == true ]; then warnMsg; exit 0; fi' EXIT SIGCHLD
 
 echo Starting socket test
 this_dir="$(dirname "$0")"
@@ -25,6 +25,8 @@ echo -e "hava\nnagila\njava\n\nvege" > $expected_output
 
 $this_dir/../../../../bin/test/useFileSystem/common/socket/server_main $port "hava,nagila,java,,vege" &
 pid1=$!
+
+sleep 1
 
 $this_dir/../../../../bin/test/useFileSystem/common/socket/client_main $port $output &
 pid2=$!
