@@ -42,6 +42,7 @@ SConscript([
     'main/algos/simrank_update/SConscript',
     'main/algos/simple_mock_algo/SConscript',
     'main/algos/pagerank/SConscript',
+    'main/algos/clever_pagerank/SConscript',
     'main/algos/psimrank/SConscript',
     'main/algos/bitprop/SConscript'
      ],

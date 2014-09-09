@@ -124,7 +124,7 @@ void InversePartitionMaker::process(FILE* inputFile) {
     }
 
     if (strlen(line) > 0) {
-      line[strlen(line) - 1]= ' ';
+      line[strlen(line) - 1] = ' ';
     }
 
     edges.clear();
