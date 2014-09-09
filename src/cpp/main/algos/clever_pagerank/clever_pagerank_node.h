@@ -19,23 +19,25 @@ using std::vector;
 
 class CleverPagerankNode: public Node {
 public:
-  CleverPagerankNode(string _outfile, long _allnode,
-      long _minnode, double _dump, int _actIter, int _maxIter);
+  CleverPagerankNode(long _allnode, long _minnode, double _dump, int _maxIter);
   void beforeIteration(string msg);
   bool afterIteration();
   void sender();
-  void initFromMaster(string);
+  void initFromMaster(string) {}
   void final();
 
   void setNumberNeighbors(vector<int>*);
-  void setOutPartitions(vector<vector<long> >*);
+  void setOutPartitions(vector<set<long> >*);
   void setInverseNodeBounds(unordered_map<long, std::pair<long, long> >*);
   void setInverseOutEdges(vector<long>*);
+  void setOutputFileName(string);
 
   void serializeImportance(int, long, double);
   void updateSelfScore(long fromEdge, double sc);
+  void readInverseNodeBounds(string);
+  void readInverseOutEdges(string);
 private:
-  vector<vector<long> >* outPartitions;
+  vector<set<long> >* outPartitions;
   unordered_map<long, std::pair<long, long> >* inverseNodeBounds;
   vector<long>* inverseOutEdges;
   vector<int>* numNeighbors;

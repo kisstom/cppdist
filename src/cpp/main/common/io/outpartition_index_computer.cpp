@@ -6,9 +6,10 @@
  *      Author: kisstom
  */
 
+#include <cstdio>
 #include "outpartition_index_computer.h"
 
-OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, int _numslaves, int _rowlen, int _numnodes) {
+OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, int _numslaves, int _rowlen, long _numnodes) {
   inputPartition = input;
   slaveConfig = cfg;
   numslaves = _numslaves;
@@ -34,7 +35,7 @@ void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
 }
 
 int OutPartitionIndexComputer::getPartitionIndex(long node) {
-  for (int i = 0; i < partitionBounds.size(); ++i) {
+  for (int i = 0; i < (int) partitionBounds.size(); ++i) {
     if (partitionBounds[i].first <= node && node < partitionBounds[i].second) {
       return i;
     }

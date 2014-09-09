@@ -9,6 +9,7 @@
 #include "../bitprop/random_bitvector_generator.h"
 #include "../../common/random/random_generator.h"
 #include "../../common/graph/edge_list_container_factory.h"
+#include "../../common/io/outpartition_index_computer.h"
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -74,6 +75,31 @@ PagerankNode* NodeFactory::createPagerankNode(unordered_map<string, string>* par
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   node->setOutputFile(string(outputFileN));
+  return node;
+}
+
+CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  EdgelistContainer* container = createEdgeListContainer(params);
+  CleverPagerankNode* node = helper.initCleverPagerankNode(params);
+
+  long numNodes;
+  int rowLen, numSlaves;
+  string input = (*params)["INPUT_PARTITION"];
+  string cfg = (*params)["SLAVE_CONFIG"];
+  sscanf((*params)["NUM_NODES"].c_str(), "%ld", &numNodes);
+  sscanf((*params)["ROW_LEN"].c_str(), "%d", &rowLen);
+  sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
+
+  OutPartitionIndexComputer computer(input, cfg, numSlaves, rowLen, numNodes);
+  node->setNumberNeighbors(computer.getNumNeighbors());
+  node->setOutPartitions(computer.getOutPartitions());
+  node->readInverseNodeBounds((*params)["INVERSE_BOUNDS"]);
+  node->readInverseOutEdges((*params)["INVERSE_OUT_EDGES"]);
+
+  char outputFileN[1024];
+  sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setOutputFileName(string(outputFileN));
   return node;
 }
 

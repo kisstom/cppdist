@@ -7,14 +7,13 @@
 
 #include "clever_pagerank_node.h"
 
- CleverPagerankNode::CleverPagerankNode(string _outfile, long _allnode,
-      long _minnode, double _dump, int _actIter, int _maxIter) {
+ CleverPagerankNode::CleverPagerankNode(long _allnode, long _minnode, double _dump, int _maxIter) {
    logger_ = &log4cpp::Category::getInstance(std::string("CleverPagerankNode"));
-   outfile = _outfile;
+
    allNode_ = _allnode;
    minNode_ = _minnode;
    dump_ = _dump;
-   actIter = _actIter;
+   actIter = 0;
    maxIter = _maxIter;
 
    outPartitions = NULL;
@@ -25,6 +24,10 @@
    tmpScore_ = NULL;
  }
 
+ void CleverPagerankNode::setOutputFileName(string _outfile) {
+   outfile = _outfile;
+ }
+
 void CleverPagerankNode::sender() {
   long origNode = minNode_ - 1, start, end;
 
@@ -33,7 +36,7 @@ void CleverPagerankNode::sender() {
     if ((*numNeighbors)[partitionNode] == 0) continue;
     double imp = (*pagerankScore_)[partitionNode] / (*numNeighbors)[partitionNode];
 
-    for (vector<long>::const_iterator partIt = (*outPartitions)[partitionNode].begin();
+    for (set<long>::const_iterator partIt = (*outPartitions)[partitionNode].begin();
         partIt != (*outPartitions)[partitionNode].end(); ++partIt) {
       serializeImportance(*partIt, origNode, imp);
     }
@@ -105,7 +108,7 @@ void CleverPagerankNode::setNumberNeighbors(vector<int>* nneighbors) {
   tmpScore_ = new vector<double>(nneighbors->size(), 0.0);
 }
 
-void CleverPagerankNode::setOutPartitions(vector<vector<long> >* _outPartitions) {
+void CleverPagerankNode::setOutPartitions(vector<set<long> >* _outPartitions) {
   outPartitions = _outPartitions;
 }
 
@@ -118,4 +121,28 @@ void CleverPagerankNode::setInverseOutEdges(vector<long>* _inverseOutEdges) {
   inverseOutEdges = _inverseOutEdges;
 }
 
+void CleverPagerankNode::readInverseNodeBounds(string fname) {
+  FILE* file = fopen(fname.c_str(), "r");
+  long prevBound = 0, node, upperBound;
 
+  inverseNodeBounds = new unordered_map<long, std::pair<long, long> >();
+
+  while (fscanf(file, "%ld %ld\n", &node, &upperBound)) {
+    (*inverseNodeBounds)[node] = std::make_pair<long, long>(prevBound, upperBound);
+    prevBound = upperBound;
+  }
+
+  fclose(file);
+}
+
+void CleverPagerankNode::readInverseOutEdges(string fname) {
+  FILE* file = fopen(fname.c_str(), "r");
+  long node;
+
+  inverseOutEdges = new vector<long>();
+  while (fscanf(file, "%ld\n", &node)) {
+    inverseOutEdges->push_back(node);
+  }
+
+  fclose(file);
+}

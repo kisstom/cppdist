@@ -10,6 +10,7 @@
 
 #include <tr1/unordered_map>
 #include "../simrank_odd_even/simrank_odd_even_node.h"
+#include "../clever_pagerank/clever_pagerank_node.h"
 #include "../pagerank/pagerank_node.h"
 #include "../psimrank/psimrank_node.h"
 #include "../bitprop/bitprop_node.h"
@@ -25,6 +26,7 @@ public:
 	SimrankOddEvenNode* initSimrankOddEvenNode(unordered_map<string, string>* params);
 	PSimrankNode* initPSimrankNode(unordered_map<string, string>* params);
 	PagerankNode* initPagerankNode(unordered_map<string, string>* params);
+	CleverPagerankNode* initCleverPagerankNode(unordered_map<string, string>* params);
 	BitpropNode* initBitpropNode(unordered_map<string, string>* params);
 private:
 	log4cpp::Category* logger_;

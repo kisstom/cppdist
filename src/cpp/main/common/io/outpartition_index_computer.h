@@ -19,7 +19,7 @@ using std::set;
 
 class OutPartitionIndexComputer {
 public:
-  OutPartitionIndexComputer(string, string, int, int, int);
+  OutPartitionIndexComputer(string, string, int, int, long);
   void readConfig(FILE*);
   void process(FILE*);
   void run();
