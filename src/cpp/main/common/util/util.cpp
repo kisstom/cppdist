@@ -141,6 +141,7 @@ void Util::printHashSet(unordered_map<int, std::set<long> > hashSet) {
   }
 }
 
+// Not thread safe
 void Util::splitByToken(char* str, vector<long>& edges) {
   char * pch;
   long num = 0;
