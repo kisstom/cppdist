@@ -30,7 +30,8 @@ void InversePartitionMaker::readPartitionBounds(FILE* slaveryFile) {
   for (int i = 0; i < numslaves; ++i) {
     fscanf(slaveryFile,"%*d %*s %ld %*ld %ld", &numNodes, &lowerBound);
     upperBound = lowerBound + numNodes;
-    partitionBounds.push_back(std::make_pair<int, int>(lowerBound, upperBound));
+    partitionBounds.push_back(std::make_pair<long, long>(lowerBound, upperBound));
+    printf("%ld %ld\n", lowerBound, upperBound);
   }
 }
 
@@ -107,10 +108,13 @@ void InversePartitionMaker::process(FILE* inputFile) {
   long current_row = 0;
   vector<long> edges;
   vector<long> edgesToPartition;
+  vector<long> prevEdgesToPartition;
 
   edgesToPartition.resize(numslaves);
+  prevEdgesToPartition.resize(numslaves);
   for (int i = 0; i < numslaves; ++i) {
     edgesToPartition[i] = 0;
+    prevEdgesToPartition[i] = 0;
   }
 
   while (fgets(line, ROWLEN, inputFile)) {
@@ -126,14 +130,24 @@ void InversePartitionMaker::process(FILE* inputFile) {
     edges.clear();
     util.splitByToken(line, edges);
 
+    for (int i = 0; i < numslaves; ++i) {
+      prevEdgesToPartition[i] = edgesToPartition[i];
+    }
+
     for (int i = 0; i < (int) edges.size(); ++i) {
       partIndex = getPartitionIndex(edges[i]);
+      if (-1 == partIndex) {
+        fprintf(stderr, "Partition not found: %ld\n", edges[i]);
+        continue;
+      }
       fprintf(edgeListPartitions[partIndex], "%ld\n", edges[i]);
       ++edgesToPartition[partIndex];
     }
 
     for (int i = 0; i < numslaves; ++i) {
-      fprintf(edgeListBoundPointers[i], "%ld %ld\n", current_row, edgesToPartition[i]);
+      if (edgesToPartition[i] > prevEdgesToPartition[i]) {
+        fprintf(edgeListBoundPointers[i], "%ld %ld\n", current_row, edgesToPartition[i]);
+      }
     }
 
     ++current_row;
