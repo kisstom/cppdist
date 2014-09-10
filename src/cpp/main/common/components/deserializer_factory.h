@@ -20,6 +20,8 @@
 #include "../../algos/simrank_odd_even/simrank_odd_even_node.h"
 #include "../../algos/pagerank/pagerank_deserializer.h"
 #include "../../algos/pagerank/pagerank_node.h"
+#include "../../algos/clever_pagerank/clever_pagerank_deserializer.h"
+#include "../../algos/clever_pagerank/clever_pagerank_node.h"
 #include "../../algos/psimrank/psimrank_node.h"
 #include "../../algos/psimrank/psimrank_deserializer.h"
 #include "../../algos/simple_mock_algo/simple_mock_deserializer.h"
@@ -41,6 +43,7 @@ private:
 	Deserializer* createPSimrankDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createSimpleMockDeserializer(unordered_map<string, string>* params, Node* node);
 	Deserializer* createBitpropDeserializer(unordered_map<string, string>* params, Node* node);
+  Deserializer* createCleverPagerankDeserializer(unordered_map<string, string>*, Node* node);
 	log4cpp::Category* logger_;
 	Util util_;
 };

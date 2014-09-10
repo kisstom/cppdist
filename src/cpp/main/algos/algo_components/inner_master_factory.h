@@ -12,6 +12,7 @@
 #include "../../common/util/param_miss_exception.h"
 #include "../../common/util/util.h"
 #include "../pagerank/pagerank_master.h"
+#include "../clever_pagerank/clever_pagerank_master.h"
 #include "../simrank_store_first/simrank_store_first_master.h"
 #include "../simrank_odd_even/simrank_odd_even_master.h"
 #include "../psimrank/psimrank_master.h"

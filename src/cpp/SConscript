@@ -84,6 +84,7 @@ if testCompile:
     'test/algos/psimrank/SConscript',
     'test/algos/bitprop/SConscript',
     'test/dmoz/SConscript',
+    'test/useFileSystem/algos/SConscript',
     'test/useFileSystem/common/SConscript',
     'test/useFileSystem/common/socket/SConscript',
     'test/useFileSystem/common/edge_list_builder_tests/SConscript',

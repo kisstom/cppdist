@@ -7,7 +7,7 @@
 
 #include "clever_pagerank_node.h"
 
- CleverPagerankNode::CleverPagerankNode(long _allnode, long _minnode, double _dump, int _maxIter) {
+CleverPagerankNode::CleverPagerankNode(long _allnode, long _minnode, double _dump, int _maxIter) {
    logger_ = &log4cpp::Category::getInstance(std::string("CleverPagerankNode"));
 
    allNode_ = _allnode;
@@ -29,6 +29,7 @@
  }
 
 void CleverPagerankNode::sender() {
+  logger_->info("Starting sender.");
   long origNode = minNode_ - 1, start, end;
 
   for (long partitionNode = 0; partitionNode < (long) outPartitions->size(); ++partitionNode) {
@@ -38,13 +39,16 @@ void CleverPagerankNode::sender() {
 
     for (set<int>::const_iterator partIt = (*outPartitions)[partitionNode].begin();
         partIt != (*outPartitions)[partitionNode].end(); ++partIt) {
-      serializeImportance(*partIt, origNode, imp);
+      if (*partIt == partIndex_) {
+        updateSelfScore(origNode, imp);
+      } else {
+        serializeImportance(*partIt, origNode, imp);
+      }
     }
-
-    updateSelfScore(origNode, imp);
   }
 
   algo_->sendAndSignal(partIndex_);
+  logger_->info("Finished sender.");
 }
 
 
@@ -55,22 +59,25 @@ void CleverPagerankNode::serializeImportance(int bufferIndex, long fromNode, dou
     senderBuffer_->emptyBuffer(bufferIndex);
   }
 
+  logger_->info("Serializing: %ld %lf", fromNode, importance);
   senderBuffer_->setBreak(bufferIndex);
   senderBuffer_->store(bufferIndex, fromNode);
   senderBuffer_->store(bufferIndex, importance);
 }
 
 void CleverPagerankNode::updateSelfScore(long origNode, double imp) {
+  logger_->info("Updating self score.");
   long start, end;
   if (inverseNodeBounds->find(origNode) != inverseNodeBounds->end()) {
     start = (*inverseNodeBounds)[origNode].first;
     end = (*inverseNodeBounds)[origNode].second;
     for (long outEdgeIt = start; outEdgeIt < end; ++outEdgeIt) {
       tmpScoreMutex_.lock();
-      (*tmpScore_)[(*inverseOutEdges)[outEdgeIt]] += imp;
+      (*tmpScore_)[(*inverseOutEdges)[outEdgeIt] - minNode_] += imp;
       tmpScoreMutex_.unlock();
     }
   }
+  logger_->info("Self score updated.");
 }
 
 void CleverPagerankNode::beforeIteration(string msg) {
@@ -81,6 +88,7 @@ void CleverPagerankNode::beforeIteration(string msg) {
 }
 
 bool CleverPagerankNode::afterIteration() {
+  logger_->info("After iteration started.");
   for (long node = 0; node < (long) tmpScore_->size(); ++node) {
     (*pagerankScore_)[node] = (*tmpScore_)[node] * (1.0 - dump_) + dump_ / allNode_;
     (*tmpScore_)[node] = 0.0;
@@ -124,7 +132,7 @@ void CleverPagerankNode::setInverseOutEdges(vector<long>* _inverseOutEdges) {
 void CleverPagerankNode::readInverseNodeBounds(string fname) {
   FILE* file = fopen(fname.c_str(), "r");
   if (NULL == file) {
-    logger_->error("Error opening inverse node bounds: %s", fname.c_str());
+    logger_->info("Error opening inverse node bounds: %s", fname.c_str());
     return;
   }
 
@@ -143,15 +151,18 @@ void CleverPagerankNode::readInverseNodeBounds(string fname) {
 void CleverPagerankNode::readInverseOutEdges(string fname) {
   FILE* file = fopen(fname.c_str(), "r");
   if (NULL == file) {
-    logger_->error("Error opening inverse out edges: %s", fname.c_str());
+    logger_->info("Error opening inverse out edges: %s", fname.c_str());
     return;
   }
   long node;
 
+  logger_->info("Reading inverse out edges.");
   inverseOutEdges = new vector<long>();
-  while (fscanf(file, "%ld\n", &node)) {
+  while (fscanf(file, "%ld\n", &node) != EOF) {
+    logger_->info("inverseout edge %ld", node);
     inverseOutEdges->push_back(node);
   }
 
   fclose(file);
+  logger_->info("%d edges stored", inverseOutEdges->size());
 }

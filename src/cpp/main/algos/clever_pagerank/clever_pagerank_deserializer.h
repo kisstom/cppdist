@@ -21,6 +21,7 @@ public:
   int storeFromBinary(char*, unsigned);
 
 private:
+  log4cpp::Category* logger_;
   CleverPagerankNode* node_;
   double imp;
   long fromNode;

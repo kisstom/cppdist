@@ -7,8 +7,15 @@
 
 #include "clever_pagerank_deserializer.h"
 
+CleverPagerankDeserializer::CleverPagerankDeserializer() {
+  logger_ = &log4cpp::Category::getInstance(std::string("CleverPagerankDeserializer"));
+  node_ = NULL;
+}
+
 void CleverPagerankDeserializer::update(short partindex) {
+  logger_->info("Updating after deserialization.");
   node_->updateSelfScore(fromNode, imp);
+  logger_->info("Update finished.");
 }
 
 int CleverPagerankDeserializer::storeFromBinary(char* buffer, unsigned length) {
