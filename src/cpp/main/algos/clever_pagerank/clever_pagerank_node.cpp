@@ -36,7 +36,7 @@ void CleverPagerankNode::sender() {
     if ((*numNeighbors)[partitionNode] == 0) continue;
     double imp = (*pagerankScore_)[partitionNode] / (*numNeighbors)[partitionNode];
 
-    for (set<long>::const_iterator partIt = (*outPartitions)[partitionNode].begin();
+    for (set<int>::const_iterator partIt = (*outPartitions)[partitionNode].begin();
         partIt != (*outPartitions)[partitionNode].end(); ++partIt) {
       serializeImportance(*partIt, origNode, imp);
     }
@@ -108,7 +108,7 @@ void CleverPagerankNode::setNumberNeighbors(vector<int>* nneighbors) {
   tmpScore_ = new vector<double>(nneighbors->size(), 0.0);
 }
 
-void CleverPagerankNode::setOutPartitions(vector<set<long> >* _outPartitions) {
+void CleverPagerankNode::setOutPartitions(vector<set<int> >* _outPartitions) {
   outPartitions = _outPartitions;
 }
 
@@ -123,11 +123,16 @@ void CleverPagerankNode::setInverseOutEdges(vector<long>* _inverseOutEdges) {
 
 void CleverPagerankNode::readInverseNodeBounds(string fname) {
   FILE* file = fopen(fname.c_str(), "r");
-  long prevBound = 0, node, upperBound;
+  if (NULL == file) {
+    logger_->error("Error opening inverse node bounds: %s", fname.c_str());
+    return;
+  }
 
+
+  long prevBound = 0, node, upperBound;
   inverseNodeBounds = new unordered_map<long, std::pair<long, long> >();
 
-  while (fscanf(file, "%ld %ld\n", &node, &upperBound)) {
+  while (fscanf(file, "%ld %ld\n", &node, &upperBound) != EOF) {
     (*inverseNodeBounds)[node] = std::make_pair<long, long>(prevBound, upperBound);
     prevBound = upperBound;
   }
@@ -137,6 +142,10 @@ void CleverPagerankNode::readInverseNodeBounds(string fname) {
 
 void CleverPagerankNode::readInverseOutEdges(string fname) {
   FILE* file = fopen(fname.c_str(), "r");
+  if (NULL == file) {
+    logger_->error("Error opening inverse out edges: %s", fname.c_str());
+    return;
+  }
   long node;
 
   inverseOutEdges = new vector<long>();

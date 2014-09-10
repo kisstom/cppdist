@@ -19,10 +19,8 @@ OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, i
   numNeighbors = new vector<int>();
   numNeighbors->resize(numnodes);
 
-  outPartitions = new vector<set<long> >();
+  outPartitions = new vector<set<int> >();
   outPartitions->resize(numnodes);
-
-  partitionBounds.resize(numslaves);
 }
 
 void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
@@ -66,7 +64,9 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
     (*numNeighbors)[current_row] = (int) edges.size();
     for (int i = 0; i < (int) edges.size(); ++i) {
       partIndex = getPartitionIndex(edges[i]);
-      (*outPartitions)[current_row].insert(partIndex);
+      if (partIndex >= 0) {
+        (*outPartitions)[current_row].insert(partIndex);
+      }
     }
 
     ++current_row;
@@ -84,7 +84,7 @@ void OutPartitionIndexComputer::run() {
   fclose(cfgFile);
 }
 
-vector<set<long> >* OutPartitionIndexComputer::getOutPartitions() {
+vector<set<int> >* OutPartitionIndexComputer::getOutPartitions() {
   return outPartitions;
 }
 

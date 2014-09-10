@@ -23,12 +23,12 @@ public:
   void readConfig(FILE*);
   void process(FILE*);
   void run();
-  vector<set<long> >* getOutPartitions();
+  vector<set<int> >* getOutPartitions();
   vector<int>* getNumNeighbors();
   int getPartitionIndex(long node);
 private:
   vector<int>* numNeighbors;
-  vector<set<long> >* outPartitions;
+  vector<set<int> >* outPartitions;
   vector<std::pair<long, long> > partitionBounds;
 
   string inputPartition;
