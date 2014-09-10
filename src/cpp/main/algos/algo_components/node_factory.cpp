@@ -83,19 +83,26 @@ CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, 
   EdgelistContainer* container = createEdgeListContainer(params);
   CleverPagerankNode* node = helper.initCleverPagerankNode(params);
 
-  long numNodes;
-  int rowLen, numSlaves;
+  int rowLen, numSlaves, slaveIndex;
   string input = (*params)["INPUT_PARTITION"];
   string cfg = (*params)["SLAVE_CONFIG"];
-  sscanf((*params)["NUM_NODES"].c_str(), "%ld", &numNodes);
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROW_LEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
 
-  OutPartitionIndexComputer computer(input, cfg, numSlaves, rowLen, numNodes);
+  char inverseBounds[1024];
+  sprintf(inverseBounds, "%spart_%s/bound.txt",
+      (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+
+  char inverseEdges[1024];
+  sprintf(inverseEdges, "%spart_%s/edges.txt",
+      (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+
+  OutPartitionIndexComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
   node->setNumberNeighbors(computer.getNumNeighbors());
   node->setOutPartitions(computer.getOutPartitions());
-  node->readInverseNodeBounds((*params)["INVERSE_BOUNDS"]);
-  node->readInverseOutEdges((*params)["INVERSE_OUT_EDGES"]);
+  node->readInverseNodeBounds(string(inverseBounds));
+  node->readInverseOutEdges(string(inverseEdges));
 
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
