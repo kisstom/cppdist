@@ -19,7 +19,7 @@ using std::set;
 
 class OutPartitionIndexComputer {
 public:
-  OutPartitionIndexComputer(string, string, int, int, long);
+  OutPartitionIndexComputer(string, string, int, int, int);
   void readConfig(FILE*);
   void process(FILE*);
   void run();
@@ -34,7 +34,7 @@ private:
   string inputPartition;
   string slaveConfig;
   Util util;
-  long numnodes;
+  int partIndex;
   int numslaves;
   int rowlen;
 };

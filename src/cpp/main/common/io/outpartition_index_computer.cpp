@@ -9,27 +9,30 @@
 #include <cstdio>
 #include "outpartition_index_computer.h"
 
-OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, int _numslaves, int _rowlen, long _numnodes) {
+OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, int _numslaves, int _rowlen, int _partIndex) {
   inputPartition = input;
   slaveConfig = cfg;
   numslaves = _numslaves;
   rowlen = _rowlen;
-  numnodes = _numnodes;
-
-  numNeighbors = new vector<int>();
-  numNeighbors->resize(numnodes);
-
-  outPartitions = new vector<set<int> >();
-  outPartitions->resize(numnodes);
+  partIndex = _partIndex;
 }
 
 void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
-  long lowerBound = 0, numNodes = 0, upperBound = 0;
+  long lowerBound = 0, numNodes = 0, upperBound = 0, partNumNodes;
   for (int i = 0; i < numslaves; ++i) {
     fscanf(slaveryFile,"%*d %*s %ld %*ld %ld", &numNodes, &lowerBound);
     upperBound = lowerBound + numNodes;
     partitionBounds.push_back(std::make_pair<long, long>(lowerBound, upperBound));
+    if (i == partIndex) {
+      partNumNodes = numNodes;
+    }
   }
+
+  numNeighbors = new vector<int>();
+  numNeighbors->resize(partNumNodes);
+
+  outPartitions = new vector<set<int> >();
+  outPartitions->resize(partNumNodes);
 }
 
 int OutPartitionIndexComputer::getPartitionIndex(long node) {

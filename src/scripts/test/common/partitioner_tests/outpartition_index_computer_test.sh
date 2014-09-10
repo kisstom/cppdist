@@ -18,7 +18,7 @@ expectedNeghbors=$resourceDir/expected_partition_indices/nn_1.txt
 expectedOutPartitionIndices=$resourceDir/expected_partition_indices/opi_1.txt
 
 "$this_dir"/../../../../bin/main/common/tools/outpartition_index_computer_job \
-"$inputPartition" "$config" 4 10000000 4 $outNeighbors $outPartitionIndices
+"$inputPartition" "$config" 4 10000000 1 $outNeighbors $outPartitionIndices
 
 diff $expectedNeghbors $outNeighbors
 diff $expectedOutPartitionIndices $outPartitionIndices
