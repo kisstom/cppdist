@@ -259,8 +259,8 @@ def pagerankInversePartition():
   bin_dir = conf.get('ALGO', 'BIN')
   inputData = conf.get('ALGO', 'INPUT_DATA')
   prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
-  inversePartDir = prPartitionDir + '/pagerankInversePartition'
-  slaveryCfg = conf.get('NODE', 'SLAVE_CONFIG')
+  inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
+  slaveryCfg = conf.get('ALGO', 'SLAVE_CONFIG')
   rowLen = conf.get('PREPROCESS', 'ROWLEN')
   run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
     (bin_dir, inputData, inversePartDir, slaveryCfg, numJobs, rowLen))
@@ -273,13 +273,7 @@ def pagerankInversePreprocess():
   remoteDir = conf.get('ALGO', 'REMOTE_DIR')
   localDir = conf.get('ALGO', 'LOCAL_DIR')
   put(remoteDir + '/' + slaveryFile, localDir)
-  # TODO slavery-t atirni
-  conf.set('NODE', 'SLAVE_CONFIG', localDir + '/' + slaveryFile)
-
-  # sets inverse part dir
-  prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
-  inversePartDir = prPartitionDir + '/pagerankInversePartition/'
-  conf.set('NODE', 'INVERSE_PARTITION_DIR', inversePartDir)
+  inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
 
   # making inverse parts
   env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
