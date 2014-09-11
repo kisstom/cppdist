@@ -30,6 +30,7 @@ public:
 	static bool search(long elem, vector<long>::iterator, int size);
 	static bool hasNext(char*, size_t from);
 	static void split(char* line, vector<long>& edges);
+	void splitByToken(char* line, vector<long>& edges);
 	vector<string> split(string str, char sep);
 	vector<long> convertToLong(vector<string>);
 	void checkParam(vector<string> , unordered_map<string, string>*);

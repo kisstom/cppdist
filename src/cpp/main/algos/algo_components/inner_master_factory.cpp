@@ -31,6 +31,8 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
     innerMaster = new SimpleMockInnerMaster;
   } else if (innerMasterType.compare("BITPROP") == 0) {
     innerMaster = createBitpropMaster(params);
+  } else if (innerMasterType.compare("CLEVER_PAGERANK") == 0) {
+    innerMaster = new CleverPagerankMaster;
   } else {
 		logger_->error("Unknown inner master type %s", innerMasterType.c_str());
 	}

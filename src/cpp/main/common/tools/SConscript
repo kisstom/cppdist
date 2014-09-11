@@ -14,3 +14,5 @@ env.Program('host_graph_creator_job', ['host_graph_creator_job.cpp', 'host_graph
 env.Program('node_remover', ['node_remover.cpp', '../graph/filter_edge_list_builder.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o',  '../graph/edgelist_container.o'])
 env.Program('pseudo_random_counter', ['pseudo_random_counter.cpp', '../random/hash_pseudo_random.o'])
 env.Program('convert_edge_list_to_base_main', ['convert_edge_list_to_base_main.cpp', '../graph/convert_edge_list_to_base.o'])
+env.Program('inverse_partition_maker_job', ['inverse_partition_maker_job.cpp', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o', '../graph/inverse_partition_maker.o'])
+env.Program('outpartition_index_computer_job', ['outpartition_index_computer_job.cpp', '../io/outpartition_index_computer.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o'])

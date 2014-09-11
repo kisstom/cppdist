@@ -20,7 +20,7 @@
 #include <string.h>
 
 void initLogger(unordered_map<string, string>* params) {
-	string debugLevel, appender, logfileName;
+	string debugLevel, logfileName;
 
 	string debugLev("DEBUG_LEVEL");
 	if (params->find(debugLev) != params->end()) {
@@ -29,7 +29,8 @@ void initLogger(unordered_map<string, string>* params) {
 		debugLevel = string("INFO");
 	}
 
-	if (params->find(string("APPENDER")) != params->end()) {
+	string appender("APPENDER");
+	if (params->find(appender) != params->end()) {
 	  appender = (*params)["APPENDER"];
 	} else {
 		appender = string("FILE");

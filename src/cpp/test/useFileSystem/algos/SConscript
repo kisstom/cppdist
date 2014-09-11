@@ -1,0 +1,4 @@
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
+
+env.Object(Glob('*.cpp'))
+env.Program('pagerank_inverse_reader_main',  ['pagerank_inverse_reader_main.cpp'] + COMMON_OBJ + ALGO_OBJ)

@@ -39,13 +39,17 @@ protected:
 };
 }
 
+// Tests serializing long vars and placing separators.
 TEST(SerializerTest, test) {
   Serializer serializer;
   char a[1024];
 
+  // Sets up variables to serialize.
   long longToStore1 = 1234;
   long longToStore2 = 12341;
   long readLong;
+
+  // Serializes vars.
   int s = serializer.store(a, longToStore1);
   s += serializer.store(a + s, longToStore2);
   s += serializer.setBreak(a + s);
@@ -53,7 +57,7 @@ TEST(SerializerTest, test) {
   s += serializer.store(a + s, longToStore1);
   serializer.setFinish(a + s);
 
-  //s = serializer.read(a, &readLong, sizeof(long));
+  // Reads back and checks.
   s = 0;
   memcpy(&readLong, a, sizeof(long));
   s += sizeof(long);
@@ -77,6 +81,7 @@ TEST(SerializerTest, test) {
   ASSERT_FALSE(serializer.hasNext(a + s));
 }
 
+// Tests serializing and reading back bytes or unsigned bytes.
 TEST(SerializerTest, testBytes) {
   Serializer serializer;
   unsigned char ser[1024];

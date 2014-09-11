@@ -13,6 +13,7 @@ SenderThread::SenderThread(Node* node) {
 }
 
 void SenderThread::main() {
+  logger_->info("Starting sender.");
 	node_->sender();
 }
 

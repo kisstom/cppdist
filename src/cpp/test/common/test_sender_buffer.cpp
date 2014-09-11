@@ -112,6 +112,20 @@ TEST(SenderBufferTest, testEmpty) {
 	delete manager;
 }
 
+TEST(SenderBufferTest, testSep) {
+  SenderBuffer senderBuffer;
+  senderBuffer.resizeBufferNum(1);
+  senderBuffer.resizeBuffers(32);
+
+  long a = 2234567890;
+  senderBuffer.store(0, a);
+  senderBuffer.setBreak(0);
+  ASSERT_EQ(9, senderBuffer.pack_size_[0]);
+
+  senderBuffer.setFinish(0);
+  ASSERT_EQ(10, senderBuffer.pack_size_[0]);
+}
+
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

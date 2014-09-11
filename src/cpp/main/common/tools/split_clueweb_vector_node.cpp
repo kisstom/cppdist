@@ -73,7 +73,7 @@ void makePart::process() {
     return ;
   }
 
-  long current_row = 0;
+  long current_row = 0, lastNumEdge = 0;
   long minnode = current_row;
   long last_minnode = minnode;
   long numedge = 0;
@@ -87,16 +87,14 @@ void makePart::process() {
       printf("%ld row processed.\n", current_row);
       fflush(stdout);
     }
+
     string str_line = string(line);
-    if (strlen(line) != 1) ++numedge;
-    pos = str_line.find_first_of(" ", 0);
-    while (pos != string::npos) {
-      pos = str_line.find_first_of(" ", pos + 1);
-      ++numedge;
+    if (str_line.compare("\n") == 0) {
+      fprintf(current_output, "%s", line);
+      ++current_row;
+      continue;
     }
-    fprintf(current_output, "%s", line);    
-    ++current_row;
-    // Size of max numedge is exceeded.
+
     if (numedge >= FLAGS_numedge_perpart) {
       fclose(current_output);
 
@@ -119,7 +117,20 @@ void makePart::process() {
         fprintf(stderr, "Error opening output file: %s\n", partition_name);
         return ;
       }
-    } 
+    }
+
+    if (str_line.size() > 0) {
+      *(str_line.end() - 1) = ' ';
+    }
+
+    pos = str_line.find_first_of(" ", 0);
+    while (pos != string::npos) {
+      ++numedge;
+      pos = str_line.find_first_of(" ", pos + 1);
+    }
+    fprintf(current_output, "%s", line);
+    ++current_row;
+    // Size of max numedge is exceeded.
   }
 
   // Last partition.
@@ -128,6 +139,7 @@ void makePart::process() {
   numnode = minnode - last_minnode;
   fprintf(partition_cfg, "%d %s_%d.txt %ld %ld %ld\n",
       slave_port, FLAGS_part_prefix.c_str(), partition, numnode, numedge, last_minnode);
+
   fclose(current_output);
   fclose(partition_cfg);
   delete [] line;

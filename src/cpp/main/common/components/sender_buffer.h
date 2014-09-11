@@ -12,6 +12,7 @@
 #include "serializer.h"
 #include "socket/socket_manager.h"
 #include "log4cpp/Category.hh"
+#include <gtest/gtest_prod.h>
 
 using std::vector;
 
@@ -37,6 +38,7 @@ public:
 	bool canAdd(int, int);
 	void setSocketManager(SocketManager*);
 private:
+	FRIEND_TEST(SenderBufferTest, testSep);
 	SocketManager* socketManager_;
 	Serializer serializer_;
 	vector<int> pack_size_;

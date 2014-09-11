@@ -7,8 +7,10 @@
 
 #include "pagerank_master.h"
 
-bool PagerankMaster::nextIter() {
+PagerankMaster::PagerankMaster() {}
+
+/*bool PagerankMaster::nextIter() {
   return true;
 }
 
-void PagerankMaster::addInfoForNodes(char* ss) {}
+void PagerankMaster::addInfoForNodes(char* ss) {}*/

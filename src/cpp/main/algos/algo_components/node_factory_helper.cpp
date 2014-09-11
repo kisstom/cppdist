@@ -1,5 +1,6 @@
 #include "node_factory_helper.h"
 
+
 NodeFactoryHelper::NodeFactoryHelper() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactoryHelper"));
 }
@@ -84,6 +85,20 @@ PSimrankNode* NodeFactoryHelper::initPSimrankNode(unordered_map<string, string>*
   sscanf((*params)["NEXT_MIN_NODE"].c_str(), "%ld", &next_min_node);
 
   PSimrankNode* node = new PSimrankNode(numPathes, pathLen, num_nodes, min_node, next_min_node);
+  return node;
+}
+
+CleverPagerankNode* NodeFactoryHelper::initCleverPagerankNode(unordered_map<string, string>* params) {
+  long allNode, minNode;
+  int maxIter;
+  double dump;
+
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
+  sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
+  sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &minNode);
+
+  CleverPagerankNode* node = new CleverPagerankNode(allNode, minNode, dump, maxIter);
   return node;
 }
 

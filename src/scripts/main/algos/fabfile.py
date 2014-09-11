@@ -200,7 +200,6 @@ def startOnMachine(slave_index):
 @task
 def makePartition():
   # TODO: zipped if null
-  print 'makePartition'
   global conf, numJobs
 
   bin_dir = conf.get('ALGO', 'BIN')
@@ -253,17 +252,62 @@ def getNumEdgePerPart():
 def checkProcess(pid):
   return not bool(int(run('ps -p ' + pid + ' >/dev/null 2>&1; echo -n $?')))
 
+
+def pagerankInversePartition():
+  global conf
+
+  bin_dir = conf.get('ALGO', 'BIN')
+  inputData = conf.get('ALGO', 'INPUT_DATA')
+  prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
+  inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
+  slaveryCfg = conf.get('ALGO', 'SLAVE_CONFIG')
+  rowLen = conf.get('PREPROCESS', 'ROWLEN')
+  run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
+    (bin_dir, inputData, inversePartDir, slaveryCfg, numJobs, rowLen))
+
+def pagerankInversePreprocess():
+  global conf, cfg_hosts
+
+  # Copying slavery config to remote nodes
+  slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
+  remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+  localDir = conf.get('ALGO', 'LOCAL_DIR')
+  put(remoteDir + '/' + slaveryFile, localDir)
+  inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
+
+  # making inverse parts
+  env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
+  for i in xrange(numJobs):
+    run('mkdir -p %s/part_%d'%(inversePartDir, i))
+  pagerankInversePartition()
+  env.hosts = cfg_hosts
+  
+@task
+def preprocess():
+  global conf
+  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+    cleanup()    
+    if conf.has_section('PREPROCESS'):
+      if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
+        makePartition()
+
+      preprocessType = conf.get('PREPROCESS', 'TYPE')
+      if preprocessType == 'PAGERANK_INVERSE':
+        pagerankInversePreprocess()
+      else:
+        print 'Error unknown type of preprocess:', preprocessType
+
 @task
 def compute():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-
+    cleanup()
     mainCompute()
 
 @task
 def computeAll():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-
-    makePartition()
+    
+    preprocess()
     mainCompute()
 
 def mainCompute():
@@ -271,7 +315,6 @@ def mainCompute():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
     storePartitionCfg()
-    cleanup()
     copyCfg()
     env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
     startMaster()
@@ -293,6 +336,7 @@ def crawlExperiment():
     conf.set("ALGO", "MASTER_LOG", master_log)
     conf.set("NODE", "MAX_NODE_TO_KEEP", maxNode)
 
+    cleanup()
     mainCompute()
 
   #concat()
@@ -363,6 +407,7 @@ def bitpropExperiment():
     epsilon /= 2
     est_index += 1
 
+    cleanup()
     mainCompute()
 
 

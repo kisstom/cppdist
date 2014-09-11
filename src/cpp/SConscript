@@ -8,8 +8,8 @@
 # -pg gprof miatt?
 # -g valgrind mint ?
 
-flags = ['-O3', '-g', '-ggdb', '-Wall']
-#flags = [ '-g', '-ggdb', '-Wall']
+#flags = ['-O3', '-g', '-ggdb', '-Wall']
+flags = [ '-g', '-ggdb', '-Wall']
 
 GMOCK= "#../dep/gmock/"
 LOG4CPP = "#../dep/log4cpp"
@@ -33,6 +33,7 @@ SConscript([
 COMMON_OBJ = Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/util/*.o')
 COMMON_OBJ += Glob('#/../bin/main/common/thread/*.o') + Glob('#/../bin/main/common/components/*.o')
 COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o')  + Glob('#/../bin/main/common/random/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/io/*.o')
 
 SConscript([
 	'main/algos/simrank_one_computer/SConscript',
@@ -42,6 +43,7 @@ SConscript([
     'main/algos/simrank_update/SConscript',
     'main/algos/simple_mock_algo/SConscript',
     'main/algos/pagerank/SConscript',
+    'main/algos/clever_pagerank/SConscript',
     'main/algos/psimrank/SConscript',
     'main/algos/bitprop/SConscript'
      ],
@@ -52,6 +54,7 @@ ALGO_OBJ = Glob('#/../bin/main/algos/simrank_odd_even/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simrank_store_first/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simrank_update/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/pagerank/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/clever_pagerank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/psimrank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simple_mock_algo/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/bitprop/*.o')
@@ -81,6 +84,7 @@ if testCompile:
     'test/algos/psimrank/SConscript',
     'test/algos/bitprop/SConscript',
     'test/dmoz/SConscript',
+    'test/useFileSystem/algos/SConscript',
     'test/useFileSystem/common/SConscript',
     'test/useFileSystem/common/socket/SConscript',
     'test/useFileSystem/common/edge_list_builder_tests/SConscript',

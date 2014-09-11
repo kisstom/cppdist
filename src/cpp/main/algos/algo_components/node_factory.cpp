@@ -9,6 +9,7 @@
 #include "../bitprop/random_bitvector_generator.h"
 #include "../../common/random/random_generator.h"
 #include "../../common/graph/edge_list_container_factory.h"
+#include "../../common/io/outpartition_index_computer.h"
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -29,6 +30,8 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
     node = createPSimrankNode(params);
   } else if (nodeType.compare("BITPROP") == 0) {
     node = createBitpropNode(params);
+  } else if (nodeType.compare("CLEVER_PAGERANK") == 0) {
+    node = createCleverPagerankNode(params);
   } else {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
@@ -74,6 +77,44 @@ PagerankNode* NodeFactory::createPagerankNode(unordered_map<string, string>* par
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   node->setOutputFile(string(outputFileN));
+  return node;
+}
+
+CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  CleverPagerankNode* node = helper.initCleverPagerankNode(params);
+  util.checkParam(params, 7, "INPUT_PARTITION", "SLAVE_CONFIG",
+      "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
+      "INVERSE_PARTITION_DIR", "LOCAL_DIR");
+
+  int rowLen, numSlaves, slaveIndex;
+  string input = (*params)["INPUT_PARTITION"];
+  string cfg = (*params)["SLAVE_CONFIG"];
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
+  sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
+
+  char inverseBounds[1024];
+  sprintf(inverseBounds, "%spart_%s/bound.txt",
+      (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+
+  char inverseEdges[1024];
+  sprintf(inverseEdges, "%spart_%s/edges.txt",
+      (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+
+  logger_->info("Starting computing out partition indices.");
+  OutPartitionIndexComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
+  computer.run();
+  node->setNumberNeighbors(computer.getNumNeighbors());
+  node->setOutPartitions(computer.getOutPartitions());
+
+  logger_->info("Reading inverse edges and bounds.");
+  node->readInverseNodeBounds(string(inverseBounds));
+  node->readInverseOutEdges(string(inverseEdges));
+
+  char outputFileN[1024];
+  sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setOutputFileName(string(outputFileN));
   return node;
 }
 

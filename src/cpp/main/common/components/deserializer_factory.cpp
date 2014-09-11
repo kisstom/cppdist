@@ -28,6 +28,8 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
     deserializer = createSimpleMockDeserializer(params, node);
   } else if (nodeType.compare("BITPROP") == 0) {
     deserializer = createBitpropDeserializer(params, node);
+  } else if (nodeType.compare("CLEVER_PAGERANK") == 0) {
+    deserializer = createCleverPagerankDeserializer(params, node);
   } else {
     logger_->error("Unknown tpye of deserializer %s", nodeType.c_str());
 	}
@@ -74,6 +76,13 @@ Deserializer* DeserializerFactory::createPagerankDeserializer(unordered_map<stri
 Deserializer* DeserializerFactory::createPSimrankDeserializer(unordered_map<string, string>* params, Node* node) {
   PSimrankNode* simrankUpdateNode = static_cast<PSimrankNode*>(node);
   PSimrankDeserializer* deserializer = new PSimrankDeserializer;
+  deserializer->setNode(simrankUpdateNode);
+  return deserializer;
+}
+
+Deserializer* DeserializerFactory::createCleverPagerankDeserializer(unordered_map<string, string>* params, Node* node) {
+  CleverPagerankNode* simrankUpdateNode = static_cast<CleverPagerankNode*>(node);
+  CleverPagerankDeserializer* deserializer = new CleverPagerankDeserializer;
   deserializer->setNode(simrankUpdateNode);
   return deserializer;
 }
