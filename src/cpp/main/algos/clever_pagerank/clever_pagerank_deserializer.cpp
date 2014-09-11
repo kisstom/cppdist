@@ -13,9 +13,7 @@ CleverPagerankDeserializer::CleverPagerankDeserializer() {
 }
 
 void CleverPagerankDeserializer::update(short partindex) {
-  logger_->info("Updating after deserialization.");
   node_->updateSelfScore(fromNode, imp);
-  logger_->info("Update finished.");
 }
 
 int CleverPagerankDeserializer::storeFromBinary(char* buffer, unsigned length) {

@@ -59,14 +59,12 @@ void CleverPagerankNode::serializeImportance(int bufferIndex, long fromNode, dou
     senderBuffer_->emptyBuffer(bufferIndex);
   }
 
-  logger_->info("Serializing: %ld %lf", fromNode, importance);
   senderBuffer_->setBreak(bufferIndex);
   senderBuffer_->store(bufferIndex, fromNode);
   senderBuffer_->store(bufferIndex, importance);
 }
 
 void CleverPagerankNode::updateSelfScore(long origNode, double imp) {
-  logger_->info("Updating self score.");
   long start, end;
   if (inverseNodeBounds->find(origNode) != inverseNodeBounds->end()) {
     start = (*inverseNodeBounds)[origNode].first;
@@ -77,7 +75,6 @@ void CleverPagerankNode::updateSelfScore(long origNode, double imp) {
       tmpScoreMutex_.unlock();
     }
   }
-  logger_->info("Self score updated.");
 }
 
 void CleverPagerankNode::beforeIteration(string msg) {
@@ -159,7 +156,6 @@ void CleverPagerankNode::readInverseOutEdges(string fname) {
   logger_->info("Reading inverse out edges.");
   inverseOutEdges = new vector<long>();
   while (fscanf(file, "%ld\n", &node) != EOF) {
-    logger_->info("inverseout edge %ld", node);
     inverseOutEdges->push_back(node);
   }
 

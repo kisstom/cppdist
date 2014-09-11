@@ -287,9 +287,10 @@ def preprocess():
   global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
     cleanup()    
-    makePartition()
-
     if conf.has_section('PREPROCESS'):
+      if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
+        makePartition()
+
       preprocessType = conf.get('PREPROCESS', 'TYPE')
       if preprocessType == 'PAGERANK_INVERSE':
         pagerankInversePreprocess()
