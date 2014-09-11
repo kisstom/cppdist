@@ -155,7 +155,13 @@ void CleverPagerankNode::readInverseOutEdges(string fname) {
 
   logger_->info("Reading inverse out edges.");
   inverseOutEdges = new vector<long>();
+  long numReadEdges = 0;
   while (fscanf(file, "%ld\n", &node) != EOF) {
+    ++numReadEdges;
+    if (numReadEdges % 10000000 == 0) {
+      logger_->info("%ld rows are read.", numReadEdges);
+    }
+
     inverseOutEdges->push_back(node);
   }
 
