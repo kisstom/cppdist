@@ -118,7 +118,7 @@ void CleverPagerankNode::setOutPartitions(vector<set<int> >* _outPartitions) {
 }
 
 void CleverPagerankNode::setInverseNodeBounds(
-    unordered_map<long, std::pair<long, long> >* _inverseNodeBounds) {
+    map<long, std::pair<long, long> >* _inverseNodeBounds) {
   inverseNodeBounds = _inverseNodeBounds;
 }
 
@@ -135,7 +135,7 @@ void CleverPagerankNode::readInverseNodeBounds(string fname) {
 
 
   long prevBound = 0, node, upperBound;
-  inverseNodeBounds = new unordered_map<long, std::pair<long, long> >();
+  inverseNodeBounds = new map<long, std::pair<long, long> >();
 
   while (fscanf(file, "%ld %ld\n", &node, &upperBound) != EOF) {
     (*inverseNodeBounds)[node] = std::make_pair<long, long>(prevBound, upperBound);
