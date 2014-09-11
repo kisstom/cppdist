@@ -24,4 +24,5 @@ awk -f $thisDir/../../simrank/histogramms/tree_size.awk $fptreeFile > $outdir/fp
 
 sort -gk1,1 $outdir/fptree_deg_dist.txt > $outdir/fptree_deg_dist.sort
 
-awk -v st=0 -v buck=1000 -v xcol=1 -v ycol=2 -f $thisDir/../tools/hist.awk  $outdir/fptree_deg_dist.sort > $outdir/fptree_deg_hist_b10.txt
+bucketSize=10
+awk -v st=0 -v buck=$bucketSize -v xcol=1 -v ycol=2 -f $thisDir/../tools/hist.awk  $outdir/fptree_deg_dist.sort > $outdir/fptree_deg_hist_b"$bucketSize".txt
