@@ -289,7 +289,9 @@ def preprocess():
     cleanup()    
     if conf.has_section('PREPROCESS'):
       if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
-        makePartition()
+        makePart = conf.get('PREPROCESS', 'MAKE_PARTITION')
+        if makePart == '1':
+          makePartition()
 
       preprocessType = conf.get('PREPROCESS', 'TYPE')
       if preprocessType == 'PAGERANK_INVERSE':
