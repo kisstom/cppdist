@@ -1,4 +1,4 @@
-from fabric.api import run, env, sudo, cd, task, settings, roles
+from fabric.api import run, env, sudo, cd, task, settings, roles, execute
 from fabric.operations import local,put,get
 from fabric.utils import error
 from fabric.decorators import hosts
@@ -54,7 +54,7 @@ def readCfg():
 
   env.user = 'kisstom'
   BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
-  MASTER_HOST = conf.get('MASTER_HOST')
+  MASTER_HOST = conf.get('ALGO', 'MASTER_HOST')
 
   conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
   buildHosts(conf)
@@ -91,10 +91,11 @@ def buildHosts(cfg):
   for option in options:
     numJobs += int(cfg.get(section, option))
     cfg_hosts += [option]
-  env.hosts = cfg_hosts
+  env.hosts = [MASTER_HOST]
 
 
 def cleanup():
+  print env.hosts
   global conf, pids
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
   run('rm -rf %s'%local_dir)
@@ -102,7 +103,6 @@ def cleanup():
   pids.clear()
 
 
-@task
 def copyCfg():
   global conf, configFile
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
@@ -117,13 +117,11 @@ def copyCfg():
   os.system('rm ' + tempf)
   
 
-@task
 def createLocalDir():
   global conf
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
   run('mkdir -p %s'%local_dir)
 
-@task
 def createConcatDir():
   global conf
   concat_dir = conf.get('ALGO', 'CONCAT_DIR')
@@ -145,7 +143,7 @@ def startMaster():
       logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
       pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
         echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
-      storePid(env.host[0], pid)
+      storePid(MASTER_HOST, pid)
       time.sleep(2)
 
 
@@ -188,7 +186,7 @@ def startOnMachine(slave_index, host):
     logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
     pid = run('''(nohup %s/main/algos/task/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
       echo $!)'''%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
-    storePid(env.host[0], pid)
+    storePid(host, pid)
   
 
 @task
@@ -218,7 +216,34 @@ def makePartition():
       numNodePerPart = getNumNodePerPart()
       logFile = conf.get('ALGO', 'LOCAL_DIR') + '/err'
       run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, remoteDir + slaveryCfg, initSlavePort))
+    
+    putPartitionIfNeeded()  
 
+def putPartitionIfNeeded():
+  global conf, numJobs
+  try:
+    putToLocal = conf.get('PREPROCESS', 'PUT_TO_LOCAL')
+  except Exception:
+    return 
+
+  if putToLocal == '0': return
+
+  slave_index = 0
+  for host in cfg_hosts:
+      if host == MASTER_HOST:
+        slave_index += int(conf.get('MACHINES', host))
+        continue
+      jobs_on_host = int(conf.get('MACHINES', host))
+      for x in xrange(jobs_on_host):
+        putOnMachine(slave_index, host)
+        slave_index += 1
+
+def putOnMachine(slave_index, host):
+  with settings(host_string=host):
+    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    run('mkdir -p %s'%remoteDir)
+    partitionFile = conf.get('ALGO', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
+    put(partitionFile, remoteDir)
 
 def getNumNodePerPart():
     global conf, numJobs
@@ -275,28 +300,36 @@ def pagerankInversePreprocess():
     for i in xrange(numJobs):
       run('mkdir -p %s/part_%d'%(inversePartDir, i))
     pagerankInversePartition()
-  
+
+
+def runOnAllNodes(function):
+  env.hosts = cfg_hosts
+  execute(function)
+  env.hosts = MASTER_HOST
+
 @task
 def preprocess():
+  runOnAllNodes(cleanup)
   global conf
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-    cleanup()   
+  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
     if conf.has_section('PREPROCESS'):
       if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
         makePart = conf.get('PREPROCESS', 'MAKE_PARTITION')
         if makePart == '1':
           makePartition()
 
-      preprocessType = conf.get('PREPROCESS', 'TYPE')
-      if preprocessType == 'PAGERANK_INVERSE':
-        pagerankInversePreprocess()
-      else:
-        print 'Error unknown type of preprocess:', preprocessType
+
+      if conf.has_option('PREPROCESS', 'TYPE'):
+        preprocessType = conf.get('PREPROCESS', 'TYPE')
+        if preprocessType == 'PAGERANK_INVERSE':
+          pagerankInversePreprocess()
+        else:
+          print 'Error unknown type of preprocess:', preprocessType
 
 @task
 def compute():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-    cleanup()
+    runOnAllNodes(cleanup)
     mainCompute()
 
 @task
@@ -311,7 +344,7 @@ def mainCompute():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
     storePartitionCfg()
-    copyCfg()
+    runOnAllNodes(copyCfg)
     startMaster()
     startNodes() 
     waitForFinish()
@@ -319,6 +352,8 @@ def mainCompute():
 
 @task
 def crawlExperiment():
+  preprocess()
+
   global crawlMaxNodes, conf, BASE_LOCAL_DIR, BASE_CONCAT_DIR
   buildCrawlMaxNodes()
   for it, maxNode in enumerate(crawlMaxNodes):
@@ -331,10 +366,8 @@ def crawlExperiment():
     conf.set("ALGO", "MASTER_LOG", master_log)
     conf.set("NODE", "MAX_NODE_TO_KEEP", maxNode)
 
-    cleanup()
+    runOnAllNodes(cleanup)
     mainCompute()
-
-  #concat()
 
 def buildCrawlMaxNodes():
   global crawlMaxNodes, conf
@@ -379,13 +412,14 @@ def gitInfo():
 @task
 def bitpropExperiment():
   global conf
+  preprocess()
   est_index = 0
   epsilon = float(conf.get('NODE', 'EPSILON'))
   BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
 
   numEstimations = 1
   if conf.has_option('NODE', 'NUM_ESTIMATIONS'):
-    numEstimations = conf.get('NODE', 'NUM_ESTIMATIONS')
+    numEstimations = int(conf.get('NODE', 'NUM_ESTIMATIONS'))
 
   for i in xrange(numEstimations):
     local_dir = BASE_LOCAL_DIR + '/est' + str(est_index) + '/'
@@ -399,7 +433,7 @@ def bitpropExperiment():
     epsilon /= 2
     est_index += 1
 
-    cleanup()
+    runOnAllNodes(cleanup)
     mainCompute()
 
 
