@@ -10,12 +10,14 @@
 
 #include "../algo_components/algo.h"
 #include <tr1/unordered_map>
+#include <map>
 #include <vector>
 #include "../algo_components/node.h"
 #include "../../common/components/mutex.h"
 
 using std::tr1::unordered_map;
 using std::vector;
+using std::map;
 
 class CleverPagerankNode: public Node {
 public:
@@ -28,7 +30,7 @@ public:
 
   void setNumberNeighbors(vector<int>*);
   void setOutPartitions(vector<set<int> >*);
-  void setInverseNodeBounds(unordered_map<long, std::pair<long, long> >*);
+  void setInverseNodeBounds(map<long, std::pair<long, long> >*);
   void setInverseOutEdges(vector<long>*);
   void setOutputFileName(string);
 
@@ -38,7 +40,7 @@ public:
   void readInverseOutEdges(string);
 private:
   vector<set<int> >* outPartitions;
-  unordered_map<long, std::pair<long, long> >* inverseNodeBounds;
+  map<long, std::pair<long, long> >* inverseNodeBounds;
   vector<long>* inverseOutEdges;
   vector<int>* numNeighbors;
 
