@@ -53,11 +53,10 @@ def readCfg():
     isConfReaded = True
 
   env.user = 'kisstom'
-  BASE_DIR = conf.get('ALGO', 'LOCAL_DIR')
+  BASE_DIR = conf.get('ALGO', 'BASE_DIR')
   LOCAL_DIR = BASE_DIR + "/outdir/"
 
   conf.set('ALGO', 'LOCAL_DIR', LOCAL_DIR)
-  conf.set('ALGO', 'BASE_DIR', BASE_DIR)
 
   BASE_LOCAL_DIR = LOCAL_DIR
   MASTER_HOST = conf.get('ALGO', 'MASTER_HOST')
