@@ -307,6 +307,37 @@ def pagerankInversePreprocess():
     for i in xrange(numJobs):
       run('mkdir -p %s/part_%d'%(inversePartDir, i))
     pagerankInversePartition()
+    putPagerankInversePartitionIfNeeded()
+
+def putPagerankInversePartitionIfNeeded():
+  global conf, numJobs
+  try:
+    putToLocal = conf.get('PREPROCESS', 'PUT_PAGERANK_TO_LOCAL')
+  except Exception:
+    return 
+
+  if putToLocal == '0': return
+
+  slave_index = 0
+  for host in cfg_hosts:
+      if host == MASTER_HOST:
+        slave_index += int(conf.get('MACHINES', host))
+        continue
+
+      jobs_on_host = int(conf.get('MACHINES', host))
+      for x in xrange(jobs_on_host):
+        putInverseOnMachine(slave_index, host)
+        slave_index += 1
+
+
+def putInverseOnMachine(slave_index, host):
+  with settings(host_string=host):
+    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR') + '/part_' + str(slave_index)
+    run('mkdir -p %s'%inversePartDir)
+    boundFile = inversePartDir + '/bound.txt'
+    edgesFile = inversePartDir + '/edges.txt'
+    put(boundFile, inversePartDir)
+    put(edgesFile, inversePartDir)
 
 
 def runOnAllNodes(function):

@@ -12,6 +12,7 @@
 #include <vector>
 #include <set>
 #include "../util/util.h"
+#include <log4cpp/Category.hh>
 
 using std::vector;
 using std::string;
@@ -37,6 +38,7 @@ private:
   int partIndex;
   int numslaves;
   int rowlen;
+  log4cpp::Category* logger_;
 };
 
 

@@ -182,5 +182,5 @@ void CleverPagerankNode::readInverseOutEdges(string fname) {
   }
 
   fclose(file);
-  logger_->info("%d edges stored", inverseOutEdges->size());
+  logger_->info("%ld edges stored", (long) inverseOutEdges->size());
 }

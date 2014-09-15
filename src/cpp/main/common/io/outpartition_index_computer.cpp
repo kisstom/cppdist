@@ -15,6 +15,7 @@ OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, i
   numslaves = _numslaves;
   rowlen = _rowlen;
   partIndex = _partIndex;
+  logger_ = &log4cpp::Category::getInstance(std::string("OutPartitionIndexComputer"));
 }
 
 void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
@@ -79,6 +80,13 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
 void OutPartitionIndexComputer::run() {
   FILE* cfgFile = fopen(slaveConfig.c_str(), "r");
   FILE* inputFile = fopen(inputPartition.c_str(), "r");
+  if (NULL == cfgFile) {
+    logger_->info("Error opening cfg file %s", slaveConfig.c_str());
+  }
+
+  if (NULL == inputFile) {
+    logger_->info("Error opening input file %s", inputPartition.c_str());
+  }
 
   readConfig(cfgFile);
   process(inputFile);
