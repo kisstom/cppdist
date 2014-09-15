@@ -292,14 +292,15 @@ def pagerankInversePartition():
       (bin_dir, inputData, inversePartDir, slaveryCfg, numJobs, rowLen))
 
 def pagerankInversePreprocess():
+  # Copying slavery config to remote nodes
+  slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
+  remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+  baseDir = conf.get('ALGO', 'BASE_DIR')
+
+  runOnAllNodes(lambda : put(remoteDir + '/' + slaveryFile, baseDir))
   with settings(host_string=MASTER_HOST):
     global conf, cfg_hosts
-
-    # Copying slavery config to remote nodes
-    slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
-    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
-    baseDir = conf.get('ALGO', 'BASE_DIR')
-    put(remoteDir + '/' + slaveryFile, baseDir)
+  
     conf.set('ALGO', 'SLAVE_CONFIG', baseDir + '/' + slaveryFile)
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
 
