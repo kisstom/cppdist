@@ -18,6 +18,9 @@ global BASE_LOCAL_DIR
 global BASE_CONCAT_DIR
 global MASTER_LOG
 
+from bitpropExperiment import bitpropExperiment
+
+
 configFile = None
 isConfReaded = False
 cfg_hosts = []
@@ -32,6 +35,12 @@ MASTER_HOST = ''
 @task
 def yes():
   run('screen -d -m "yes" > /dev/null < /dev/null ')
+
+"""
+  ####################################################
+  ########  TOOLS FOR INITIALIZING CONFIG ############
+  ####################################################
+"""
 
 @task
 def cfg(configFileParam):
@@ -71,6 +80,14 @@ def readConfig(configFile):
   config.read(configFile)
   return config
 
+def buildHosts(cfg):
+  global numJobs, cfg_hosts
+  section = 'MACHINES'
+  options = cfg.options(section)
+  for option in options:
+    numJobs += int(cfg.get(section, option))
+    cfg_hosts += [option]
+  env.hosts = [MASTER_HOST]
 
 def storePartitionCfg():
   global partCfg
@@ -89,15 +106,12 @@ def storePartitionCfg():
 
   partCfgFile.close()
 
-def buildHosts(cfg):
-  global numJobs, cfg_hosts
-  section = 'MACHINES'
-  options = cfg.options(section)
-  for option in options:
-    numJobs += int(cfg.get(section, option))
-    cfg_hosts += [option]
-  env.hosts = [MASTER_HOST]
 
+"""
+  ####################################################
+  ########  TOOLS APPLIED TO ALL MACHINES ############
+  ####################################################
+"""
 
 def cleanup():
   print env.hosts
@@ -132,67 +146,46 @@ def createConcatDir():
   concat_dir = conf.get('ALGO', 'CONCAT_DIR')
   run('mkdir -p %s'%concat_dir)
 
-def storePid(host, pid):
-  global pids
-  if host not in pids:
-    pids[host] = []
+# Not working.
+@task
+def concat():
+  global conf, cfg_hosts
+  section = 'ALGO'
+  concat_dir = conf.get(section, 'CONCAT_DIR')
+  remote_local_dir = conf.get(section, 'LOCAL_DIR')
+  run('mkdir -p %s'%concat_dir)
+  for host in cfg_hosts:
+    env.rolesdefs['server'] = [host]
+    copyFromMachineTo(remote_local_dir, concat_dir)
 
-  pids[host] += [pid]
+  run('cat %s/out* > %s/concat'%(concat_dir, concat_dir))
 
-def startMaster():
-    global conf, configFile, numJobs, pids
-    with settings(host_string=MASTER_HOST):
-      bin_dir = conf.get('ALGO', 'BIN')
-      master_log = conf.get('ALGO', 'MASTER_LOG')
-      run('rm -f %s'%master_log)
-      logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
-      pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
-        echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
-      storePid(MASTER_HOST, pid)
-      time.sleep(2)
+"""
+  ####################################################
+  ########  TOOLS FOR PREPROCESSING ############
+  ####################################################
+"""
+
+@task
+def preprocess():
+  runOnAllNodes(cleanup)
+  global conf
+  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
+    if conf.has_section('PREPROCESS'):
+      if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
+        makePart = conf.get('PREPROCESS', 'MAKE_PARTITION')
+        if makePart == '1':
+          makePartition()
 
 
-def isWorkFinished():
-  global pids
-  for host in pids.keys(): 
-    with settings(host_string=host):
-      for pid in pids[host]:
-        isRun = checkProcess(pid)
-        if isRun:
-          return False
+      if conf.has_option('PREPROCESS', 'TYPE'):
+        preprocessType = conf.get('PREPROCESS', 'TYPE')
+        if preprocessType == 'PAGERANK_INVERSE':
+          pagerankInversePreprocess()
+        else:
+          print 'Error unknown type of preprocess:', preprocessType
 
-  return True
-
-def waitForFinish():
-  print 'Waiting for finish'
-  while 1 == 1:
-    isFinished = isWorkFinished()
-    if (isFinished):
-      break
-
-    os.system('sleep 10')
-
-  print 'Run finished.'
-
-def startNodes():
-    global conf, numJobs
-    slave_index = 0
-    for host in cfg_hosts:
-        jobs_on_host = int(conf.get('MACHINES', host))
-        for x in xrange(jobs_on_host):
-          startOnMachine(slave_index, host)
-          slave_index += 1
-          time.sleep(1)
-
-def startOnMachine(slave_index, host):
-  global configFile, numJobs, conf
-  with settings(host_string=host):
-    bin_dir = conf.get('ALGO', 'BIN') 
-    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
-    pid = run('''(nohup %s/main/algos/task/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
-      echo $!)'''%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
-    storePid(host, pid)
-  
+########### For partitioning ##################
 
 @task
 def makePartition():
@@ -250,31 +243,25 @@ def putOnMachine(slave_index, host):
     partitionFile = conf.get('ALGO', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
     put(partitionFile, remoteDir)
 
-def getNumNodePerPart():
-    global conf, numJobs
+########### For partitioning ##################
+def pagerankInversePreprocess():
+  global conf, cfg_hosts
+  # Copying slavery config to remote nodes
+  slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
+  remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+  baseDir = conf.get('ALGO', 'BASE_DIR')
 
-    numNode = int(conf.get('ALGO', 'NUMLINE'))
-    if numNode % numJobs:
-      numNodePerPart = numNode // numJobs + 1
-    else:
-      numNodePerPart = numNode // numJobs
+  runOnAllNodes(lambda : put(remoteDir + '/' + slaveryFile, baseDir))
+  with settings(host_string=MASTER_HOST):
+    
+    conf.set('ALGO', 'SLAVE_CONFIG', baseDir + '/' + slaveryFile)
+    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
 
-    return numNodePerPart
-
-
-def getNumEdgePerPart():
-    global conf, numJobs
-
-    numEdge = int(conf.get('ALGO', 'NUMEDGE'))
-    if numEdge % numJobs:
-      numEdgePerPart = numEdge // numJobs + 1
-    else:
-      numEdgePerPart = numEdge // numJobs
-
-    return numEdgePerPart
-
-def checkProcess(pid):
-  return not bool(int(run('ps -p ' + pid + ' >/dev/null 2>&1; echo -n $?')))
+    # making inverse parts
+    for i in xrange(numJobs):
+      run('mkdir -p %s/part_%d'%(inversePartDir, i))
+    pagerankInversePartition()
+    putPagerankInversePartitionIfNeeded()
 
 
 def pagerankInversePartition():
@@ -289,25 +276,6 @@ def pagerankInversePartition():
     rowLen = conf.get('PREPROCESS', 'ROWLEN')
     run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
       (bin_dir, inputData, inversePartDir, slaveryCfg, numJobs, rowLen))
-
-def pagerankInversePreprocess():
-  # Copying slavery config to remote nodes
-  slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
-  remoteDir = conf.get('ALGO', 'REMOTE_DIR')
-  baseDir = conf.get('ALGO', 'BASE_DIR')
-
-  runOnAllNodes(lambda : put(remoteDir + '/' + slaveryFile, baseDir))
-  with settings(host_string=MASTER_HOST):
-    global conf, cfg_hosts
-  
-    conf.set('ALGO', 'SLAVE_CONFIG', baseDir + '/' + slaveryFile)
-    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
-
-    # making inverse parts
-    for i in xrange(numJobs):
-      run('mkdir -p %s/part_%d'%(inversePartDir, i))
-    pagerankInversePartition()
-    putPagerankInversePartitionIfNeeded()
 
 def putPagerankInversePartitionIfNeeded():
   global conf, numJobs
@@ -340,29 +308,53 @@ def putInverseOnMachine(slave_index, host):
     put(edgesFile, inversePartDir)
 
 
-def runOnAllNodes(function):
-  env.hosts = cfg_hosts
-  execute(function)
-  env.hosts = MASTER_HOST
+"""
+  ####################################################
+  ########  TOOLS FOR STARTING CLUSTER ############
+  ####################################################
+"""
 
-@task
-def preprocess():
-  runOnAllNodes(cleanup)
+
+def startMaster():
+    global conf, configFile, numJobs, pids
+    with settings(host_string=MASTER_HOST):
+      bin_dir = conf.get('ALGO', 'BIN')
+      master_log = conf.get('ALGO', 'MASTER_LOG')
+      run('rm -f %s'%master_log)
+      logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
+      pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
+        echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
+      storePid(MASTER_HOST, pid)
+      time.sleep(2)
+
+def startNodes():
+    global conf, numJobs
+    slave_index = 0
+    for host in cfg_hosts:
+        jobs_on_host = int(conf.get('MACHINES', host))
+        for x in xrange(jobs_on_host):
+          startOnMachine(slave_index, host)
+          slave_index += 1
+          time.sleep(1)
+
+def startOnMachine(slave_index, host):
+  global configFile, numJobs, conf
+  with settings(host_string=host):
+    bin_dir = conf.get('ALGO', 'BIN') 
+    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
+    pid = run('''(nohup %s/main/algos/task/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
+      echo $!)'''%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
+    storePid(host, pid)
+
+def mainCompute():
   global conf
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
-    if conf.has_section('PREPROCESS'):
-      if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
-        makePart = conf.get('PREPROCESS', 'MAKE_PARTITION')
-        if makePart == '1':
-          makePartition()
+  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
-
-      if conf.has_option('PREPROCESS', 'TYPE'):
-        preprocessType = conf.get('PREPROCESS', 'TYPE')
-        if preprocessType == 'PAGERANK_INVERSE':
-          pagerankInversePreprocess()
-        else:
-          print 'Error unknown type of preprocess:', preprocessType
+    storePartitionCfg()
+    runOnAllNodes(copyCfg)
+    startMaster()
+    startNodes() 
+    waitForFinish()
 
 @task
 def compute():
@@ -377,16 +369,96 @@ def computeAll():
     preprocess()
     mainCompute()
 
-def mainCompute():
+
+"""
+  ####################################################
+  ########  HELPER MATHODS FOR RUNNING CLUSTER #######
+  ####################################################
+"""
+
+def storePid(host, pid):
+  global pids
+  if host not in pids:
+    pids[host] = []
+
+  pids[host] += [pid]
+
+def isWorkFinished():
+  global pids
+  for host in pids.keys(): 
+    with settings(host_string=host):
+      for pid in pids[host]:
+        isRun = checkProcess(pid)
+        if isRun:
+          return False
+
+  return True
+
+def waitForFinish():
+  print 'Waiting for finish'
+  while 1 == 1:
+    isFinished = isWorkFinished()
+    if (isFinished):
+      break
+
+    os.system('sleep 10')
+
+  print 'Run finished.'
+
+def getNumNodePerPart():
+    global conf, numJobs
+
+    numNode = int(conf.get('ALGO', 'NUMLINE'))
+    if numNode % numJobs:
+      numNodePerPart = numNode // numJobs + 1
+    else:
+      numNodePerPart = numNode // numJobs
+
+    return numNodePerPart
+
+
+def getNumEdgePerPart():
+    global conf, numJobs
+
+    numEdge = int(conf.get('ALGO', 'NUMEDGE'))
+    if numEdge % numJobs:
+      numEdgePerPart = numEdge // numJobs + 1
+    else:
+      numEdgePerPart = numEdge // numJobs
+
+    return numEdgePerPart
+
+def checkProcess(pid):
+  return not bool(int(run('ps -p ' + pid + ' >/dev/null 2>&1; echo -n $?')))
+
+
+def runOnAllNodes(function):
+  env.hosts = cfg_hosts
+  execute(function)
+  env.hosts = MASTER_HOST
+
+def gitInfo():
   global conf
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+  localDir = conf.get('ALGO', 'LOCAL_DIR')
+  scriptDir = conf.get('ALGO', 'SCRIPTDIR')
+  gitLog = localDir + '/gitlog.txt'
+  f = open(gitLog, 'w')
 
-    storePartitionCfg()
-    runOnAllNodes(copyCfg)
-    startMaster()
-    startNodes() 
-    waitForFinish()
+  with cd(scriptDir):
+    print run("""git diff --quiet --exit-code || """ +
+      """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
+    out = run("""git log -1 --pretty=format:%H""")
+    print out
+    f.write(str(out))
 
+  f.close()
+
+
+"""
+  ####################################################
+  ######## ALGOS WITH EXTERNAL COMPUTATION #######
+  ####################################################
+"""
 
 @task
 def crawlExperiment():
@@ -415,40 +487,9 @@ def buildCrawlMaxNodes():
     maxNodeToKeep = int(conf.get(section, option))
     crawlMaxNodes += [maxNodeToKeep]
 
-
-# Not working.
-@task
-def concat():
-  global conf, cfg_hosts
-  section = 'ALGO'
-  concat_dir = conf.get(section, 'CONCAT_DIR')
-  remote_local_dir = conf.get(section, 'LOCAL_DIR')
-  run('mkdir -p %s'%concat_dir)
-  for host in cfg_hosts:
-    env.rolesdefs['server'] = [host]
-    copyFromMachineTo(remote_local_dir, concat_dir)
-
-  run('cat %s/out* > %s/concat'%(concat_dir, concat_dir))
-
-@task
-def gitInfo():
-  global conf
-  localDir = conf.get('ALGO', 'LOCAL_DIR')
-  scriptDir = conf.get('ALGO', 'SCRIPTDIR')
-  gitLog = localDir + '/gitlog.txt'
-  f = open(gitLog, 'w')
-
-  with cd(scriptDir):
-    print run("""git diff --quiet --exit-code || """ +
-      """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
-    out = run("""git log -1 --pretty=format:%H""")
-    print out
-    f.write(str(out))
-
-  f.close()
-
 @task
 def bitpropExperiment():
+  bitpropExperiment.bitpropExperiment()
   global conf
   preprocess()
   est_index = 0
@@ -473,6 +514,3 @@ def bitpropExperiment():
 
     runOnAllNodes(cleanup)
     mainCompute()
-
-
-
