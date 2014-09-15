@@ -53,7 +53,13 @@ def readCfg():
     isConfReaded = True
 
   env.user = 'kisstom'
-  BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
+  BASE_DIR = conf.get('ALGO', 'LOCAL_DIR')
+  LOCAL_DIR = BASE_DIR + "/outdir/"
+
+  conf.set('ALGO', 'LOCAL_DIR', LOCAL_DIR)
+  conf.set('ALGO', 'BASE_DIR', BASE_DIR)
+
+  BASE_LOCAL_DIR = LOCAL_DIR
   MASTER_HOST = conf.get('ALGO', 'MASTER_HOST')
 
   conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
@@ -292,8 +298,9 @@ def pagerankInversePreprocess():
     # Copying slavery config to remote nodes
     slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
     remoteDir = conf.get('ALGO', 'REMOTE_DIR')
-    localDir = conf.get('ALGO', 'LOCAL_DIR')
-    put(remoteDir + '/' + slaveryFile, localDir)
+    baseDir = conf.get('ALGO', 'BASE_DIR')
+    put(remoteDir + '/' + slaveryFile, baseDir)
+    conf.set('ALGO', 'SLAVE_CONFIG', baseDir + '/' + slaveryFile)
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
 
     # making inverse parts
