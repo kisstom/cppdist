@@ -155,14 +155,29 @@ void CleverPagerankNode::readInverseOutEdges(string fname) {
 
   logger_->info("Reading inverse out edges.");
   inverseOutEdges = new vector<long>();
-  long numReadEdges = 0;
-  while (fscanf(file, "%ld\n", &node) != EOF) {
-    ++numReadEdges;
-    if (numReadEdges % 10000000 == 0) {
-      logger_->info("%ld rows are read.", numReadEdges);
-    }
+  unsigned long numReadEdges = 0;
 
-    inverseOutEdges->push_back(node);
+  try {
+    while (fscanf(file, "%ld\n", &node) != EOF) {
+      ++numReadEdges;
+      if (numReadEdges % 10000000 == 0) {
+        logger_->info("%ld rows are read.", numReadEdges);
+      }
+
+      inverseOutEdges->push_back(node);
+    }
+  }
+  catch( std::bad_alloc& ba)
+  {
+          logger_->info( "Bad allocation: %s", ba.what() );
+  }
+  catch( std::exception &e)
+  {
+          logger_->info( "Unhandled exception: %s", e.what() );
+  }
+  catch( ... )
+  {
+          logger_->info( "Unknown exception" );
   }
 
   fclose(file);
