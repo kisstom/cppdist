@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 
-if [ "$#" != 1 ]; then
-	echo "args: outdir"
+if [ "$#" != 2 ]; then
+	echo "args: outdir inputdata"
 	exit 1
 fi
 
