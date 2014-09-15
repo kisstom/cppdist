@@ -19,7 +19,7 @@ OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, i
 }
 
 void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
-  long lowerBound = 0, numNodes = 0, upperBound = 0, partNumNodes;
+  long lowerBound = 0, numNodes = 0, upperBound = 0, partNumNodes = 0;
   for (int i = 0; i < numslaves; ++i) {
     fscanf(slaveryFile,"%*d %*s %ld %*ld %ld", &numNodes, &lowerBound);
     upperBound = lowerBound + numNodes;
@@ -90,10 +90,21 @@ void OutPartitionIndexComputer::run() {
 
   readConfig(cfgFile);
   process(inputFile);
+  countPartitions();
 
   fclose(inputFile);
   fclose(cfgFile);
 }
+
+void OutPartitionIndexComputer::countPartitions() {
+  long outPartSize = 0;
+  for (int i = 0; i < (int) outPartitions->size(); ++i) {
+    outPartSize += (long) (*outPartitions)[i].size();
+  }
+
+  logger_->info("Out partition count %ld", outPartSize);
+}
+
 
 vector<set<int> >* OutPartitionIndexComputer::getOutPartitions() {
   return outPartitions;

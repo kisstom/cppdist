@@ -18,9 +18,6 @@ global BASE_LOCAL_DIR
 global BASE_CONCAT_DIR
 global MASTER_LOG
 
-from bitpropExperiment import bitpropExperiment
-
-
 configFile = None
 isConfReaded = False
 cfg_hosts = []
@@ -489,7 +486,6 @@ def buildCrawlMaxNodes():
 
 @task
 def bitpropExperiment():
-  bitpropExperiment.bitpropExperiment()
   global conf
   preprocess()
   est_index = 0

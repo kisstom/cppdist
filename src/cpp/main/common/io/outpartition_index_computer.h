@@ -27,6 +27,7 @@ public:
   vector<set<int> >* getOutPartitions();
   vector<int>* getNumNeighbors();
   int getPartitionIndex(long node);
+  void countPartitions();
 private:
   vector<int>* numNeighbors;
   vector<set<int> >* outPartitions;
