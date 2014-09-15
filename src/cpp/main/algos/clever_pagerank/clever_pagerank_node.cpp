@@ -142,6 +142,9 @@ void CleverPagerankNode::readInverseNodeBounds(string fname) {
     prevBound = upperBound;
   }
 
+  inverseOutEdges = new vector<long>(upperBound);
+  logger_->info("Resizing inverse out edges to %ld", upperBound);
+
   fclose(file);
 }
 
@@ -151,20 +154,18 @@ void CleverPagerankNode::readInverseOutEdges(string fname) {
     logger_->info("Error opening inverse out edges: %s", fname.c_str());
     return;
   }
-  long node;
 
   logger_->info("Reading inverse out edges.");
-  inverseOutEdges = new vector<long>();
   unsigned long numReadEdges = 0;
+  long node;
 
   try {
     while (fscanf(file, "%ld\n", &node) != EOF) {
+      (*inverseOutEdges)[numReadEdges] = node;
       ++numReadEdges;
       if (numReadEdges % 10000000 == 0) {
         logger_->info("%ld rows are read.", numReadEdges);
       }
-
-      inverseOutEdges->push_back(node);
     }
   }
   catch( std::bad_alloc& ba)

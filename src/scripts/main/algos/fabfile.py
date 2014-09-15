@@ -1,6 +1,7 @@
-from fabric.api import run, env, sudo, cd, task, settings, roles
+from fabric.api import run, env, sudo, cd, task, settings, roles, execute
 from fabric.operations import local,put,get
 from fabric.utils import error
+from fabric.decorators import hosts
 from fabric.context_managers import shell_env
 import ConfigParser
 import time, os, tempfile
@@ -26,7 +27,7 @@ pids = dict()
 crawlMaxNodes = []
 BASE_LOCAL_DIR = ""
 BASE_CONCAT_DIR = ""
-env.rolesdefs = {'server' : []}
+MASTER_HOST = ''
 
 @task
 def yes():
@@ -44,18 +45,22 @@ def readCfg():
   global conf
   global isConfReaded
   global configFile
-  global BASE_LOCAL_DIR
+  global BASE_LOCAL_DIR, MASTER_HOST
   if configFile is None:
     error('Configfile of the deployment is missing! Use task "cfg"!')
   if not isConfReaded:
     conf = readConfig(configFile)
-
-    #storePartitionCfg()
-
     isConfReaded = True
+
   env.user = 'kisstom'
-  BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
-  #BASE_CONCAT_DIR = conf.get('ALGO', 'CONCAT_DIR')
+  BASE_DIR = conf.get('ALGO', 'LOCAL_DIR')
+  LOCAL_DIR = BASE_DIR + "/outdir/"
+
+  conf.set('ALGO', 'LOCAL_DIR', LOCAL_DIR)
+  conf.set('ALGO', 'BASE_DIR', BASE_DIR)
+
+  BASE_LOCAL_DIR = LOCAL_DIR
+  MASTER_HOST = conf.get('ALGO', 'MASTER_HOST')
 
   conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
   buildHosts(conf)
@@ -92,10 +97,11 @@ def buildHosts(cfg):
   for option in options:
     numJobs += int(cfg.get(section, option))
     cfg_hosts += [option]
-  env.hosts = cfg_hosts
+  env.hosts = [MASTER_HOST]
 
-@task
+
 def cleanup():
+  print env.hosts
   global conf, pids
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
   run('rm -rf %s'%local_dir)
@@ -103,7 +109,6 @@ def cleanup():
   pids.clear()
 
 
-@task
 def copyCfg():
   global conf, configFile
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
@@ -118,18 +123,15 @@ def copyCfg():
   os.system('rm ' + tempf)
   
 
-@task
 def createLocalDir():
   global conf
   local_dir = conf.get('ALGO', 'LOCAL_DIR')
   run('mkdir -p %s'%local_dir)
 
-@task
 def createConcatDir():
   global conf
   concat_dir = conf.get('ALGO', 'CONCAT_DIR')
   run('mkdir -p %s'%concat_dir)
-
 
 def storePid(host, pid):
   global pids
@@ -138,28 +140,27 @@ def storePid(host, pid):
 
   pids[host] += [pid]
 
-
-@task
 def startMaster():
     global conf, configFile, numJobs, pids
-    bin_dir = conf.get('ALGO', 'BIN')
-    master_log = conf.get('ALGO', 'MASTER_LOG')
-    run('rm -f %s'%master_log)
-    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
-    pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
-      echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
-    storePid(env.host[0], pid)
-    time.sleep(2)
+    with settings(host_string=MASTER_HOST):
+      bin_dir = conf.get('ALGO', 'BIN')
+      master_log = conf.get('ALGO', 'MASTER_LOG')
+      run('rm -f %s'%master_log)
+      logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
+      pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
+        echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
+      storePid(MASTER_HOST, pid)
+      time.sleep(2)
 
 
 def isWorkFinished():
   global pids
   for host in pids.keys(): 
-    env.rolesdefs['server'] = [host]
-    for pid in pids[host]:
-      isRun = checkProcess(pid)
-      if isRun:
-        return False
+    with settings(host_string=host):
+      for pid in pids[host]:
+        isRun = checkProcess(pid)
+        if isRun:
+          return False
 
   return True
 
@@ -174,57 +175,81 @@ def waitForFinish():
 
   print 'Run finished.'
 
-@task
 def startNodes():
     global conf, numJobs
     slave_index = 0
     for host in cfg_hosts:
-      env.rolesdefs['server'] = [host]
-      jobs_on_host = int(conf.get('MACHINES', host))
+        jobs_on_host = int(conf.get('MACHINES', host))
+        for x in xrange(jobs_on_host):
+          startOnMachine(slave_index, host)
+          slave_index += 1
+          time.sleep(1)
 
-      for x in xrange(jobs_on_host):
-        startOnMachine(slave_index)
-        slave_index += 1
-        time.sleep(1)
-
-@roles('server')
-def startOnMachine(slave_index):
-   global configFile, numJobs, conf
-   bin_dir = conf.get('ALGO', 'BIN') 
-   logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
-   pid = run('''(nohup %s/main/algos/task/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
+def startOnMachine(slave_index, host):
+  global configFile, numJobs, conf
+  with settings(host_string=host):
+    bin_dir = conf.get('ALGO', 'BIN') 
+    logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
+    pid = run('''(nohup %s/main/algos/task/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
       echo $!)'''%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
-   storePid(env.host[0], pid)
+    storePid(host, pid)
   
 
 @task
 def makePartition():
-  # TODO: zipped if null
+  with settings(host_string=MASTER_HOST):
+    global conf, numJobs
+
+    bin_dir = conf.get('ALGO', 'BIN')
+    remoteDir =  conf.get('ALGO', 'REMOTE_DIR')
+    inputData =  conf.get('ALGO', 'INPUT_DATA')
+    slaveryCfg =  conf.get('ALGO', 'SLAVERY_CFG')
+    initSlavePort =  conf.get('ALGO', 'INIT_SLAVE_PORT')
+    try:
+      splitType = conf.get('ALGO', 'SPLIT_TYPE')
+    except Exception:
+      splitType = ''
+
+    run('mkdir -p %s'%remoteDir)
+    if splitType == '' or splitType == 'EDGE_BALANCED':
+      print 'Using partitioner edge balanced'
+      numEdgePerPart = getNumEdgePerPart()
+      run('%s/main/common/tools/split_clueweb_vector_node -input %s -init_slave_port %s -numedge_perpart %d -part_prefix %s -partition_cfg %s'%(bin_dir, inputData, initSlavePort, numEdgePerPart, remoteDir + 'slavery', remoteDir + slaveryCfg))
+ 
+ 
+    elif splitType == 'NODE_BALANCED':
+      print 'Using partitioner node balanced'
+      numNodePerPart = getNumNodePerPart()
+      logFile = conf.get('ALGO', 'LOCAL_DIR') + '/err'
+      run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, remoteDir + slaveryCfg, initSlavePort))
+    
+    putPartitionIfNeeded()  
+
+def putPartitionIfNeeded():
   global conf, numJobs
-
-  bin_dir = conf.get('ALGO', 'BIN')
-  remoteDir =  conf.get('ALGO', 'REMOTE_DIR')
-  inputData =  conf.get('ALGO', 'INPUT_DATA')
-  slaveryCfg =  conf.get('ALGO', 'SLAVERY_CFG')
-  initSlavePort =  conf.get('ALGO', 'INIT_SLAVE_PORT')
   try:
-    splitType = conf.get('ALGO', 'SPLIT_TYPE')
+    putToLocal = conf.get('PREPROCESS', 'PUT_TO_LOCAL')
   except Exception:
-    splitType = ''
+    return 
 
-  run('mkdir -p %s'%remoteDir)
-  if splitType == '' or splitType == 'EDGE_BALANCED':
-    print 'Using partitioner edge balanced'
-    numEdgePerPart = getNumEdgePerPart()
-    run('%s/main/common/tools/split_clueweb_vector_node -input %s -init_slave_port %s -numedge_perpart %d -part_prefix %s -partition_cfg %s'%(bin_dir, inputData, initSlavePort, numEdgePerPart, remoteDir + 'slavery', remoteDir + slaveryCfg))
- 
- 
-  elif splitType == 'NODE_BALANCED':
-    print 'Using partitioner node balanced'
-    numNodePerPart = getNumNodePerPart()
-    logFile = conf.get('ALGO', 'LOCAL_DIR') + '/err'
-    run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, remoteDir + slaveryCfg, initSlavePort))
+  if putToLocal == '0': return
 
+  slave_index = 0
+  for host in cfg_hosts:
+      if host == MASTER_HOST:
+        slave_index += int(conf.get('MACHINES', host))
+        continue
+      jobs_on_host = int(conf.get('MACHINES', host))
+      for x in xrange(jobs_on_host):
+        putOnMachine(slave_index, host)
+        slave_index += 1
+
+def putOnMachine(slave_index, host):
+  with settings(host_string=host):
+    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    run('mkdir -p %s'%remoteDir)
+    partitionFile = conf.get('ALGO', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
+    put(partitionFile, remoteDir)
 
 def getNumNodePerPart():
     global conf, numJobs
@@ -254,55 +279,64 @@ def checkProcess(pid):
 
 
 def pagerankInversePartition():
-  global conf
+  with settings(host_string=MASTER_HOST):
+    global conf
 
-  bin_dir = conf.get('ALGO', 'BIN')
-  inputData = conf.get('ALGO', 'INPUT_DATA')
-  prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
-  inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
-  slaveryCfg = conf.get('ALGO', 'SLAVE_CONFIG')
-  rowLen = conf.get('PREPROCESS', 'ROWLEN')
-  run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
-    (bin_dir, inputData, inversePartDir, slaveryCfg, numJobs, rowLen))
+    bin_dir = conf.get('ALGO', 'BIN')
+    inputData = conf.get('ALGO', 'INPUT_DATA')
+    prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
+    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
+    slaveryCfg = conf.get('ALGO', 'SLAVE_CONFIG')
+    rowLen = conf.get('PREPROCESS', 'ROWLEN')
+    run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
+      (bin_dir, inputData, inversePartDir, slaveryCfg, numJobs, rowLen))
 
 def pagerankInversePreprocess():
-  global conf, cfg_hosts
+  with settings(host_string=MASTER_HOST):
+    global conf, cfg_hosts
 
-  # Copying slavery config to remote nodes
-  slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
-  remoteDir = conf.get('ALGO', 'REMOTE_DIR')
-  localDir = conf.get('ALGO', 'LOCAL_DIR')
-  put(remoteDir + '/' + slaveryFile, localDir)
-  inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
+    # Copying slavery config to remote nodes
+    slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
+    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    baseDir = conf.get('ALGO', 'BASE_DIR')
+    put(remoteDir + '/' + slaveryFile, baseDir)
+    conf.set('ALGO', 'SLAVE_CONFIG', baseDir + '/' + slaveryFile)
+    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
 
-  # making inverse parts
-  env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
-  for i in xrange(numJobs):
-    run('mkdir -p %s/part_%d'%(inversePartDir, i))
-  pagerankInversePartition()
+    # making inverse parts
+    for i in xrange(numJobs):
+      run('mkdir -p %s/part_%d'%(inversePartDir, i))
+    pagerankInversePartition()
+
+
+def runOnAllNodes(function):
   env.hosts = cfg_hosts
-  
+  execute(function)
+  env.hosts = MASTER_HOST
+
 @task
 def preprocess():
+  runOnAllNodes(cleanup)
   global conf
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-    cleanup()    
+  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
     if conf.has_section('PREPROCESS'):
       if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
         makePart = conf.get('PREPROCESS', 'MAKE_PARTITION')
         if makePart == '1':
           makePartition()
 
-      preprocessType = conf.get('PREPROCESS', 'TYPE')
-      if preprocessType == 'PAGERANK_INVERSE':
-        pagerankInversePreprocess()
-      else:
-        print 'Error unknown type of preprocess:', preprocessType
+
+      if conf.has_option('PREPROCESS', 'TYPE'):
+        preprocessType = conf.get('PREPROCESS', 'TYPE')
+        if preprocessType == 'PAGERANK_INVERSE':
+          pagerankInversePreprocess()
+        else:
+          print 'Error unknown type of preprocess:', preprocessType
 
 @task
 def compute():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-    cleanup()
+    runOnAllNodes(cleanup)
     mainCompute()
 
 @task
@@ -317,8 +351,7 @@ def mainCompute():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
 
     storePartitionCfg()
-    copyCfg()
-    env.hosts = [conf.get('ALGO', 'MASTER_HOST')]
+    runOnAllNodes(copyCfg)
     startMaster()
     startNodes() 
     waitForFinish()
@@ -326,6 +359,8 @@ def mainCompute():
 
 @task
 def crawlExperiment():
+  preprocess()
+
   global crawlMaxNodes, conf, BASE_LOCAL_DIR, BASE_CONCAT_DIR
   buildCrawlMaxNodes()
   for it, maxNode in enumerate(crawlMaxNodes):
@@ -338,10 +373,8 @@ def crawlExperiment():
     conf.set("ALGO", "MASTER_LOG", master_log)
     conf.set("NODE", "MAX_NODE_TO_KEEP", maxNode)
 
-    cleanup()
+    runOnAllNodes(cleanup)
     mainCompute()
-
-  #concat()
 
 def buildCrawlMaxNodes():
   global crawlMaxNodes, conf
@@ -352,6 +385,7 @@ def buildCrawlMaxNodes():
     crawlMaxNodes += [maxNodeToKeep]
 
 
+# Not working.
 @task
 def concat():
   global conf, cfg_hosts
@@ -364,10 +398,6 @@ def concat():
     copyFromMachineTo(remote_local_dir, concat_dir)
 
   run('cat %s/out* > %s/concat'%(concat_dir, concat_dir))
-#  run('rm %s/out*'%(concat_dir))
-
-#def copyFromMachineTo(remote_local_dir, concat_dir):
-#  get(remote_local_dir/out*, concat_dir)  
 
 @task
 def gitInfo():
@@ -389,13 +419,14 @@ def gitInfo():
 @task
 def bitpropExperiment():
   global conf
+  preprocess()
   est_index = 0
   epsilon = float(conf.get('NODE', 'EPSILON'))
   BASE_LOCAL_DIR = conf.get('ALGO', 'LOCAL_DIR')
 
   numEstimations = 1
   if conf.has_option('NODE', 'NUM_ESTIMATIONS'):
-    numEstimations = conf.get('NODE', 'NUM_ESTIMATIONS')
+    numEstimations = int(conf.get('NODE', 'NUM_ESTIMATIONS'))
 
   for i in xrange(numEstimations):
     local_dir = BASE_LOCAL_DIR + '/est' + str(est_index) + '/'
@@ -409,7 +440,7 @@ def bitpropExperiment():
     epsilon /= 2
     est_index += 1
 
-    cleanup()
+    runOnAllNodes(cleanup)
     mainCompute()
 
 
