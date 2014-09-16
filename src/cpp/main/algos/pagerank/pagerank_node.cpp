@@ -58,6 +58,7 @@ void PagerankNode::sender() {
   }
 
   algo_->sendAndSignal(partIndex_);
+  logger_->info("Finished sender.");
 }
 
 void PagerankNode::final() {
