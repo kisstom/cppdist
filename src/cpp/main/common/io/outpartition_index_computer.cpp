@@ -103,7 +103,7 @@ void OutPartitionIndexComputer::run() {
 void OutPartitionIndexComputer::countPartitions() {
   long outPartSize = 0;
   for (int i = 0; i < (int) outPartitions->size(); ++i) {
-    if (i == partIndex) continue;
+    //if (i == partIndex) continue;
     outPartSize += (long) (*outPartitions)[i].size();
   }
 
