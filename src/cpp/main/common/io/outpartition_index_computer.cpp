@@ -46,7 +46,8 @@ int OutPartitionIndexComputer::getPartitionIndex(long node) {
 }
 
 void OutPartitionIndexComputer::process(FILE* inputFile) {
-  int partIndex = 0;
+  int partI = 0;
+  long numCrossEdge = 0;
   char* line = new char[rowlen];
   long current_row = 0;
   vector<long> edges;
@@ -67,14 +68,17 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
 
     (*numNeighbors)[current_row] = (int) edges.size();
     for (int i = 0; i < (int) edges.size(); ++i) {
-      partIndex = getPartitionIndex(edges[i]);
-      if (partIndex >= 0) {
-        (*outPartitions)[current_row].insert(partIndex);
+      partI = getPartitionIndex(edges[i]);
+      if (partI >= 0 && partI != partIndex) {
+        (*outPartitions)[current_row].insert(partI);
+        ++numCrossEdge;
       }
     }
 
     ++current_row;
   }
+
+  logger_->info("Number of edges between partitions: %ld", numCrossEdge);
 }
 
 void OutPartitionIndexComputer::run() {
