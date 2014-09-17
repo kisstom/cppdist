@@ -118,7 +118,7 @@ void CleverPagerankNode::setOutPartitions(vector<set<int> >* _outPartitions) {
 }
 
 void CleverPagerankNode::setInverseNodeBounds(
-    map<long, std::pair<long, long> >* _inverseNodeBounds) {
+    unordered_map<long, std::pair<long, long> >* _inverseNodeBounds) {
   inverseNodeBounds = _inverseNodeBounds;
 }
 
@@ -133,9 +133,8 @@ void CleverPagerankNode::readInverseNodeBounds(string fname) {
     return;
   }
 
-
   long prevBound = 0, node, upperBound;
-  inverseNodeBounds = new map<long, std::pair<long, long> >();
+  inverseNodeBounds = new unordered_map<long, std::pair<long, long> >();
 
   while (fscanf(file, "%ld %ld\n", &node, &upperBound) != EOF) {
     (*inverseNodeBounds)[node] = std::make_pair<long, long>(prevBound, upperBound);
@@ -168,17 +167,14 @@ void CleverPagerankNode::readInverseOutEdges(string fname) {
       }
     }
   }
-  catch( std::bad_alloc& ba)
-  {
-          logger_->info( "Bad allocation: %s", ba.what() );
+  catch ( std::bad_alloc& ba) {
+    logger_->info( "Bad allocation: %s", ba.what() );
   }
-  catch( std::exception &e)
-  {
-          logger_->info( "Unhandled exception: %s", e.what() );
+  catch ( std::exception &e) {
+    logger_->info( "Unhandled exception: %s", e.what() );
   }
-  catch( ... )
-  {
-          logger_->info( "Unknown exception" );
+  catch ( ... ) {
+    logger_->info( "Unknown exception" );
   }
 
   fclose(file);
