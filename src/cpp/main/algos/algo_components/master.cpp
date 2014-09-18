@@ -32,11 +32,10 @@ void Master::InitServer() {
 }
 
 void Master::KillNodes() {
-  //log_info(logfile_, "Sending nodes die.\n");
+  logger_->info("Killing nodes.");
   for (unsigned int i = 0; i < slaves_->size(); ++i) {
     (*slaves_)[i].socket->Send(4, "die");
   }
-  //log_info(logfile_, "Exiting.");
 }
 
 bool Master::setUp() {
@@ -67,13 +66,8 @@ void Master::run()
   bool cont = true;
   bool retval = true;
   try {
-    // Varunk.
-    // WaitForNodes();
     while (cont) {
-      // Megmondjuk a node-oknak hogy futtassak
-      // sender, receiver fuggvenyeiket 2 kulon szalban.
-      //cont = innerMaster_->nextIter();
-      //if (!cont) break;
+      // Telling nodes to start next iter.
       RunThreads();
       WaitForNodes();
 
@@ -88,7 +82,6 @@ void Master::run()
 
     }
   } catch (ConnectionError& e) {
-    //log_err(logfile_, "Error: %s.\n", e.what());
     KillNodes();
     return;
   }
@@ -197,17 +190,15 @@ void Master::MakeConnection(int i, int j)
 {
   if (j >= (int) slaves_->size()) {
     (*slaves_)[i].socket->Send(6, "relax");
-    //log_dbg(logfile_, "Sending to %d relax.", i);
     return;
   }
   char msg_i[1024] = "Accept";
   sprintf(msg_i + 6, " %d %s %d", j, (*slaves_)[j].ip, (*slaves_)[j].port);
   char msg_j[1024] = "Connect";
   sprintf(msg_j + 7, " %d %s %d", i, (*slaves_)[i].ip, (*slaves_)[i].port);
+  // Maybe this is a string, that's why the +1
   (*slaves_)[i].socket->Send(strlen(msg_i)+1, msg_i);
   (*slaves_)[j].socket->Send(strlen(msg_j)+1, msg_j);
-  //log_dbg(logfile_, "Sending to %d %s.", i, msg_i);
-  //log_dbg(logfile_, "Sending to %d %s.", j, msg_j);
 }
 
 void Master::RunThreads()
@@ -225,7 +216,6 @@ void Master::Final()
     (*slaves_)[i].socket->Send(5, "exit");
     // close socket TODO
   }
-  //log_info(logfile_, "Master finished.");
 }
 
 void Master::setInnerMaster(InnerMaster* innerMaster) {

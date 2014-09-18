@@ -1,9 +1,9 @@
+#!/bin/bash -eu
+
 INPUT=$1
 OUTPUTDIR=$2
 thisDir=$(dirname $0)
 SRCDIR=$thisDir/../../../../
-
-#export LD_LIBRARY_PATH=/mnt/nessi4/home/kisstom/mylibs/
 
 $SRCDIR/bin/main/common/graph_converter/continue_indexing $INPUT $OUTPUTDIR/reindex_hash.txt
 echo "graph reindex map fertig"

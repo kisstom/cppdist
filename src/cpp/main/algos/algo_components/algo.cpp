@@ -12,7 +12,6 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index,
 			long num_nodes, long min_node) {
 	strcpy(master_host_, master_host);
-	//strcpy(logfile_name_pref_, logfile_name_pref);
 	master_port_ = master_port;
 	slave_port_ = slave_port;
 	send_limit_ = send_limit;
@@ -23,7 +22,6 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
   num_nodes_ = num_nodes;
   min_node_ = min_node;
   logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
-  //startLogger();
 }
 
 int Algo::getSlaveIndex() {
@@ -50,8 +48,6 @@ short Algo::getNumberOfPartitions() {
 	return (short) partition_min_node_.size();
 }
 
-
-// TODO ez nem lep ki
 bool Algo::setUp() {
 	logger_->info("setting up node");
 
@@ -95,8 +91,6 @@ void Algo::run()
 	logger_->info("Starting run.");
   char instr[1024];
   try {
-  	//setUp();
-    //bool exit = false;
     while (1)
     {
       logger_->info("Algo waiting for instruction from master.");
@@ -130,21 +124,16 @@ void Algo::run()
     }
   }
   catch (MasterException& e) {
-    //log_err(logfile_, "Master said i must die. I die.");
     return;
   }
   catch (LogError& e) {
-    //log_err(stderr, "Error: %s.\nExiting.", e.what());
   	socketManager_->sendFailToMaster();
     return;
   }
   catch (ConnectionError& e) {
-    //log_err(logfile_, "Error: %s.\nExiting.", e.what());
   	socketManager_->sendFailToMaster();
     return;
   }
-
-  //log_info(logfile_, "Finished at iteration %d.", current_iteration_);
 
   // destructor should destroy and send to master
 }
@@ -175,7 +164,6 @@ void Algo::receiver() {
 		if (!is_more)
 		{
 			++finished;
-			// TODO -1?
 			if (finished == num_slaves_ - 1)
 			{
 				break;
@@ -183,7 +171,6 @@ void Algo::receiver() {
 		}
 	}
 	logger_->info("Receiver finished.");
-	//logger_->info("remains size %d", storeFromBinary_->remains_size_[socket_index]);
 }
 
 bool Algo::storeFromBinary(int socket_index) {
@@ -203,8 +190,8 @@ void Algo::initFromMaster() {
 		ss >> actMin;
 		partition_min_node_.push_back(actMin);
 	}
-	part_index_ = getPartitionIndex(min_node_);
 
+	part_index_ = getPartitionIndex(min_node_);
 	node_->setPartitionIndex(part_index_);
 
 	if (ss.tellg() != -1) {
@@ -216,10 +203,9 @@ void Algo::initFromMaster() {
 
 void Algo::runThreads() {
 	logger_->info("run threads");
-	char rec[1024] = "receiver";
 	ReceiverThread *receiver = new ReceiverThread(this);
-	char sen[1024] = "sender";
 	SenderThread *sender = new SenderThread(node_);
+
 	receiver->start();
 	sender->start();
 	receiver->waitForThread();
@@ -267,5 +253,4 @@ long Algo::getAllNodes() {
 }
 
 Algo::~Algo() {
-	//delete storeFromBinary_;
 }
