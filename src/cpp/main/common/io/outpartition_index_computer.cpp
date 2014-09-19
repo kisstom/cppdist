@@ -69,7 +69,7 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
     (*numNeighbors)[current_row] = (int) edges.size();
     for (int i = 0; i < (int) edges.size(); ++i) {
       partI = getPartitionIndex(edges[i]);
-      if (partI >= 0 && partI != partIndex) {
+      if (partI >= 0) {
         (*outPartitions)[current_row].insert(partI);
         ++numCrossEdge;
       }

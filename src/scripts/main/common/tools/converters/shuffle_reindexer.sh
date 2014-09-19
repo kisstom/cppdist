@@ -2,6 +2,7 @@
 
 if [ "$#" != 3 ]; then
 	echo "Wrong number of params."
+        exit
 fi
 
 input="$1"
