@@ -143,19 +143,26 @@ def createConcatDir():
   concat_dir = conf.get('ALGO', 'CONCAT_DIR')
   run('mkdir -p %s'%concat_dir)
 
-# Not working.
 @task
 def concat():
-  global conf, cfg_hosts
-  section = 'ALGO'
-  concat_dir = conf.get(section, 'CONCAT_DIR')
-  remote_local_dir = conf.get(section, 'LOCAL_DIR')
+  global conf, cfg_hosts 
+  concat_dir = conf.get('ALGO', 'CONCAT_DIR')
   run('mkdir -p %s'%concat_dir)
-  for host in cfg_hosts:
-    env.rolesdefs['server'] = [host]
-    copyFromMachineTo(remote_local_dir, concat_dir)
 
-  run('cat %s/out* > %s/concat'%(concat_dir, concat_dir))
+  slave_index = 0
+  for host in cfg_hosts:
+    jobs_on_host = int(conf.get('MACHINES', host))
+    for x in xrange(jobs_on_host):
+      concatFromHost(slave_index, host)
+      slave_index += 1
+
+
+def concatFromHost(slave_index, host):
+  outfile = conf.get('ALGO', 'LOCAL_DIR') + '/out_' + str(slave_index)
+  concat_dir = conf.get('ALGO', 'CONCAT_DIR')
+
+  with settings(host_string=host):
+    run('cat %s* >> %s/concat'%(outfile, concat_dir))
 
 """
   ####################################################
