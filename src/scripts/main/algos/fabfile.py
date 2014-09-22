@@ -453,8 +453,8 @@ def gitInfo():
     run("""git diff --quiet --exit-code || """ +
       """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
     out = run("""git log -1 --pretty=format:%H""")
-    print out
-    f.write(out)
+    print out.strip()
+    f.write(out.strip())
 
   f.close()
 
