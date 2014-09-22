@@ -140,6 +140,7 @@ void CleverPagerankNode::readInverseNodeBounds(string fname) {
     (*inverseNodeBounds)[node] = std::make_pair<long, long>(prevBound, upperBound);
     prevBound = upperBound;
   }
+  logger_->info("Inverse node size: %d", inverseNodeBounds->size());
 
   inverseOutEdges = new vector<long>(upperBound);
   logger_->info("Resizing inverse out edges to %ld", upperBound);
