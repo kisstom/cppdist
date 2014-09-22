@@ -71,7 +71,9 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
       partI = getPartitionIndex(edges[i]);
       if (partI >= 0) {
         (*outPartitions)[current_row].insert(partI);
-        ++numCrossEdge;
+        if (partI != partIndex) {
+          ++numCrossEdge;
+        }
       }
     }
 
@@ -103,8 +105,11 @@ void OutPartitionIndexComputer::run() {
 void OutPartitionIndexComputer::countPartitions() {
   long outPartSize = 0;
   for (int i = 0; i < (int) outPartitions->size(); ++i) {
-    //if (i == partIndex) continue;
-    outPartSize += (long) (*outPartitions)[i].size();
+    if ((*outPartitions)[i].find(partIndex) == (*outPartitions)[i].end()) {
+      outPartSize += (long) (*outPartitions)[i].size();
+    } else {
+      outPartSize += (long) (*outPartitions)[i].size() - 1;
+    }
   }
 
   logger_->info("Out partition count %ld", outPartSize);
