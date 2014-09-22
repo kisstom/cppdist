@@ -441,6 +441,7 @@ def runOnAllNodes(function):
   execute(function)
   env.hosts = MASTER_HOST
 
+@task
 def gitInfo():
   global conf
   localDir = conf.get('ALGO', 'LOCAL_DIR')
