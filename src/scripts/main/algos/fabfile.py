@@ -353,7 +353,7 @@ def startOnMachine(slave_index, host):
 def mainCompute():
   global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-
+    gitInfo()
     storePartitionCfg()
     runOnAllNodes(copyCfg)
     startMaster()
