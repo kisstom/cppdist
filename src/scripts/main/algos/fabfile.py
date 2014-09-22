@@ -447,7 +447,7 @@ def gitInfo():
   localDir = conf.get('ALGO', 'LOCAL_DIR')
   scriptDir = conf.get('ALGO', 'SCRIPTDIR')
   gitLog = localDir + '/gitlog.txt'
-  f = open(gitLog, 'wU')
+  f = open(gitLog, 'w')
 
   with cd(scriptDir):
     run("""git diff --quiet --exit-code || """ +
