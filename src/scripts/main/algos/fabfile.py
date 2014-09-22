@@ -454,7 +454,7 @@ def gitInfo():
       """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
     out = run("""git log -1 --pretty=format:%H""")
     print out
-    f.write(str(out))
+    f.write(out)
 
   f.close()
 
