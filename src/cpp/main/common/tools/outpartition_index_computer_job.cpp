@@ -8,8 +8,11 @@
 #include <iostream>
 #include <cstdio>
 #include "../io/outpartition_index_computer.h"
+#include "../util/logger_factory.h"
 
 int main (int argc, char* argv[]) {
+  LoggerFactory::initLogger("INFO", "CONSOLE", "");
+
   string inputFile(argv[1]);
   string cfg(argv[2]);
   int numslaves, rowlen, partIndex;
