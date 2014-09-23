@@ -44,6 +44,7 @@ SConscript([
     'main/algos/simple_mock_algo/SConscript',
     'main/algos/pagerank/SConscript',
     'main/algos/clever_pagerank/SConscript',
+    'main/algos/custom_non_block/SConscript',
     'main/algos/psimrank/SConscript',
     'main/algos/bitprop/SConscript'
      ],
@@ -58,6 +59,7 @@ ALGO_OBJ += Glob('#/../bin/main/algos/clever_pagerank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/psimrank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simple_mock_algo/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/bitprop/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/custom_non_block/*.o')
 
 SConscript([
     'main/dmoz/SConscript',

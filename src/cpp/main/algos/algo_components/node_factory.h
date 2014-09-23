@@ -17,6 +17,7 @@
 #include "../simrank_odd_even/simrank_odd_even_node.h"
 #include "../pagerank/pagerank_node.h"
 #include "../clever_pagerank/clever_pagerank_node.h"
+#include "../custom_non_block/custom_non_block_node.h"
 #include "../psimrank/psimrank_node.h"
 #include "../bitprop/bitprop_node.h"
 #include "../../common/util/util.h"
@@ -42,6 +43,7 @@ private:
 	PSimrankNode* createPSimrankNode(unordered_map<string, string>* params);
 	BitpropNode* createBitpropNode(unordered_map<string, string>* params);
 	CleverPagerankNode* createCleverPagerankNode(unordered_map<string, string>* params);
+	CustomNonBlockNode* createCustomNonBlockNode(unordered_map<string, string>* params);
 	log4cpp::Category* logger_;
 	Util util;
 };

@@ -6,7 +6,7 @@
  */
 
 #include "inner_master_factory.h"
-
+#include "../custom_non_block/custom_non_block_master.h"
 
 InnerMasterFactory::InnerMasterFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("InnerMasterFactory"));
@@ -17,7 +17,6 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
 	InnerMaster* innerMaster = NULL;
 
 	if (innerMasterType.compare("SIMRANK_UPDATE") == 0) {
-	  //innerMaster = new SimrankUpdateMaster;
 		innerMaster = NULL;
 	} else if (innerMasterType.compare("SIMRANK_STORE_FIRST") == 0) {
 		innerMaster = new SimrankStoreFirstMaster;
@@ -33,7 +32,9 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
     innerMaster = createBitpropMaster(params);
   } else if (innerMasterType.compare("CLEVER_PAGERANK") == 0) {
     innerMaster = new CleverPagerankMaster;
-  } else {
+  } else if (innerMasterType.compare("CUSTOM_NON_BLOCK") == 0) {
+    innerMaster = new CustomNonBlockMaster;
+  }else {
 		logger_->error("Unknown inner master type %s", innerMasterType.c_str());
 	}
 

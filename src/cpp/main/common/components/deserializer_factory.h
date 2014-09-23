@@ -22,6 +22,8 @@
 #include "../../algos/pagerank/pagerank_node.h"
 #include "../../algos/clever_pagerank/clever_pagerank_deserializer.h"
 #include "../../algos/clever_pagerank/clever_pagerank_node.h"
+#include "../../algos/custom_non_block/custom_non_block_deserializer.h"
+#include "../../algos/custom_non_block/custom_non_block_node.h"
 #include "../../algos/psimrank/psimrank_node.h"
 #include "../../algos/psimrank/psimrank_deserializer.h"
 #include "../../algos/simple_mock_algo/simple_mock_deserializer.h"
@@ -44,6 +46,7 @@ private:
 	Deserializer* createSimpleMockDeserializer(unordered_map<string, string>* params, Node* node);
 	Deserializer* createBitpropDeserializer(unordered_map<string, string>* params, Node* node);
   Deserializer* createCleverPagerankDeserializer(unordered_map<string, string>*, Node* node);
+  Deserializer* createCustomNonBlock(unordered_map<string, string>* params, Node* node);
 	log4cpp::Category* logger_;
 	Util util_;
 };

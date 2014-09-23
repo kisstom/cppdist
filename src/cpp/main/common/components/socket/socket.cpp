@@ -223,16 +223,7 @@ SocketConnection *Selector::Select() {
     //return NULL;
   }
   if (readsocks == 0) {
-    // Nothing ready to read, just show that
-    //   we're alive -- inkabb nem: exit(1)
-/*    log_err(stderr, "readsocks is 0");
-    exit(1);
-    //return NULL;
-    char msg[1024];
-    sprintf(msg, "Error in selector:
-    readsocks is 0.");*/
     throw SelectError();
-    //return NULL;
   } else {
 
     int rand_start = RandStart();
@@ -245,16 +236,6 @@ SocketConnection *Selector::Select() {
         return socket;
       }
     }
-
-
-
-    // TODO(zsfekete) itt lehetne valami randomitas?
-    /*for (unsigned int listnum = 0; listnum < sockets_.size(); listnum++) {
-      SocketConnection *socket = sockets_[listnum];
-      if (FD_ISSET(socket->GetFileDescriptor(), &socks_)) {
-        return socket;
-      }
-    }*/
   }
   // ide nem is johet
   return NULL;
@@ -266,19 +247,9 @@ int Selector::SelectIndex() {
                          (fd_set *) 0, NULL);
   if (readsocks < 0) {
     throw SelectError();
-    //return NULL;
   }
   if (readsocks == 0) {
-    // Nothing ready to read, just show that
-    //   we're alive -- inkabb nem: exit(1)
-/*    log_err(stderr, "readsocks is 0");
-    exit(1);
-    //return NULL;
-    char msg[1024];
-    sprintf(msg, "Error in selector:
-    readsocks is 0.");*/
     throw SelectError();
-    //return NULL;
   } else {
 
     int rand_start = RandStart();
@@ -291,16 +262,6 @@ int Selector::SelectIndex() {
         return listnum % (int)sockets_.size();
       }
     }
-
-
-
-    // TODO(zsfekete) itt lehetne valami randomitas?
-    /*for (unsigned int listnum = 0; listnum < sockets_.size(); listnum++) {
-      SocketConnection *socket = sockets_[listnum];
-      if (FD_ISSET(socket->GetFileDescriptor(), &socks_)) {
-        return socket;
-      }
-    }*/
   }
   // ide nem is johet
   return -1;
