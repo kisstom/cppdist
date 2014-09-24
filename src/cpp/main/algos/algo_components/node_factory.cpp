@@ -122,7 +122,20 @@ CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, 
 
 CounterInverseNode* NodeFactory::
 createCounterInverseNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  EdgelistContainer* container = createEdgeListContainer(params);
+  CounterInverseNode* node = helper.initCounterInverseNode(params);
+  node->setEdgeListContainer(container);
 
+  char outputFileN[1024];
+  sprintf(outputFileN, "%s/inverse_counter_%s.txt", (*params)["COUNTER_INVERSE_OUTPUT_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setOutputFile(string(outputFileN));
+
+  char partitionFileN[1024];
+  sprintf(outputFileN, "%s/partition_bounds_%s.txt", (*params)["PARTITION_BOUNDS_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setPartitionBoundFile(string(outputFileN));
+
+  return node;
 }
 
 EdgelistContainer* NodeFactory::createEdgeListContainer(
@@ -139,9 +152,9 @@ CounterInversePagerankNode* NodeFactory::
 createCounterInversePagerankNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CounterInversePagerankNode* node = helper.initCounterInversePagerankNode(params);
-  util.checkParam(params, 9, "POINTER_TO_COUNTERS", "SLAVE_CONFIG",
+  util.checkParam(params, 9, "POINTER_TO_COUNTERS_DIR", "SLAVE_CONFIG",
       "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
-      "OUT_PARTITION_INDICES", "LOCAL_DIR", "PARTITION_BOUNDS");
+      "OUT_PARTITION_INDICES_DIR", "LOCAL_DIR", "PARTITION_BOUNDS_DIR");
 
   int rowLen, numSlaves, slaveIndex;
   long minNode;
@@ -154,7 +167,7 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
 
   char inverseCounters[1024];
   sprintf(inverseCounters, "%s/inverse_counter_%s.txt",
-      (*params)["POINTER_TO_COUNTERS"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+      (*params)["POINTER_TO_COUNTERS_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
 
   EdgeListBuilder builder;
   EdgelistContainer* container;
@@ -163,10 +176,14 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
 
   char outpartitionIndices[1024];
   sprintf(outpartitionIndices, "%s/outpartition_indices_%s.txt",
-      (*params)["OUT_PARTITION_INDICES"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+      (*params)["OUT_PARTITION_INDICES_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   container = createEdgeListContainer(string(outpartitionIndices), minNode, &builder);
   node->setOutpartitionIndices(container);
-  node->readPartitionBouns((*params)["PARTITION_BOUNDS"]);
+
+  char partitionBounds[1024];
+  sprintf(partitionBounds, "%s/partition_bounds_%s.txt",
+        (*params)["PARTITION_BOUNDS_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->readPartitionBouns(string(partitionBounds));
 
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
