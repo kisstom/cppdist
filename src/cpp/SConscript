@@ -45,6 +45,8 @@ SConscript([
     'main/algos/pagerank/SConscript',
     'main/algos/clever_pagerank/SConscript',
     'main/algos/custom_non_block/SConscript',
+    'main/algos/counter_inverse/SConscript',
+    'main/algos/counter_inverse_pagerank/SConscript',
     'main/algos/psimrank/SConscript',
     'main/algos/bitprop/SConscript'
      ],
@@ -60,6 +62,8 @@ ALGO_OBJ += Glob('#/../bin/main/algos/psimrank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/simple_mock_algo/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/bitprop/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/custom_non_block/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse_pagerank/*.o')
 
 SConscript([
     'main/dmoz/SConscript',

@@ -115,6 +115,23 @@ void OutPartitionIndexComputer::countPartitions() {
   logger_->info("Out partition count %ld", outPartSize);
 }
 
+void OutPartitionIndexComputer::flushAsEdgelistContainer(FILE* outfile) {
+  bool first = true;
+  for (long i = 0; i < (long) outPartitions->size(); ++i) {
+    first = true;
+    for (set<int>::const_iterator it = (*outPartitions)[i].begin();it != (*outPartitions)[i].end(); ++it) {
+      if (first) {
+        fprintf (outfile, "%d", *it);
+        first = false;
+      } else {
+        fprintf (outfile, " %d", *it);
+      }
+    }
+
+    fprintf(outfile, "\n");
+  }
+}
+
 
 vector<set<int> >* OutPartitionIndexComputer::getOutPartitions() {
   return outPartitions;

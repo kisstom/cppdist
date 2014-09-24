@@ -248,9 +248,18 @@ void Algo::sendAndSignal(int self_index) {
 	}
 }
 
+long Algo::getNumberOfPartitionNodes() {
+  return num_nodes_;
+}
+
 long Algo::getAllNodes() {
   return all_node_;
 }
+
+long Algo::getMinnode() {
+  return min_node_;
+}
+
 
 Algo::~Algo() {
 }

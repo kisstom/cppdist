@@ -115,3 +115,20 @@ CustomNonBlockNode* NodeFactoryHelper::initCustomNonBlockNode(unordered_map<stri
   CustomNonBlockNode* node = new CustomNonBlockNode(allNode, minNode, dump, maxIter);
   return node;
 }
+
+CounterInversePagerankNode* NodeFactoryHelper::initCounterInversePagerankNode(unordered_map<string, string>* params) {
+  long allNode;
+  int maxIter;
+  double dump;
+
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
+  sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
+  sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
+
+  CounterInversePagerankNode* node = new CounterInversePagerankNode(allNode, dump, maxIter);
+  return node;
+}
+
+CounterInverseNode* NodeFactoryHelper::initCounterInverseNode(unordered_map<string, string>* params) {
+  return new CounterInverseNode();
+}

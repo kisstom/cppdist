@@ -20,6 +20,9 @@
 #include "../custom_non_block/custom_non_block_node.h"
 #include "../psimrank/psimrank_node.h"
 #include "../bitprop/bitprop_node.h"
+#include "../counter_inverse/counter_inverse_node.h"
+#include "../counter_inverse_pagerank/counter_inverse_pagerank_node.h"
+
 #include "../../common/util/util.h"
 #include "../bitprop/estimation_handler.h"
 
@@ -36,6 +39,7 @@ public:
 	unsigned char* initRandomVectorBits(long, int, double, int);
 private:
 	EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params);
+	EdgelistContainer* createEdgeListContainer(string, long, IEdgeListBuilder*);
 	IEdgeListBuilder* createEdgeListBuilder(unordered_map<string, string>* params);
 	SimrankStoreFirstNode* createSimrankStoreFirstNode(unordered_map<string, string>* params);
 	SimrankOddEvenNode* createSimrankOddEvenNode(unordered_map<string, string>* params);
@@ -44,6 +48,8 @@ private:
 	BitpropNode* createBitpropNode(unordered_map<string, string>* params);
 	CleverPagerankNode* createCleverPagerankNode(unordered_map<string, string>* params);
 	CustomNonBlockNode* createCustomNonBlockNode(unordered_map<string, string>* params);
+  CounterInverseNode* createCounterInverseNode(unordered_map<string, string>* params);
+  CounterInversePagerankNode* createCounterInversePagerankNode(unordered_map<string, string>* params);
 	log4cpp::Category* logger_;
 	Util util;
 };

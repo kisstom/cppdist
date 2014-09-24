@@ -15,6 +15,8 @@
 #include "../psimrank/psimrank_node.h"
 #include "../bitprop/bitprop_node.h"
 #include "../custom_non_block/custom_non_block_node.h"
+#include "../counter_inverse/counter_inverse_node.h"
+#include "../counter_inverse_pagerank/counter_inverse_pagerank_node.h"
 #include "../../common/util/util.h"
 #include "inode_factory.h"
 
@@ -30,6 +32,8 @@ public:
 	CleverPagerankNode* initCleverPagerankNode(unordered_map<string, string>* params);
 	BitpropNode* initBitpropNode(unordered_map<string, string>* params);
 	CustomNonBlockNode* initCustomNonBlockNode(unordered_map<string, string>* params);
+	CounterInverseNode* initCounterInverseNode(unordered_map<string, string>* params);
+	CounterInversePagerankNode* initCounterInversePagerankNode(unordered_map<string, string>* params);
 private:
 	log4cpp::Category* logger_;
 	Util util;

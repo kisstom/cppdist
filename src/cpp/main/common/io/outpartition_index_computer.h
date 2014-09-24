@@ -24,6 +24,7 @@ public:
   void readConfig(FILE*);
   void process(FILE*);
   void run();
+  void flushAsEdgelistContainer(FILE*);
   vector<set<int> >* getOutPartitions();
   vector<int>* getNumNeighbors();
   int getPartitionIndex(long node);

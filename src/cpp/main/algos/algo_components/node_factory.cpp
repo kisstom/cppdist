@@ -120,6 +120,61 @@ CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, 
   return node;
 }
 
+CounterInverseNode* NodeFactory::
+createCounterInverseNode(unordered_map<string, string>* params) {
+
+}
+
+EdgelistContainer* NodeFactory::createEdgeListContainer(
+    string fname, long minNode, IEdgeListBuilder* builder) {
+  EdgelistContainer* container = new EdgelistContainer();
+  container->initContainers();
+  container->setMinnode(minNode);
+  builder->setContainer(container);
+  builder->buildFromFile(fname);
+  return container;
+}
+
+CounterInversePagerankNode* NodeFactory::
+createCounterInversePagerankNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  CounterInversePagerankNode* node = helper.initCounterInversePagerankNode(params);
+  util.checkParam(params, 9, "POINTER_TO_COUNTERS", "SLAVE_CONFIG",
+      "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
+      "OUT_PARTITION_INDICES", "LOCAL_DIR", "PARTITION_BOUNDS");
+
+  int rowLen, numSlaves, slaveIndex;
+  long minNode;
+  string input = (*params)["INPUT_PARTITION"];
+  string cfg = (*params)["SLAVE_CONFIG"];
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
+  sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &minNode);
+
+  char inverseCounters[1024];
+  sprintf(inverseCounters, "%s/inverse_counter_%s.txt",
+      (*params)["POINTER_TO_COUNTERS"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+
+  EdgeListBuilder builder;
+  EdgelistContainer* container;
+  container = createEdgeListContainer(string(inverseCounters), minNode, &builder);
+  node->setPointerToCounters(container);
+
+  char outpartitionIndices[1024];
+  sprintf(outpartitionIndices, "%s/outpartition_indices_%s.txt",
+      (*params)["OUT_PARTITION_INDICES"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  container = createEdgeListContainer(string(outpartitionIndices), minNode, &builder);
+  node->setOutpartitionIndices(container);
+  node->readPartitionBouns((*params)["PARTITION_BOUNDS"]);
+
+  char outputFileN[1024];
+  sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setOutputFile(string(outputFileN));
+  return node;
+}
+
+
 CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CustomNonBlockNode* node = helper.initCustomNonBlockNode(params);

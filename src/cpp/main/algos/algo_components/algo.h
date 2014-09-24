@@ -57,6 +57,8 @@ public:
   short getNumberOfPartitions();
   void final();
   long getAllNodes();
+  long getMinnode();
+  long getNumberOfPartitionNodes();
 
 	void setNode(Node *);
   void setSocketManager(SocketManager*);
