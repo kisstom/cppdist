@@ -11,7 +11,6 @@
 #include "counter_inverse_node.h"
 #include "../../common/components/deserializer.h"
 
-
 class CounterInverseDeserializer :public Deserializer {
 public:
   CounterInverseDeserializer();

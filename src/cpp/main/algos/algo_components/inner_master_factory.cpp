@@ -7,6 +7,8 @@
 
 #include "inner_master_factory.h"
 #include "../custom_non_block/custom_non_block_master.h"
+#include "../counter_inverse/counter_inverse_master.h"
+#include "../counter_inverse_pagerank/counter_inverse_pagerank_master.h"
 
 InnerMasterFactory::InnerMasterFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("InnerMasterFactory"));
@@ -34,7 +36,11 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
     innerMaster = new CleverPagerankMaster;
   } else if (innerMasterType.compare("CUSTOM_NON_BLOCK") == 0) {
     innerMaster = new CustomNonBlockMaster;
-  }else {
+  } else if (innerMasterType.compare("COUNTER_INVERSE") == 0) {
+    innerMaster = new CounterInverseMaster;
+  } else if (innerMasterType.compare("COUNTER_INVERSE_PAGERANK") == 0) {
+    innerMaster = new CounterInversePagerankMaster;
+  } else {
 		logger_->error("Unknown inner master type %s", innerMasterType.c_str());
 	}
 
