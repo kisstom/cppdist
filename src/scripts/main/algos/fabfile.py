@@ -334,8 +334,8 @@ def outpartitionIndexComputeOnePart(slave_index):
     run(command)
 
 def counterInversePreprocess():
-  runOnAllNodes(lambda : run('mkdir %s'%conf.get('ALGO', 'COUNTER_INVERSE_OUTPUT_DIR')))
-  runOnAllNodes(lambda : run('mkdir %s'%conf.get('ALGO', 'PARTITION_BOUNDS_DIR')))
+  runOnAllNodes(lambda : run('mkdir -p %s'%conf.get('ALGO', 'COUNTER_INVERSE_OUTPUT_DIR')))
+  runOnAllNodes(lambda : run('mkdir -p %s'%conf.get('ALGO', 'PARTITION_BOUNDS_DIR')))
 
 
 """
