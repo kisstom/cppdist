@@ -29,7 +29,7 @@ public:
   void final();
 
   void setNumberNeighbors(vector<int>*);
-  void setOutPartitions(vector<set<int> >*);
+  void setOutPartitions(vector<short*>*);
   void setInverseNodeBounds(unordered_map<long, std::pair<long, long> >*);
   void setInverseOutEdges(vector<long>*);
   void setOutputFileName(string);
@@ -39,7 +39,7 @@ public:
   void readInverseNodeBounds(string);
   void readInverseOutEdges(string);
 private:
-  vector<set<int> >* outPartitions;
+  vector<short*>* outPartitions;
   unordered_map<long, std::pair<long, long> >* inverseNodeBounds;
   vector<long>* inverseOutEdges;
   vector<int>* numNeighbors;

@@ -25,13 +25,13 @@ public:
   void process(FILE*);
   void run();
   void flushAsEdgelistContainer(FILE*);
-  vector<set<int> >* getOutPartitions();
+  vector<short*>* getOutPartitions();
   vector<int>* getNumNeighbors();
   int getPartitionIndex(long node);
   void countPartitions();
 private:
   vector<int>* numNeighbors;
-  vector<set<int> >* outPartitions;
+  vector<short*>* outPartitions;
   vector<std::pair<long, long> > partitionBounds;
 
   string inputPartition;

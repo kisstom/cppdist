@@ -32,18 +32,19 @@ CustomNonBlockNode::CustomNonBlockNode(long _allnode, long _minnode, double _dum
 void CustomNonBlockNode::sender() {
   logger_->info("Starting sender.");
   long origNode = minNode_ - 1, start, end;
+  short size;
 
   for (long partitionNode = 0; partitionNode < (long) outPartitions->size(); ++partitionNode) {
     ++origNode;
     if ((*numNeighbors)[partitionNode] == 0) continue;
     double imp = (*pagerankScore_)[partitionNode] / (*numNeighbors)[partitionNode];
 
-    for (set<int>::const_iterator partIt = (*outPartitions)[partitionNode].begin();
-        partIt != (*outPartitions)[partitionNode].end(); ++partIt) {
-      if (*partIt == partIndex_) {
+    size = (*outPartitions)[partitionNode][0];
+    for (short c = 0; c < size; ++c) {
+      if ((*outPartitions)[partitionNode][c + 1] == partIndex_) {
         updateSenderScore(origNode, imp);
       } else {
-        serializeImportance(*partIt, origNode, imp);
+        serializeImportance((*outPartitions)[partitionNode][c + 1], origNode, imp);
       }
     }
   }
@@ -53,7 +54,7 @@ void CustomNonBlockNode::sender() {
 }
 
 
-void CustomNonBlockNode::serializeImportance(int bufferIndex, long fromNode, double importance) {
+void CustomNonBlockNode::serializeImportance(short bufferIndex, long fromNode, double importance) {
   int shouldAdd = 1 + sizeof(long) + sizeof(double);
 
   if (!senderBuffer_->canAdd(bufferIndex, shouldAdd)) {
@@ -125,7 +126,7 @@ void CustomNonBlockNode::setNumberNeighbors(vector<int>* nneighbors) {
   tmpReceiverScore_ = new vector<double>(nneighbors->size(), 0.0);
 }
 
-void CustomNonBlockNode::setOutPartitions(vector<set<int> >* _outPartitions) {
+void CustomNonBlockNode::setOutPartitions(vector<short*>* _outPartitions) {
   outPartitions = _outPartitions;
 }
 

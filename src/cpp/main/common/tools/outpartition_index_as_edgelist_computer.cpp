@@ -26,7 +26,7 @@ int main (int argc, char* argv[]) {
   OutPartitionIndexComputer computer(inputFile, cfg, numslaves, rowlen, partIndex);
   computer.run();
 
-  vector<set<int> >* outPartitions = computer.getOutPartitions();
+  vector<short*>* outPartitions = computer.getOutPartitions();
   FILE* outPartFile = fopen(argv[6], "w");
   if (NULL == outPartFile) {
     logger->error("Error opening file %s.", argv[6]);

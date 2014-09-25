@@ -31,22 +31,9 @@ int main (int argc, char* argv[]) {
   }
   fclose(neighborFile);
 
-  vector<set<int> >* outPartitions = computer.getOutPartitions();
+  vector<short*>* outPartitions = computer.getOutPartitions();
   FILE* outPartFile = fopen(argv[7], "w");
-  bool first = true;
-  for (int i = 0; i < (int) outPartitions->size(); ++i) {
-    first = true;
-    for (set<int>::const_iterator it = (*outPartitions)[i].begin();
-        it != (*outPartitions)[i].end(); ++it) {
-      if (first) {
-        fprintf(neighborFile, "%d", *it);
-        first = false;
-      } else {
-        fprintf(neighborFile, " %d", *it);
-      }
-    }
-    fprintf(neighborFile, "\n");
-  }
+  computer.flushAsEdgelistContainer(outPartFile);
   fclose(outPartFile);
 
 }

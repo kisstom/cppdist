@@ -32,7 +32,7 @@ void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
   numNeighbors = new vector<int>();
   numNeighbors->resize(partNumNodes);
 
-  outPartitions = new vector<set<int> >();
+  outPartitions = new vector<short*>();
   outPartitions->resize(partNumNodes);
 }
 
@@ -48,13 +48,16 @@ int OutPartitionIndexComputer::getPartitionIndex(long node) {
 void OutPartitionIndexComputer::process(FILE* inputFile) {
   int partI = 0;
   long numCrossEdge = 0;
+  long outPartSize = 0;
   char* line = new char[rowlen];
   long current_row = 0;
   vector<long> edges;
-
+  set<short> outIndices;
 
   while (fgets(line, rowlen, inputFile)) {
     if (strcmp(line, "\n") == 0) {
+      (*outPartitions)[current_row] = new short[1];
+      (*outPartitions)[current_row][0] = 0;
       ++current_row;
       continue;
     }
@@ -67,20 +70,34 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
     util.splitByToken(line, edges);
 
     (*numNeighbors)[current_row] = (int) edges.size();
+    outIndices.clear();
     for (int i = 0; i < (int) edges.size(); ++i) {
       partI = getPartitionIndex(edges[i]);
       if (partI >= 0) {
-        (*outPartitions)[current_row].insert(partI);
+        outIndices.insert(partI);
         if (partI != partIndex) {
           ++numCrossEdge;
         }
       }
     }
 
+    short* indices = new short[outIndices.size() + 1];
+    indices[0] = outIndices.size();
+    short count = 1;
+    for (set<short>::const_iterator it = outIndices.begin(); it != outIndices.end(); ++it) {
+      indices[count] = *it;
+      ++count;
+      if (*it != partIndex) {
+        ++outPartSize;
+      }
+    }
+    (*outPartitions)[current_row] = indices;
+
     ++current_row;
   }
 
   logger_->info("Number of edges between partitions: %ld", numCrossEdge);
+  logger_->info("Out partition count %ld", outPartSize);
 }
 
 void OutPartitionIndexComputer::run() {
@@ -96,7 +113,6 @@ void OutPartitionIndexComputer::run() {
 
   readConfig(cfgFile);
   process(inputFile);
-  countPartitions();
 
   fclose(inputFile);
   fclose(cfgFile);
@@ -104,11 +120,13 @@ void OutPartitionIndexComputer::run() {
 
 void OutPartitionIndexComputer::countPartitions() {
   long outPartSize = 0;
+  short size = -1;
   for (int i = 0; i < (int) outPartitions->size(); ++i) {
-    if ((*outPartitions)[i].find(partIndex) == (*outPartitions)[i].end()) {
-      outPartSize += (long) (*outPartitions)[i].size();
-    } else {
-      outPartSize += (long) (*outPartitions)[i].size() - 1;
+    size = (*outPartitions)[i][0];
+    for (short c = 0; c < size; ++c) {
+      if ((*outPartitions)[i][c + 1] != partIndex) {
+        ++outPartSize;
+      }
     }
   }
 
@@ -116,15 +134,14 @@ void OutPartitionIndexComputer::countPartitions() {
 }
 
 void OutPartitionIndexComputer::flushAsEdgelistContainer(FILE* outfile) {
-  bool first = true;
+  int size = -1;
   for (long i = 0; i < (long) outPartitions->size(); ++i) {
-    first = true;
-    for (set<int>::const_iterator it = (*outPartitions)[i].begin();it != (*outPartitions)[i].end(); ++it) {
-      if (first) {
-        fprintf (outfile, "%d", *it);
-        first = false;
+    size = (*outPartitions)[i][0];
+    for (int c = 0; c < size; ++c) {
+      if (c == 0) {
+        fprintf (outfile, "%hd", (*outPartitions)[i][c + 1]);
       } else {
-        fprintf (outfile, " %d", *it);
+        fprintf (outfile, " %hd", (*outPartitions)[i][c + 1]);
       }
     }
 
@@ -133,7 +150,7 @@ void OutPartitionIndexComputer::flushAsEdgelistContainer(FILE* outfile) {
 }
 
 
-vector<set<int> >* OutPartitionIndexComputer::getOutPartitions() {
+vector<short*>* OutPartitionIndexComputer::getOutPartitions() {
   return outPartitions;
 }
 

@@ -31,18 +31,19 @@ CleverPagerankNode::CleverPagerankNode(long _allnode, long _minnode, double _dum
 void CleverPagerankNode::sender() {
   logger_->info("Starting sender.");
   long origNode = minNode_ - 1, start, end;
+  short size;
 
   for (long partitionNode = 0; partitionNode < (long) outPartitions->size(); ++partitionNode) {
     ++origNode;
     if ((*numNeighbors)[partitionNode] == 0) continue;
     double imp = (*pagerankScore_)[partitionNode] / (*numNeighbors)[partitionNode];
 
-    for (set<int>::const_iterator partIt = (*outPartitions)[partitionNode].begin();
-        partIt != (*outPartitions)[partitionNode].end(); ++partIt) {
-      if (*partIt == partIndex_) {
+    size = (*outPartitions)[partitionNode][0];
+    for (short c = 0; c < size; ++c) {
+      if ((*outPartitions)[partitionNode][c + 1] == partIndex_) {
         updateSelfScore(origNode, imp);
       } else {
-        serializeImportance(*partIt, origNode, imp);
+        serializeImportance((*outPartitions)[partitionNode][c + 1], origNode, imp);
       }
     }
   }
@@ -113,7 +114,7 @@ void CleverPagerankNode::setNumberNeighbors(vector<int>* nneighbors) {
   tmpScore_ = new vector<double>(nneighbors->size(), 0.0);
 }
 
-void CleverPagerankNode::setOutPartitions(vector<set<int> >* _outPartitions) {
+void CleverPagerankNode::setOutPartitions(vector<short*>* _outPartitions) {
   outPartitions = _outPartitions;
 }
 
