@@ -187,6 +187,7 @@ def preprocess():
       runPreprocessTask('MAKE_PARTITION', makePartition)
       runPreprocessTask('PAGERANK_INVERSE', pagerankInversePreprocess)
       runPreprocessTask('OUTPARTITION_INDEX', outpartitionIndexCompute)
+      runPreprocessTask('COUNTER_INVERSE', counterInversePreprocess)
 
 ########### For partitioning ##################
 
@@ -331,6 +332,10 @@ def outpartitionIndexComputeOnePart(slave_index):
     command += '%s %d %s %d ' % (slaveryCfg, numJobs, rowLen, slave_index)
     command += '%s/outpartition_indices_%s.txt'%(outPartIndicesDir, slave_index)
     run(command)
+
+def counterInversePreprocess():
+  runOnAllNodes(lambda : run('mkdir %s'%conf.get('ALGO', 'COUNTER_INVERSE_OUTPUT_DIR')))
+  runOnAllNodes(lambda : run('mkdir %s'%conf.get('ALGO', 'PARTITION_BOUNDS_DIR')))
 
 
 """
