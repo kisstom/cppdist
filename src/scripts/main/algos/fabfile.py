@@ -169,6 +169,14 @@ def concatFromHost(slave_index, host):
   ########  TOOLS FOR PREPROCESSING ############
   ####################################################
 """
+def runPreprocessTask(section, function):
+  global conf
+  if conf.has_section('PREPROCESS'):
+      if conf.has_option('PREPROCESS', section):
+        sectionValue = conf.get('PREPROCESS', section)
+        if sectionValue == '1':
+          function()
+
 
 @task
 def preprocess():
@@ -176,18 +184,9 @@ def preprocess():
   global conf
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
     if conf.has_section('PREPROCESS'):
-      if conf.has_option('PREPROCESS', 'MAKE_PARTITION'):
-        makePart = conf.get('PREPROCESS', 'MAKE_PARTITION')
-        if makePart == '1':
-          makePartition()
-
-
-      if conf.has_option('PREPROCESS', 'TYPE'):
-        preprocessType = conf.get('PREPROCESS', 'TYPE')
-        if preprocessType == 'PAGERANK_INVERSE':
-          pagerankInversePreprocess()
-        else:
-          print 'Error unknown type of preprocess:', preprocessType
+      runPreprocessTask('MAKE_PARTITION', makePartition)
+      runPreprocessTask('PAGERANK_INVERSE', pagerankInversePreprocess)
+      runPreprocessTask('OUTPARTITION_INDEX', outpartitionIndexCompute)
 
 ########### For partitioning ##################
 
@@ -310,6 +309,28 @@ def putInverseOnMachine(slave_index, host):
     edgesFile = inversePartDir + '/edges.txt'
     put(boundFile, inversePartDir)
     put(edgesFile, inversePartDir)
+
+@task
+def outpartitionIndexCompute():
+  global conf, numJobs
+
+  outPartIndicesDir = conf.get('ALGO', 'OUT_PARTITION_INDICES_DIR')
+  run('mkdir -p %s'%outPartIndicesDir)
+
+  for slave_index in xrange(numJobs):
+      outpartitionIndexComputeOnePart(slave_index)
+
+def outpartitionIndexComputeOnePart(slave_index):
+  global numJobs, conf
+  rowLen = conf.get('PREPROCESS', 'ROWLEN')
+  outPartIndicesDir = conf.get('ALGO', 'OUT_PARTITION_INDICES_DIR')
+  slaveryCfg = conf.get('ALGO', 'REMOTE_DIR') + '/' + conf.get('ALGO', 'SLAVERY_CFG')
+  with settings(host_string=MASTER_HOST):
+    command = '%s/main/common/tools/outpartition_index_as_edgelist_computer '%conf.get('ALGO', 'BIN')
+    command += '%s/slavery_%d.txt ' % (conf.get('ALGO', 'REMOTE_DIR'), slave_index)
+    command += '%s %d %s %d ' % (slaveryCfg, numJobs, rowLen, slave_index)
+    command += '%s/outpartition_indices_%s.txt'%(outPartIndicesDir, slave_index)
+    run(command)
 
 
 """
