@@ -12,15 +12,16 @@
 #include "../algo_components/node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
-#include <gtest/gtest_prod.h>
 #include <stdio.h>
+#include <gtest/gtest_prod.h>
 
 struct InverseTriple {
-  InverseTriple(long c, long t, short p):
-    count(c), to(t), fromPartition(p) {}
+  InverseTriple(long c, long t, short _fromPartition):
+    count(c), to(t), fromPartition(_fromPartition) {}
 
   static bool compare(const InverseTriple& lh, const InverseTriple& rh) {
-    return lh.to < rh.to;
+    if (lh.fromPartition == rh.fromPartition) return lh.to < rh.to;
+    return lh.fromPartition < rh.fromPartition;
   }
 
   long count;
@@ -40,15 +41,17 @@ public:
   void setPartitionBoundFile(string file);
   void setEdgeListContainer(EdgelistContainer*);
   void initFromMaster(string) {}
-  void update(short partIndex, long to);
-  vector<long> determineBounds();
+  void update(short partIndex, long from, long to);
+  void determineBounds();
   void setCounters(int numPart);
 private:
-  void serializeEdge(int partIndex, long to);
+  void serializeEdge(int partIndex, long from, long to);
   EdgelistContainer* matrix;
   vector<InverseTriple>* inversePartsEdges;
   vector<long>* counter;
+  vector<long>* newComer;
   vector<long>* partitionBound;
+  vector<long>* bounds;
 
   Mutex mutex;
   string outfile;

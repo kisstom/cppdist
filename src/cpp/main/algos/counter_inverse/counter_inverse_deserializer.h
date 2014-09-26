@@ -23,6 +23,7 @@ private:
   log4cpp::Category* logger_;
   CounterInverseNode* node_;
   long to;
+  long from;
 };
 
 

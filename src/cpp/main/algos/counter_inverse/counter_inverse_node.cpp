@@ -13,6 +13,9 @@ CounterInverseNode::CounterInverseNode() {
   matrix = NULL;
   inversePartsEdges = NULL;
   counter = NULL;
+  bounds = NULL;
+  newComer = NULL;
+  partitionBound = NULL;
 }
 
 
@@ -29,9 +32,9 @@ void CounterInverseNode::sender() {
       partIndex = algo_->getPartitionIndex(outEdge);
 
       if (partIndex == partIndex_) {
-        update(partIndex, outEdge);
+        update(partIndex, partitionNode, outEdge);
       } else {
-        serializeEdge(partIndex, outEdge);
+        serializeEdge(partIndex, partitionNode, outEdge);
       }
     }
   }
@@ -40,22 +43,27 @@ void CounterInverseNode::sender() {
   logger_->info("Finished sender.");
 }
 
-void CounterInverseNode::update(short partIndex, long to) {
+void CounterInverseNode::update(short partIndex, long from, long to) {
   mutex.lock();
+  if (from != (*newComer)[partIndex]) {
+    ++(*counter)[partIndex];
+    (*newComer)[partIndex] = from;
+  }
+
   inversePartsEdges->push_back(InverseTriple((*counter)[partIndex],
       to - matrix->getMinnode(), partIndex));
-  ++(*counter)[partIndex];
   mutex.unlock();
 }
 
-void CounterInverseNode::serializeEdge(int bufferIndex, long to) {
-  int shouldAdd = 1 + sizeof(long);
+void CounterInverseNode::serializeEdge(int bufferIndex, long from, long to) {
+  int shouldAdd = 1 + sizeof(long) * 2;
 
   if (!senderBuffer_->canAdd(bufferIndex, shouldAdd)) {
     senderBuffer_->emptyBuffer(bufferIndex);
   }
 
   senderBuffer_->setBreak(bufferIndex);
+  senderBuffer_->store(bufferIndex, from);
   senderBuffer_->store(bufferIndex, to);
 }
 
@@ -64,6 +72,7 @@ void CounterInverseNode::beforeIteration(string msg) {}
 bool CounterInverseNode::afterIteration() {
   std::sort(inversePartsEdges->begin(),
        inversePartsEdges->end(), InverseTriple::compare);
+  determineBounds();
   return false;
 }
 
@@ -75,6 +84,7 @@ void CounterInverseNode::setEdgeListContainer(EdgelistContainer* _matrix) {
 
 void CounterInverseNode::setCounters(int numPart) {
   counter = new vector<long>(numPart, 0);
+  newComer = new vector<long>(numPart, -1);
 }
 
 void CounterInverseNode::setOutputFile(string outputFile) {
@@ -85,23 +95,19 @@ void CounterInverseNode::setPartitionBoundFile(string file) {
   partitionBoundFile = file;
 }
 
-vector<long> CounterInverseNode::determineBounds() {
-  vector<long> bounds(algo_->getNumberOfPartitions() + 1, 0);
+void CounterInverseNode::determineBounds() {
+  bounds = new vector<long>(algo_->getNumberOfPartitions() + 1, 0);
   for (int i = 0; i < (int) counter->size() + 1; ++i) {
     if (i  > 0) {
-      bounds[i] = bounds[i - 1] + (*counter)[i - 1];
+      (*bounds)[i] = (*bounds)[i - 1] + (*counter)[i - 1];
     }
   }
-
-  return bounds;
 }
 
 void CounterInverseNode::final() {
-  vector<long> bounds = determineBounds();
-
   FILE* partitionBound = fopen(partitionBoundFile.c_str(), "w");
-  for (int i = 0; i < (int) bounds.size(); ++i) {
-    fprintf(partitionBound, "%ld\n", bounds[i]);
+  for (int i = 0; i < (int) bounds->size(); ++i) {
+    fprintf(partitionBound, "%ld\n", (*bounds)[i]);
   }
   fclose(partitionBound);
 
@@ -110,7 +116,7 @@ void CounterInverseNode::final() {
 
   for (long i = 0; i < (long) inversePartsEdges->size(); ++i) {
     act = (*inversePartsEdges)[i].to;
-    index = (*inversePartsEdges)[i].count + bounds[(*inversePartsEdges)[i].fromPartition];
+    index = (*inversePartsEdges)[i].count + (*bounds)[(*inversePartsEdges)[i].fromPartition];
     if (act != prev) {
       if (i != 0) {
         for (int emptyCount = 0; emptyCount < prev - act; ++emptyCount) {

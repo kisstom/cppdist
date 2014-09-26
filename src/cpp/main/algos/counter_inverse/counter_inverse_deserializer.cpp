@@ -13,7 +13,7 @@ CounterInverseDeserializer::CounterInverseDeserializer() {
 }
 
 void CounterInverseDeserializer::update(short partindex) {
-  node_->update(partindex, to);
+  node_->update(partindex, from, to);
 }
 
 int CounterInverseDeserializer::storeFromBinary(char* buffer, unsigned length) {
@@ -21,7 +21,9 @@ int CounterInverseDeserializer::storeFromBinary(char* buffer, unsigned length) {
   if (!shouldRead) return -1;
 
   int stored = 0;
-  memcpy(&to, buffer, sizeof(long));
+  memcpy(&from, buffer + stored, sizeof(long));
+  stored += sizeof(long);
+  memcpy(&to, buffer + stored, sizeof(long));
   stored += sizeof(long);
 
   return stored;
@@ -29,7 +31,7 @@ int CounterInverseDeserializer::storeFromBinary(char* buffer, unsigned length) {
 
 
 bool CounterInverseDeserializer::checkReadable(char* buffer, unsigned length) {
-  if (length < sizeof(long)) {
+  if (length < sizeof(long) * 2) {
     return false;
   }
 
