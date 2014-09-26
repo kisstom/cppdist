@@ -120,7 +120,7 @@ void CounterInverseNode::final() {
     //fprintf(output, "%ld %hd\n", (*inversePartsEdges)[i].count, (*inversePartsEdges)[i].fromPartition);
     if (act != prev) {
       if (i != 0) {
-        for (int emptyCount = 0; emptyCount < prev - act; ++emptyCount) {
+        for (int emptyCount = 0; emptyCount < act - prev; ++emptyCount) {
           fprintf(output, "\n");
         }
       }
