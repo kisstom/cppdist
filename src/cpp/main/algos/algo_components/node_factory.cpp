@@ -34,6 +34,10 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
     node = createCleverPagerankNode(params);
   } else if (nodeType.compare("CUSTOM_NON_BLOCK") == 0) {
     node = createCustomNonBlockNode(params);
+  } else if (nodeType.compare("COUNTER_INVERSE") == 0) {
+    node = createCounterInverseNode(params);
+  } else if (nodeType.compare("COUNTER_INVERSE_PAGERANK") == 0) {
+    node = createCounterInversePagerankNode(params);
   } else {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
@@ -122,10 +126,13 @@ CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, 
 
 CounterInverseNode* NodeFactory::
 createCounterInverseNode(unordered_map<string, string>* params) {
+  int numSlaves;
   NodeFactoryHelper helper;
   EdgelistContainer* container = createEdgeListContainer(params);
   CounterInverseNode* node = helper.initCounterInverseNode(params);
+  sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
   node->setEdgeListContainer(container);
+  node->setCounters(numSlaves);
 
   char outputFileN[1024];
   sprintf(outputFileN, "%s/inverse_counter_%s.txt", (*params)["COUNTER_INVERSE_OUTPUT_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());

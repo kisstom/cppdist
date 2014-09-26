@@ -62,13 +62,19 @@ void CounterInverseNode::serializeEdge(int bufferIndex, long to) {
 void CounterInverseNode::beforeIteration(string msg) {}
 
 bool CounterInverseNode::afterIteration() {
+  std::sort(inversePartsEdges->begin(),
+       inversePartsEdges->end(), InverseTriple::compare);
   return false;
 }
 
 void CounterInverseNode::setEdgeListContainer(EdgelistContainer* _matrix) {
   matrix = _matrix;
   inversePartsEdges = new vector<InverseTriple>();
-  counter = new vector<long>(algo_->getNumberOfPartitions(), 0);
+
+}
+
+void CounterInverseNode::setCounters(int numPart) {
+  counter = new vector<long>(numPart, 0);
 }
 
 void CounterInverseNode::setOutputFile(string outputFile) {
@@ -98,9 +104,6 @@ void CounterInverseNode::final() {
     fprintf(partitionBound, "%ld\n", bounds[i]);
   }
   fclose(partitionBound);
-
-  std::sort(inversePartsEdges->begin(),
-      inversePartsEdges->end(), InverseTriple::compare);
 
   FILE* output = fopen(outfile.c_str(), "w");
   long prev = -1, act = -1, index = -1;

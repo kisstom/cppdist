@@ -12,6 +12,7 @@
 #include "../algo_components/node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
+#include <gtest/gtest_prod.h>
 #include <stdio.h>
 
 struct InverseTriple {
@@ -41,6 +42,7 @@ public:
   void initFromMaster(string) {}
   void update(short partIndex, long to);
   vector<long> determineBounds();
+  void setCounters(int numPart);
 private:
   void serializeEdge(int partIndex, long to);
   EdgelistContainer* matrix;
@@ -52,6 +54,9 @@ private:
   string outfile;
   string partitionBoundFile;
   log4cpp::Category* logger_;
+
+  // TEST CASES
+  FRIEND_TEST(CounterInverseNodeTest, test);
 };
 
 

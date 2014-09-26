@@ -68,10 +68,12 @@ ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse_pagerank/*.o')
 SConscript([
     'main/dmoz/SConscript',
     'main/algos/algo_components/SConscript'
+    'main/algos/algo_components/test_node_factories/SConscript'
 	],
     exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])
 
 ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/test_node_factories/*.o')
 
 SConscript([
     'main/algos/task/SConscript'
@@ -89,6 +91,7 @@ if testCompile:
     'test/algos/simrank_odd_even/SConscript',
     'test/algos/psimrank/SConscript',
     'test/algos/bitprop/SConscript',
+    'test/algos/counter_inverse/SConscript',
     'test/dmoz/SConscript',
     'test/useFileSystem/algos/SConscript',
     'test/useFileSystem/common/SConscript',
