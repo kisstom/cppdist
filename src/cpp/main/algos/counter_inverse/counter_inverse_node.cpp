@@ -114,6 +114,7 @@ void CounterInverseNode::final() {
   FILE* output = fopen(outfile.c_str(), "w");
   long prev = -1, act = -1, index = -1;
 
+  fprintf(output, "size %d", (int) inversePartsEdges->size());
   for (long i = 0; i < (long) inversePartsEdges->size(); ++i) {
     act = (*inversePartsEdges)[i].to;
     index = (*inversePartsEdges)[i].count + (*bounds)[(*inversePartsEdges)[i].fromPartition];
