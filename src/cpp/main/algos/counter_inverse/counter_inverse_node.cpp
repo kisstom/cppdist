@@ -126,9 +126,9 @@ void CounterInverseNode::final() {
       }
 
       fprintf(output, "%ld", index);
+    } else {
+      fprintf(output, " %ld", index);
     }
-
-    fprintf(output, " %ld", index);
     prev = act;
   }
   fclose(output);
