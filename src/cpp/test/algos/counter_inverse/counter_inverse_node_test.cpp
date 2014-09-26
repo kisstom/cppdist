@@ -39,8 +39,8 @@ protected:
      part1.push_back("8 10");
      part1.push_back("");
      part1.push_back("2 4 6");
+     part1.push_back("");
 
-     part2.push_back("");
      part2.push_back("2 3 5");
      part2.push_back("11");
      part2.push_back("");
@@ -81,11 +81,11 @@ TEST_F(CounterInverseNodeTest, test) {
         node->inversePartsEdges->at(i).fromPartition);
   }
 
-  ASSERT_EQ(7, (int) node->inversePartsEdges->size());
-  ASSERT_EQ(3, (int) node->counter->at(0));
+  ASSERT_EQ(5, (int) node->inversePartsEdges->size());
+  ASSERT_EQ(2, (int) node->counter->at(0));
   ASSERT_EQ(0, (int) node->bounds->at(0));
-  ASSERT_EQ(3, (int) node->bounds->at(1));
-  ASSERT_EQ(5, (int) node->bounds->at(2));
+  ASSERT_EQ(2, (int) node->bounds->at(1));
+  ASSERT_EQ(4, (int) node->bounds->at(2));
 }
 
 int main (int argc, char **argv) {
