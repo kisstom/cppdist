@@ -159,7 +159,7 @@ CounterInversePagerankNode* NodeFactory::
 createCounterInversePagerankNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CounterInversePagerankNode* node = helper.initCounterInversePagerankNode(params);
-  util.checkParam(params, 9, "POINTER_TO_COUNTERS_DIR", "SLAVE_CONFIG",
+  util.checkParam(params, 8, "POINTER_TO_COUNTERS_DIR", "SLAVE_CONFIG",
       "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "OUT_PARTITION_INDICES_DIR", "LOCAL_DIR", "PARTITION_BOUNDS_DIR");
 
