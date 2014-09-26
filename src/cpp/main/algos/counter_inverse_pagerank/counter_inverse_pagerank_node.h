@@ -12,6 +12,7 @@
 #include "../algo_components/node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
+#include <gtest/gtest_prod.h>
 #include <stdio.h>
 
 class CounterInversePagerankNode : public Node {
@@ -52,6 +53,8 @@ private:
   int actIter;
   int maxIter;
   log4cpp::Category* logger_;
+
+  FRIEND_TEST(CounterInversePagerankNodeTest, test);
 };
 
 

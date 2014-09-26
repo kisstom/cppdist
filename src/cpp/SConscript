@@ -92,6 +92,7 @@ if testCompile:
     'test/algos/psimrank/SConscript',
     'test/algos/bitprop/SConscript',
     'test/algos/counter_inverse/SConscript',
+    'test/algos/counter_inverse_pagerank/SConscript',
     'test/dmoz/SConscript',
     'test/useFileSystem/algos/SConscript',
     'test/useFileSystem/common/SConscript',
