@@ -20,8 +20,8 @@ struct InverseTriple {
     count(c), to(t), fromPartition(_fromPartition) {}
 
   static bool compare(const InverseTriple& lh, const InverseTriple& rh) {
-    if (lh.fromPartition == rh.fromPartition) return lh.to < rh.to;
-    return lh.fromPartition < rh.fromPartition;
+    if (lh.to == rh.to) return lh.fromPartition == rh.fromPartition;
+    return lh.to < rh.to;
   }
 
   long count;
