@@ -22,14 +22,15 @@ public:
   void sender();
   void final();
   void initFromMaster(string);
-  void update(short partIndex, double imp);
+  void update(short partIndex, long from, double imp);
   void updateWithIncomingPr();
-  void serializeImportance(int bufferIndex, double importance);
+  void serializeImportance(int bufferIndex, long from, double importance);
 
   void setOutputFile(string outputFile);
   void setPointerToCounters(EdgelistContainer*);
   void setOutpartitionIndices(EdgelistContainer*);
   void setPartitionBound(vector<long>*);
+  void initCounters();
 
   void readPartitionBouns(string fname);
 private:
@@ -40,6 +41,7 @@ private:
   vector<double>* pagerankScore;
 
   vector<long>* counter;
+  vector<long>* newComer;
   vector<long>* partitionBound;
   string outfile;
 

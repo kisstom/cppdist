@@ -1,4 +1,4 @@
-from fabric.api import run, env, sudo, cd, task, settings, roles, execute
+from fabric.api import run, env, sudo, cd, task, settings, roles, execute, parallel
 from fabric.operations import local,put,get
 from fabric.utils import error
 from fabric.decorators import hosts
@@ -321,6 +321,7 @@ def outpartitionIndexCompute():
   for slave_index in xrange(numJobs):
       outpartitionIndexComputeOnePart(slave_index)
 
+@parallel
 def outpartitionIndexComputeOnePart(slave_index):
   global numJobs, conf
   rowLen = conf.get('PREPROCESS', 'ROWLEN')

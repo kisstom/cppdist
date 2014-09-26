@@ -23,6 +23,7 @@ private:
   log4cpp::Category* logger_;
   CounterInversePagerankNode* node_;
   double importance;
+  long from;
 };
 
 

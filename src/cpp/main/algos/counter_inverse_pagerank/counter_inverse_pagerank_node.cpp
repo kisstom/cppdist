@@ -39,9 +39,9 @@ void CounterInversePagerankNode::sender() {
       partIndex = outPartitionIndices->getEdgeAtPosPart(partitionNode, i);
 
       if (partIndex == partIndex_) {
-        update(partIndex, imp);
+        update(partIndex, partitionNode, imp);
       } else {
-        serializeImportance(partIndex, imp);
+        serializeImportance(partIndex, partitionNode, imp);
       }
     }
   }
@@ -50,22 +50,28 @@ void CounterInversePagerankNode::sender() {
   logger_->info("Finished sender.");
 }
 
-void CounterInversePagerankNode::update(short partIndex, double imp) {
+void CounterInversePagerankNode::update(short partIndex, long from, double imp) {
   mutex.lock();
+  if (from != (*newComer)[partIndex]) {
+    ++(*counter)[partIndex];
+    (*newComer)[partIndex] = from;
+  }
+
   long index = (*counter)[partIndex] + (*partitionBound)[partIndex];
-  ++(*counter)[partIndex];
+
   (*incomingPageranks)[index] = imp;
   mutex.unlock();
 }
 
-void CounterInversePagerankNode::serializeImportance(int bufferIndex, double importance) {
-  int shouldAdd = 1 + sizeof(double);
+void CounterInversePagerankNode::serializeImportance(int bufferIndex, long from, double importance) {
+  int shouldAdd = 1 + sizeof(double) + sizeof(long);
 
   if (!senderBuffer_->canAdd(bufferIndex, shouldAdd)) {
     senderBuffer_->emptyBuffer(bufferIndex);
   }
 
   senderBuffer_->setBreak(bufferIndex);
+  senderBuffer_->store(bufferIndex, from);
   senderBuffer_->store(bufferIndex, importance);
 }
 
@@ -86,7 +92,7 @@ void CounterInversePagerankNode::updateWithIncomingPr() {
 
     for (long i = 0; i < numNeighbors; ++i) {
       if (i == 0) {
-        (*pagerankScore)[partitionNode] = 0;
+        (*pagerankScore)[partitionNode] = 0.0;
       }
 
       index = pointerToCounters->getEdgeAtPosPart(partitionNode, i);
@@ -135,8 +141,7 @@ void CounterInversePagerankNode::setOutpartitionIndices(EdgelistContainer* _outP
 
 void CounterInversePagerankNode::setPartitionBound(vector<long>* _partitionBound) {
   partitionBound = _partitionBound;
-  long numberOfCounters = (*partitionBound)[(int) partitionBound->size()];
-  incomingPageranks = new vector<double>(numberOfCounters, 0.0);
+  initCounters();
 }
 
 void CounterInversePagerankNode::readPartitionBouns(string fname) {
@@ -153,4 +158,13 @@ void CounterInversePagerankNode::readPartitionBouns(string fname) {
   }
 
   fclose(file);
+
+  initCounters();
+}
+
+void CounterInversePagerankNode::initCounters() {
+  counter = new vector<long>(partitionBound->size() - 1, 0);
+  newComer = new vector<long>(partitionBound->size() - 1, -1);
+  long numberOfCounters = (*partitionBound)[(int) partitionBound->size() - 1];
+  incomingPageranks = new vector<double>(numberOfCounters, 0.0);
 }

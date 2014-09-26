@@ -13,7 +13,7 @@ CounterInversePagerankDeserializer::CounterInversePagerankDeserializer() {
 }
 
 void CounterInversePagerankDeserializer::update(short partindex) {
-  node_->update(partindex, importance);
+  node_->update(partindex, from, importance);
 }
 
 int CounterInversePagerankDeserializer::storeFromBinary(char* buffer, unsigned length) {
@@ -21,7 +21,9 @@ int CounterInversePagerankDeserializer::storeFromBinary(char* buffer, unsigned l
   if (!shouldRead) return -1;
 
   int stored = 0;
-  memcpy(&importance, buffer, sizeof(double));
+  memcpy(&from, buffer + stored, sizeof(long));
+  stored += sizeof(long);
+  memcpy(&importance, buffer + stored, sizeof(double));
   stored += sizeof(double);
 
   return stored;
@@ -29,7 +31,7 @@ int CounterInversePagerankDeserializer::storeFromBinary(char* buffer, unsigned l
 
 
 bool CounterInversePagerankDeserializer::checkReadable(char* buffer, unsigned length) {
-  if (length < sizeof(double)) {
+  if (length < sizeof(double) + sizeof(long)) {
     return false;
   }
 
