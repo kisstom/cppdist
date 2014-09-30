@@ -331,7 +331,7 @@ def outpartitionIndexComputeOnePart(slave_index):
     command = '%s/main/common/tools/outpartition_index_as_edgelist_computer '%conf.get('ALGO', 'BIN')
     command += '%s/slavery_%d.txt ' % (conf.get('ALGO', 'REMOTE_DIR'), slave_index)
     command += '%s %d %s %d ' % (slaveryCfg, numJobs, rowLen, slave_index)
-    command += '%s/outpartition_indices_%s.txt'%(outPartIndicesDir, slave_index)
+    command += '%s/outpartition_indices_%s.txt '%(outPartIndicesDir, slave_index)
     command += '%s/neighbors_file_%s.txt'%(outPartIndicesDir, slave_index)
     run(command)
 
