@@ -12,6 +12,7 @@ CounterInversePagerankNode::CounterInversePagerankNode(
   logger_ = &log4cpp::Category::getInstance(std::string("CounterInversePagerankNode"));
 
   allNode = _allnode;
+  logger_->info("Initing allnode: %ld", allNode);
   dump = _dump;
   actIter = 0;
   maxIter = _maxIter;
@@ -22,20 +23,23 @@ CounterInversePagerankNode::CounterInversePagerankNode(
   pagerankScore = NULL;
   counter = NULL;
   partitionBound = NULL;
+  newComer = NULL;
+  numNeighbors = NULL;
 }
 
 void CounterInversePagerankNode::sender() {
-  long numNeighbors;
-  int partIndex;
+  int partIndex, numNeighborsOfThis, partitionNeighbors;
 
   for (long partitionNode = 0;
       partitionNode < outPartitionIndices->getNumberOfNodes(); ++partitionNode) {
-    numNeighbors = outPartitionIndices->neighborhoodSizePart(partitionNode);
-    if (0.0 == numNeighbors) continue;
+    numNeighborsOfThis = numNeighbors->at(partitionNode);
 
-    double imp = (*pagerankScore)[partitionNode] / numNeighbors;
+    if (0.0 == numNeighborsOfThis) continue;
+    double imp = (*pagerankScore)[partitionNode] / numNeighborsOfThis;
 
-    for (long i = 0; i < numNeighbors; ++i) {
+    partitionNeighbors =
+        outPartitionIndices->neighborhoodSizePart(partitionNode);
+    for (long i = 0; i < partitionNeighbors; ++i) {
       partIndex = outPartitionIndices->getEdgeAtPosPart(partitionNode, i);
 
       if (partIndex == partIndex_) {
@@ -57,7 +61,7 @@ void CounterInversePagerankNode::update(short partIndex, long from, double imp) 
     (*newComer)[partIndex] = from;
   }
 
-  long index = (*counter)[partIndex] + (*partitionBound)[partIndex];
+  long index = (*counter)[partIndex] + (*partitionBound)[partIndex] - 1;
 
   (*incomingPageranks)[index] = imp;
   mutex.unlock();
@@ -105,7 +109,9 @@ void CounterInversePagerankNode::updateWithIncomingPr() {
 }
 
 void CounterInversePagerankNode::initFromMaster(string) {
-  pagerankScore = new vector<double>(algo_->getNumberOfPartitionNodes(), 0.0);
+  double ini = 1.0 / allNode;
+
+  pagerankScore = new vector<double>(algo_->getNumberOfPartitionNodes(), ini);
 }
 
 bool CounterInversePagerankNode::afterIteration() {
@@ -125,6 +131,16 @@ void CounterInversePagerankNode::final() {
   }
 
   fclose(outf);
+}
+
+void CounterInversePagerankNode::readNeighbors(string neighborsFile) {
+  numNeighbors = new vector<int>();
+  int neighbors = -1;
+  FILE* file = fopen(neighborsFile.c_str(), "r");
+  while (fscanf(file, "%d\n", &neighbors) != EOF) {
+    numNeighbors->push_back(neighbors);
+  }
+  fclose(file);
 }
 
 void CounterInversePagerankNode::setOutputFile(string outputFile) {
@@ -167,4 +183,8 @@ void CounterInversePagerankNode::initCounters() {
   newComer = new vector<long>(partitionBound->size() - 1, -1);
   long numberOfCounters = (*partitionBound)[(int) partitionBound->size() - 1];
   incomingPageranks = new vector<double>(numberOfCounters, 0.0);
+}
+
+void CounterInversePagerankNode::setNumNeighbors(vector<int>* _numNeighbors) {
+  numNeighbors = _numNeighbors;
 }

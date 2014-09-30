@@ -125,6 +125,7 @@ CounterInversePagerankNode* NodeFactoryHelper::initCounterInversePagerankNode(un
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
 
+
   CounterInversePagerankNode* node = new CounterInversePagerankNode(allNode, dump, maxIter);
   return node;
 }

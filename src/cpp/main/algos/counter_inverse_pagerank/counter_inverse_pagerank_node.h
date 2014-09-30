@@ -31,6 +31,8 @@ public:
   void setPointerToCounters(EdgelistContainer*);
   void setOutpartitionIndices(EdgelistContainer*);
   void setPartitionBound(vector<long>*);
+  void setNumNeighbors(vector<int>*);
+  void readNeighbors(string);
   void initCounters();
 
   void readPartitionBouns(string fname);
@@ -44,6 +46,7 @@ private:
   vector<long>* counter;
   vector<long>* newComer;
   vector<long>* partitionBound;
+  vector<int>* numNeighbors;
   string outfile;
 
   Mutex mutex;

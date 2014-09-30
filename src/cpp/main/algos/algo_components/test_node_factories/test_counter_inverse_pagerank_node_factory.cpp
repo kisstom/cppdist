@@ -15,6 +15,7 @@ Node* TestCounterInversePagerankNodeFactory::createNodeFromConfig(unordered_map<
   node->setOutpartitionIndices(outPartitionIndices);
   node->setPartitionBound(partitionBound);
   node->setPointerToCounters(pointerToCounters);
+  node->setNumNeighbors(numNeighbors);
 
   return node;
 }
@@ -29,6 +30,10 @@ void TestCounterInversePagerankNodeFactory::setOutPartitionIndices(EdgelistConta
 
 void TestCounterInversePagerankNodeFactory::setPartitionBound(vector<long>* _partitionBound) {
   partitionBound = _partitionBound;
+}
+
+void TestCounterInversePagerankNodeFactory::setNumNeighbors(vector<int>* _numNeighbors) {
+  numNeighbors = _numNeighbors;
 }
 
 void TestCounterInversePagerankNodeFactory::setNumSlaves(int) {

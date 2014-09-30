@@ -149,6 +149,11 @@ void OutPartitionIndexComputer::flushAsEdgelistContainer(FILE* outfile) {
   }
 }
 
+void OutPartitionIndexComputer::flushNeighborsFile(FILE* neighborsFile) {
+  for (long i = 0; i < (long) numNeighbors->size(); ++i) {
+    fprintf(neighborsFile, "%ld\n", numNeighbors->at(i));
+  }
+}
 
 vector<short*>* OutPartitionIndexComputer::getOutPartitions() {
   return outPartitions;

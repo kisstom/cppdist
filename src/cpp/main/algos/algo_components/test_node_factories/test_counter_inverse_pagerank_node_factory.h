@@ -18,13 +18,13 @@ public:
   void setOutPartitionIndices(EdgelistContainer*);
   void setPartitionBound(vector<long>*);
   void setNumSlaves(int);
+  void setNumNeighbors(vector<int>* numNeighbors);
 private:
   int numSlaves;
   EdgelistContainer* pointerToCounters;
   EdgelistContainer* outPartitionIndices;
   vector<long>* partitionBound;
-
-  CounterInversePagerankNode* createCounterInversePagerankNode(unordered_map<string, string>*);
+  vector<int>* numNeighbors;
   log4cpp::Category* logger;
 };
 

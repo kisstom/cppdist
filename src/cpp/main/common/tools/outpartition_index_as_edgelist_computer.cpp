@@ -35,6 +35,10 @@ int main (int argc, char* argv[]) {
 
   computer.flushAsEdgelistContainer(outPartFile);
   fclose(outPartFile);
+
+  FILE* neighborsFile = fopen(argv[7], "w");
+  computer.flushNeighborsFile(neighborsFile);
+  fclose(neighborsFile);
 }
 
 

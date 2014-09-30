@@ -24,8 +24,8 @@ protected:
      initParams("COUNTER_INVERSE_PAGERANK");
      initLogger();
 
-     params_["MAX_ITER"] = 1;
-     params_["DUMP"] = 0.9;
+     params_["MAX_ITER"] = "1";
+     params_["DUMP"] = "0.1";
 
      vector<string> part1;
      vector<string> part2;
@@ -64,8 +64,24 @@ protected:
      partIndices2.push_back("");
      partIndices2.push_back("0 1");
 
-     addNodeFactory(part1, partIndices1, partitionBounds, 2);
-     addNodeFactory(part2, partIndices2, partitionBounds, 2);
+     vector<int>* numNeighbors1 = new vector<int>();
+     vector<int>* numNeighbors2 = new vector<int>();
+     numNeighbors1->push_back(3);
+     numNeighbors1->push_back(0);
+     numNeighbors1->push_back(1);
+     numNeighbors1->push_back(2);
+     numNeighbors1->push_back(0);
+     numNeighbors1->push_back(3);
+     numNeighbors1->push_back(0);
+
+     numNeighbors2->push_back(3);
+     numNeighbors2->push_back(1);
+     numNeighbors2->push_back(0);
+     numNeighbors2->push_back(0);
+     numNeighbors2->push_back(3);
+
+     addNodeFactory(part1, partIndices1, partitionBounds, numNeighbors1, 2);
+     addNodeFactory(part2, partIndices2, partitionBounds, numNeighbors2, 2);
 
      setUpBuilder();
      finalSetup();
@@ -76,7 +92,7 @@ protected:
   }
 
   void addNodeFactory(vector<string> pointerToCounters, vector<string> outPartitionIndices,
-      vector<long>* partitionBound, long numSlaves) {
+     vector<long>* partitionBound, vector<int>* numNeighbors, long numSlaves) {
     TestCounterInversePagerankNodeFactory* nodeFactory = new TestCounterInversePagerankNodeFactory;
     EdgelistContainer* outpContainer = createContainer(outPartitionIndices, numSlaves);
     EdgelistContainer* counterContainer = createContainer(pointerToCounters, numSlaves);
@@ -85,6 +101,7 @@ protected:
     nodeFactory->setPartitionBound(partitionBound);
     nodeFactory->setPointerToCounters(counterContainer);
     nodeFactory->setNumSlaves(numSlaves);
+    nodeFactory->setNumNeighbors(numNeighbors);
     // TODO size is enough to pass
     AlgoTestBase::addNodeFactory(nodeFactory, pointerToCounters, numSlaves);
   }
@@ -97,9 +114,22 @@ TEST_F(CounterInversePagerankNodeTest, test) {
   cluster.start();
 
   CounterInversePagerankNode* node = static_cast<CounterInversePagerankNode*>(cluster.getNode(0));
-  for (int i = 0; i < (int) node->pagerankScore->size(); ++i) {
-    node->logger_->info("%d %lf", i, node->pagerankScore->at(i));
-  }
+
+  ASSERT_NEAR(0.08333, node->pagerankScore->at(0), 0.0001);
+  ASSERT_NEAR(0.058333, node->pagerankScore->at(1), 0.0001);
+  ASSERT_NEAR(0.08333, node->pagerankScore->at(2), 0.0001);
+  ASSERT_NEAR(0.05833, node->pagerankScore->at(3), 0.0001);
+  ASSERT_NEAR(0.03333, node->pagerankScore->at(4), 0.0001);
+  ASSERT_NEAR(0.03333, node->pagerankScore->at(5), 0.0001);
+  ASSERT_NEAR(0.05833, node->pagerankScore->at(6), 0.0001);
+
+  node = static_cast<CounterInversePagerankNode*>(cluster.getNode(1));
+  ASSERT_NEAR(0.08333, node->pagerankScore->at(0), 0.0001);
+  ASSERT_NEAR(0.0708, node->pagerankScore->at(1), 0.0001);
+  ASSERT_NEAR(0.08333, node->pagerankScore->at(2), 0.0001);
+  ASSERT_NEAR(0.04583, node->pagerankScore->at(3), 0.0001);
+  ASSERT_NEAR(0.08333, node->pagerankScore->at(4), 0.0001);
+
 
 }
 

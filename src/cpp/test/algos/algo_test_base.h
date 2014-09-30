@@ -132,7 +132,7 @@ protected:
     params_["NUMLINE"] = ss.str();
     ss.str("");
 
-    logger_->info("Setting number of slaves %d", slaveIndex_);
+    logger_->info("Setting number of slaves %d number of nodes %ld", slaveIndex_, numNodes_);
     ss << slaveIndex_;
     params_["NUM_SLAVES"] = ss.str();
     ss.str("");
