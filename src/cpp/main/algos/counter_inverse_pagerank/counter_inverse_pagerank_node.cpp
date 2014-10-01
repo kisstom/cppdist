@@ -111,7 +111,7 @@ void CounterInversePagerankNode::updateWithIncomingPr() {
 void CounterInversePagerankNode::initFromMaster(string) {
   double ini = 1.0 / allNode;
 
-  pagerankScore = new vector<double>(algo_->getNumberOfPartitionNodes(), ini);
+  pagerankScore = new vector<double>(algo_->getNumberOfPartitionNodes(), 0.0);
 }
 
 bool CounterInversePagerankNode::afterIteration() {
