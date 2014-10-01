@@ -93,7 +93,7 @@ void CounterInversePagerankNode::updateWithIncomingPr() {
       partitionNode < pointerToCounters->getNumberOfNodes(); ++partitionNode) {
     numNeighbors = pointerToCounters->neighborhoodSizePart(partitionNode);
     if (0.0 == numNeighbors) {
-      (*pagerankScore)[partitionNode] = 0.0;
+      (*pagerankScore)[partitionNode] = dump / allNode;
       continue;
     }
 
