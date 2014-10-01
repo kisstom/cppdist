@@ -22,7 +22,7 @@ void ThreadManager::start() {
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-  const int rc = pthread_create(&thread, &attr, static_main,static_cast<void*>(this));
+  const int rc = pthread_create(&thread, &attr, static_main, static_cast<void*>(this));
   if (rc) {
   	logger_->error("Return code from pthread_create() is %d.", rc);
     exit(-1);
