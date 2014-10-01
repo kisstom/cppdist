@@ -95,7 +95,8 @@ void PagerankNode::serializeImportance(int bufferIndex, long outNode, double imp
 
 void PagerankNode::setEdgeListContainer(EdgelistContainer* matrix) {
   matrix_ = matrix;
-  pagerankScore_ = new vector<double>(matrix->getNumberOfNodes(), 0.0);
+  double ini = 1.0 / allNode_;
+  pagerankScore_ = new vector<double>(matrix->getNumberOfNodes(), ini);
   tmpScore_ = new vector<double>(matrix->getNumberOfNodes(), 0.0);
 }
 
