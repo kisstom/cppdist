@@ -115,7 +115,7 @@ TEST_F(CounterInversePagerankNodeTest, test) {
 
   CounterInversePagerankNode* node = static_cast<CounterInversePagerankNode*>(cluster.getNode(0));
 
-  ASSERT_NEAR(0.08333, node->pagerankScore->at(0), 0.0001);
+  ASSERT_NEAR(0.008333, node->pagerankScore->at(0), 0.0001);
   ASSERT_NEAR(0.058333, node->pagerankScore->at(1), 0.0001);
   ASSERT_NEAR(0.08333, node->pagerankScore->at(2), 0.0001);
   ASSERT_NEAR(0.05833, node->pagerankScore->at(3), 0.0001);
@@ -124,7 +124,7 @@ TEST_F(CounterInversePagerankNodeTest, test) {
   ASSERT_NEAR(0.05833, node->pagerankScore->at(6), 0.0001);
 
   node = static_cast<CounterInversePagerankNode*>(cluster.getNode(1));
-  ASSERT_NEAR(0.08333, node->pagerankScore->at(0), 0.0001);
+  ASSERT_NEAR(0.008333, node->pagerankScore->at(0), 0.0001);
   ASSERT_NEAR(0.0708, node->pagerankScore->at(1), 0.0001);
   ASSERT_NEAR(0.08333, node->pagerankScore->at(2), 0.0001);
   ASSERT_NEAR(0.04583, node->pagerankScore->at(3), 0.0001);
