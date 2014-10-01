@@ -194,7 +194,7 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
 
   char neighborsFile[1024];
   sprintf(neighborsFile, "%s/neighbors_file_%s.txt",
-        (*params)["PARTITION_BOUNDS_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+        (*params)["OUT_PARTITION_INDICES_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   node->readNeighbors(string(neighborsFile));
 
   char outputFileN[1024];
