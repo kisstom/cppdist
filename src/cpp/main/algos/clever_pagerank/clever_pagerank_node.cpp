@@ -109,8 +109,9 @@ void CleverPagerankNode::final() {
 }
 
 void CleverPagerankNode::setNumberNeighbors(vector<int>* nneighbors) {
+  double ini = 1.0 / allNode_;
   numNeighbors = nneighbors;
-  pagerankScore_ = new vector<double>(nneighbors->size(), 0.0);
+  pagerankScore_ = new vector<double>(nneighbors->size(), ini);
   tmpScore_ = new vector<double>(nneighbors->size(), 0.0);
 }
 
