@@ -55,6 +55,7 @@ void CounterInversePagerankNode::sender() {
 }
 
 void CounterInversePagerankNode::update(short partIndex, long from, double imp) {
+  logger_->info("updating %ld %lf", from, imp);
   mutex.lock();
   if (from != (*newComer)[partIndex]) {
     ++(*counter)[partIndex];
