@@ -187,7 +187,7 @@ def preprocess():
       runPreprocessTask('MAKE_PARTITION', makePartition)
       runPreprocessTask('PAGERANK_INVERSE', pagerankInversePreprocess)
       runPreprocessTask('OUTPARTITION_INDEX', outpartitionIndexCompute)
-      #runPreprocessTask('COUNTER_INVERSE', counterInversePreprocess)
+      runPreprocessTask('COUNTER_INVERSE', counterInversePreprocess)
 
 ########### For partitioning ##################
 
