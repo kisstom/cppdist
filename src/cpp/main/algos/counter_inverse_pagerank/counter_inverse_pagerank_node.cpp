@@ -55,7 +55,6 @@ void CounterInversePagerankNode::sender() {
 }
 
 void CounterInversePagerankNode::update(short partIndex, long from, double imp) {
-  logger_->info("updating %ld %lf", from, imp);
   mutex.lock();
   if (from != (*newComer)[partIndex]) {
     ++(*counter)[partIndex];
@@ -93,7 +92,7 @@ void CounterInversePagerankNode::updateWithIncomingPr() {
   for (long partitionNode = 0;
       partitionNode < pointerToCounters->getNumberOfNodes(); ++partitionNode) {
     numNeighbors = pointerToCounters->neighborhoodSizePart(partitionNode);
-    logger_->info("from %ld num neighb %ld", partitionNode, numNeighbors);
+
     if (0.0 == numNeighbors) {
       (*pagerankScore)[partitionNode] = dump / allNode;
       continue;
@@ -105,7 +104,6 @@ void CounterInversePagerankNode::updateWithIncomingPr() {
       }
 
       index = pointerToCounters->getEdgeAtPosPart(partitionNode, i);
-      logger_->info("adding %lf", (*incomingPageranks)[index]);
       (*pagerankScore)[partitionNode] += (*incomingPageranks)[index];
     }
 

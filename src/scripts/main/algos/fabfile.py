@@ -380,8 +380,12 @@ def startOnMachine(slave_index, host):
 
 def mainCompute():
   global conf
+  debug = False
+  if conf.has_option('ALGO', 'DEBUG'):
+    debug = True
+
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
-    gitInfo()
+    gitInfo(debug)
     storePartitionCfg()
     runOnAllNodes(copyCfg)
     startMaster()
@@ -470,19 +474,20 @@ def runOnAllNodes(function):
   env.hosts = MASTER_HOST
 
 @task
-def gitInfo():
+def gitInfo(debug):
   global conf
   localDir = conf.get('ALGO', 'LOCAL_DIR')
   scriptDir = conf.get('ALGO', 'SCRIPTDIR')
   gitLog = localDir + '/gitlog.txt'
   f = open(gitLog, 'w')
 
-  with cd(scriptDir):
-    run("""git diff --quiet --exit-code || """ +
-      """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
-    out = run("""git log -1 --pretty=format:%H""")
-    print out.strip()
-    f.write(out.strip())
+  if not debug:
+    with cd(scriptDir):
+      run("""git diff --quiet --exit-code || """ +
+        """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
+      out = run("""git log -1 --pretty=format:%H""")
+      print out.strip()
+      f.write(out.strip())
 
   f.close()
 
