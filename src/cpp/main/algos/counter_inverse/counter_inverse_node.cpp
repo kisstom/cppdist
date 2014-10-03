@@ -112,7 +112,7 @@ void CounterInverseNode::final() {
   fclose(partitionBound);
 
   FILE* output = fopen(outfile.c_str(), "w");
-  long prev = matrix->getMinnode(), act = -1, index = -1;
+  long prev = 0, act = -1, index = -1;
 
   for (long i = 0; i < (long) inversePartsEdges->size(); ++i) {
     act = (*inversePartsEdges)[i].to;
@@ -129,7 +129,7 @@ void CounterInverseNode::final() {
     prev = act;
   }
 
-  for (long i = 0; i < matrix->getNumberOfNodes() - (prev - matrix->getMinnode()) + 1; ++i) {
+  for (long i = 0; i < matrix->getNumberOfNodes() - prev + 1; ++i) {
     fprintf(output, "\n");
   }
 

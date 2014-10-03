@@ -82,8 +82,6 @@ TEST_F(CounterInverseNodeTest, test) {
   }
 
 
-
-
   ASSERT_EQ(5, (int) node->inversePartsEdges->size());
   ASSERT_EQ(2, (int) node->counter->at(0));
   ASSERT_EQ(0, (int) node->bounds->at(0));
