@@ -118,7 +118,7 @@ void CounterInverseNode::final() {
     act = (*inversePartsEdges)[i].to;
     index = (*inversePartsEdges)[i].count + (*bounds)[(*inversePartsEdges)[i].fromPartition];
     if (act != prev) {
-      if (i != 0) {
+      if (act != 0) {
         for (int emptyCount = 0; emptyCount < act - prev; ++emptyCount) {
           fprintf(output, "\n");
         }
