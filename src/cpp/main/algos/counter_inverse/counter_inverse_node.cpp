@@ -129,7 +129,7 @@ void CounterInverseNode::final() {
     prev = act;
   }
 
-  for (long i = 0; i < matrix->getNumberOfNodes() - prev + 1; ++i) {
+  for (long i = 0; i < matrix->getNumberOfNodes() - prev; ++i) {
     fprintf(output, "\n");
   }
 
