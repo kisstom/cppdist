@@ -28,6 +28,7 @@ CounterInversePagerankNode::CounterInversePagerankNode(
 }
 
 void CounterInversePagerankNode::sender() {
+  logger_->info("Starting sender.");
   int partIndex, numNeighborsOfThis, partitionNeighbors;
 
   for (long partitionNode = 0;
@@ -80,6 +81,7 @@ void CounterInversePagerankNode::serializeImportance(int bufferIndex, long from,
 }
 
 void CounterInversePagerankNode::beforeIteration(string msg) {
+  logger_->info("Starting iteration %d", actIter);
   for (int i = 0; i < (int) counter->size(); ++i) {
     (*counter)[i] = 0;
   }
