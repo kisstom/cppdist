@@ -1,20 +1,14 @@
 #!/bin/bash -eu
 
-if [ "$#" -lt 3 ]; then
-  echo "Wrong number of params. Correct: input numParts outputDir startFromZero"
+if [ "$#" != 4 ]; then
+  echo "Wrong number of params. Correct: input numParts outputDir numNodes"
   exit
 fi
 
 input="$1"
 numParts="$2"
 outputDir="$3"
-startFromZero="0"
-
-if [ "$#" -gt 3 ]; then
-  startFromZero=$4
-fi
-
-echo "start from zero $startFromZero"
+numNodes="$4"
 
 rm -rf "$outputDir"
 mkdir -p "$outputDir"
@@ -23,13 +17,6 @@ thisDir=$(dirname $0)
 thisDir=$(readlink -f $thisDir)
 
 srcdir=$thisDir/../../../../../
-
-date
-echo "counting nodes..."
-numNodes=`awk -v startFromZero="$startFromZero" \
-'BEGIN{max=0} {if ($1 > max) max = $1; if ($2 > max) max = $2}\
-END{if (startFromZero == 1) ++max; print max}' "$input"`
-echo "number of nodes: $numNodes" 
 
 date
 echo "sorting edge list..."
