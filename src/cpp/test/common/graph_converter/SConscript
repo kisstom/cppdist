@@ -3,4 +3,5 @@ Import('env')
 COMMON_OBJ = []
 
 env.Program('test_remove_paralel', ['test_remove_paralel.cpp', '../../../../bin/main/common/graph_converter/remove_paralel.o'] + COMMON_OBJ)
-env.Program('split_by_row_test', ['split_by_row_test.cpp', '../../../../bin/main/common/graph_converter/split_by_row.o'] + COMMON_OBJ) 
+env.Program('split_by_row_test', ['split_by_row_test.cpp', '../../../../bin/main/common/graph_converter/split_by_row.o'] + COMMON_OBJ)
+env.Program('shuffle_continue_reindexer_test', ['shuffle_continue_reindexer_test.cpp', '../../../../bin/main/common/graph_converter/shuffle_continue_reindexer.o'] + COMMON_OBJ) 

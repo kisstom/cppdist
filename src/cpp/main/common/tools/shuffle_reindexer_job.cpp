@@ -26,5 +26,4 @@ int main (int argc, char* argv[]) {
   ShuffleReindexer reindexer(inputF, outputF, hashF);
   reindexer.init();
   reindexer.run();
-
 }

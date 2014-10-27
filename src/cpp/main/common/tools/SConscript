@@ -17,4 +17,6 @@ env.Program('convert_edge_list_to_base_main', ['convert_edge_list_to_base_main.c
 env.Program('inverse_partition_maker_job', ['inverse_partition_maker_job.cpp', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o', '../graph/inverse_partition_maker.o'])
 env.Program('outpartition_index_computer_job', ['outpartition_index_computer_job.cpp', '../io/outpartition_index_computer.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o'])
 env.Program('shuffle_reindexer_job', ['shuffle_reindexer_job.cpp', '../graph_converter/shuffle_reindexer.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o'])
+env.Program('shuffle_continue_reindexer_job', ['shuffle_continue_reindexer_job.cpp', '../graph_converter/shuffle_continue_reindexer.o'])
 env.Program('outpartition_index_as_edgelist_computer', ['outpartition_index_as_edgelist_computer.cpp', '../io/outpartition_index_computer.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o'])
+env.Program('node_counter', ['node_counter.cpp'])
