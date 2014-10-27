@@ -35,6 +35,8 @@ private:
   FRIEND_TEST(ShuffleContinueReindexerTest, test);
   FRIEND_TEST(ShuffleContinueReindexerTest, test2);
   FRIEND_TEST(ShuffleContinueReindexerTest, test3);
+  FRIEND_TEST(ShuffleContinueReindexerTest, test4);
+  FRIEND_TEST(ShuffleContinueReindexerTest, test5);
 };
 
 

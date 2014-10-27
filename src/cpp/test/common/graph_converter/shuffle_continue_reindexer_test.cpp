@@ -66,6 +66,55 @@ TEST(ShuffleContinueReindexerTest, test3) {
   ASSERT_EQ(expected, reindex);
 }
 
+TEST(ShuffleContinueReindexerTest, test4) {
+  ShuffleContinueReindexer indexer("", "", "", 27, 5);
+  long randomIndex = 685195;
+
+  indexer.nodeCounter = 16;
+  indexer.reindexFile = stderr;
+  long reindex = indexer.reindexer(randomIndex);
+  long expected = 9;
+  ASSERT_EQ(expected, reindex);
+
+  indexer.nodeCounter = 17;
+  reindex = indexer.reindexer(randomIndex + 1);
+  expected = 15;
+  ASSERT_EQ(expected, reindex);
+
+
+  indexer.nodeCounter = 18;
+  expected = 20;
+  reindex = indexer.reindexer(randomIndex + 2);
+  ASSERT_EQ(expected, reindex);
+
+  indexer.nodeCounter = 19;
+  expected = 25;
+  reindex = indexer.reindexer(randomIndex + 3);
+  ASSERT_EQ(expected, reindex);
+
+  indexer.nodeCounter = 25;
+  reindex = indexer.reindexer(randomIndex + 1);
+  expected = 15;
+  ASSERT_EQ(expected, reindex);
+}
+
+TEST(ShuffleContinueReindexerTest, test5) {
+  ShuffleContinueReindexer indexer("", "", "", 27, 5);
+  indexer.nodeCounter = 18;
+  indexer.reindexFile = stderr;
+  indexer.reindexer(0);
+  ASSERT_EQ(19, indexer.nodeCounter);
+
+  indexer.reindexer(0);
+  ASSERT_EQ(19, indexer.nodeCounter);
+}
+
+/*TEST(ShuffleContinueReindexerTest, test6) {
+  ShuffleContinueReindexer indexer("", "", "", 27, 5);
+  indexer.nodeCounter = 18;
+  indexer.reindexer(0);
+  ASSERT_EQ(19, indexer.nodeCounter);
+}*/
 
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
