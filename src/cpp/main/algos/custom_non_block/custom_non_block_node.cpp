@@ -121,7 +121,8 @@ void CustomNonBlockNode::final() {
 
 void CustomNonBlockNode::setNumberNeighbors(vector<int>* nneighbors) {
   numNeighbors = nneighbors;
-  pagerankScore_ = new vector<double>(nneighbors->size(), 0.0);
+  double ini = 1.0 / allNode_;
+  pagerankScore_ = new vector<double>(nneighbors->size(), ini);
   tmpSenderScore_ = new vector<double>(nneighbors->size(), 0.0);
   tmpReceiverScore_ = new vector<double>(nneighbors->size(), 0.0);
 }
