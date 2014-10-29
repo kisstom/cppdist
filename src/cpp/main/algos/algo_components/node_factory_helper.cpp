@@ -34,6 +34,20 @@ PagerankNode* NodeFactoryHelper::initPagerankNode(unordered_map<string, string>*
   return node;
 }
 
+PagerankNonBlockNode* NodeFactoryHelper::initPagerankNonBlockNode(unordered_map<string, string>* params) {
+  long allNode, min_node;
+  int maxIter;
+  double dump;
+
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
+  sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
+  sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
+
+  PagerankNonBlockNode* node = new PagerankNonBlockNode(allNode, min_node, dump, maxIter);
+  return node;
+}
+
 SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<string, string>* params) {
 	GeneratorType type = SRAND;
 	int seed;

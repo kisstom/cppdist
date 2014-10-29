@@ -7,6 +7,7 @@
 
 #include "inner_master_factory.h"
 #include "../custom_non_block/custom_non_block_master.h"
+#include "../pagerank_non_block/pagerank_non_block_master.h"
 #include "../counter_inverse/counter_inverse_master.h"
 #include "../counter_inverse_pagerank/counter_inverse_pagerank_master.h"
 
@@ -26,7 +27,9 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
 		innerMaster = new SimrankOddEvenMaster;
 	} else if (innerMasterType.compare("PAGERANK") == 0) {
 	  innerMaster = new PagerankMaster;
-	} else if (innerMasterType.compare("PSIMRANK") == 0) {
+	} else if (innerMasterType.compare("PAGERANK_NON_BLOCK") == 0) {
+    innerMaster = new PagerankNonBlockMaster;
+  } else if (innerMasterType.compare("PSIMRANK") == 0) {
 	  innerMaster = createPSimrankMaster(params);
   } else if (innerMasterType.compare("SIMPLE_MOCK") == 0) {
     innerMaster = new SimpleMockInnerMaster;

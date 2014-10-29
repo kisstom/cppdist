@@ -16,6 +16,7 @@
 #include "../simrank_store_first/simrank_store_first_node.h"
 #include "../simrank_odd_even/simrank_odd_even_node.h"
 #include "../pagerank/pagerank_node.h"
+#include "../pagerank_non_block/pagerank_non_block_node.h"
 #include "../clever_pagerank/clever_pagerank_node.h"
 #include "../custom_non_block/custom_non_block_node.h"
 #include "../psimrank/psimrank_node.h"
@@ -44,6 +45,7 @@ private:
 	SimrankStoreFirstNode* createSimrankStoreFirstNode(unordered_map<string, string>* params);
 	SimrankOddEvenNode* createSimrankOddEvenNode(unordered_map<string, string>* params);
 	PagerankNode* createPagerankNode(unordered_map<string, string>* params);
+	PagerankNonBlockNode* createPagerankNonBlockNode(unordered_map<string, string>* params);
 	PSimrankNode* createPSimrankNode(unordered_map<string, string>* params);
 	BitpropNode* createBitpropNode(unordered_map<string, string>* params);
 	CleverPagerankNode* createCleverPagerankNode(unordered_map<string, string>* params);

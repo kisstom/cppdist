@@ -20,6 +20,8 @@
 #include "../../algos/simrank_odd_even/simrank_odd_even_node.h"
 #include "../../algos/pagerank/pagerank_deserializer.h"
 #include "../../algos/pagerank/pagerank_node.h"
+#include "../../algos/pagerank_non_block/pagerank_non_block_node.h"
+#include "../../algos/pagerank_non_block/pagerank_non_block_deserializer.h"
 #include "../../algos/clever_pagerank/clever_pagerank_deserializer.h"
 #include "../../algos/clever_pagerank/clever_pagerank_node.h"
 #include "../../algos/custom_non_block/custom_non_block_deserializer.h"
@@ -46,6 +48,7 @@ private:
 	Deserializer* createSimrankStoreFirstDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createSimrankOddEvenDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createPagerankDeserializer(unordered_map<string, string>*, Node* node);
+  Deserializer* createPagerankNonBlockDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createPSimrankDeserializer(unordered_map<string, string>*, Node* node);
 	Deserializer* createSimpleMockDeserializer(unordered_map<string, string>* params, Node* node);
 	Deserializer* createBitpropDeserializer(unordered_map<string, string>* params, Node* node);

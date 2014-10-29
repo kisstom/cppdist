@@ -26,7 +26,9 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 		node = createSimrankOddEvenNode(params);
 	} else if (nodeType.compare("PAGERANK") == 0) {
 	  node = createPagerankNode(params);
-	} else if (nodeType.compare("PSIMRANK") == 0) {
+	} else if (nodeType.compare("PAGERANK_NON_BLOCK") == 0) {
+    node = createPagerankNonBlockNode(params);
+  } else if (nodeType.compare("PSIMRANK") == 0) {
     node = createPSimrankNode(params);
   } else if (nodeType.compare("BITPROP") == 0) {
     node = createBitpropNode(params);
@@ -83,6 +85,18 @@ PagerankNode* NodeFactory::createPagerankNode(unordered_map<string, string>* par
   char outputFileN[1024];
   sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   node->setOutputFile(string(outputFileN));
+  return node;
+}
+
+PagerankNonBlockNode* NodeFactory::createPagerankNonBlockNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  EdgelistContainer* container = createEdgeListContainer(params);
+  PagerankNonBlockNode* node = helper.initPagerankNonBlockNode(params);
+  node->setEdgeListContainer(container);
+
+  char outputFileN[1024];
+  sprintf(outputFileN, "%sout_%s", (*params)["LOCAL_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
+  node->setOutputFileName(string(outputFileN));
   return node;
 }
 

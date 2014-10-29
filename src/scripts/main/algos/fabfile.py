@@ -247,7 +247,7 @@ def putOnMachine(slave_index, host):
     partitionFile = conf.get('ALGO', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
     put(partitionFile, remoteDir)
 
-########### For partitioning ##################
+########### For pagerank inverse ##################
 def pagerankInversePreprocess():
   global conf, cfg_hosts
   # Copying slavery config to remote nodes
@@ -311,6 +311,8 @@ def putInverseOnMachine(slave_index, host):
     put(boundFile, inversePartDir)
     put(edgesFile, inversePartDir)
 
+########### Out partition index compute ##################
+
 @task
 def outpartitionIndexCompute():
   global conf, numJobs
@@ -334,6 +336,9 @@ def outpartitionIndexComputeOnePart(slave_index):
     command += '%s/outpartition_indices_%s.txt '%(outPartIndicesDir, slave_index)
     command += '%s/neighbors_file_%s.txt'%(outPartIndicesDir, slave_index)
     run(command)
+
+
+########### Counter inverse ##################
 
 def counterInversePreprocess():
   runOnAllNodes(lambda : run('mkdir -p %s'%conf.get('ALGO', 'COUNTER_INVERSE_OUTPUT_DIR')))

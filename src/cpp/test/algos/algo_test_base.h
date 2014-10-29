@@ -23,11 +23,14 @@ using std::tr1::unordered_map;*/
 
 class AlgoTestBase: public ::testing::Test  {
 protected:
-  AlgoTestBase() {}
+  AlgoTestBase() {
+    logger_ = &log4cpp::Category::getInstance(std::string("AlgoTestBase"));
+  }
 
   virtual ~AlgoTestBase() {}
 
   virtual void initParams(string nodeType) {
+    logger_->info("Initing params.");
     numNodes_ = 0;
     slaveIndex_ = 0;
     slavePort_ = 7001;

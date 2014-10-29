@@ -8,59 +8,31 @@
 
 #include <gtest/gtest.h>
 
-
-#include "../../../main/algos/algo_components/algo.h"
-#include "../../../main/algos/algo_components/master.h"
-#include "../../../main/common/thread/node_thread.h"
-#include "../../../main/algos/simple_mock_algo/simple_mock_node.h"
-#include "../../../main/algos/simple_mock_algo/simple_mock_deserializer.h"
-#include "../../../main/algos/simple_mock_algo/simple_mock_inner_master.h"
-#include "../common/algo_test_base.h"
+#include <gtest/gtest.h>
+#include "../../../main/algos/algo_components/test_simrank_odd_even_node_factory.h"
+#include "../../../main/algos/algo_components/cluster.h"
+#include "../algo_test_base.h"
 
 namespace {
 
 class SimpleMockTestRun: public AlgoTestBase {
 protected:
-  // You can remove any or all of the following functions if its body
-  // is empty.
 
   SimpleMockTestRun() {
   }
 
   virtual ~SimpleMockTestRun() {
-    // You can do clean-up work that doesn't throw exceptions here.
-  }
-
-  // If the constructor and destructor are not enough for setting up
-  // and cleaning up each test, you can define the following methods:
-  static void SetUpTestCase() {
-  }
-
-  static void TearDownTestCase() {
   }
 
   virtual void SetUp() {
-    initParams("SIMPLE_MOCK");
     initLogger();
+    initParams("SIMPLE_MOCK");
 
-    vector<string> part1;
-    vector<string> part2;
-    part1.push_back("1 2 3");
-    part1.push_back("");
-    part1.push_back("9");
-    part1.push_back("8 10");
-    part1.push_back("");
-    part1.push_back("2 4 6");
 
-    part2.push_back("");
-    part2.push_back("2 3 5");
-    part2.push_back("11");
-    part2.push_back("");
-    part2.push_back("");
-    part2.push_back("1 6 8");
-
-    addPartition(part1, 2);
-    addPartition(part2, 2);
+    addNodeFactory(2);
+    addNodeFactory(2);
+    /*addNodeFactory(4);
+    addNodeFactory(4);*/
 
     setUpBuilder();
     finalSetup();
@@ -69,16 +41,22 @@ protected:
   virtual void TearDown() {
   }
 
-  void addFactory() {
-    nodeFactories_.push_back(new TestSimrankOddEvenNodeFactory);
+  void initParams(string nodeType) {
+    AlgoTestBase::initParams(nodeType);
   }
-  // Objects declared here can be used by all tests in the test case for Foo.
+
+  void addNodeFactory(long numSlaves) {
+    TestSimrankOddEvenNodeFactory* nodeFactory = new TestSimrankOddEvenNodeFactory();
+    vector<string> partString;
+    AlgoTestBase::addNodeFactory(nodeFactory, partString, numSlaves);
+  }
 };
 
 
 TEST_F(SimpleMockTestRun, test) {
   Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
   cluster.init();
+  //cluster.setUp();
   cluster.start();
 }
 

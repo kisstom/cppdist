@@ -22,7 +22,9 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
 		deserializer = createSimrankOddEvenDeserializer(params, node);
 	} else if (nodeType.compare("PAGERANK") == 0) {
 	  deserializer = createPagerankDeserializer(params, node);
-	} else if (nodeType.compare("PSIMRANK") == 0) {
+	} else if (nodeType.compare("PAGERANK_NON_BLOCK") == 0) {
+    deserializer = createPagerankNonBlockDeserializer(params, node);
+  } else if (nodeType.compare("PSIMRANK") == 0) {
     deserializer = createPSimrankDeserializer(params, node);
   } else if (nodeType.compare("SIMPLE_MOCK") == 0) {
     deserializer = createSimpleMockDeserializer(params, node);
@@ -75,6 +77,13 @@ Deserializer* DeserializerFactory::createSimrankOddEvenDeserializer(unordered_ma
 Deserializer* DeserializerFactory::createPagerankDeserializer(unordered_map<string, string>*, Node* node) {
   PagerankNode* pagerankNodeNode = static_cast<PagerankNode*>(node);
   PagerankDeserializer* deserializer = new PagerankDeserializer;
+  deserializer->setNode(pagerankNodeNode);
+  return deserializer;
+}
+
+Deserializer* DeserializerFactory::createPagerankNonBlockDeserializer(unordered_map<string, string>*, Node* node) {
+  PagerankNonBlockNode* pagerankNodeNode = static_cast<PagerankNonBlockNode*>(node);
+  PagerankNonBlockDeserializer* deserializer = new PagerankNonBlockDeserializer;
   deserializer->setNode(pagerankNodeNode);
   return deserializer;
 }

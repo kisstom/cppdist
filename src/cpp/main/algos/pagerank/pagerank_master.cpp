@@ -8,9 +8,3 @@
 #include "pagerank_master.h"
 
 PagerankMaster::PagerankMaster() {}
-
-/*bool PagerankMaster::nextIter() {
-  return true;
-}
-
-void PagerankMaster::addInfoForNodes(char* ss) {}*/
