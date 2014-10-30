@@ -26,6 +26,7 @@ public:
   virtual void sendToNode(int, char*, int);
   virtual void setIp();
   virtual vector<SocketConnection*> getReceiverSockets();
+  virtual vector<SocketConnection*> getSenderSockets();
   virtual ~SocketManager();
 private:
   ServerSocket* self_socket_;

@@ -11,7 +11,7 @@
 #include "../../../main/algos/algo_components/cluster.h"
 #include "../algo_test_base.h"
 
-namespace {
+//namespace {
 
 class SimpleMockTestSetup: public AlgoTestBase {
 protected:
@@ -22,7 +22,6 @@ protected:
 
   virtual ~SimpleMockTestSetup() {
   }
-
 
   virtual void SetUp() {
     initParams("SIMPLE_MOCK");
@@ -48,9 +47,17 @@ TEST_F(SimpleMockTestSetup, testSetup) {
   Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
   cluster.init();
   cluster.setUp();
+
+  Algo* algo = cluster.getAlgo(0);
+  ASSERT_TRUE(NULL != (algo->socketManager_->getSenderSockets())[1]);
+  ASSERT_TRUE(NULL == (algo->socketManager_->getSenderSockets())[0]);
+
+  algo = cluster.getAlgo(1);
+  ASSERT_TRUE(NULL != (algo->socketManager_->getSenderSockets())[0]);
+  ASSERT_TRUE(NULL == (algo->socketManager_->getSenderSockets())[1]);
 }
 
-}
+//}
 
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);

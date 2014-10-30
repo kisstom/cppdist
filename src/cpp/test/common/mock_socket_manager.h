@@ -26,6 +26,7 @@ public:
 	MOCK_METHOD3(recvFromNode, int(int, char*, int));
 	MOCK_METHOD3(sendToNode, void(int, char*, int));
 	MOCK_METHOD0(getReceiverSockets, vector<SocketConnection*>());
+	MOCK_METHOD0(getSenderSockets, vector<SocketConnection*>());
 	//~MockSocketManager() {printf("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFfff");}
 };
 

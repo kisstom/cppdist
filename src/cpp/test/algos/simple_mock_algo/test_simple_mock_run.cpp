@@ -27,10 +27,15 @@ protected:
   virtual void SetUp() {
     initLogger();
     initParams("SIMPLE_MOCK");
+    vector<string> part1;
+    vector<string> part2;
+
+    //part1.push_back("");
+    //part2.push_back("");
 
 
-    addNodeFactory(2);
-    addNodeFactory(2);
+    addNodeFactory(part1, 2);
+    addNodeFactory(part2, 2);
     /*addNodeFactory(4);
     addNodeFactory(4);*/
 
@@ -45,10 +50,10 @@ protected:
     AlgoTestBase::initParams(nodeType);
   }
 
-  void addNodeFactory(long numSlaves) {
+  void addNodeFactory(vector<string> part, long numSlaves) {
     TestSimrankOddEvenNodeFactory* nodeFactory = new TestSimrankOddEvenNodeFactory();
-    vector<string> partString;
-    AlgoTestBase::addNodeFactory(nodeFactory, partString, numSlaves);
+    //vector<string> partString;
+    AlgoTestBase::addNodeFactory(nodeFactory, part, numSlaves);
   }
 };
 

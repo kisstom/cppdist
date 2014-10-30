@@ -125,6 +125,10 @@ void SocketManager::initConnections()
     }
     sendReadyToMaster();
   }
+  for (int i = 0; i < (int) sender_sockets_.size(); ++i) {
+    logger_->info("My port %d connection %d pointer %d",  slave_port_, i, NULL == receiver_sockets_[i]);
+  }
+
   logger_->info("Finished connections.");
 }
 
@@ -150,3 +154,6 @@ vector<SocketConnection*> SocketManager::getReceiverSockets() {
 	return receiver_sockets_;
 }
 
+vector<SocketConnection*> SocketManager::getSenderSockets() {
+  return sender_sockets_;
+}

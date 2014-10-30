@@ -9,17 +9,9 @@
 #define ALGO_TEST_BASE_H_
 
 #include <gtest/gtest.h>
-/*#include <vector>
-#include <string>
-#include <tr1/unordered_map>*/
-
 #include "../../main/common/util/logger_factory.h"
 #include "../../main/algos/algo_components/test_master_builder.h"
 #include "../../main/algos/algo_components/test_simrank_odd_even_node_factory.h"
-
-/*using std::string;
-using std::vector;
-using std::tr1::unordered_map;*/
 
 class AlgoTestBase: public ::testing::Test  {
 protected:

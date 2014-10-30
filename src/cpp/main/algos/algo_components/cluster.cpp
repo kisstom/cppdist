@@ -31,6 +31,10 @@ Node* Cluster::getNode(int slaveIndex) {
 	return builders_[slaveIndex]->getNode();
 }
 
+Algo* Cluster::getAlgo(int slaveIndex) {
+  return builders_[slaveIndex]->getAlgo();
+}
+
 void Cluster::initNodes() {
   logger_->info("Initing nodes.");
 	for (int i = 0; i < numSlaves_; ++i) {

@@ -191,8 +191,8 @@ void Algo::initFromMaster() {
 		partition_min_node_.push_back(actMin);
 	}
 
-	part_index_ = getPartitionIndex(min_node_);
-	node_->setPartitionIndex(part_index_);
+	//part_index_ = getPartitionIndex(min_node_);
+	node_->setPartitionIndex(slave_index_);
 
 	if (ss.tellg() != -1) {
 		node_->initFromMaster(ss.str().substr(ss.tellg()));

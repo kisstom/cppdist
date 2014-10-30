@@ -23,7 +23,7 @@ bool SimpleMockNode::afterIteration() {
 }
 
 void SimpleMockNode::sender() {
-	logger_->info("Starting sender.");
+	logger_->info("Starting sender %d.", partIndex_);
 	int num_slaves = senderBuffer_->getBufferNum();
 	long lmsg = 4;
 	int imsg = 2;

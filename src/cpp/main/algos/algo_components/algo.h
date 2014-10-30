@@ -22,6 +22,7 @@
 #include <sstream>
 #include "log4cpp/PatternLayout.hh"
 #include <limits.h>
+#include <gtest/gtest_prod.h>
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -86,6 +87,8 @@ private:
 	Node* node_;
 	StoreFromBinary* storeFromBinary_;
 	log4cpp::Category* logger_;
+
+	FRIEND_TEST(SimpleMockTestSetup, testSetup);
 };
 
 

@@ -56,7 +56,7 @@ void CounterInversePagerankNode::sender() {
 }
 
 void CounterInversePagerankNode::update(short partIndex, long from, double imp) {
-  mutex.lock();
+  //mutex.lock();
   if (from != (*newComer)[partIndex]) {
     ++(*counter)[partIndex];
     (*newComer)[partIndex] = from;
@@ -65,7 +65,7 @@ void CounterInversePagerankNode::update(short partIndex, long from, double imp) 
   long index = (*counter)[partIndex] + (*partitionBound)[partIndex] - 1;
 
   (*incomingPageranks)[index] = imp;
-  mutex.unlock();
+  //mutex.unlock();
 }
 
 void CounterInversePagerankNode::serializeImportance(int bufferIndex, long from, double importance) {
