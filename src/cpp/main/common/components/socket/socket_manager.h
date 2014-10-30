@@ -8,6 +8,7 @@
 #ifndef SOCKET_MANAGER_H_
 #define SOCKET_MANAGER_H_
 
+#include <gtest/gtest_prod.h>
 #include "socket.h"
 #include "log4cpp/Category.hh"
 
@@ -26,7 +27,6 @@ public:
   virtual void sendToNode(int, char*, int);
   virtual void setIp();
   virtual vector<SocketConnection*> getReceiverSockets();
-  virtual vector<SocketConnection*> getSenderSockets();
   virtual ~SocketManager();
 private:
   ServerSocket* self_socket_;
@@ -36,6 +36,8 @@ private:
   char ip_[1024];
   int slave_port_;
   log4cpp::Category* logger_;
+
+  FRIEND_TEST(SimpleMockTestSetup, testSetup);
 };
 
 

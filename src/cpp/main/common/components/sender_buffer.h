@@ -34,16 +34,22 @@ public:
 	void resizeBufferNum(int size);
 	void resizeBuffers(int size);
 	void emptyBuffer(int);
-	vector<char*> pack_;
+
 	bool canAdd(int, int);
 	void setSocketManager(SocketManager*);
 private:
-	FRIEND_TEST(SenderBufferTest, testSep);
+
+	vector<char*> pack_;
 	SocketManager* socketManager_;
 	Serializer serializer_;
 	vector<int> pack_size_;
 	int send_limit_;
 	log4cpp::Category* logger_;
+
+	FRIEND_TEST(SenderBufferTest, test);
+	FRIEND_TEST(SenderBufferTest, testSep);
+	FRIEND_TEST(SenderBufferTest, testEmpty);
+	FRIEND_TEST(SimpleMockTestSetup, testSetup);
 };
 
 inline SenderBuffer::SenderBuffer() {

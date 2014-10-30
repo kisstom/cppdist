@@ -8,6 +8,7 @@
 #ifndef STORE_FROM_BINARY_H_
 #define STORE_FROM_BINARY_H_
 
+#include <gtest/gtest_prod.h>
 #include <vector>
 #include "deserializer.h"
 #include "serializer.h"
@@ -33,6 +34,8 @@ private:
 	Serializer serializer_;
 	Deserializer* deserializer_;
 	log4cpp::Category* logger_;
+
+	FRIEND_TEST(SimpleMockTestSetup, testSetup);
 };
 
 

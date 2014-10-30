@@ -154,5 +154,18 @@ void Util::splitByToken(char* str, vector<long>& edges) {
   }
 }
 
+int Util::stringToInt(const string& str) {
+  stringstream ss(stringstream::in | stringstream::out);
+  ss << str;
+  int retval;
+  ss >> retval;
+  return retval;
+}
+
+string Util::intToString(const int val) {
+  stringstream ss(stringstream::in | stringstream::out);
+  ss << val;
+  return ss.str();
+}
 
 

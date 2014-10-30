@@ -41,6 +41,9 @@ public:
 
 	template<typename T>
 	bool hasSection(std::set<T>, std::set<T>);
+
+	int stringToInt(const string&);
+	string intToString(const int val);
 };
 
 template<typename T>

@@ -14,7 +14,7 @@
 using std::vector;
 using std::string;
 
-namespace {
+//namespace {
 
 class SenderBufferTest: public ::testing::Test  {
 protected:
@@ -43,7 +43,7 @@ protected:
   }
   // Objects declared here can be used by all tests in the test case for Foo.
 };
-}
+//}
 
 TEST(SenderBufferTest, test) {
   SenderBuffer senderBuffer;

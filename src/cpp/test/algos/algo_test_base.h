@@ -17,6 +17,10 @@ class AlgoTestBase: public ::testing::Test  {
 protected:
   AlgoTestBase() {
     logger_ = &log4cpp::Category::getInstance(std::string("AlgoTestBase"));
+    initSlavePort = 7001;
+    host = "localhost";
+    masterPort = 7000;
+    sendLimit = 6000;
   }
 
   virtual ~AlgoTestBase() {}
@@ -25,16 +29,16 @@ protected:
     logger_->info("Initing params.");
     numNodes_ = 0;
     slaveIndex_ = 0;
-    slavePort_ = 7001;
+    slavePort_ = initSlavePort;
     std::stringstream ss;
 
     ss << slavePort_;
     params_["INIT_SLAVE_PORT"] = ss.str();
     ss.str("");
 
-    params_["MASTER_PORT"] = "7000";
-    params_["SEND_LIMIT"] = "6000";
-    params_["MASTER_HOST"] = "localhost";
+    params_["MASTER_PORT"] = util.intToString(masterPort);
+    params_["SEND_LIMIT"] = util.intToString(sendLimit);
+    params_["MASTER_HOST"] = host;
     params_["NODE_TYPE"] = nodeType;
     params_["INNER_MASTER_TYPE"] = nodeType;
     params_["DESERIALIZER_TYPE"] = nodeType;
@@ -152,6 +156,12 @@ protected:
   long numNodes_;
   int slaveIndex_;
   int slavePort_;
+
+  int initSlavePort;
+  int masterPort;
+  string host;
+  int sendLimit;
+  Util util;
 };
 
 #endif /* ALGO_TEST_BASE_H_ */

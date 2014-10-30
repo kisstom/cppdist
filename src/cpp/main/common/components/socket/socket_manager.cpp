@@ -154,6 +154,4 @@ vector<SocketConnection*> SocketManager::getReceiverSockets() {
 	return receiver_sockets_;
 }
 
-vector<SocketConnection*> SocketManager::getSenderSockets() {
-  return sender_sockets_;
-}
+

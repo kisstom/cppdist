@@ -1,6 +1,5 @@
 Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
 
-env.Program('test_node', ['test_node.cpp'] + COMMON_OBJ + ALGO_OBJ)
 env.Program('test_simrank_update', ['test_simrank_update.cpp'] + COMMON_OBJ + ALGO_OBJ)
 env.Program('test_simrank_update_deserializer', ['test_simrank_update_deserializer.cpp']  + COMMON_OBJ + ALGO_OBJ)
 

@@ -11,8 +11,6 @@
 #include "../../../main/algos/algo_components/cluster.h"
 #include "../algo_test_base.h"
 
-//namespace {
-
 class SimpleMockTestSetup: public AlgoTestBase {
 protected:
 
@@ -29,7 +27,6 @@ protected:
 
     addFactory(2);
     addFactory(2);
-    //addFactory(3);
 
     setUpBuilder();
     finalSetup();
@@ -49,15 +46,41 @@ TEST_F(SimpleMockTestSetup, testSetup) {
   cluster.setUp();
 
   Algo* algo = cluster.getAlgo(0);
-  ASSERT_TRUE(NULL != (algo->socketManager_->getSenderSockets())[1]);
-  ASSERT_TRUE(NULL == (algo->socketManager_->getSenderSockets())[0]);
+  ASSERT_TRUE(NULL != (algo->socketManager_->sender_sockets_)[1]);
+  ASSERT_TRUE(NULL == (algo->socketManager_->sender_sockets_)[0]);
+  ASSERT_TRUE(NULL != (algo->socketManager_->receiver_sockets_)[1]);
+  ASSERT_TRUE(NULL == (algo->socketManager_->receiver_sockets_)[0]);
+  ASSERT_EQ(slaveIndex_, (int) algo->senderBuffer_->pack_.size());
+  ASSERT_EQ(slaveIndex_, (int) algo->senderBuffer_->pack_size_.size());
+  ASSERT_EQ(sendLimit, algo->senderBuffer_->send_limit_);
+  for (int i = 0; i < (int) algo->senderBuffer_->pack_size_.size(); ++i) {
+    ASSERT_EQ(0, algo->senderBuffer_->pack_size_[i]);
+  }
+  ASSERT_EQ(slaveIndex_, (int) algo->storeFromBinary_->receiver_remains_.size());
+  ASSERT_EQ(slaveIndex_, (int) algo->storeFromBinary_->remains_size_.size());
+  for (int i = 0; i < (int) algo->storeFromBinary_->receiver_remains_.size(); ++i) {
+    ASSERT_EQ(0, algo->storeFromBinary_->remains_size_[i]);
+  }
+
 
   algo = cluster.getAlgo(1);
-  ASSERT_TRUE(NULL != (algo->socketManager_->getSenderSockets())[0]);
-  ASSERT_TRUE(NULL == (algo->socketManager_->getSenderSockets())[1]);
+  ASSERT_TRUE(NULL != (algo->socketManager_->sender_sockets_)[0]);
+  ASSERT_TRUE(NULL == (algo->socketManager_->sender_sockets_)[1]);
+  ASSERT_TRUE(NULL != (algo->socketManager_->receiver_sockets_)[0]);
+  ASSERT_TRUE(NULL == (algo->socketManager_->receiver_sockets_)[1]);
+  ASSERT_EQ(slaveIndex_, (int) algo->senderBuffer_->pack_.size());
+  ASSERT_EQ(slaveIndex_, (int) algo->senderBuffer_->pack_size_.size());
+  ASSERT_EQ(sendLimit , algo->senderBuffer_->send_limit_);
+  for (int i = 0; i < (int) algo->senderBuffer_->pack_size_.size(); ++i) {
+    ASSERT_EQ(0, algo->senderBuffer_->pack_size_[i]);
+  }
+  ASSERT_EQ(slaveIndex_, (int) algo->storeFromBinary_->receiver_remains_.size());
+  ASSERT_EQ(slaveIndex_, (int) algo->storeFromBinary_->remains_size_.size());
+  for (int i = 0; i < (int) algo->storeFromBinary_->receiver_remains_.size(); ++i) {
+    ASSERT_EQ(0, algo->storeFromBinary_->remains_size_[i]);
+  }
 }
 
-//}
 
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
