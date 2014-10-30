@@ -182,6 +182,7 @@ def runPreprocessTask(section, function):
 def preprocess():
   runOnAllNodes(cleanup)
   global conf
+
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
     if conf.has_section('PREPROCESS'):
       runPreprocessTask('MAKE_PARTITION', makePartition)
@@ -389,7 +390,11 @@ def mainCompute():
   if conf.has_option('ALGO', 'DEBUG'):
     debug = True
 
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+  bin_dir = conf.get('ALGO', 'BIN')
+  depDir = bin_dir + '../dep/'
+  libPath = depDir + 'gmp/lib/'
+  libPath += ':' + depDir + 'log4cpp/lib/'
+  with  shell_env(LD_LIBRARY_PATH=libPath):
     gitInfo(debug)
     storePartitionCfg()
     runOnAllNodes(copyCfg)
@@ -399,13 +404,26 @@ def mainCompute():
 
 @task
 def compute():
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+  global conf
+  bin_dir = conf.get('ALGO', 'BIN')
+  depDir = bin_dir + '../dep/'
+  libPath = depDir + 'gmp/lib/'
+  libPath += ':' + depDir + 'log4cpp/lib/'
+
+  with  shell_env(LD_LIBRARY_PATH=libPath):
     runOnAllNodes(cleanup)
     mainCompute()
 
 @task
 def computeAll():
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):
+  global conf
+  bin_dir = conf.get('ALGO', 'BIN')
+  depDir = bin_dir + '../dep/'
+  libPath = depDir + 'gmp/lib/'
+  libPath += ':' + depDir + 'log4cpp/lib/'
+
+  print libPath
+  with  shell_env(LD_LIBRARY_PATH=libPath):
     
     preprocess()
     mainCompute()
