@@ -34,6 +34,7 @@ echo algo tests
 test_dir ./bin/test/algos/simrank_odd_even/
 test_dir ./bin/test/algos/psimrank/
 test_dir ./bin/test/algos/bitprop/
+test_dir ./bin/test/algos/simple_mock_algo/
 
 echo script tests
 test_scripts ./scripts/test/

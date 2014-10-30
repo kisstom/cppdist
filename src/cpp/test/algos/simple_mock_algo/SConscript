@@ -1,6 +1,5 @@
 Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
 
 
-env.Program('test_simple_mock', ['test_simple_mock.cpp'] + COMMON_OBJ + ALGO_OBJ)
 env.Program('test_simple_mock_run', ['test_simple_mock_run.cpp'] + COMMON_OBJ + ALGO_OBJ)
 env.Program('test_simple_mock_setup', ['test_simple_mock_setup.cpp'] + COMMON_OBJ + ALGO_OBJ)
