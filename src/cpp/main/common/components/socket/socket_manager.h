@@ -38,6 +38,7 @@ private:
   log4cpp::Category* logger_;
 
   FRIEND_TEST(SimpleMockTestSetup, testSetup);
+  friend class SimpleMockTestSetup;
 };
 
 

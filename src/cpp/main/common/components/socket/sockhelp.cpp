@@ -209,63 +209,13 @@ int make_connection(char *service, int type, char *netaddress)
   return sock;
 }
 
+// Only for tcp
 int make_connection(int port, char *netaddress)
 {
   char service[10];
   sprintf(service, "%d", port);
   fprintf(stderr, "make_connection port=%s\n", service);
   return make_connection(service, SOCK_STREAM, netaddress);
-
-  fprintf(stderr, "2 prot=%d\n", port);
-  /* First convert service from a string, to a number... */
-//  int port = -1;
-  struct in_addr *addr;
-  int sock;
-  // int connected;
-  struct sockaddr_in address;
-
-//  if (type == SOCK_STREAM) 
-    port = atoport(service, "tcp");
-//  if (type == SOCK_DGRAM)
-//    port = atoport(service, "udp");
-//  if (port == -1) {
-//    fprintf(stderr,"make_connection:  Invalid socket type.\n");
-//    return -1;
-//  }
-  addr = atoaddr(netaddress);
-  if (addr == NULL) {
-    fprintf(stderr,"make_connection:  Invalid network address.\n");
-    return -1;
-  }
- 
-  memset((char *) &address, 0, sizeof(address));
-  address.sin_family = AF_INET;
-  address.sin_port = (port);
-  address.sin_addr.s_addr = addr->s_addr;
-
-  sock = socket(AF_INET, SOCK_DGRAM, 0);
-
-  printf("Connecting to %s on port %d.\n",inet_ntoa(*addr),htons(port));
-
-
-//  if (type == SOCK_STREAM) {
-    int connected = connect(sock, (struct sockaddr *) &address, 
-      sizeof(address));
-    if (connected < 0) {
-      perror("connect");
-      return -1;
-    }
-    return sock;
-//  }
-
-  /*
-  // Otherwise, must be for udp, so bind to address. 
-  if (bind(sock, (struct sockaddr *) &address, sizeof(address)) < 0) {
-    perror("bind");
-    return -1;
-  }
-  */
-  return sock;
 }
 
 /* This is just like the read() system call, accept that it will make

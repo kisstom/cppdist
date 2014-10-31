@@ -50,6 +50,7 @@ private:
 	FRIEND_TEST(SenderBufferTest, testSep);
 	FRIEND_TEST(SenderBufferTest, testEmpty);
 	FRIEND_TEST(SimpleMockTestSetup, testSetup);
+	friend class SimpleMockTestSetup;
 };
 
 inline SenderBuffer::SenderBuffer() {
