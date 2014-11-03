@@ -18,6 +18,7 @@ class Socket {
  protected:
   int socket_file_descriptor;
   bool isClosed_;
+  int socketType;
  public:
   Socket();
   ~Socket();

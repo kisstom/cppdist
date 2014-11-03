@@ -32,6 +32,7 @@
 
 Socket::Socket() {
   isClosed_ = false;
+  socketType = SOCK_STREAM;
 }
 
 Socket::~Socket() {
@@ -60,6 +61,7 @@ void Socket::Close() {
 //
 
 ServerSocket::ServerSocket() {
+  socketType = SOCK_STREAM;
 }
 
 ServerSocket::~ServerSocket() {
@@ -69,9 +71,10 @@ ServerSocket *ServerSocket::Create(int port) {
   char service[10];
   sprintf(service, "%d", port);
   port = atoport(service, "tcp");
+  int sType = SOCK_STREAM;
 
   ServerSocket *socket_obj = new ServerSocket;
-  socket_obj->socket_file_descriptor = socket(AF_INET, SOCK_STREAM, 0);
+  socket_obj->socket_file_descriptor = socket(AF_INET, sType, 0);
   socket_obj->port_ = port;
   if (socket_obj->socket_file_descriptor < 0) {
     throw ServerCreateError(port);
@@ -118,6 +121,7 @@ SocketConnection *ServerSocket::Accept() {
 }
 
 SocketConnection::SocketConnection() {
+  socketType = SOCK_STREAM;
 }
 
 SocketConnection::~SocketConnection() {
@@ -130,9 +134,10 @@ SocketConnection *SocketConnection::Connect(string host, int port) {
   res->host_ = host;
   char *netaddress = new char[host.size()+1];
   strcpy(netaddress, host.c_str());
+  int sType = SOCK_STREAM;
   // TODO exception
   //fprintf(stderr, "port=%d\n", port);
-  res->socket_file_descriptor = make_connection(port, netaddress);
+  res->socket_file_descriptor = make_connection(port, sType, netaddress);
   if (res->socket_file_descriptor == -1) {
     throw ConnectError(host, port);
   }
