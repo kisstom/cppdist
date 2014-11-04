@@ -21,7 +21,7 @@ env = Environment(
         CCFLAGS = flags,
         CPPPATH=[ '#.', GMOCK + '/include/', LOG4CPP + '/include/', GMP + 'include/', GTEST + 'include/'],
         LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/', LOG4CPP + '/lib/', GMOCK + 'build/', GTEST + 'build/'],
-        LIBS=['gflags', 'gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx']
+        LIBS=['gflags', 'gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx', 'zmq']
 )
 
 testCompile = ARGUMENTS.get('test', False)
@@ -33,7 +33,7 @@ SConscript([
 COMMON_OBJ = Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin/main/common/util/*.o')
 COMMON_OBJ += Glob('#/../bin/main/common/thread/*.o') + Glob('#/../bin/main/common/components/*.o')
 COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o')  + Glob('#/../bin/main/common/random/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/io/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/io/*.o') + Glob('#/../bin/main/common/components/socket/zmq_sockets/*.o')
 
 SConscript([
 	'main/algos/simrank_one_computer/SConscript',
