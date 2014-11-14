@@ -31,5 +31,5 @@ done
 
 sleep 1
 
-python /home/kisstom/sandbox/c++/multicast/0mq_pub_sub/multiple_sub/zmq_start.py "$triggerPort"
+python ../../../main/common/zmq/zmq_start.py "$triggerPort"
 
