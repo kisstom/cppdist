@@ -32,7 +32,7 @@ class SocketConnection;
 
 class ServerSocket : public Socket{
  private:
-  Socket *socket_;
+
   int port_;
   ServerSocket();
  public:
@@ -45,7 +45,7 @@ class ServerSocket : public Socket{
 class SocketConnection : public Socket {
   friend class ServerSocket;
  private:
-  Socket *socket_;
+
   int port_;
   string host_;
   SocketConnection();

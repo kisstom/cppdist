@@ -4,3 +4,5 @@ SOCKETS = Glob('#/../bin/main/common/components/socket/*.o')
 
 env.Program('client_main', ['client_main.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
 env.Program('server_main', ['server_main.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
+env.Program('client_perform_test', ['client_perform_test.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
+env.Program('server_perform_test', ['server_perform_test.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
