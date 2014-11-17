@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
   int finishSize = digi(expectedMsgs - 1);
 
   try {
-    SocketConnection* serverConn = SocketConnection::Connect("localhost", master_port_);
+    SocketConnection* serverConn = SocketConnection::Connect("10.1.1.107", master_port_);
 
     char msg[1024];
     int recvMsgSize = 0;
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     zmq::socket_t instrSocket(context, ZMQ_SUB);
     instrSocket.setsockopt(ZMQ_SUBSCRIBE, "", 0);
     fprintf(stderr, "Waiting for trigger on port %d.\n", triggerPort);
-    sprintf(ip, "tcp://localhost:%d", triggerPort);
+    sprintf(ip, "tcp://10.1.1.107:%d", triggerPort);
     instrSocket.connect(ip);
     zmq::message_t m(20);
     instrSocket.recv(&m);

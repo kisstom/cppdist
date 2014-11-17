@@ -96,7 +96,7 @@ ServerSocket *ServerSocket::Create(int port) {
   }
 
   /* Set up queue for incoming connections. */
-  listen(socket_obj->socket_file_descriptor, 5);
+  listen(socket_obj->socket_file_descriptor, 30);
 
   return socket_obj;
 }
