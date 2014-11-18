@@ -44,6 +44,10 @@ public:
 
 	int stringToInt(const string&);
 	string intToString(const int val);
+
+	int digi(int index);
+	char* createBufferAtSize(int size, int index);
+	void zmqSocketBlock(int);
 };
 
 template<typename T>

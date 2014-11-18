@@ -1,8 +1,11 @@
 Import('env')
 
 SOCKETS = Glob('#/../bin/main/common/components/socket/*.o')
+UTIL = Glob('#/../bin/main/common/util/*.o')
 
 env.Program('client_main', ['client_main.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
 env.Program('server_main', ['server_main.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
 env.Program('client_perform_test', ['client_perform_test.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
 env.Program('server_perform_test', ['server_perform_test.cpp', '#/../bin/main/common/util/ConnectionError.o'] + SOCKETS)
+env.Program('udp_multicast_sender', ['udp_multicast_sender.cpp'] + SOCKETS + UTIL)
+env.Program('udp_multicast_listener', ['udp_multicast_listener.cpp'] + SOCKETS + UTIL)

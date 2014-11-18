@@ -10,6 +10,8 @@
 #include <string>
 #include <stdio.h>
 #include <algorithm>
+#include <math.h>
+#include "../components/socket/zmq_sockets/zmq.hpp"
 
 size_t Util::nextLong(char* line, size_t from, long& element) {
 	sscanf(line + from, "%ld", &element);
@@ -168,4 +170,38 @@ string Util::intToString(const int val) {
   return ss.str();
 }
 
+int Util::digi(int index) {
+  int digits = 0;
+  if (index == 0) {
+    digits = 1;
+  } else {
+    digits = (int) log10(index) + 1;
+  }
+  return digits;
+}
+
+char* Util::createBufferAtSize(int size, int index) {
+  char* message = new char[size + 1];
+  int digits = digi(index);
+
+  int i;
+  for (i = 0; i < size - digits; ++i) {
+    message[i] = 'V';
+  }
+
+  sprintf(message + size - digits, "%d", index);
+  return message;
+}
+
+void Util::zmqSocketBlock(int triggerPort) {
+  char ip[1024];
+  zmq::context_t context (1);
+  zmq::socket_t instrSocket(context, ZMQ_SUB);
+  instrSocket.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+  fprintf(stderr, "Waiting for trigger on port %d.\n", triggerPort);
+  sprintf(ip, "tcp://localhost:%d", triggerPort);
+  instrSocket.connect(ip);
+  zmq::message_t m(20);
+  instrSocket.recv(&m);
+}
 
