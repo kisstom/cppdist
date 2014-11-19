@@ -1,7 +1,7 @@
 #include "UDPMulticastPublisher.h"
 
 int UDPMulticastPublisher::create(char* group, int port) {
-  if ((socket_file_descriptor = socket(AF_INET,SOCK_DGRAM,0)) < 0) {
+  if ((socket_file_descriptor = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
     //perror("socket");
     //exit(1);
     return socket_file_descriptor;

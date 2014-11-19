@@ -18,7 +18,7 @@ exportCommand="export LD_LIBRARY_PATH=~/libs/;"
 outputDir="$outputPrefix"_"$numMessages"_"$msgSize"
 mkdir -p "$outputDir"
 
-"$bindir"/server_perform_test $masterPort \
+"$bindir"/server_perform_main $masterPort \
     "$numMessages" $msgSize "$numReceivers" "$triggerPort" > "$outputDir"/log &
 
 for i in `seq 0 $((numReceivers-1))`
@@ -26,7 +26,7 @@ do
   sleep 1
   ssh  hadoop0$((i%4+1)) "mkdir -p $outputDir"
 
-  ssh hadoop0$((i%4+1)) "$exportCommand ./bin/client_perform_test $masterPort $numMessages $msgSize $triggerPort 1>$outputDir/client_log_$i 2>&1 &"
+  ssh hadoop0$((i%4+1)) "$exportCommand ./bin/client_perform_main $masterPort $numMessages $msgSize $triggerPort 1>$outputDir/client_log_$i 2>&1 &"
 done
 
 sleep 1
