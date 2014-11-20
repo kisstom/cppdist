@@ -11,6 +11,22 @@ MulticastSocketManager::MulticastSocketManager(int _nodeIndex, int _startingHash
   strcpy(initMulticastHost, _initMulticastHost);
   initMultiCastPort = _initMultiCastPort;
   clusterSize = _clusterSize;
+  masterSocketManager = NULL;
+}
+
+int MulticastSocketManager::recvFromNode(int limit, char* buffer, int socketIndex) {
+  return listeners[socketIndex]->recv(limit, buffer);
+}
+
+void MulticastSocketManager::sendToNode(int limit, char* buffer, int socketIndex) {
+  publishers[socketIndex]->send(limit, buffer);
+}
+
+void MulticastSocketManager::initConnections() {
+  initPublishers();
+  masterSocketManager->sendReadyToMaster();
+  initListeners();
+  masterSocketManager->sendReadyToMaster();
 }
 
 void MulticastSocketManager::initPublishers() {
@@ -53,9 +69,13 @@ void MulticastSocketManager::initListeners() {
 
 void MulticastSocketManager::initSockets() {
   int publisherSize = pow(2, clusterSize - 1) - 1;
+  if (publisherSize < 1) return;
+
   publishers.resize(publisherSize, NULL);
 
   int listenerSize = pow(2, clusterSize - 1);
+  if (listenerSize < 1) return;
+
   listeners.resize(listenerSize, NULL);
 }
 
