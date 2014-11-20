@@ -22,6 +22,7 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
   num_nodes_ = num_nodes;
   min_node_ = min_node;
   logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
+  masterSocketManager_ = NULL;
 }
 
 int Algo::getSlaveIndex() {
@@ -54,7 +55,9 @@ bool Algo::setUp() {
 	try {
 
 		socketManager_->initClient(slave_port_);
-		socketManager_->connectToMaster(master_host_, master_port_);
+		socketManager_->setMasterSocketManager(masterSocketManager_);
+		masterSocketManager_->setPort(slave_port_);
+		masterSocketManager_->connectToMaster(master_host_, master_port_);
 
 		initFromMaster();
 
@@ -64,7 +67,7 @@ bool Algo::setUp() {
 		storeFromBinary_->resizeSocketNum(num_slaves_);
 		storeFromBinary_->setBufferCapacity(send_limit_ * 2);
 
-		socketManager_->sendReadyToMaster();
+		masterSocketManager_->sendReadyToMaster();
 		socketManager_->initConnections();
 
 	} catch (MasterException& e) {
@@ -73,12 +76,12 @@ bool Algo::setUp() {
   }
   catch (LogError& e) {
   	logger_->info("Error: %s.\nExiting.", e.what());
-  	socketManager_->sendFailToMaster();
+  	masterSocketManager_->sendFailToMaster();
     return false;
   }
   catch (ConnectionError& e) {
     logger_->info("Error: %s.\nExiting.", e.what());
-  	socketManager_->sendFailToMaster();
+    masterSocketManager_->sendFailToMaster();
     return false;
   }
 
@@ -95,7 +98,7 @@ void Algo::run()
     {
       logger_->info("Algo waiting for instruction from master.");
       // Sync with run threads in master.
-    	socketManager_->recvFromMaster(1024, instr);
+      masterSocketManager_->recvFromMaster(1024, instr);
     	if (!strcmp(instr, "exit")) {
     		break;
     	}
@@ -105,11 +108,11 @@ void Algo::run()
 
     	logger_->info("Recieving instruction %s.", instr);
     	logger_->info("Sending ready for master.");
-    	socketManager_->sendReadyToMaster();
+    	masterSocketManager_->sendReadyToMaster();
 
     	// Sync with inner master nextIter.
     	logger_->info("Waiting for before iteration instr.");
-    	socketManager_->recvFromMaster(1024, instr);
+    	masterSocketManager_->recvFromMaster(1024, instr);
 
     	logger_->info("Received instr %s.", instr);
     	node_->beforeIteration(instr);
@@ -117,9 +120,9 @@ void Algo::run()
     	bool cont = node_->afterIteration();
 
     	if (cont) {
-    	  socketManager_->sendReadyToMaster();
+    	  masterSocketManager_->sendReadyToMaster();
     	} else {
-    		socketManager_->sendEmptyToMaster();
+    	  masterSocketManager_->sendEmptyToMaster();
     	}
     }
   }
@@ -127,11 +130,11 @@ void Algo::run()
     return;
   }
   catch (LogError& e) {
-  	socketManager_->sendFailToMaster();
+    masterSocketManager_->sendFailToMaster();
     return;
   }
   catch (ConnectionError& e) {
-  	socketManager_->sendFailToMaster();
+    masterSocketManager_->sendFailToMaster();
     return;
   }
 
@@ -176,7 +179,7 @@ bool Algo::storeFromBinary(int socket_index) {
 void Algo::initFromMaster() {
 	char buf[send_limit_];
 	int size;
-	size = socketManager_->recvFromMaster(1024, buf);
+	size = masterSocketManager_->recvFromMaster(1024, buf);
 
 	if (strcmp(buf, "die") == 0) throw MasterException();
 	stringstream ss (stringstream::in | stringstream::out);
@@ -219,6 +222,10 @@ void Algo::setNode(Node * node) {
 void Algo::setSocketManager(SocketManager* manager) {
 	socketManager_ = manager;
 	senderBuffer_->setSocketManager(manager);
+}
+
+void Algo::setMasterSocketManager(MasterSocketManager* manager) {
+  masterSocketManager_ = manager;
 }
 
 void Algo::setStoreFromBinary(StoreFromBinary* storeFromBinary) {

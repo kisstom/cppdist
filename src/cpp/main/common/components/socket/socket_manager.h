@@ -10,6 +10,7 @@
 
 #include <gtest/gtest_prod.h>
 #include "socket.h"
+#include "master_socket_manager.h"
 #include "log4cpp/Category.hh"
 
 class SocketManager {
@@ -17,18 +18,15 @@ public:
 	SocketManager();
 	virtual void initSockets(int);
   virtual void initClient(int);
-  virtual void connectToMaster(char*, int);
-  virtual int recvFromMaster(int, char*);
-  virtual void sendFailToMaster();
-  virtual void sendReadyToMaster();
-  virtual void sendEmptyToMaster();
   virtual void initConnections();
   virtual int recvFromNode(int, char*, int);
   virtual void sendToNode(int, char*, int);
-  virtual void setIp();
+
+  void setMasterSocketManager(MasterSocketManager* manager);
   virtual vector<SocketConnection*> getReceiverSockets();
   virtual ~SocketManager();
 private:
+  MasterSocketManager* masterSocketManager;
   ServerSocket* self_socket_;
   SocketConnection* master_socket_;
   vector<SocketConnection*> sender_sockets_;

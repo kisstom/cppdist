@@ -16,6 +16,7 @@ public:
   void sendReadyToMaster();
   void sendEmptyToMaster();
   void setIp();
+  void setPort(int);
   void initSockets();
 private:
   SocketConnection* master_socket_;

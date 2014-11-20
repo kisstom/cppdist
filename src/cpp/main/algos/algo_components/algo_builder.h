@@ -28,6 +28,7 @@ private:
   Deserializer* deserializer_;
   SenderBuffer* senderBuffer_;
   SocketManager* socketManager_;
+  MasterSocketManager* masterSocketManager_;
   StoreFromBinary* storeFromBinary_;
   INodeFactory* nodeFactory_;
 };

@@ -8,7 +8,6 @@
 #include "algo_builder.h"
 
 
-
 Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params) {
 	DeserializerFactory deserializerFactory;
 
@@ -24,6 +23,9 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params) {
 
   socketManager_ = new SocketManager;
   algo_->setSocketManager(socketManager_);
+
+  masterSocketManager_ = new MasterSocketManager;
+  algo_->setMasterSocketManager(masterSocketManager_);
 
   storeFromBinary_ = new StoreFromBinary;
   storeFromBinary_->setDeserializer(deserializer_);

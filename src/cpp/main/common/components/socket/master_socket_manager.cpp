@@ -52,6 +52,10 @@ void MasterSocketManager::setIp() {
     close(sd);
 }
 
+int MasterSocketManager::recvFromMaster(int limit, char* buf) {
+  master_socket_->Recv(limit, buf);
+}
+
 void MasterSocketManager::sendReadyToMaster(){
   //logger_->info("Sending ready to master.");
   master_socket_->Send(6, "ready");
@@ -65,4 +69,8 @@ void MasterSocketManager::sendEmptyToMaster(){
 void MasterSocketManager::sendFailToMaster(){
   logger_->info("Sending fail to master.");
   master_socket_->Send(5, "fail");
+}
+
+void MasterSocketManager::setPort(int port) {
+  slave_port_ = port;
 }

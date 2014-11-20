@@ -14,11 +14,13 @@
 #include "runnable.h"
 #include "../../common/components/sender_buffer.h"
 #include "../../common/components/socket/socket_manager.h"
+#include "../../common/components/socket/master_socket_manager.h"
 #include "../../common/components/deserializer.h"
 #include "../../common/components/store_from_binary.h"
 #include "../../common/thread/receiver_thread.h"
 #include "../../common/thread/sender_thread.h"
 #include "../../common/thread/thread_manager.h"
+
 #include <sstream>
 #include "log4cpp/PatternLayout.hh"
 #include <limits.h>
@@ -63,6 +65,7 @@ public:
 
 	void setNode(Node *);
   void setSocketManager(SocketManager*);
+  void setMasterSocketManager(MasterSocketManager* manager);
   void setStoreFromBinary(StoreFromBinary*);
   void setSenderBuffer(SenderBuffer*);
   virtual ~Algo();
@@ -83,6 +86,8 @@ private:
   int slave_index_;
 
 	SocketManager* socketManager_;
+	MasterSocketManager* masterSocketManager_;
+
 	SenderBuffer* senderBuffer_;
 	Node* node_;
 	StoreFromBinary* storeFromBinary_;

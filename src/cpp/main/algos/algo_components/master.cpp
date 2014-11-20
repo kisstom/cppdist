@@ -95,7 +95,7 @@ void Master::run()
 void Master::WaitForAccepts()
 {
 	logger_->info("Waiting for %d accepts.", (int)slaves_->size());
-  char instr[1024], ip[1024];
+  char instr[1024], ip[1024], msg[1024];
   int port;
   SocketConnection* client_socket;
   for (unsigned int i = 0; i < slaves_->size(); ++i) {
@@ -112,7 +112,8 @@ void Master::WaitForAccepts()
         success = true;
       }
     }
-    if (!success) throw NodeFailException("Not valid port received from node.");
+    sprintf(msg, "Not valid port %d received from node.", port);
+    if (!success) throw NodeFailException(msg);
   }
 }
 
