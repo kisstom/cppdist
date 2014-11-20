@@ -2,9 +2,7 @@
 
 int UDPMulticastPublisher::create(char* group, int port) {
   if ((socket_file_descriptor = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-    //perror("socket");
-    //exit(1);
-    return socket_file_descriptor;
+    throw CreateError();
   }
 
   /* set up destination address */
@@ -21,5 +19,8 @@ int UDPMulticastPublisher::send(int limit, char* buffer) {
   nbytes = sendto(socket_file_descriptor, buffer, limit, 0,
       (struct sockaddr *) &addr, sizeof(addr));
 
+  if (nbytes < 0) {
+    throw SendError();
+  }
   return nbytes;
 }

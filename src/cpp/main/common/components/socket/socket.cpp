@@ -56,6 +56,16 @@ void Socket::Close() {
   }
 }
 
+bool Socket::isConnected() {
+  int optval;
+  socklen_t optlen = sizeof(optval);
+
+  int res = getsockopt(socket_file_descriptor, SOL_SOCKET, SO_ERROR, &optval, &optlen);
+  if(optval==0 && res==0) return true;
+
+  return false;
+}
+
 //
 // ServerSocket
 //

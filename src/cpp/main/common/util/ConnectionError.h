@@ -79,6 +79,16 @@ class RecvError: public SocketError {
     RecvError(int port);
 };
 
+class CreateError: public SocketError {
+  public:
+  CreateError();
+};
+
+class SendError: public SocketError {
+  public:
+  SendError();
+};
+
 class ConnectError: public SocketError {
   public:
     ConnectError(string host, int port);

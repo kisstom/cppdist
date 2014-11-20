@@ -23,6 +23,7 @@ class Socket {
   Socket();
   ~Socket();
   bool IsClosed();
+  bool isConnected();
 //  void SetNonBlocking();
   int GetFileDescriptor();
   void Close();

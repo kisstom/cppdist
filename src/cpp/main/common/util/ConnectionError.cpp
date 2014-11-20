@@ -70,6 +70,18 @@ RecvError::RecvError(int port) : SocketError(port) {
   sprintf(error_msg_, "Receiving bad message on host %s at port %d.", host, port_);
 }
 
+CreateError::CreateError() : SocketError(0) {
+  char host[1024];
+  getIp(host);
+  sprintf(error_msg_, "Receiving bad message on host %s at port %d.", host, port_);
+}
+
+SendError::SendError() : SocketError(0) {
+  char host[1024];
+  getIp(host);
+  sprintf(error_msg_, "Receiving bad message on host %s at port %d.", host, port_);
+}
+
 ConnectError::ConnectError(string host, int port) : SocketError(port), host_(host) {
   char self_host[1024];
   getIp(self_host);

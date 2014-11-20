@@ -4,6 +4,7 @@
 class MulticastHelper {
 public:
   int hash(short*);
+
 };
 
 
