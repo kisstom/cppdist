@@ -16,3 +16,5 @@ env.Program('test_random_generator', ['test_random_generator.cpp'] + COMMON_OBJ 
 env.Program('hash_pseudo_random_main', ['hash_pseudo_random_main.cpp', '../../../bin/main/common/random/hash_pseudo_random.o'] )
 env.Program('multicast_socket_manager_test', ['multicast_socket_manager_test.cpp'] + COMMON_OBJ + ALGO_OBJ)
 env.Program('ip_index_maker_test', ['ip_index_maker_test.cpp'] + COMMON_OBJ + ALGO_OBJ)
+
+SConscript(['./util/config/SConscript'], exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])

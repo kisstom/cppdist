@@ -10,6 +10,7 @@
 
 #include <gtest/gtest_prod.h>
 #include "socket.h"
+#include "isocket/isocket_manager.h"
 #include "master_socket_manager.h"
 #include "log4cpp/Category.hh"
 
