@@ -10,7 +10,6 @@
 class MasterSocketManager {
 public:
   MasterSocketManager();
-  void initClient(int);
   void connectToMaster(char*, int);
   int recvFromMaster(int, char*);
   void sendFailToMaster();
@@ -19,7 +18,6 @@ public:
   void setIp();
   void initSockets();
 private:
-  ServerSocket* self_socket_;
   SocketConnection* master_socket_;
   char ip_[1024];
   int slave_port_;

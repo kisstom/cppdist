@@ -13,16 +13,8 @@
 #include <string.h>
 
 MasterSocketManager::MasterSocketManager() {
-  self_socket_ = NULL;
   master_socket_ = NULL;
   logger_ = &log4cpp::Category::getInstance(std::string("MasterSocketManager"));
-}
-
-void MasterSocketManager::initClient(int slave_port) {
-  logger_->info("Creating client at port %d", slave_port);
-  self_socket_ = ServerSocket::Create(slave_port);
-  slave_port_ = slave_port;
-  logger_->info("Created client at port %d.", slave_port_);
 }
 
 void MasterSocketManager::connectToMaster(char* master_host, int master_port) {

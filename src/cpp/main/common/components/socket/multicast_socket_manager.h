@@ -18,6 +18,7 @@ public:
   void sendToNode(int, char*, int);
   void initConnections();
   void initSockets();
+  void setMasterSocketManager(MasterSocketManager*);
 
 private:
   void initPublishers();

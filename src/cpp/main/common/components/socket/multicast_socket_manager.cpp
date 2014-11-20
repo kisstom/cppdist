@@ -29,6 +29,11 @@ void MulticastSocketManager::initConnections() {
   masterSocketManager->sendReadyToMaster();
 }
 
+void MulticastSocketManager::setMasterSocketManager(
+    MasterSocketManager*_masterSocketManager ) {
+  masterSocketManager = _masterSocketManager;
+}
+
 void MulticastSocketManager::initPublishers() {
   int publisherSize = pow(2, clusterSize - 1) - 1;
 
