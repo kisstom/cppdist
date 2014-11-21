@@ -55,7 +55,6 @@ bool Algo::setUp() {
 	try {
 
 		socketManager_->initClient(slave_port_);
-		socketManager_->setMasterSocketManager(masterSocketManager_);
 		masterSocketManager_->setPort(slave_port_);
 		masterSocketManager_->connectToMaster(master_host_, master_port_);
 
@@ -69,6 +68,8 @@ bool Algo::setUp() {
 
 		masterSocketManager_->sendReadyToMaster();
 		socketManager_->initConnections();
+
+    clientSocketManager_->setUp();
 
 	} catch (MasterException& e) {
     logger_->info("Master said i must die. I die.");

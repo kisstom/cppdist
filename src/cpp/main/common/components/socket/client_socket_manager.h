@@ -4,13 +4,17 @@
 #include "cluster_config.h"
 #include "log4cpp/Category.hh"
 #include "zmq_sockets/zmq.hpp"
+#include "master_socket_manager.h"
 
 class ClientSocketManager {
 public:
   ClientSocketManager(int selfIndex, int clusterSize);
   void publishEndSignal();
   void run();
+  void setUp();
+
   void setClusterConfig(ClusterConfig*);
+  void setMasterSocketManager(MasterSocketManager*);
 
   void resetFinishCounter();
   bool isFinished();
@@ -24,6 +28,8 @@ private:
   int startClienPort;
   int selfIndex;
   int sendHWM;
+
+  MasterSocketManager* masterSocketManager;
 
   ClusterConfig* clusterConfig;
   zmq::context_t* context;

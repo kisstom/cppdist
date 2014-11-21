@@ -53,6 +53,7 @@ class Master : public Runnable {
     void setInnerMaster(InnerMaster*);
     void sendMessageForAllNodes(char* msg);
     long getNumNodes();
+    void SetUpClientManager();
   private:
     long numNodes_;
     InnerMaster* innerMaster_;

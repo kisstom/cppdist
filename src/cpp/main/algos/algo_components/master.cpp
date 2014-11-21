@@ -38,6 +38,13 @@ void Master::KillNodes() {
   }
 }
 
+void Master::SetUpClientManager() {
+  sendMessageForAllNodes("HAVA NAGILA");
+  WaitForNodes();
+  sendMessageForAllNodes("HAVA NAGILA");
+  WaitForNodes();
+}
+
 bool Master::setUp() {
 	logger_->info("Setting up master.");
 	try {
@@ -51,6 +58,8 @@ bool Master::setUp() {
 		WaitForNodes();
 		// Letrehozzuk a kapcsolatokat a node-k kozott.
 		MakeNodeConnections();
+
+		SetUpClientManager();
 	} catch (ConnectionError& e) {
     logger_->info("Error: %s. Killing nodes.", e.what());
     KillNodes();

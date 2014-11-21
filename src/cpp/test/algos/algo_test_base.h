@@ -21,6 +21,7 @@ protected:
     host = "localhost";
     masterPort = 7000;
     sendLimit = 6000;
+    initSlaveCommunicationPort = 8001;
   }
 
   virtual ~AlgoTestBase() {}
@@ -30,7 +31,12 @@ protected:
     numNodes_ = 0;
     slaveIndex_ = 0;
     slavePort_ = initSlavePort;
+
     std::stringstream ss;
+
+    ss << initSlaveCommunicationPort;
+    params_["INIT_SLAVE_COMMUNICATION_PORT"] = ss.str();
+    ss.str("");
 
     ss << slavePort_;
     params_["INIT_SLAVE_PORT"] = ss.str();
@@ -121,9 +127,9 @@ protected:
 
     ss << minNode;
     params_["MIN_NODE"] = ss.str();
+    ss.str("");
 
     nodeParams_.push_back(params_);
-    clusterNodeParams.push_back(std::make_pair<string, string>("localhost", params_["SLAVE_INDEX"]));
   }
 
   virtual void finalSetup() {
@@ -141,6 +147,8 @@ protected:
       nodeParams_[i]["NUMLINE"] = params_["NUMLINE"];
       nodeParams_[i]["NUM_SLAVES"] = params_["NUM_SLAVES"];
     }
+
+    clusterNodeParams.push_back(std::make_pair<string, string>("localhost", params_["NUM_SLAVES"]));
   }
 
   void setUpBuilder() {
@@ -159,6 +167,7 @@ protected:
   long numNodes_;
   int slaveIndex_;
   int slavePort_;
+  int initSlaveCommunicationPort;
 
   int initSlavePort;
   int masterPort;

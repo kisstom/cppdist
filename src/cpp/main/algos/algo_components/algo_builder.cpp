@@ -28,10 +28,16 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   masterSocketManager_ = new MasterSocketManager;
   algo_->setMasterSocketManager(masterSocketManager_);
 
+  socketManager_->setMasterSocketManager(masterSocketManager_);
+
   clientSocketManager_ = new ClientSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()),
       atoi((*params)["NUM_SLAVES"].c_str()));
+  clientSocketManager_->setMasterSocketManager(masterSocketManager_);
+
   clusterConfig = createClusterConfig(hostAndPort,
-      atoi((*params)["INIT_SLAVE_PORT"].c_str()), atoi((*params)["NUM_SLAVES"].c_str()));
+      atoi((*params)["INIT_SLAVE_COMMUNICATION_PORT"].c_str()), atoi((*params)["NUM_SLAVES"].c_str()));
+  clientSocketManager_->setClusterConfig(clusterConfig);
+
   algo_->setClientSocketManager(clientSocketManager_);
 
   storeFromBinary_ = new StoreFromBinary;

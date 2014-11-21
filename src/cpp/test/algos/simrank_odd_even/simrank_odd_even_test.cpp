@@ -99,9 +99,9 @@ protected:
 
 		ss << minNode;
 		params_["MIN_NODE"] = ss.str();
+    ss.str("");
 
 		nodeParams_.push_back(params_);
-		clusterNodeParams.push_back(std::make_pair<string, string>("localhost", params_["SLAVE_INDEX"]));
   }
 
   void setUpBuilder() {
@@ -115,9 +115,14 @@ protected:
   	numNodes_ = 0;
   	slaveIndex_ = 0;
   	slavePort_ = 7001;
+  	initSlaveCommunicationPort = 8001;
     std::stringstream ss;
 
-    ss << slavePort_;
+    ss << initSlaveCommunicationPort;
+  	params_["INIT_SLAVE_COMMUNICATION_PORT"] = ss.str();
+  	ss.str("");
+
+  	ss << slavePort_;
   	params_["INIT_SLAVE_PORT"] = ss.str();
   	ss.str("");
 
@@ -156,6 +161,7 @@ protected:
       nodeParams_[i]["NUM_SLAVES"] = params_["NUM_SLAVES"];
     }
 
+    clusterNodeParams.push_back(std::make_pair<string, string>("localhost", params_["NUM_SLAVES"]));
   }
 
   void initLogger() {
@@ -289,6 +295,8 @@ protected:
   virtual void TearDown() {
   }
 
+
+  int initSlaveCommunicationPort;
   vector<INodeFactory*> nodeFactories_;
   TestMasterBuilder* masterBuilder_;
   vector<Slave> slaves_;

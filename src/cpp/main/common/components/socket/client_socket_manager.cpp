@@ -18,6 +18,17 @@ ClientSocketManager::ClientSocketManager(
   listenerSocket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
 }
 
+void ClientSocketManager::setUp() {
+  char msg[1024];
+  masterSocketManager->recvFromMaster(1024, msg);
+  initPublisher();
+  masterSocketManager->sendReadyToMaster();
+
+  masterSocketManager->recvFromMaster(1024, msg);
+  initSubscribes();
+  masterSocketManager->sendReadyToMaster();
+}
+
 void ClientSocketManager::initPublisher() {
   char ip[1024];
   publisherSocket->setsockopt(ZMQ_SNDHWM, &sendHWM, sizeof(sendHWM));
@@ -64,4 +75,8 @@ bool ClientSocketManager::isFinished() {
 
 void ClientSocketManager::incrementFinishCounter() {
   ++finishCounter;
+}
+
+void ClientSocketManager::setMasterSocketManager(MasterSocketManager* manager) {
+  masterSocketManager = manager;
 }
