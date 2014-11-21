@@ -11,7 +11,7 @@ public:
   char* getHost(int);
   int getPort(int);
   void initClusterSize(int);
-  void setHost(char* host, int i);
+  void setHost(const char* host, int i);
   void setPort(int port, int i);
 
 private:

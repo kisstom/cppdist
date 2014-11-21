@@ -6,10 +6,10 @@
  */
 
 #include "algo_builder.h"
-
+#include <cstdlib>
 
 Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
-    unordered_map<string, string>* hostAndPort) {
+    vector<std::pair<string, string> >* hostAndPort) {
 	DeserializerFactory deserializerFactory;
 
 	algo_ = createAlgoFromConfig(params);
@@ -83,7 +83,28 @@ Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {
 			slave_port, send_limit, all_node, num_slaves, slave_index, num_nodes, min_node);
 }
 
-ClusterConfig* AlgoBuilder::createClusterConfig(unordered_map<string, string>* hostAndPort)  {
+ClusterConfig* AlgoBuilder::createClusterConfig(vector<std::pair<string, string> >* hostAndPort, int initSlavePort)  {
   ClusterConfig* config = new ClusterConfig;
+  int clusterSize = 0;
+  for (vector<std::pair<string, string> >::iterator it = hostAndPort->begin();
+      it != hostAndPort->end(); ++it) {
+    clusterSize += atoi(it->second.c_str());
+  }
+
+  config->initClusterSize(clusterSize);
+
+  int nodeIndex = 0;
+  int nodeOnThisHost;
+
+  for (vector<std::pair<string, string> >::iterator it = hostAndPort->begin();
+      it != hostAndPort->end(); ++it) {
+    nodeOnThisHost = atoi(it->second.c_str());
+    for (int i = 0; i < nodeOnThisHost; ++i) {
+      config->setHost(it->first.c_str(), nodeIndex);
+      config->setPort(initSlavePort + nodeIndex, nodeIndex);
+      ++nodeIndex;
+    }
+  }
+
   return config;
 }

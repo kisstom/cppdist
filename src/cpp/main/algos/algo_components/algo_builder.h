@@ -17,11 +17,11 @@
 
 class AlgoBuilder {
 public:
-  Algo* buildFromConfig(unordered_map<string, string>* params, unordered_map<string, string>* hostAndPort);
+  Algo* buildFromConfig(unordered_map<string, string>* params,vector<std::pair<string, string> >* hostAndPort);
   ~AlgoBuilder();
   Algo* getAlgo();
   Node* getNode();
-  ClusterConfig* createClusterConfig(unordered_map<string, string>* params);
+  ClusterConfig* createClusterConfig(vector<std::pair<string, string> >* params, int);
   void setNodeFactory(INodeFactory*);
 private:
   Util util_;

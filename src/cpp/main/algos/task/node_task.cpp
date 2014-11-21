@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
   // should add checking
   cfgreader.read(argv[1]);
   unordered_map<string, string>* params = cfgreader.getParams();
-  unordered_map<string, string>* hostAndPort = cfgreader.getHostAndPort();
+  vector<std::pair<string, string> >* hostAndPort = cfgreader.getHostAndPort();
 
   (*params)["SLAVE_INDEX"] = string(argv[2]);
   (*params)["NUM_SLAVES"] = string(argv[3]);

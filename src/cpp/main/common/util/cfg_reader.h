@@ -9,19 +9,21 @@
 #define CFG_READER_H_
 
 #include <tr1/unordered_map>
+#include <vector>
 
 using std::tr1::unordered_map;
 using std::string;
+using std::vector;
 
 class CfgReader {
 public:
   void read(char* file);
   void trim (string& s);
   unordered_map<string, string>* getParams();
-  unordered_map<string, string>* getHostAndPort();
+  vector<std::pair<string, string> >* getHostAndPort();
 private:
   unordered_map<string, string>* params_;
-  unordered_map<string, string>* hostAndPort_;
+  vector<std::pair<string, string> >* hostAndPort_;
 };
 
 

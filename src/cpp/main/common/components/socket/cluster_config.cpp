@@ -18,7 +18,7 @@ void ClusterConfig::initClusterSize(int csize) {
   }
 }
 
-void ClusterConfig::setHost(char* host, int i) {
+void ClusterConfig::setHost(const char* host, int i) {
   strcpy(hosts[i], host);
 }
 
