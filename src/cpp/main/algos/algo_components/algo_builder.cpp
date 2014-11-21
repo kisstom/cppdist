@@ -8,7 +8,7 @@
 #include "algo_builder.h"
 
 
-Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params) {
+Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params, INIReader* iniReader) {
 	DeserializerFactory deserializerFactory;
 
 	algo_ = createAlgoFromConfig(params);
@@ -80,4 +80,9 @@ Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {
 
 	return new Algo(master_host, master_port,
 			slave_port, send_limit, all_node, num_slaves, slave_index, num_nodes, min_node);
+}
+
+ClusterConfig* AlgoBuilder::createClusterConfig(unordered_map<string, string>* params)  {
+  ClusterConfig* config = new ClusterConfig;
+  return config;
 }

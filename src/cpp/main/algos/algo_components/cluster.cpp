@@ -49,7 +49,7 @@ void Cluster::initNode(int nodeId) {
 	INodeFactory* nodeFactory = nodeFactories_[nodeId];
 
 	builder->setNodeFactory(nodeFactory);
-	builder->buildFromConfig(&(nodeParams_->at(nodeId)));
+	builder->buildFromConfig(&(nodeParams_->at(nodeId)), NULL);
 	builders_.push_back(builder);
 }
 
