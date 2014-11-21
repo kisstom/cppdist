@@ -18,8 +18,10 @@ public:
   void read(char* file);
   void trim (string& s);
   unordered_map<string, string>* getParams();
+  unordered_map<string, string>* getHostAndPort();
 private:
   unordered_map<string, string>* params_;
+  unordered_map<string, string>* hostAndPort_;
 };
 
 

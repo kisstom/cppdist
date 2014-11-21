@@ -17,7 +17,6 @@
 #include "log4cpp/PatternLayout.hh"
 
 #include "../../common/util/logger_factory.h"
-#include "../../common/util/config/INIReader.h"
 #include <string.h>
 
 void initLogger(unordered_map<string, string>* params) {
@@ -49,11 +48,12 @@ void initLogger(unordered_map<string, string>* params) {
 
 int main(int argc, char* argv[]) {
 	CfgReader cfgreader;
-	INIReader* inireader = new INIReader(string(argv[1]));
 
   // should add checking
   cfgreader.read(argv[1]);
   unordered_map<string, string>* params = cfgreader.getParams();
+  unordered_map<string, string>* hostAndPort = cfgreader.getHostAndPort();
+
   (*params)["SLAVE_INDEX"] = string(argv[2]);
   (*params)["NUM_SLAVES"] = string(argv[3]);
 
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
   builder.setNodeFactory(nodeFactory);
 
   try {
-    Algo* algo = builder.buildFromConfig(params, inireader);
+    Algo* algo = builder.buildFromConfig(params, hostAndPort);
 
     if (algo->setUp()) {
       algo->run();

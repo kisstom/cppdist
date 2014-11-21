@@ -1,0 +1,6 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+
+COMMON = Glob('#/../bin/main/common/util/*.o')
+env.Program('cfgreader_main', ['cfgreader_main.cpp'] + COMMON)

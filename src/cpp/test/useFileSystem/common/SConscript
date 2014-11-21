@@ -9,4 +9,4 @@ env.Program('test_sorted_vector_reader', ['test_sorted_vector_reader.cpp'] + COM
 env.Program('file_util_test', ['file_util_test.cpp'] + COMMON_OBJ)
 env.Program('edge_list_builder_tool', ['edge_list_builder_tool.cpp'] + COMMON_OBJ)
 
-#SConscript(['edge_list_builder_tests/SConscript'], exports = ['env'])
+SConscript(['util/SConscript'], exports = ['env'])

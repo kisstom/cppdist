@@ -17,7 +17,7 @@
 
 class AlgoBuilder {
 public:
-  Algo* buildFromConfig(unordered_map<string, string>* params, INIReader*);
+  Algo* buildFromConfig(unordered_map<string, string>* params, unordered_map<string, string>* hostAndPort);
   ~AlgoBuilder();
   Algo* getAlgo();
   Node* getNode();

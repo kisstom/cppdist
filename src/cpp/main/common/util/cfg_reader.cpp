@@ -27,6 +27,9 @@ void CfgReader::read(char* file) {
 	}
 
 	params_ = new unordered_map<string, string>();
+	hostAndPort_ = new unordered_map<string, string>();
+  bool sectionMachine = false;
+
 	char line[1024];
 	char key[1024];
 	char value[1024];
@@ -38,7 +41,15 @@ void CfgReader::read(char* file) {
 
 		char* pos = find(line, line + strlen(line), '=');
 		if (pos == line + strlen(line)) {
-      //printf("%s\n", line);
+		  string strline(line);
+      trim(strline);
+      if (strline.compare("[MACHINES]") == 0) {
+        sectionMachine = true;
+      } else if (strline.find("[") >= 0 && strline.find("]") >= 0 &&
+          strline.find("[") < strline.find("]")) {
+        sectionMachine = false;
+      }
+
       continue;
 		}
 
@@ -54,12 +65,17 @@ void CfgReader::read(char* file) {
 		value[size] = '\0';
 
 		string k = string(key);
+
+		if (k[0] == '#') continue;
 		string v = string(value);
 		trim(k);
     trim(v);
 
 
 		(*params_)[k] = v;
+		if (sectionMachine) {
+		  (*hostAndPort_)[k] = v;
+		}
 		//if (k.find("MASTER_LOG") != std::string::npos) {
 		printf("key-value %s %s\n", k.c_str(), v.c_str());
 		  //printf("|%s|\n", k.c_str());
@@ -75,4 +91,6 @@ unordered_map<string, string>* CfgReader::getParams() {
 	return params_;
 }
 
-
+unordered_map<string, string>* CfgReader::getHostAndPort() {
+  return hostAndPort_;
+}
