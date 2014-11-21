@@ -69,7 +69,7 @@ protected:
 
 
 TEST_F(CounterInverseNodeTest, test) {
-  Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_);
+  Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_, &clusterNodeParams);
   cluster.init();
   cluster.start();
 

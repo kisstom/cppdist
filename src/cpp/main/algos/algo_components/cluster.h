@@ -27,7 +27,7 @@ using std::vector;
 class Cluster {
 public:
 	Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
-			vector<INodeFactory*>, IMasterBuilder*);
+			vector<INodeFactory*>, IMasterBuilder*, vector<std::pair<string, string> >*);
 	void init();
 	void start();
 	void setUp();
@@ -41,6 +41,7 @@ private:
 	int numSlaves_;
 	unordered_map<string, string>* params_;
 	vector<unordered_map<string, string> >* nodeParams_;
+	vector<std::pair<string, string> >* clusterNodeParams_;
 	vector<AlgoBuilder*> builders_;
 	Master* master_;
 	vector<INodeFactory*> nodeFactories_;

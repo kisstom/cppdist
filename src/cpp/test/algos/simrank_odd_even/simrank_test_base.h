@@ -131,6 +131,7 @@ protected:
 		params_["MIN_NODE"] = ss.str();
 
 		nodeParams_.push_back(params_);
+		clusterNodeParams.push_back(std::make_pair<string, string>("localhost", params_["SLAVE_INDEX"]));
   }
 
   void setUpBuilder() {
@@ -251,6 +252,8 @@ protected:
   vector<Slave> slaves_;
   unordered_map<string, string> params_;
   vector<unordered_map<string, string> > nodeParams_;
+  vector<std::pair<string, string> > clusterNodeParams;
+
   log4cpp::Category* logger_;
   int pathLen_;
   int numPathes_;

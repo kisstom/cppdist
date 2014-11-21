@@ -8,11 +8,13 @@
 #include "cluster.h"
 
 Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
-		vector<INodeFactory*> nodeFactories, IMasterBuilder* masterBuilder) {
+		vector<INodeFactory*> nodeFactories, IMasterBuilder* masterBuilder,
+		vector<std::pair<string, string> >* clusterNodeParams) {
 	//numSlaves_ = numSlaves;
 	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves_);
 	params_ = params;
 	nodeParams_ = nodeParams;
+	clusterNodeParams_ = clusterNodeParams;
 	nodeFactories_ = nodeFactories;
 	masterBuilder_ = masterBuilder;
 	logger_ = &log4cpp::Category::getInstance(std::string("Cluster"));
@@ -49,7 +51,7 @@ void Cluster::initNode(int nodeId) {
 	INodeFactory* nodeFactory = nodeFactories_[nodeId];
 
 	builder->setNodeFactory(nodeFactory);
-	builder->buildFromConfig(&(nodeParams_->at(nodeId)), NULL);
+	builder->buildFromConfig(&(nodeParams_->at(nodeId)), clusterNodeParams_);
 	builders_.push_back(builder);
 }
 
