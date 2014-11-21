@@ -95,12 +95,15 @@ ClusterConfig* AlgoBuilder::createClusterConfig(vector<std::pair<string, string>
 
   int nodeIndex = 0;
   int nodeOnThisHost;
+  char actIp[1024];
 
   for (vector<std::pair<string, string> >::iterator it = hostAndPort->begin();
       it != hostAndPort->end(); ++it) {
     nodeOnThisHost = atoi(it->second.c_str());
+    util_.setIpByHost(it->first.c_str(), actIp);
+
     for (int i = 0; i < nodeOnThisHost; ++i) {
-      config->setHost(it->first.c_str(), nodeIndex);
+      config->setHost(actIp, nodeIndex);
       config->setPort(initSlavePort + nodeIndex, nodeIndex);
       ++nodeIndex;
     }

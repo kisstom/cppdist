@@ -227,6 +227,21 @@ TEST(TestUtil, splitByToken) {
   ASSERT_EQ(434234242, edges[4]);
 }
 
+TEST(TestUtil, testGetipByname) {
+  Util util;
+  char host[1024] = "hulk";
+  char ip[1024];
+  char expected[1024] = "10.1.2.47";
+
+  util.setIpByHost(host, ip);
+  ASSERT_EQ(0, strcmp(expected, ip));
+
+  strcpy(host, "hulk2");
+  strcpy(expected, "10.1.2.247");
+  util.setIpByHost(host, ip);
+  ASSERT_EQ(0, strcmp(expected, ip));
+}
+
 }
 
 int main (int argc, char **argv) {

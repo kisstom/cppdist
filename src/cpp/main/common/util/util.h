@@ -48,6 +48,7 @@ public:
 	int digi(int index);
 	char* createBufferAtSize(int size, int index);
 	void zmqSocketBlock(int);
+	void setIpByHost(const char* hostName, char* ip);
 };
 
 template<typename T>
