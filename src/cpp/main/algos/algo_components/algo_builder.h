@@ -21,7 +21,7 @@ public:
   ~AlgoBuilder();
   Algo* getAlgo();
   Node* getNode();
-  ClusterConfig* createClusterConfig(vector<std::pair<string, string> >* params, int);
+  ClusterConfig* createClusterConfig(vector<std::pair<string, string> >* params, int, int);
   void setNodeFactory(INodeFactory*);
 private:
   Util util_;
@@ -32,7 +32,9 @@ private:
   SenderBuffer* senderBuffer_;
   SocketManager* socketManager_;
   MasterSocketManager* masterSocketManager_;
+  ClientSocketManager* clientSocketManager_;
   StoreFromBinary* storeFromBinary_;
+  ClusterConfig* clusterConfig;
   INodeFactory* nodeFactory_;
 };
 

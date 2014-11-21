@@ -28,6 +28,12 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   masterSocketManager_ = new MasterSocketManager;
   algo_->setMasterSocketManager(masterSocketManager_);
 
+  clientSocketManager_ = new ClientSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()),
+      atoi((*params)["NUM_SLAVES"].c_str()));
+  clusterConfig = createClusterConfig(hostAndPort,
+      atoi((*params)["INIT_SLAVE_PORT"].c_str()), atoi((*params)["NUM_SLAVES"].c_str()));
+  algo_->setClientSocketManager(clientSocketManager_);
+
   storeFromBinary_ = new StoreFromBinary;
   storeFromBinary_->setDeserializer(deserializer_);
 
@@ -83,15 +89,10 @@ Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {
 			slave_port, send_limit, all_node, num_slaves, slave_index, num_nodes, min_node);
 }
 
-ClusterConfig* AlgoBuilder::createClusterConfig(vector<std::pair<string, string> >* hostAndPort, int initSlavePort)  {
+ClusterConfig* AlgoBuilder::createClusterConfig(
+    vector<std::pair<string, string> >* hostAndPort, int initSlavePort, int numSlaves)  {
   ClusterConfig* config = new ClusterConfig;
-  int clusterSize = 0;
-  for (vector<std::pair<string, string> >::iterator it = hostAndPort->begin();
-      it != hostAndPort->end(); ++it) {
-    clusterSize += atoi(it->second.c_str());
-  }
-
-  config->initClusterSize(clusterSize);
+  config->initClusterSize(numSlaves);
 
   int nodeIndex = 0;
   int nodeOnThisHost;

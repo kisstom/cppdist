@@ -13,6 +13,7 @@
 #include "node.h"
 #include "runnable.h"
 #include "../../common/components/sender_buffer.h"
+#include "../../common/components/socket/client_socket_manager.h"
 #include "../../common/components/socket/socket_manager.h"
 #include "../../common/components/socket/master_socket_manager.h"
 #include "../../common/components/deserializer.h"
@@ -65,6 +66,7 @@ public:
 
 	void setNode(Node *);
   void setSocketManager(SocketManager*);
+  void setClientSocketManager(ClientSocketManager*);
   void setMasterSocketManager(MasterSocketManager* manager);
   void setStoreFromBinary(StoreFromBinary*);
   void setSenderBuffer(SenderBuffer*);
@@ -87,6 +89,7 @@ private:
 
 	SocketManager* socketManager_;
 	MasterSocketManager* masterSocketManager_;
+	ClientSocketManager* clientSocketManager_;
 
 	SenderBuffer* senderBuffer_;
 	Node* node_;

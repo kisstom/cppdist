@@ -228,6 +228,10 @@ void Algo::setMasterSocketManager(MasterSocketManager* manager) {
   masterSocketManager_ = manager;
 }
 
+void Algo::setClientSocketManager(ClientSocketManager* manager) {
+  clientSocketManager_ = manager;
+}
+
 void Algo::setStoreFromBinary(StoreFromBinary* storeFromBinary) {
 	storeFromBinary_ = storeFromBinary;
 }

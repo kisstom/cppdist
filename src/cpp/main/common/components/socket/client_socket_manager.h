@@ -7,16 +7,17 @@
 
 class ClientSocketManager {
 public:
-  ClientSocketManager(int, int, int);
+  ClientSocketManager(int selfIndex, int clusterSize);
   void publishEndSignal();
   void run();
+  void setClusterConfig(ClusterConfig*);
 
   void resetFinishCounter();
   bool isFinished();
   void incrementFinishCounter();
   void initSubscribes();
   void initPublisher();
-  void setClusterConfig(ClusterConfig*);
+
 private:
   int finishCounter;
   int numCluster;
