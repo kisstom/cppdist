@@ -17,6 +17,11 @@ MasterSocketManager::MasterSocketManager() {
   logger_ = &log4cpp::Category::getInstance(std::string("MasterSocketManager"));
 }
 
+MasterSocketManager::~MasterSocketManager() {
+  if (master_socket_) delete master_socket_;
+}
+
+
 void MasterSocketManager::connectToMaster(char* master_host, int master_port) {
   logger_->info("Connecting to master on host %s and port %d", master_host, master_port);
   setIp();

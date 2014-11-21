@@ -6,7 +6,7 @@
  */
 
 #include "algo.h"
-
+#include "../../common/thread/run_thread.h"
 
 Algo::Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index,
@@ -153,6 +153,8 @@ void Algo::receiver() {
 	bool is_more = true;
 	Selector selector;
 	selector.Init(socketManager_->getReceiverSockets());
+	clientSocketManager_->resetFinishCounter();
+
 	while (1)
 	{
 		socket_index = selector.SelectIndex();
@@ -161,14 +163,15 @@ void Algo::receiver() {
 		storeFromBinary_->remains_size_[socket_index] += (unsigned) size;
 		is_more = storeFromBinary(socket_index);
 
-		if (!is_more)
+		if (clientSocketManager_->isFinished()) break;
+		/*if (!is_more)
 		{
 			++finished;
 			if (finished == num_slaves_ - 1)
 			{
 				break;
 			}
-		}
+		}*/
 	}
 	logger_->info("Receiver finished.");
 }
@@ -204,15 +207,19 @@ void Algo::runThreads() {
 	logger_->info("run threads");
 	ReceiverThread *receiver = new ReceiverThread(this);
 	SenderThread *sender = new SenderThread(node_);
+	RunThread* slaveCommunication = new RunThread(clientSocketManager_);
 
 	receiver->start();
 	sender->start();
-	receiver->waitForThread();
+	slaveCommunication->start();
+	//receiver->waitForThread();
 	sender->waitForThread();
+	slaveCommunication->waitForThread();
 
 	logger_->info("threads ended");
 	delete receiver;
 	delete sender;
+	delete slaveCommunication;
 }
 
 
@@ -250,9 +257,11 @@ void Algo::sendAndSignal(int self_index) {
 	    senderBuffer_->emptyBuffer(part_index);
 		}
 
-    senderBuffer_->setFinish(part_index);
+    senderBuffer_->setBreak(part_index);
     senderBuffer_->emptyBuffer(part_index);
 	}
+
+	clientSocketManager_->publishEndSignal();
 }
 
 long Algo::getNumberOfPartitionNodes() {

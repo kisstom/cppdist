@@ -20,6 +20,7 @@ public:
   void initSockets();
   void setMasterSocketManager(MasterSocketManager*);
 
+  ~MulticastSocketManager();
 private:
   void initPublishers();
   void initListeners();

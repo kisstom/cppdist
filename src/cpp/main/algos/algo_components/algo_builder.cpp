@@ -67,6 +67,8 @@ AlgoBuilder::~AlgoBuilder() {
   delete deserializer_;
   delete node_;
   delete algo_;
+  delete masterSocketManager_;
+  delete clientSocketManager_;
 }
 
 Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {

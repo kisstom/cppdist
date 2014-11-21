@@ -5,24 +5,27 @@
 #include "log4cpp/Category.hh"
 #include "zmq_sockets/zmq.hpp"
 #include "master_socket_manager.h"
+#include "../../../../main/algos/algo_components/runnable.h"
 
-class ClientSocketManager {
+class ClientSocketManager: public Runnable {
 public:
   ClientSocketManager(int selfIndex, int clusterSize);
   void publishEndSignal();
   void run();
-  void setUp();
+  bool setUp();
 
   void setClusterConfig(ClusterConfig*);
   void setMasterSocketManager(MasterSocketManager*);
-
-  void resetFinishCounter();
   bool isFinished();
+  void resetFinishCounter();
+
+  ~ClientSocketManager();
+private:
+
   void incrementFinishCounter();
   void initSubscribes();
   void initPublisher();
 
-private:
   int finishCounter;
   int numCluster;
   int startClienPort;

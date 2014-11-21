@@ -18,7 +18,12 @@ ClientSocketManager::ClientSocketManager(
   listenerSocket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
 }
 
-void ClientSocketManager::setUp() {
+ClientSocketManager::~ClientSocketManager () {
+  delete listenerSocket;
+  delete publisherSocket;
+}
+
+bool ClientSocketManager::setUp() {
   char msg[1024];
   masterSocketManager->recvFromMaster(1024, msg);
   initPublisher();
@@ -27,6 +32,7 @@ void ClientSocketManager::setUp() {
   masterSocketManager->recvFromMaster(1024, msg);
   initSubscribes();
   masterSocketManager->sendReadyToMaster();
+  return true;
 }
 
 void ClientSocketManager::initPublisher() {
@@ -50,6 +56,7 @@ void ClientSocketManager::initSubscribes() {
 }
 
 void ClientSocketManager::publishEndSignal() {
+  logger->info("Publishing finish %d", selfIndex);
   zmq::message_t message(1);
   char msg[2] = "0";
   strcpy((char*) message.data(), msg);
@@ -63,6 +70,8 @@ void ClientSocketManager::run() {
     // Check whether it is really 0
     incrementFinishCounter();
   }
+
+  logger->info("ClientSocketManager finished.");
 }
 
 void ClientSocketManager::resetFinishCounter() {
@@ -70,10 +79,12 @@ void ClientSocketManager::resetFinishCounter() {
 }
 
 bool ClientSocketManager::isFinished() {
-  return numCluster == finishCounter;
+  logger->info("Is finished counter %d cluster size %d", finishCounter, numCluster);
+  return numCluster - 1 == finishCounter;
 }
 
 void ClientSocketManager::incrementFinishCounter() {
+  logger->info("Incrementing counter %d at node %d", finishCounter, selfIndex);
   ++finishCounter;
 }
 

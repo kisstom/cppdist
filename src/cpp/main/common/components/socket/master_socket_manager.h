@@ -18,6 +18,8 @@ public:
   void setIp();
   void setPort(int);
   void initSockets();
+
+  ~MasterSocketManager();
 private:
   SocketConnection* master_socket_;
   char ip_[1024];

@@ -14,6 +14,16 @@ MulticastSocketManager::MulticastSocketManager(int _nodeIndex, int _startingHash
   masterSocketManager = NULL;
 }
 
+MulticastSocketManager::~MulticastSocketManager() {
+  for (int i = 0; (int) listeners.size(); ++i) {
+    delete listeners[i];
+  }
+
+  for (int i = 0; (int) publishers.size(); ++i) {
+    delete publishers[i];
+  }
+}
+
 int MulticastSocketManager::recvFromNode(int limit, char* buffer, int socketIndex) {
   return listeners[socketIndex]->recv(limit, buffer);
 }
