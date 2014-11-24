@@ -6,7 +6,9 @@
  */
 
 #include "algo_builder.h"
+#include "../../common/components/socket/multicast_socket_manager.h"
 #include <cstdlib>
+
 
 Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
     vector<std::pair<string, string> >* hostAndPort) {
@@ -22,7 +24,10 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   senderBuffer_ = new SenderBuffer;
   algo_->setSenderBuffer(senderBuffer_);
 
-  socketManager_ = new SocketManager;
+  //socketManager_ = new SocketManager;
+  socketManager_ = new MulticastSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()), 1000,
+      "225.0.0.", 8001, atoi((*params)["NUM_SLAVES"].c_str()));
+
   algo_->setSocketManager(socketManager_);
 
   masterSocketManager_ = new MasterSocketManager;

@@ -3,10 +3,10 @@
 
 #include "socket.h"
 
-class UDPMulticastReceiver : public Socket {
+class UDPMulticastReceiver : public SocketConnection {
 public:
   void connectToMulticastIp(char* ip, int port);
-  int recv(int limit, char* buffer);
+  virtual int Recv(int limit, char* buffer);
 private:
   struct sockaddr_in addr;
   int addrlen;

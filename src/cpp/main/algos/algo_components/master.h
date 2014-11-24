@@ -44,6 +44,8 @@ class Master : public Runnable {
     void SendInfoToNodes();
     bool WaitForNodes();
     void MakeNodeConnections();
+    void MakeNodeConnections2();
+
     vector<vector<int> >* MakeTournament();
     void MakeConnection(int i, int j);
     void RunThreads();

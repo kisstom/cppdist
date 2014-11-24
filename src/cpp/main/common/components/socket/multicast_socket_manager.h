@@ -17,8 +17,10 @@ public:
   int recvFromNode(int, char*, int);
   void sendToNode(int, char*, int);
   void initConnections();
-  void initSockets();
+  void initSockets(int);
+  void initClient(int) {}
   void setMasterSocketManager(MasterSocketManager*);
+  Selector* getSelector();
 
   ~MulticastSocketManager();
 private:
@@ -26,7 +28,7 @@ private:
   void initListeners();
 
   vector<UDPMulticastPublisher*> publishers;
-  vector<UDPMulticastReceiver*> listeners;
+  vector<SocketConnection*> listeners;
   MasterSocketManager* masterSocketManager;
 
   IPIndexMaker ipIndexMaker;

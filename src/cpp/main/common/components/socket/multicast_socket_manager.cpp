@@ -7,7 +7,7 @@ MulticastSocketManager::MulticastSocketManager(int _nodeIndex, int _startingHash
       char* _initMulticastHost, int _initMultiCastPort, int _clusterSize) :
       ipIndexMaker(_nodeIndex, _clusterSize) {
   nodeIndex = _nodeIndex;
-  startingHash = _startingHash;
+  //startingHash = _startingHash;
   strcpy(initMulticastHost, _initMulticastHost);
   initMultiCastPort = _initMultiCastPort;
   clusterSize = _clusterSize;
@@ -27,7 +27,7 @@ MulticastSocketManager::~MulticastSocketManager() {
 }
 
 int MulticastSocketManager::recvFromNode(int limit, char* buffer, int socketIndex) {
-  return listeners[socketIndex]->recv(limit, buffer);
+  return listeners[socketIndex]->Recv(limit, buffer);
 }
 
 void MulticastSocketManager::sendToNode(int limit, char* buffer, int socketIndex) {
@@ -50,17 +50,17 @@ void MulticastSocketManager::initPublishers() {
   int publisherSize = pow(2, clusterSize - 1) - 1;
 
   if (publisherSize < 1) return;
-  int ipIndex, add;
+  int ipIndex, port;
 
   char actHost[1024];
   for (int pi = 1; pi <= publisherSize; ++pi) {
     ipIndex = ipIndexMaker.createPublisherIPIndex(pi);
 
-    add = ipIndex + startingHash;
+    port = ipIndex + initMultiCastPort;
     publishers[pi - 1] = new UDPMulticastPublisher;
 
-    sprintf(actHost, "%s%d", initMulticastHost, add);
-    publishers[pi - 1]->create(actHost, add);
+    sprintf(actHost, "%s%d", initMulticastHost, ipIndex);
+    publishers[pi - 1]->create(actHost, port);
   }
 
 }
@@ -71,20 +71,23 @@ void MulticastSocketManager::initListeners() {
   if (listenerSize < 1) return;
   int ipIndex, port;
 
+  UDPMulticastReceiver* listener;
+
   char actHost[1024];
   for (int pi = 0; pi < listenerSize; ++pi) {
     ipIndex = ipIndexMaker.createClientIPIndex(pi);
 
-    port = ipIndex + startingHash;
-    listeners[pi] = new UDPMulticastReceiver;
+    port = ipIndex + initMultiCastPort;
+    listener = new UDPMulticastReceiver;
 
-    sprintf(actHost, "%s%d", initMulticastHost, port);
-    listeners[pi]->connectToMulticastIp(actHost, port);
+    sprintf(actHost, "%s%d", initMulticastHost, ipIndex);
+    listener->connectToMulticastIp(actHost, port);
+    listeners[pi] = listener;
   }
 
 }
 
-void MulticastSocketManager::initSockets() {
+void MulticastSocketManager::initSockets(int foo) {
   int publisherSize = pow(2, clusterSize - 1) - 1;
   if (publisherSize < 1) return;
 
@@ -94,5 +97,11 @@ void MulticastSocketManager::initSockets() {
   if (listenerSize < 1) return;
 
   listeners.resize(listenerSize, NULL);
+}
+
+Selector* MulticastSocketManager::getSelector() {
+  Selector* selector = new Selector;
+  selector->Init(&listeners);
+  return selector;
 }
 

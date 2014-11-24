@@ -14,7 +14,7 @@
 #include "master_socket_manager.h"
 #include "log4cpp/Category.hh"
 
-class SocketManager {
+class SocketManager : public ISocketManager {
 public:
 	SocketManager();
 	virtual void initSockets(int);
@@ -24,7 +24,8 @@ public:
   virtual void sendToNode(int, char*, int);
 
   void setMasterSocketManager(MasterSocketManager* manager);
-  virtual vector<SocketConnection*> getReceiverSockets();
+  //virtual vector<SocketConnection*> getReceiverSockets();
+  virtual Selector* getSelector();
   virtual ~SocketManager();
 private:
   MasterSocketManager* masterSocketManager;

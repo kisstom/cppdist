@@ -33,7 +33,7 @@ protected:
   }
 
   void checkAlgo(Algo* algo) {
-    ASSERT_EQ(slaveIndex_, (int) algo->socketManager_->sender_sockets_.size());
+    /*ASSERT_EQ(slaveIndex_, (int) algo->socketManager_->sender_sockets_.size());
     ASSERT_EQ(slaveIndex_, (int) algo->socketManager_->receiver_sockets_.size());
 
     int index = algo->slave_index_;
@@ -45,7 +45,7 @@ protected:
         ASSERT_TRUE(NULL != (algo->socketManager_->sender_sockets_)[i]);
         ASSERT_TRUE(NULL != (algo->socketManager_->receiver_sockets_)[i]);
       }
-    }
+    }*/
 
     ASSERT_EQ(slaveIndex_, (int) algo->senderBuffer_->pack_.size());
     ASSERT_EQ(slaveIndex_, (int) algo->senderBuffer_->pack_size_.size());

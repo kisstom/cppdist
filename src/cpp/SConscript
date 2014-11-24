@@ -34,7 +34,7 @@ COMMON_OBJ = Glob('#/../bin/main/common/components/socket/*.o') + Glob('#/../bin
 COMMON_OBJ += Glob('#/../bin/main/common/thread/*.o') + Glob('#/../bin/main/common/components/*.o')
 COMMON_OBJ += Glob('#/../bin/main/common/graph/*.o')  + Glob('#/../bin/main/common/random/*.o')
 COMMON_OBJ += Glob('#/../bin/main/common/io/*.o') + Glob('#/../bin/main/common/components/socket/zmq_sockets/*.o')
-COMMON_OBJ += Glob('#/../bin/main/common/util/config/*.o')
+COMMON_OBJ += Glob('#/../bin/main/common/util/config/*.o') + Glob('#/../bin/main/common/components/socket/isocket/*.o')
 
 SConscript([
 	'main/algos/simrank_one_computer/SConscript',

@@ -65,7 +65,7 @@ public:
   long getNumberOfPartitionNodes();
 
 	void setNode(Node *);
-  void setSocketManager(SocketManager*);
+  void setSocketManager(ISocketManager*);
   void setClientSocketManager(ClientSocketManager*);
   void setMasterSocketManager(MasterSocketManager* manager);
   void setStoreFromBinary(StoreFromBinary*);
@@ -87,7 +87,7 @@ private:
   long min_node_;
   int slave_index_;
 
-	SocketManager* socketManager_;
+	ISocketManager* socketManager_;
 	MasterSocketManager* masterSocketManager_;
 	ClientSocketManager* clientSocketManager_;
 

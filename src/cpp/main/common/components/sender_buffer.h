@@ -10,7 +10,7 @@
 
 #include <vector>
 #include "serializer.h"
-#include "socket/socket_manager.h"
+#include "socket/isocket/isocket_manager.h"
 #include "log4cpp/Category.hh"
 #include <gtest/gtest_prod.h>
 
@@ -36,11 +36,11 @@ public:
 	void emptyBuffer(int);
 
 	bool canAdd(int, int);
-	void setSocketManager(SocketManager*);
+	void setSocketManager(ISocketManager*);
 private:
 
 	vector<char*> pack_;
-	SocketManager* socketManager_;
+	ISocketManager* socketManager_;
 	Serializer serializer_;
 	vector<int> pack_size_;
 	int send_limit_;
@@ -114,7 +114,7 @@ inline bool SenderBuffer::canAdd(int index, int size) {
 	return size + pack_size_[index] <= send_limit_;
 }
 
-inline void SenderBuffer::setSocketManager(SocketManager* manager) {
+inline void SenderBuffer::setSocketManager(ISocketManager* manager) {
 	socketManager_ = manager;
 }
 

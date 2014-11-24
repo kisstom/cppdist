@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
   char* buf = new char[messageSize + 1];
   int bytes;
   for (int i = 0; i < numMessages; ++i) {
-    bytes = receiver.recv(messageSize, buf);
+    bytes = receiver.Recv(messageSize, buf);
     buf[bytes] = '\0';
     printf("%s\n", buf);
   }

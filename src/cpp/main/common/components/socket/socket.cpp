@@ -68,6 +68,10 @@ bool Socket::isConnected() {
   return false;
 }
 
+int Socket::Recv(int limit, char* buf) {
+  return -1;
+}
+
 //
 // ServerSocket
 //
@@ -200,7 +204,7 @@ Selector::Selector() {
   logger = &log4cpp::Category::getInstance(std::string("Selector"));
 }
 
-void Selector::Init(vector<SocketConnection *> sockets) {
+void Selector::Init(vector<SocketConnection*>* sockets) {
   sockets_ = sockets;
   BuilFdSet();
 }
@@ -212,8 +216,8 @@ void Selector::BuilFdSet() {
      accepted. */
   FD_ZERO(&socks_);
   max_fd_ = -1;
-  for (unsigned int listnum = 0; listnum < sockets_.size(); listnum++) {
-    Socket *socket = sockets_[listnum];
+  for (unsigned int listnum = 0; listnum < sockets_->size(); listnum++) {
+    SocketConnection *socket = (*sockets_)[listnum];
 
     // self socket is uninited
     if (socket == NULL) continue;
@@ -231,11 +235,11 @@ int Selector::RandStart () {
   timeval tim;
   gettimeofday(&tim, NULL);
   srand(tim.tv_usec);
-  double x = (double)rand() * sockets_.size() / RAND_MAX;
+  double x = (double)rand() * sockets_->size() / RAND_MAX;
   return (int) x;
 }
 
-SocketConnection *Selector::Select() {
+/*SocketConnection *Selector::Select() {
   BuilFdSet();
 
   struct timeval tv = {0, 20};
@@ -264,7 +268,7 @@ SocketConnection *Selector::Select() {
   }
 
   return NULL;
-}
+}*/
 
 int Selector::SelectIndex() {
   BuilFdSet();
@@ -279,13 +283,13 @@ int Selector::SelectIndex() {
   } else {
 
     int rand_start = RandStart();
-    for (int listnum = rand_start; listnum < (int)sockets_.size() + rand_start; listnum++) {
-      SocketConnection *socket = sockets_[listnum%((int)sockets_.size())];
+    for (int listnum = rand_start; listnum < (int)sockets_->size() + rand_start; listnum++) {
+      Socket *socket = (*sockets_)[listnum%((int)sockets_->size())];
 
       // self socket is uninited
       if (socket == NULL) continue;
       if (FD_ISSET(socket->GetFileDescriptor(), &socks_)) {
-        return listnum % (int)sockets_.size();
+        return listnum % (int)sockets_->size();
       }
     }
   }

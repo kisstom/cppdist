@@ -44,7 +44,7 @@ void UDPMulticastReceiver::connectToMulticastIp(char* group, int port) {
   return;
 }
 
-int UDPMulticastReceiver::recv(int limit, char* buffer) {
+int UDPMulticastReceiver::Recv(int limit, char* buffer) {
   int nbytes;
 
   if ((nbytes = recvfrom(socket_file_descriptor, buffer, limit, 0,

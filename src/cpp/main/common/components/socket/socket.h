@@ -28,6 +28,7 @@ class Socket {
   bool isConnected();
   int GetFileDescriptor();
   void Close();
+  virtual int Recv(int limit, char* buf);
 };
 
 class SocketConnection;
@@ -50,14 +51,15 @@ class SocketConnection : public Socket {
 
   int port_;
   string host_;
-  SocketConnection();
+
  public:
+  SocketConnection();
   static SocketConnection *Connect(string host, int port);
   ~SocketConnection();
   int Send(int length, const char *buf);
   int SendCStr(const char *msg);
   int SendStr(const string &msg);
-  int Recv(int limit, char* buf);
+  virtual int Recv(int limit, char* buf);
   int GetPort();
   string GetHost();
 };
@@ -65,15 +67,15 @@ class SocketConnection : public Socket {
 class Selector {
  private:
   log4cpp::Category* logger;
-  vector<SocketConnection *> sockets_;
+  vector<SocketConnection*>* sockets_;
   fd_set socks_;
   int max_fd_;
   void BuilFdSet();
   int RandStart();
  public:
   Selector();
-  void Init(vector<SocketConnection *> connections);
-  SocketConnection *Select();
+  void Init(vector<SocketConnection*>* connections);
+  //SocketConnection *Select();
   int SelectIndex();
 };
 

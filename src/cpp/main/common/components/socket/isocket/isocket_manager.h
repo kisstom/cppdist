@@ -5,11 +5,13 @@
 
 class ISocketManager {
 public:
-  virtual void initSockets() = 0;
+  virtual void initSockets(int) = 0;
+  virtual void initClient(int) = 0;
   virtual void initConnections() = 0;
   virtual int recvFromNode(int, char*, int) = 0;
   virtual void sendToNode(int, char*, int) = 0;
   virtual void setMasterSocketManager(MasterSocketManager*) = 0;
+  virtual Selector* getSelector() = 0;
   virtual ~ISocketManager() {}
 };
 

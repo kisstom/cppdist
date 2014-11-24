@@ -102,8 +102,14 @@ void SocketManager::initSockets(int socket_size) {
 	sender_sockets_.resize(socket_size, NULL);
 }
 
-vector<SocketConnection*> SocketManager::getReceiverSockets() {
-	return receiver_sockets_;
+Selector* SocketManager::getSelector() {
+  Selector* selector = new Selector;
+  selector->Init(&receiver_sockets_);
+  return selector;
 }
+
+/*vector<SocketConnection*> SocketManager::getReceiverSockets() {
+	return receiver_sockets_;
+}*/
 
 

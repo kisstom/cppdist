@@ -151,13 +151,14 @@ void Algo::receiver() {
 	logger_->info("Starting receiver.");
 	int finished = 0, socket_index, size = 0;
 	bool is_more = true;
-	Selector selector;
-	selector.Init(socketManager_->getReceiverSockets());
+	//Selector selector;
+	//selector.Init(socketManager_->getReceiverSockets());
 	//clientSocketManager_->resetFinishCounter();
+	Selector* selector = socketManager_->getSelector();
 
 	while (1)
 	{
-		socket_index = selector.SelectIndex();
+		socket_index = selector->SelectIndex();
 		if (socket_index >= 0) {
 		  size = socketManager_->recvFromNode(
 		      send_limit_, storeFromBinary_->getEndOfBufferAt(socket_index), socket_index);
@@ -177,6 +178,7 @@ void Algo::receiver() {
 		}
 	}
 
+	delete selector;
 	logger_->info("Receiver finished.");
 }
 
@@ -231,7 +233,7 @@ void Algo::setNode(Node * node) {
 	node_ = node;
 }
 
-void Algo::setSocketManager(SocketManager* manager) {
+void Algo::setSocketManager(ISocketManager* manager) {
 	socketManager_ = manager;
 	senderBuffer_->setSocketManager(manager);
 }

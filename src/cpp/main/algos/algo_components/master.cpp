@@ -57,7 +57,9 @@ bool Master::setUp() {
 		// Varunk, a masolas mellett be is olvassak a node-k az adatot.
 		WaitForNodes();
 		// Letrehozzuk a kapcsolatokat a node-k kozott.
+
 		MakeNodeConnections();
+    //MakeNodeConnections2();
 
 		SetUpClientManager();
 	} catch (ConnectionError& e) {
@@ -67,6 +69,13 @@ bool Master::setUp() {
   }
 	logger_->info("Master setup finished.");
 	return true;
+}
+
+void Master::MakeNodeConnections2() {
+  sendMessageForAllNodes("HAVA NAGILA");
+  WaitForNodes();
+  sendMessageForAllNodes("HAVA NAGILA");
+  WaitForNodes();
 }
 
 void Master::run()

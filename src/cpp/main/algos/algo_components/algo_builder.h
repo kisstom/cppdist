@@ -30,7 +30,7 @@ private:
   Node* node_;
   Deserializer* deserializer_;
   SenderBuffer* senderBuffer_;
-  SocketManager* socketManager_;
+  ISocketManager* socketManager_;
   MasterSocketManager* masterSocketManager_;
   ClientSocketManager* clientSocketManager_;
   StoreFromBinary* storeFromBinary_;
