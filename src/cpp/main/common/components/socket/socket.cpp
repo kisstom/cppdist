@@ -31,12 +31,14 @@
 }*/
 
 Socket::Socket() {
+  logger = &log4cpp::Category::getInstance(std::string("Socket"));
   isClosed_ = false;
   socketType = SOCK_STREAM;
 }
 
 Socket::~Socket() {
   if (!isClosed_) {
+    logger->info("Base socket destructor called.");
     Close();
   }
 }
@@ -194,6 +196,10 @@ string SocketConnection::GetHost() {
 // Selector
 //
 
+Selector::Selector() {
+  logger = &log4cpp::Category::getInstance(std::string("Selector"));
+}
+
 void Selector::Init(vector<SocketConnection *> sockets) {
   sockets_ = sockets;
   BuilFdSet();
@@ -231,14 +237,18 @@ int Selector::RandStart () {
 
 SocketConnection *Selector::Select() {
   BuilFdSet();
+
+  struct timeval tv = {0, 20};
+
   int readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
-                         (fd_set *) 0, NULL);
+                         (fd_set *) 0, &tv);
   if (readsocks < 0) {
     throw SelectError();
     //return NULL;
   }
   if (readsocks == 0) {
-    throw SelectError();
+    //throw SelectError();
+
   } else {
 
     int rand_start = RandStart();
@@ -252,19 +262,20 @@ SocketConnection *Selector::Select() {
       }
     }
   }
-  // ide nem is johet
+
   return NULL;
 }
 
 int Selector::SelectIndex() {
   BuilFdSet();
+  struct timeval tv = {0, 20};
   int readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
-                         (fd_set *) 0, NULL);
+                         (fd_set *) 0, &tv);
   if (readsocks < 0) {
     throw SelectError();
   }
   if (readsocks == 0) {
-    throw SelectError();
+    logger->info("Time expired.");
   } else {
 
     int rand_start = RandStart();

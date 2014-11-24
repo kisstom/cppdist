@@ -27,6 +27,7 @@ public:
   virtual void setBufferCapacity(int);
   virtual bool storeFromIndex(int);
   virtual char* getEndOfBufferAt(int);
+  virtual void emptyBufferSizes();
   vector<unsigned> remains_size_;
   vector<char*> receiver_remains_;
   int getRemainsSize(int socketIndex);

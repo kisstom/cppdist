@@ -153,26 +153,30 @@ void Algo::receiver() {
 	bool is_more = true;
 	Selector selector;
 	selector.Init(socketManager_->getReceiverSockets());
-	clientSocketManager_->resetFinishCounter();
+	//clientSocketManager_->resetFinishCounter();
 
 	while (1)
 	{
 		socket_index = selector.SelectIndex();
-		size = socketManager_->recvFromNode(send_limit_, storeFromBinary_->getEndOfBufferAt(socket_index), socket_index);
+		if (socket_index >= 0) {
+		  size = socketManager_->recvFromNode(
+		      send_limit_, storeFromBinary_->getEndOfBufferAt(socket_index), socket_index);
 
-		storeFromBinary_->remains_size_[socket_index] += (unsigned) size;
-		is_more = storeFromBinary(socket_index);
+		  storeFromBinary_->remains_size_[socket_index] += (unsigned) size;
+		  is_more = storeFromBinary(socket_index);
+		}
 
-		if (clientSocketManager_->isFinished()) break;
-		/*if (!is_more)
+		//if (clientSocketManager_->isFinished()) break;
+		if (!is_more)
 		{
 			++finished;
 			if (finished == num_slaves_ - 1)
 			{
 				break;
 			}
-		}*/
+		}
 	}
+
 	logger_->info("Receiver finished.");
 }
 
@@ -207,19 +211,19 @@ void Algo::runThreads() {
 	logger_->info("run threads");
 	ReceiverThread *receiver = new ReceiverThread(this);
 	SenderThread *sender = new SenderThread(node_);
-	RunThread* slaveCommunication = new RunThread(clientSocketManager_);
+	//RunThread* slaveCommunication = new RunThread(clientSocketManager_);
 
 	receiver->start();
 	sender->start();
-	slaveCommunication->start();
-	//receiver->waitForThread();
+	//slaveCommunication->start();
+	receiver->waitForThread();
 	sender->waitForThread();
-	slaveCommunication->waitForThread();
+	//slaveCommunication->waitForThread();
 
 	logger_->info("threads ended");
 	delete receiver;
 	delete sender;
-	delete slaveCommunication;
+	//delete slaveCommunication;
 }
 
 
@@ -257,11 +261,11 @@ void Algo::sendAndSignal(int self_index) {
 	    senderBuffer_->emptyBuffer(part_index);
 		}
 
-    senderBuffer_->setBreak(part_index);
+    senderBuffer_->setFinish(part_index);
     senderBuffer_->emptyBuffer(part_index);
 	}
 
-	clientSocketManager_->publishEndSignal();
+	//clientSocketManager_->publishEndSignal();
 }
 
 long Algo::getNumberOfPartitionNodes() {

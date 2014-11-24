@@ -39,6 +39,13 @@ void StoreFromBinary::setBufferCapacity(int c) {
 	}
 }
 
+
+void StoreFromBinary::emptyBufferSizes() {
+  for (int i = 0; i < (int) receiver_remains_.size(); ++i) {
+    remains_size_[i] = 0;
+  }
+}
+
 bool StoreFromBinary::storeFromIndex(int socket_index) {
 	unsigned stored = 0;
 	int success;
@@ -56,9 +63,11 @@ bool StoreFromBinary::storeFromIndex(int socket_index) {
 
   	if (remains_size_[socket_index] == stored + 1) {
   		bool cont = true;
-  		if (!serializer_.hasNext(receiver_remains_[socket_index] + stored)) {
-  			cont = false;
-  		}
+
+  	  if (!serializer_.hasNext(receiver_remains_[socket_index] + stored)) {
+  	    logger_->info("Received end signal.");
+  	    cont = false;
+  	  }
 
   		if (stored > 0) {
   			memcpy(receiver_remains_[socket_index], receiver_remains_[socket_index] + stored,

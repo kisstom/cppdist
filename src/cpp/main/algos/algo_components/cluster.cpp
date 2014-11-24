@@ -21,7 +21,10 @@ Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<str
 }
 
 Cluster::~Cluster() {
-  // TODO
+  delete masterBuilder_;
+  for (int i = 0; i < builders_.size(); ++i) {
+    delete builders_[i];
+  }
 }
 
 void Cluster::init() {

@@ -31,6 +31,7 @@ TEST_F(TestMulticastSocketManager, createMulticastPublisher) {
   int expectedPublisherSize = pow(2, clusterSize - 1) - 1;
   manager.initSockets();
   manager.initPublishers();
+  manager.initListeners();
   ASSERT_EQ(expectedPublisherSize, (int) manager.publishers.size());
 
   for (int i = 0; i < (int) manager.publishers.size(); ++i) {
@@ -51,6 +52,7 @@ TEST_F(TestMulticastSocketManager, createMulticastListener) {
   int expectedListenerSize = pow(2, clusterSize - 1);
   manager.initSockets();
   manager.initListeners();
+
   ASSERT_EQ(expectedListenerSize, (int) manager.listeners.size());
 
   for (int i = 0; i < (int) manager.listeners.size(); ++i) {

@@ -57,14 +57,16 @@ void ClientSocketManager::initSubscribes() {
 
 void ClientSocketManager::publishEndSignal() {
   logger->info("Publishing finish %d", selfIndex);
-  zmq::message_t message(1);
+  zmq::message_t message(2);
   char msg[2] = "0";
   strcpy((char*) message.data(), msg);
   publisherSocket->send(message);
 }
 
 void ClientSocketManager::run() {
-  zmq::message_t m(20);
+  zmq::message_t m(2);
+  resetFinishCounter();
+
   while (!isFinished()) {
     listenerSocket->recv(&m);
     // Check whether it is really 0
@@ -76,6 +78,7 @@ void ClientSocketManager::run() {
 
 void ClientSocketManager::resetFinishCounter() {
   finishCounter = 0;
+  logger->info("Resetting finish counter to %d", finishCounter);
 }
 
 bool ClientSocketManager::isFinished() {

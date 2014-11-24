@@ -13,15 +13,17 @@ using std::vector;
 
 #include <fcntl.h>
 #include  "../../util/ConnectionError.h"
+#include "log4cpp/Category.hh"
 
 class Socket {
  protected:
   int socket_file_descriptor;
   bool isClosed_;
   int socketType;
+  log4cpp::Category* logger;
  public:
   Socket();
-  ~Socket();
+  virtual ~Socket();
   bool IsClosed();
   bool isConnected();
   int GetFileDescriptor();
@@ -62,12 +64,14 @@ class SocketConnection : public Socket {
 
 class Selector {
  private:
+  log4cpp::Category* logger;
   vector<SocketConnection *> sockets_;
   fd_set socks_;
   int max_fd_;
   void BuilFdSet();
   int RandStart();
  public:
+  Selector();
   void Init(vector<SocketConnection *> connections);
   SocketConnection *Select();
   int SelectIndex();

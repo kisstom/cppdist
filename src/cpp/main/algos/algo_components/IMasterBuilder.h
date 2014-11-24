@@ -19,9 +19,10 @@ using std::string;
 class IMasterBuilder {
 public:
 	Master* buildFromConfig(unordered_map<string, string>* params);
+	virtual ~IMasterBuilder() {}
 protected:
   virtual Master* createMaster(unordered_map<string, string>*) = 0;
-	virtual ~IMasterBuilder() {}
+
 };
 
 #endif /* IMASTERBUILDER_H_ */

@@ -15,12 +15,14 @@ MulticastSocketManager::MulticastSocketManager(int _nodeIndex, int _startingHash
 }
 
 MulticastSocketManager::~MulticastSocketManager() {
-  for (int i = 0; (int) listeners.size(); ++i) {
-    delete listeners[i];
+  for (int i = 0; i < (int) listeners.size(); ++i) {
+    if (listeners[i])
+      delete listeners[i];
   }
 
-  for (int i = 0; (int) publishers.size(); ++i) {
-    delete publishers[i];
+  for (int i = 0; i < (int) publishers.size(); ++i) {
+    if (publishers[i])
+      delete publishers[i];
   }
 }
 

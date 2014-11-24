@@ -165,7 +165,7 @@ protected:
   }
 
   void initLogger() {
-  	string debugLevel= "EMERG";
+  	string debugLevel= "INFO";
   	string appender = "CONSOLE";
 
   	LoggerFactory::initLogger(debugLevel, appender, "");
