@@ -8,25 +8,28 @@ TEST(MulticastHelperTest, test1) {
   MulticastHelper helper(nodeIndex);
 
   short* indices = new short[3];
+  bool shouldUpdateSelf = false;
   // size of the neighbors
   indices[0] = 2;
   indices[1] = 0;
   indices[2] = 3;
 
-  ASSERT_EQ(4, helper.hash(indices));
+  ASSERT_EQ(4, helper.hash(indices, &shouldUpdateSelf));
+  ASSERT_TRUE(shouldUpdateSelf);
 }
 
 TEST(MulticastHelperTest, test2) {
   int nodeIndex = 1;
   MulticastHelper helper(nodeIndex);
-
+  bool shouldUpdateSelf = false;
   short* indices = new short[3];
   // size of the neighbors
   indices[0] = 2;
   indices[1] = 1;
   indices[2] = 3;
 
-  ASSERT_EQ(3, helper.hash(indices));
+  ASSERT_EQ(3, helper.hash(indices, &shouldUpdateSelf));
+  ASSERT_TRUE(shouldUpdateSelf);
 }
 
 int main (int argc, char **argv) {

@@ -23,6 +23,7 @@ CustomMultiNonBlockNode::CustomMultiNonBlockNode(long _allnode, long _minnode, d
    pagerankScore_ = NULL;
    tmpSenderScore_ = NULL;
    tmpReceiverScore_ = NULL;
+   multicastHelper = NULL;
  }
 
  void CustomMultiNonBlockNode::setOutputFileName(string _outfile) {
@@ -32,20 +33,16 @@ CustomMultiNonBlockNode::CustomMultiNonBlockNode(long _allnode, long _minnode, d
 void CustomMultiNonBlockNode::sender() {
   logger_->info("Starting sender.");
   long origNode = minNode_ - 1, start, end;
-  short size;
+  bool shouldUpdateSelf = false;
 
   for (long partitionNode = 0; partitionNode < (long) outPartitions->size(); ++partitionNode) {
     ++origNode;
     if ((*numNeighbors)[partitionNode] == 0) continue;
     double imp = (*pagerankScore_)[partitionNode] / (*numNeighbors)[partitionNode];
 
-    size = (*outPartitions)[partitionNode][0];
-    for (short c = 0; c < size; ++c) {
-      if ((*outPartitions)[partitionNode][c + 1] == partIndex_) {
-        updateSenderScore(origNode, imp);
-      } else {
-        serializeImportance((*outPartitions)[partitionNode][c + 1], origNode, imp);
-      }
+    serializeImportance((*outPartitions)[partitionNode], origNode, imp, &shouldUpdateSelf);
+    if (shouldUpdateSelf) {
+      updateSenderScore(origNode, imp);
     }
   }
 
@@ -54,16 +51,19 @@ void CustomMultiNonBlockNode::sender() {
 }
 
 
-void CustomMultiNonBlockNode::serializeImportance(short bufferIndex, long fromNode, double importance) {
+void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNode,
+    double importance, bool* shouldUpdateSelf) {
+  int hashIndex = multicastHelper->hash(outIndices, shouldUpdateSelf);
+
   int shouldAdd = 1 + sizeof(long) + sizeof(double);
 
-  if (!senderBuffer_->canAdd(bufferIndex, shouldAdd)) {
-    senderBuffer_->emptyBuffer(bufferIndex);
+  if (!senderBuffer_->canAdd(hashIndex, shouldAdd)) {
+    senderBuffer_->emptyBuffer(hashIndex);
   }
 
-  senderBuffer_->setBreak(bufferIndex);
-  senderBuffer_->store(bufferIndex, fromNode);
-  senderBuffer_->store(bufferIndex, importance);
+  senderBuffer_->setBreak(hashIndex);
+  senderBuffer_->store(hashIndex, fromNode);
+  senderBuffer_->store(hashIndex, importance);
 }
 
 void CustomMultiNonBlockNode::updateReceiverScore(long origNode, double imp) {
@@ -103,6 +103,10 @@ bool CustomMultiNonBlockNode::afterIteration() {
         (1.0 - dump_) + dump_ / allNode_;
   }
   return (++actIter < maxIter);
+}
+
+void CustomMultiNonBlockNode::initFromMaster(string) {
+  multicastHelper = new MulticastHelper(algo_->getSlaveIndex());
 }
 
 void CustomMultiNonBlockNode::final() {

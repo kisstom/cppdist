@@ -4,7 +4,7 @@
 class MulticastHelper {
 public:
   MulticastHelper(int);
-  int hash(short*);
+  int hash(short*, bool*);
 
 private:
   int nodeIndex;

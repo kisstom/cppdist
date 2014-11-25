@@ -13,6 +13,7 @@
 #include <map>
 #include <vector>
 #include "../algo_components/node.h"
+#include "../../common/components/socket/multicast_helper.h"
 
 using std::tr1::unordered_map;
 using std::vector;
@@ -24,7 +25,7 @@ public:
   void beforeIteration(string msg);
   bool afterIteration();
   void sender();
-  void initFromMaster(string) {}
+  void initFromMaster(string);
   void final();
 
   void setNumberNeighbors(vector<int>*);
@@ -33,12 +34,14 @@ public:
   void setInverseOutEdges(vector<long>*);
   void setOutputFileName(string);
 
-  void serializeImportance(short, long, double);
+  void serializeImportance(short*, long, double, bool*);
   void updateSenderScore(long fromEdge, double sc);
   void updateReceiverScore(long fromEdge, double sc);
   void readInverseNodeBounds(string);
   void readInverseOutEdges(string);
 private:
+  MulticastHelper* multicastHelper;
+
   vector<short*>* outPartitions;
   unordered_map<long, std::pair<long, long> >* inverseNodeBounds;
   vector<long>* inverseOutEdges;
