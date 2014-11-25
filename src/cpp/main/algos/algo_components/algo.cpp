@@ -11,7 +11,7 @@
 
 Algo::Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index,
-			long num_nodes, long min_node) {
+			long num_nodes, long min_node, bool _isMulticast) {
 	strcpy(master_host_, master_host);
 	master_port_ = master_port;
 	slave_port_ = slave_port;
@@ -24,6 +24,7 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
   min_node_ = min_node;
   logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
   masterSocketManager_ = NULL;
+  isMulticast = _isMulticast;
 }
 
 int Algo::getSlaveIndex() {

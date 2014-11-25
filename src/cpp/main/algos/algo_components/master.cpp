@@ -10,7 +10,7 @@
 
 using std::vector;
 
-Master::Master(int master_port, vector<Slave>* slaves, long numNodes)
+Master::Master(int master_port, vector<Slave>* slaves, long numNodes, bool _isMulti)
 {
   master_port_ = master_port;
   slaves_ = slaves;
@@ -18,6 +18,7 @@ Master::Master(int master_port, vector<Slave>* slaves, long numNodes)
   numNodes_ = numNodes;
   master_socket_ = NULL;
   innerMaster_ = NULL;
+  isMulti = _isMulti;
 }
 
 Master::~Master()

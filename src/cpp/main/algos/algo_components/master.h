@@ -36,7 +36,7 @@ struct Slave {
 
 class Master : public Runnable {
   public:
-    Master(int, vector<Slave>*, long);
+    Master(int, vector<Slave>*, long, bool);
     ~Master();
     void run();
     bool setUp();
@@ -58,6 +58,7 @@ class Master : public Runnable {
     void SetUpClientManager();
   private:
     long numNodes_;
+    bool isMulti;
     InnerMaster* innerMaster_;
     int master_port_;
     char master_host_[1024];

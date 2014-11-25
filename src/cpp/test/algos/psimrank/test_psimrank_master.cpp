@@ -42,7 +42,7 @@ protected:
 };
 
 TEST(PSimrankMasterTest, testInit) {
-  Master* master = new Master(0, NULL, 12);
+  Master* master = new Master(0, NULL, 12, false);
   PSimrankMaster* innerMaster = new PSimrankMaster;
 
   PSimrankRandomGeneratorIFace* randomGen = new PSimrankRandomGenerator(13);

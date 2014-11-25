@@ -41,7 +41,7 @@ class Algo : public Runnable {
 public:
 	Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index,
-			long num_nodes, long min_node);
+			long num_nodes, long min_node, bool isMulticast);
 	void run();
 	//void startLogger();
 	void setIp();
@@ -86,6 +86,7 @@ private:
 	int part_index_;
   long min_node_;
   int slave_index_;
+  bool isMulticast;
 
 	ISocketManager* socketManager_;
 	MasterSocketManager* masterSocketManager_;
