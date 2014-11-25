@@ -3,8 +3,11 @@
 
 class MulticastHelper {
 public:
+  MulticastHelper(int);
   int hash(short*);
 
+private:
+  int nodeIndex;
 };
 
 

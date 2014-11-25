@@ -18,3 +18,4 @@ env.Program('multicast_socket_manager_test', ['multicast_socket_manager_test.cpp
 env.Program('ip_index_maker_test', ['ip_index_maker_test.cpp'] + COMMON_OBJ + ALGO_OBJ)
 
 SConscript(['./util/config/SConscript'], exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])
+SConscript(['./socket/SConscript'], exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])

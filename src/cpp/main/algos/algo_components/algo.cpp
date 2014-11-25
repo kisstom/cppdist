@@ -7,6 +7,7 @@
 
 #include "algo.h"
 #include "../../common/thread/run_thread.h"
+#include <cmath>
 
 Algo::Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index,
@@ -61,7 +62,10 @@ bool Algo::setUp() {
 		initFromMaster();
 
 		socketManager_->initSockets(num_slaves_);
-		senderBuffer_->resizeBufferNum(num_slaves_);
+		//senderBuffer_->resizeBufferNum(num_slaves_);
+
+		senderBuffer_->resizeBufferNum((int) pow(2, num_slaves_ - 1) - 1);
+
 		senderBuffer_->resizeBuffers(send_limit_);
 		storeFromBinary_->resizeSocketNum(num_slaves_);
 		storeFromBinary_->setBufferCapacity(send_limit_ * 2);
