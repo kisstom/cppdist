@@ -15,7 +15,7 @@ TEST(MulticastHelperTest, test1) {
   indices[2] = 3;
 
   ASSERT_EQ(4, helper.hash(indices, &shouldUpdateSelf));
-  ASSERT_TRUE(shouldUpdateSelf);
+  ASSERT_FALSE(shouldUpdateSelf);
 }
 
 TEST(MulticastHelperTest, test2) {
