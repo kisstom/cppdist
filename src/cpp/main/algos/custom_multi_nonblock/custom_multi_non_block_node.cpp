@@ -53,7 +53,10 @@ void CustomMultiNonBlockNode::sender() {
 
 void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNode,
     double importance, bool* shouldUpdateSelf) {
+  logger_->info("Starting serialize.");
+
   int hashIndex = multicastHelper->hash(outIndices, shouldUpdateSelf);
+  if (hashIndex < 0) return;
 
   int shouldAdd = 1 + sizeof(long) + sizeof(double);
 
@@ -61,6 +64,7 @@ void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNo
     senderBuffer_->emptyBuffer(hashIndex);
   }
 
+  logger_->info("Serializing to %hd from %ld imp %lf.", hashIndex, fromNode, importance);
   senderBuffer_->setBreak(hashIndex);
   senderBuffer_->store(hashIndex, fromNode);
   senderBuffer_->store(hashIndex, importance);

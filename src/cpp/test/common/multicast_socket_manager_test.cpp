@@ -49,7 +49,7 @@ TEST_F(TestMulticastSocketManager, createMulticastListener) {
   MulticastSocketManager manager(nodeIndex, startingHash,
       initMulticastHost, initMultiCastPort, clusterSize);
 
-  int expectedListenerSize = pow(2, clusterSize - 1);
+  int expectedListenerSize = pow(2, clusterSize - 1) - 1;
   manager.initSockets(-1);
   manager.initListeners();
 

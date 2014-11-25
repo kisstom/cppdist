@@ -67,13 +67,14 @@ void MulticastSocketManager::initPublishers() {
     publishers[pi - 1] = new UDPMulticastPublisher;
 
     sprintf(actHost, "%s%d", initMulticastHost, ipIndex);
+    logger->info("Create multicast %s %d index is %d", actHost, port, pi - 1);
     publishers[pi - 1]->create(actHost, port);
   }
 
 }
 
 void MulticastSocketManager::initListeners() {
-  int listenerSize = pow(2, clusterSize - 1);
+  int listenerSize = pow(2, clusterSize - 1) - 1;
 
   if (listenerSize < 1) return;
   int ipIndex, port;
@@ -88,6 +89,7 @@ void MulticastSocketManager::initListeners() {
     listener = new UDPMulticastReceiver;
 
     sprintf(actHost, "%s%d", initMulticastHost, ipIndex);
+    logger->info("Connect to multicast %s %d index is %d", actHost, port, pi);
     listener->connectToMulticastIp(actHost, port);
     listeners[pi] = listener;
   }
@@ -100,7 +102,7 @@ void MulticastSocketManager::initSockets(int foo) {
 
   publishers.resize(publisherSize, NULL);
 
-  int listenerSize = pow(2, clusterSize - 1);
+  int listenerSize = pow(2, clusterSize - 1) - 1;
   if (listenerSize < 1) return;
 
   listeners.resize(listenerSize, NULL);

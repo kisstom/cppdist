@@ -266,7 +266,8 @@ void Algo::setSenderBuffer(SenderBuffer* senderBuffer) {
 
 void Algo::sendAndSignal(int self_index) {
 	for (int part_index = 0; part_index < (int) senderBuffer_->getBufferNum(); ++part_index) {
-		if (part_index == self_index) continue;
+	  if (!isMulticast && part_index == self_index) continue;
+		//if (part_index == self_index) continue;
 
 		if (!senderBuffer_->canAdd(part_index , 1)) {
 	    senderBuffer_->emptyBuffer(part_index);

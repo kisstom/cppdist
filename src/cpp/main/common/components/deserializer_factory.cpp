@@ -38,7 +38,7 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
     deserializer = createCounterInverseDeserializer(params, node);
   } else if (nodeType.compare("COUNTER_INVERSE_PAGERANK") == 0) {
     deserializer = createCounterInversePagerankDeserializer(params, node);
-  } else if (nodeType.compare("CUSTOM_MULTI_NON_BLOCK") == 0) {
+  } else if (nodeType.compare("CUSTOM_MULTI_NONBLOCK") == 0) {
     deserializer = createCustomMultiNonBlock(params, node);
   } else {
     logger_->error("Unknown tpye of deserializer %s", nodeType.c_str());

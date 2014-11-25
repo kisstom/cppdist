@@ -26,6 +26,7 @@ int CustomMultiNonBlockDeserializer::storeFromBinary(char* buffer, unsigned leng
   memcpy(&imp, buffer + stored, sizeof(double));
   stored += sizeof(double);
 
+  logger_->info("Deserialized values: %lf %ld", imp, fromNode);
   return stored;
 }
 
