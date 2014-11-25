@@ -26,6 +26,8 @@
 #include "../../algos/clever_pagerank/clever_pagerank_node.h"
 #include "../../algos/custom_non_block/custom_non_block_deserializer.h"
 #include "../../algos/custom_non_block/custom_non_block_node.h"
+#include "../../algos/custom_multi_nonblock/custom_multi_non_block_deserializer.h"
+#include "../../algos/custom_multi_nonblock/custom_multi_non_block_node.h"
 #include "../../algos/counter_inverse/counter_inverse_node.h"
 #include "../../algos/counter_inverse/counter_inverse_deserializer.h"
 #include "../../algos/counter_inverse_pagerank/counter_inverse_pagerank_node.h"
@@ -54,6 +56,7 @@ private:
 	Deserializer* createBitpropDeserializer(unordered_map<string, string>* params, Node* node);
   Deserializer* createCleverPagerankDeserializer(unordered_map<string, string>*, Node* node);
   Deserializer* createCustomNonBlock(unordered_map<string, string>* params, Node* node);
+  Deserializer* createCustomMultiNonBlock(unordered_map<string, string>* params, Node* node);
   Deserializer* createCounterInverseDeserializer(unordered_map<string, string>* params, Node* node);
   Deserializer* createCounterInversePagerankDeserializer(unordered_map<string, string>* params, Node* node);
 	log4cpp::Category* logger_;

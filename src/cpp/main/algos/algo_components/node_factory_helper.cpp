@@ -130,6 +130,20 @@ CustomNonBlockNode* NodeFactoryHelper::initCustomNonBlockNode(unordered_map<stri
   return node;
 }
 
+CustomMultiNonBlockNode* NodeFactoryHelper::initCustomMultiNonBlockNode(unordered_map<string, string>* params) {
+  long allNode, minNode;
+  int maxIter;
+  double dump;
+
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
+  sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
+  sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &minNode);
+
+  CustomMultiNonBlockNode* node = new CustomMultiNonBlockNode(allNode, minNode, dump, maxIter);
+  return node;
+}
+
 CounterInversePagerankNode* NodeFactoryHelper::initCounterInversePagerankNode(unordered_map<string, string>* params) {
   long allNode;
   int maxIter;

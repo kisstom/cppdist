@@ -7,6 +7,7 @@
 
 #include "inner_master_factory.h"
 #include "../custom_non_block/custom_non_block_master.h"
+#include "../custom_multi_nonblock/custom_multi_non_block_master.h"
 #include "../pagerank_non_block/pagerank_non_block_master.h"
 #include "../counter_inverse/counter_inverse_master.h"
 #include "../counter_inverse_pagerank/counter_inverse_pagerank_master.h"
@@ -43,6 +44,8 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
     innerMaster = new CounterInverseMaster;
   } else if (innerMasterType.compare("COUNTER_INVERSE_PAGERANK") == 0) {
     innerMaster = new CounterInversePagerankMaster;
+  } else if (innerMasterType.compare("CUSTOM_MULTI_NONBLOCK") == 0) {
+    innerMaster = new CustomMultiNonBlockMaster;
   } else {
 		logger_->error("Unknown inner master type %s", innerMasterType.c_str());
 	}

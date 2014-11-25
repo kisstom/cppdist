@@ -19,6 +19,7 @@
 #include "../pagerank_non_block/pagerank_non_block_node.h"
 #include "../clever_pagerank/clever_pagerank_node.h"
 #include "../custom_non_block/custom_non_block_node.h"
+#include "../custom_multi_nonblock/custom_multi_non_block_node.h"
 #include "../psimrank/psimrank_node.h"
 #include "../bitprop/bitprop_node.h"
 #include "../counter_inverse/counter_inverse_node.h"
@@ -50,6 +51,7 @@ private:
 	BitpropNode* createBitpropNode(unordered_map<string, string>* params);
 	CleverPagerankNode* createCleverPagerankNode(unordered_map<string, string>* params);
 	CustomNonBlockNode* createCustomNonBlockNode(unordered_map<string, string>* params);
+	CustomMultiNonBlockNode* createCustomMultiNonBlockNode(unordered_map<string, string>* params);
   CounterInverseNode* createCounterInverseNode(unordered_map<string, string>* params);
   CounterInversePagerankNode* createCounterInversePagerankNode(unordered_map<string, string>* params);
 	log4cpp::Category* logger_;

@@ -8,7 +8,7 @@
 #include "custom_multi_non_block_node.h"
 
 CustomMultiNonBlockNode::CustomMultiNonBlockNode(long _allnode, long _minnode, double _dump, int _maxIter) {
-   logger_ = &log4cpp::Category::getInstance(std::string("CustomNonBlockNode"));
+   logger_ = &log4cpp::Category::getInstance(std::string("CustomMultiNonBlockNode"));
 
    allNode_ = _allnode;
    minNode_ = _minnode;
