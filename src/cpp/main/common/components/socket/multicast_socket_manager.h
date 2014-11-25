@@ -8,6 +8,7 @@
 #include "ip_index_maker.h"
 #include "isocket/isocket_manager.h"
 #include "master_socket_manager.h"
+#include "log4cpp/Category.hh"
 
 using std::vector;
 
@@ -38,6 +39,7 @@ private:
   char initMulticastHost[1024];
   int initMultiCastPort;
   int clusterSize;
+  log4cpp::Category* logger;
 
   // FRIEND TESTS
   FRIEND_TEST(TestMulticastSocketManager, createMulticastPublisher);

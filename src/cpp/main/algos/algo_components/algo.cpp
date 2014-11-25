@@ -62,10 +62,14 @@ bool Algo::setUp() {
 
 		initFromMaster();
 
+		// num_slaves csak a sima socket-nel szamit
 		socketManager_->initSockets(num_slaves_);
-		//senderBuffer_->resizeBufferNum(num_slaves_);
 
-		senderBuffer_->resizeBufferNum((int) pow(2, num_slaves_ - 1) - 1);
+		if (isMulticast) {
+		  senderBuffer_->resizeBufferNum((int) pow(2, num_slaves_ - 1) - 1);
+		} else {
+		  senderBuffer_->resizeBufferNum(num_slaves_);
+		}
 
 		senderBuffer_->resizeBuffers(send_limit_);
 		storeFromBinary_->resizeSocketNum(num_slaves_);

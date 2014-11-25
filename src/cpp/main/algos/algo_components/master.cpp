@@ -59,8 +59,11 @@ bool Master::setUp() {
 		WaitForNodes();
 		// Letrehozzuk a kapcsolatokat a node-k kozott.
 
-		MakeNodeConnections();
-    //MakeNodeConnections2();
+		if (isMulti) {
+		  MakeNodeConnections2();
+		} else {
+		  MakeNodeConnections();
+		}
 
 		SetUpClientManager();
 	} catch (ConnectionError& e) {

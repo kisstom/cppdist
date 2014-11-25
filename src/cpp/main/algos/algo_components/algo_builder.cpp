@@ -24,9 +24,18 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   senderBuffer_ = new SenderBuffer;
   algo_->setSenderBuffer(senderBuffer_);
 
-  //socketManager_ = new SocketManager;
-  socketManager_ = new MulticastSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()), 1000,
-      "225.0.0.", 8001, atoi((*params)["NUM_SLAVES"].c_str()));
+
+  if (params->find("MULTI") != params->end()) {
+    bool isMulticast = atoi((*params)["MULTI"].c_str());
+    if (isMulticast) {
+      socketManager_ = new MulticastSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()), 1000,
+            "225.0.0.", 8001, atoi((*params)["NUM_SLAVES"].c_str()));
+    } else {
+      socketManager_ = new SocketManager;
+    }
+  } else {
+    socketManager_ = new SocketManager;
+  }
 
   algo_->setSocketManager(socketManager_);
 

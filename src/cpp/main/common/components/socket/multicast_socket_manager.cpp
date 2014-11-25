@@ -12,6 +12,7 @@ MulticastSocketManager::MulticastSocketManager(int _nodeIndex, int _startingHash
   initMultiCastPort = _initMultiCastPort;
   clusterSize = _clusterSize;
   masterSocketManager = NULL;
+  logger = &log4cpp::Category::getInstance(std::string("MulticastSocketManager"));
 }
 
 MulticastSocketManager::~MulticastSocketManager() {
@@ -35,8 +36,14 @@ void MulticastSocketManager::sendToNode(int limit, char* buffer, int socketIndex
 }
 
 void MulticastSocketManager::initConnections() {
+  logger->info("Initing connections");
+  int limit = 1024;
+  char msg[1024];
+
+  masterSocketManager->recvFromMaster(limit, msg);
   initPublishers();
   masterSocketManager->sendReadyToMaster();
+  masterSocketManager->recvFromMaster(limit, msg);
   initListeners();
   masterSocketManager->sendReadyToMaster();
 }
