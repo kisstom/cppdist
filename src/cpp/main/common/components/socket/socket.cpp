@@ -272,9 +272,9 @@ int Selector::RandStart () {
 
 int Selector::SelectIndex() {
   BuilFdSet();
-  struct timeval tv = {0, 20};
+  //struct timeval tv = {0, 20};
   int readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
-                         (fd_set *) 0, &tv);
+                         (fd_set *) 0, NULL);
   if (readsocks < 0) {
     throw SelectError();
   }

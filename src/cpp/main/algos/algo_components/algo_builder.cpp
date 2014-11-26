@@ -24,12 +24,13 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   senderBuffer_ = new SenderBuffer;
   algo_->setSenderBuffer(senderBuffer_);
 
+  int initSlavePort = atoi((*params)["INIT_SLAVE_PORT"].c_str());
 
   if (params->find("MULTI") != params->end()) {
     bool isMulticast = atoi((*params)["MULTI"].c_str());
     if (isMulticast) {
       socketManager_ = new MulticastSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()), 1000,
-            "225.0.0.", 8001, atoi((*params)["NUM_SLAVES"].c_str()));
+            "225.0.0.", initSlavePort, atoi((*params)["NUM_SLAVES"].c_str()));
     } else {
       socketManager_ = new SocketManager;
     }
@@ -43,14 +44,14 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   algo_->setMasterSocketManager(masterSocketManager_);
 
   socketManager_->setMasterSocketManager(masterSocketManager_);
-
-  clientSocketManager_ = new ClientSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()),
+  clientSocketManager_ = NULL;
+  /*clientSocketManager_ = new ClientSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()),
       atoi((*params)["NUM_SLAVES"].c_str()));
   clientSocketManager_->setMasterSocketManager(masterSocketManager_);
 
   clusterConfig = createClusterConfig(hostAndPort,
       atoi((*params)["INIT_SLAVE_COMMUNICATION_PORT"].c_str()), atoi((*params)["NUM_SLAVES"].c_str()));
-  clientSocketManager_->setClusterConfig(clusterConfig);
+  clientSocketManager_->setClusterConfig(clusterConfig);*/
 
   algo_->setClientSocketManager(clientSocketManager_);
 

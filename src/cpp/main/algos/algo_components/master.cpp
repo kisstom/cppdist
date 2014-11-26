@@ -65,7 +65,7 @@ bool Master::setUp() {
 		  MakeNodeConnections();
 		}
 
-		SetUpClientManager();
+		//SetUpClientManager();
 	} catch (ConnectionError& e) {
     logger_->info("Error: %s. Killing nodes.", e.what());
     KillNodes();

@@ -54,6 +54,7 @@ short Algo::getNumberOfPartitions() {
 bool Algo::setUp() {
 	logger_->info("setting up node");
 
+	int numSockets = -1;
 	try {
 
 		socketManager_->initClient(slave_port_);
@@ -62,23 +63,26 @@ bool Algo::setUp() {
 
 		initFromMaster();
 
-		// num_slaves csak a sima socket-nel szamit
-		socketManager_->initSockets(num_slaves_);
+
 
 		if (isMulticast) {
-		  senderBuffer_->resizeBufferNum((int) pow(2, num_slaves_ - 1) - 1);
+		  numSockets = (int) pow(2, num_slaves_ - 1) - 1;
 		} else {
-		  senderBuffer_->resizeBufferNum(num_slaves_);
+		  numSockets = num_slaves_;
 		}
 
+		// TODO num_slaves csak a sima socket-nel szamit
+		socketManager_->initSockets(numSockets);
+		senderBuffer_->resizeBufferNum(numSockets);
+		storeFromBinary_->resizeSocketNum(numSockets);
+
 		senderBuffer_->resizeBuffers(send_limit_);
-		storeFromBinary_->resizeSocketNum(num_slaves_);
 		storeFromBinary_->setBufferCapacity(send_limit_ * 2);
 
 		masterSocketManager_->sendReadyToMaster();
 		socketManager_->initConnections();
 
-    clientSocketManager_->setUp();
+    //clientSocketManager_->setUp();
 
 	} catch (MasterException& e) {
     logger_->info("Master said i must die. I die.");

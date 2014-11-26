@@ -53,7 +53,7 @@ void CustomMultiNonBlockNode::sender() {
 
 void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNode,
     double importance, bool* shouldUpdateSelf) {
-  logger_->info("Starting serialize.");
+  //logger_->info("Starting serialize.");
 
   int hashIndex = multicastHelper->hash(outIndices, shouldUpdateSelf);
   if (hashIndex < 0) return;
@@ -64,13 +64,14 @@ void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNo
     senderBuffer_->emptyBuffer(hashIndex);
   }
 
-  logger_->info("Serializing to %hd from %ld imp %lf.", hashIndex, fromNode, importance);
+  logger_->info("Serializing to %hd from %ld imp %.10lf.", hashIndex, fromNode, importance);
   senderBuffer_->setBreak(hashIndex);
   senderBuffer_->store(hashIndex, fromNode);
   senderBuffer_->store(hashIndex, importance);
 }
 
 void CustomMultiNonBlockNode::updateReceiverScore(long origNode, double imp) {
+  //logger_->info("Updating receiver score.");
   long start, end;
   if (inverseNodeBounds->find(origNode) != inverseNodeBounds->end()) {
     start = (*inverseNodeBounds)[origNode].first;
@@ -82,11 +83,14 @@ void CustomMultiNonBlockNode::updateReceiverScore(long origNode, double imp) {
 }
 
 void CustomMultiNonBlockNode::updateSenderScore(long origNode, double imp) {
+  //logger_->info("Updating sender score.");
   long start, end;
   if (inverseNodeBounds->find(origNode) != inverseNodeBounds->end()) {
+    //logger_->info("Looping inverseNodeBounds.");
     start = (*inverseNodeBounds)[origNode].first;
     end = (*inverseNodeBounds)[origNode].second;
     for (long outEdgeIt = start; outEdgeIt < end; ++outEdgeIt) {
+      //logger_->info("Adding to edge %ld value %lf.", (*inverseOutEdges)[outEdgeIt] - minNode_, imp);
       (*tmpSenderScore_)[(*inverseOutEdges)[outEdgeIt] - minNode_] += imp;
     }
   }
@@ -103,6 +107,7 @@ void CustomMultiNonBlockNode::beforeIteration(string msg) {
 bool CustomMultiNonBlockNode::afterIteration() {
   logger_->info("After iteration started.");
   for (long node = 0; node < (long) tmpSenderScore_->size(); ++node) {
+    //logger_->info("%ld %lf %lf", minNode_ + node, (*tmpSenderScore_)[node], (*tmpReceiverScore_)[node]);
     (*pagerankScore_)[node] = ((*tmpSenderScore_)[node] + (*tmpReceiverScore_)[node]) *
         (1.0 - dump_) + dump_ / allNode_;
   }
