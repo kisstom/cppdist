@@ -63,7 +63,6 @@ bool Algo::setUp() {
 	int numSockets = -1;
 	try {
 
-		socketManager_->initClient(slave_port_);
 		masterSocketManager_->setPort(slave_port_);
 		masterSocketManager_->connectToMaster(master_host_, master_port_);
 
@@ -75,8 +74,6 @@ bool Algo::setUp() {
 		  numSockets = num_slaves_;
 		}
 
-		// TODO num_slaves csak a sima socket-nel szamit
-		socketManager_->initSockets(numSockets);
 		senderBuffer_->resizeBufferNum(numSockets);
 		storeFromBinary_->resizeSocketNum(numSockets);
 
@@ -85,8 +82,6 @@ bool Algo::setUp() {
 
 		masterSocketManager_->sendReadyToMaster();
 		socketManager_->initConnections();
-
-    //clientSocketManager_->setUp();
 
 	} catch (MasterException& e) {
     logger_->info("Master said i must die. I die.");
@@ -169,6 +164,7 @@ void Algo::receiver() {
 	int finished = 0, socket_index, size = 0;
 	bool is_more = true;
 	Selector* selector = socketManager_->getSelector();
+  socketManager_->resetFinishCount();
 
 	while (1)
 	{
@@ -184,8 +180,10 @@ void Algo::receiver() {
 		//if (clientSocketManager_->isFinished()) break;
 		if (!is_more)
 		{
-			++finished;
-			if (finished == expectedNumSocketFinish)
+			//++finished;
+		  socketManager_->finishedSocket(socket_index);
+		  if (socketManager_->isFinishedAll())
+			//if (finished == expectedNumSocketFinish)
 			{
 				break;
 			}

@@ -18,20 +18,30 @@ public:
   int recvFromNode(int, char*, int);
   void sendToNode(int, char*, int);
   void initConnections();
-  void initSockets(int);
-  void initClient(int) {}
+
+  void resetFinishCount();
+  void finishedSocket(int socketIndex);
+  bool isFinishedAll();
+
   void setMasterSocketManager(MasterSocketManager*);
   Selector* getSelector();
 
+  int getLastBit(int number);
+  int getNumberOfZeros(int number);
+
   ~MulticastSocketManager();
 private:
+  void initSockets();
   void initPublishers();
   void initListeners();
+  void initExpectedFinishCounters();
 
   vector<UDPMulticastPublisher*> publishers;
   vector<SocketConnection*> listeners;
   MasterSocketManager* masterSocketManager;
 
+  vector<int> finishCounter;
+  vector<int> expectedFinish;
   IPIndexMaker ipIndexMaker;
 
   int nodeIndex;
@@ -39,6 +49,9 @@ private:
   char initMulticastHost[1024];
   int initMultiCastPort;
   int clusterSize;
+  int finishedSockets;
+  int expectedNumFinishedSockets;
+
   log4cpp::Category* logger;
 
   // FRIEND TESTS

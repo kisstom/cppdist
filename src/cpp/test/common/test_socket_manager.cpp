@@ -41,7 +41,7 @@ protected:
 }
 
 TEST(TestSocketManager, test) {
-	SocketManager manager;
+	//SocketManager manager;
 
 }
 

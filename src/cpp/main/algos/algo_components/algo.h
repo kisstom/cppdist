@@ -92,6 +92,7 @@ private:
 	ISocketManager* socketManager_;
 	MasterSocketManager* masterSocketManager_;
 	ClientSocketManager* clientSocketManager_;
+	vector<int> numberOfEndOnSocket;
 
 	SenderBuffer* senderBuffer_;
 	Node* node_;

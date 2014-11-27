@@ -19,11 +19,22 @@
 #include <stdio.h>
 #include <string.h>
 
-SocketManager::SocketManager () {
+SocketManager::SocketManager() {
+  logger_ = NULL;
+  master_socket_ = NULL;
+  self_socket_ = NULL;
+  masterSocketManager = NULL;
+  slave_port_ = -1;
+  clusterSize = -1;
+}
+
+SocketManager::SocketManager (int _clusterSize, int port) {
   logger_ = &log4cpp::Category::getInstance(std::string("SocketManager"));
   master_socket_ = NULL;
   self_socket_ = NULL;
   masterSocketManager = NULL;
+  slave_port_ = port;
+  clusterSize = _clusterSize;
 }
 
 SocketManager::~SocketManager() {
@@ -41,10 +52,9 @@ void SocketManager::setMasterSocketManager(MasterSocketManager* manager) {
   masterSocketManager = manager;
 }
 
-void SocketManager::initClient(int slave_port) {
-	logger_->info("Creating client at port %d", slave_port);
-  self_socket_ = ServerSocket::Create(slave_port);
-  slave_port_ = slave_port;
+void SocketManager::initClient() {
+	logger_->info("Creating client at port %d", slave_port_);
+  self_socket_ = ServerSocket::Create(slave_port_);
   logger_->info("Created client at port %d.", slave_port_);
 }
 
@@ -52,6 +62,9 @@ void SocketManager::initClient(int slave_port) {
 void SocketManager::initConnections()
 {
   logger_->info("Initing connections.");
+  initClient();
+
+
   char buf[1024], instr[1024], host[1024];
   int slave_index, port;
   int num_round = receiver_sockets_.size() % 2 ? receiver_sockets_.size() :
@@ -96,10 +109,10 @@ void SocketManager::sendToNode(int limit, char* buf, int nodeIndex) {
 	sender_sockets_[nodeIndex]->Send(limit, buf);
 }
 
-void SocketManager::initSockets(int socket_size) {
-	logger_->info("Initing sockets size %d.", socket_size);
-	receiver_sockets_.resize(socket_size, NULL);
-	sender_sockets_.resize(socket_size, NULL);
+void SocketManager::initSockets() {
+	logger_->info("Initing sockets size %d.", clusterSize);
+	receiver_sockets_.resize(clusterSize, NULL);
+	sender_sockets_.resize(clusterSize, NULL);
 }
 
 Selector* SocketManager::getSelector() {
@@ -108,8 +121,14 @@ Selector* SocketManager::getSelector() {
   return selector;
 }
 
-/*vector<SocketConnection*> SocketManager::getReceiverSockets() {
-	return receiver_sockets_;
-}*/
+
+void SocketManager::resetFinishCount() {}
+
+void SocketManager::finishedSocket(int socketIndex) {}
+
+bool SocketManager::isFinishedAll() {
+  return false;
+}
+
 
 

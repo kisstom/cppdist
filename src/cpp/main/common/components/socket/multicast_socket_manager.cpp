@@ -37,6 +37,9 @@ void MulticastSocketManager::sendToNode(int limit, char* buffer, int socketIndex
 
 void MulticastSocketManager::initConnections() {
   logger->info("Initing connections");
+  initSockets();
+
+
   int limit = 1024;
   char msg[1024];
 
@@ -92,25 +95,69 @@ void MulticastSocketManager::initListeners() {
     logger->info("Connect to multicast %s %d index is %d", actHost, port, pi);
     listener->connectToMulticastIp(actHost, port);
     listeners[pi] = listener;
+
+    // Also setting number of expected finishes.
+    expectedFinish[pi] = getNumberOfZeros(ipIndex);
   }
 
 }
 
-void MulticastSocketManager::initSockets(int foo) {
+void MulticastSocketManager::initSockets() {
   int publisherSize = pow(2, clusterSize - 1) - 1;
   if (publisherSize < 1) return;
-
   publishers.resize(publisherSize, NULL);
 
   int listenerSize = pow(2, clusterSize - 1) - 1;
   if (listenerSize < 1) return;
-
   listeners.resize(listenerSize, NULL);
+
+  initExpectedFinishCounters();
+}
+
+void MulticastSocketManager::initExpectedFinishCounters() {
+  int expectedNumFinishedSockets = pow(2, clusterSize - 1) - 1;
+  if (expectedNumFinishedSockets < 1) return;
+
+  finishCounter.resize(expectedNumFinishedSockets, 0);
+  expectedFinish.resize(expectedNumFinishedSockets, 0);
+  finishedSockets = 0;
+}
+
+void MulticastSocketManager::resetFinishCount() {
+  for (int i = 0; i < (int) finishCounter.size(); ++i) {
+    finishCounter[i] = 0;
+  }
+
+  finishedSockets = 0;
+}
+
+void MulticastSocketManager::finishedSocket(int socketIndex) {
+  ++finishCounter[socketIndex];
+
+  if (finishCounter[socketIndex] == expectedFinish[socketIndex]) ++finishedSockets;
+}
+
+bool MulticastSocketManager::isFinishedAll() {
+  return finishedSockets == expectedNumFinishedSockets;
 }
 
 Selector* MulticastSocketManager::getSelector() {
   Selector* selector = new Selector;
   selector->Init(&listeners);
   return selector;
+}
+
+int MulticastSocketManager::getNumberOfZeros(int number) {
+  int numOnes = 0;
+  while (number) {
+    numOnes += getLastBit(number);
+    number >>= 1;
+  }
+
+  return clusterSize - numOnes;
+}
+
+int MulticastSocketManager::getLastBit(int number) {
+  return number & 1;
 }
 

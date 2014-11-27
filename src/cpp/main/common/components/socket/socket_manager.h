@@ -16,18 +16,25 @@
 
 class SocketManager : public ISocketManager {
 public:
-	SocketManager();
-	virtual void initSockets(int);
-  virtual void initClient(int);
+  SocketManager();
+	SocketManager(int clusterSize, int port);
+
   virtual void initConnections();
   virtual int recvFromNode(int, char*, int);
   virtual void sendToNode(int, char*, int);
+
+  virtual void resetFinishCount();
+  virtual void finishedSocket(int socketIndex);
+  virtual bool isFinishedAll();
 
   void setMasterSocketManager(MasterSocketManager* manager);
   virtual Selector* getSelector();
 
   virtual ~SocketManager();
 private:
+  void initSockets();
+  void initClient();
+
   MasterSocketManager* masterSocketManager;
   ServerSocket* self_socket_;
   SocketConnection* master_socket_;
@@ -35,6 +42,7 @@ private:
   vector<SocketConnection*> receiver_sockets_;
   char ip_[1024];
   int slave_port_;
+  int clusterSize;
   log4cpp::Category* logger_;
 
   FRIEND_TEST(SimpleMockTestSetup, testSetup);
