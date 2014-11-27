@@ -3,7 +3,7 @@
 logDir=$1
 numPart=$2
 
-baseDir=$(readlink -f `dirname install_gtest.sh`)
+baseDir=$(readlink -f `dirname $0`)
 findIterAwk="$baseDir/find_iter_gap.awk"
 printSenderAwk="$baseDir/print_sender_time_milli.awk"
 

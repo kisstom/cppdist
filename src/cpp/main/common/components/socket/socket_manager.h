@@ -43,6 +43,9 @@ private:
   char ip_[1024];
   int slave_port_;
   int clusterSize;
+
+  int expectedFinish;
+  int numFinished;
   log4cpp::Category* logger_;
 
   FRIEND_TEST(SimpleMockTestSetup, testSetup);

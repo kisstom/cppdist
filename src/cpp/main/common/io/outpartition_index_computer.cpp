@@ -19,6 +19,7 @@ OutPartitionIndexComputer::OutPartitionIndexComputer(string input, string cfg, i
 }
 
 void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
+  logger_->info("Reading config");
   long lowerBound = 0, numNodes = 0, upperBound = 0, partNumNodes = 0;
   for (int i = 0; i < numslaves; ++i) {
     fscanf(slaveryFile,"%*d %*s %ld %*ld %ld", &numNodes, &lowerBound);
@@ -34,6 +35,7 @@ void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
 
   outPartitions = new vector<short*>();
   outPartitions->resize(partNumNodes);
+  logger_->info("Out partitions size %d", partNumNodes);
 }
 
 int OutPartitionIndexComputer::getPartitionIndex(long node) {
@@ -46,6 +48,7 @@ int OutPartitionIndexComputer::getPartitionIndex(long node) {
 }
 
 void OutPartitionIndexComputer::process(FILE* inputFile) {
+  logger_->info("Processing out partition indices.");
   int partI = 0;
   long numCrossEdge = 0;
   long outPartSize = 0;
@@ -63,11 +66,10 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
     }
 
     if (strlen(line) > 0) {
-      line[strlen(line) - 1]= ' ';
+      line[strlen(line) - 1]= '\0';
     }
 
-    edges.clear();
-    util.splitByToken(line, edges);
+    util.split(line, edges);
 
     (*numNeighbors)[current_row] = (int) edges.size();
     outIndices.clear();
@@ -151,7 +153,7 @@ void OutPartitionIndexComputer::flushAsEdgelistContainer(FILE* outfile) {
 
 void OutPartitionIndexComputer::flushNeighborsFile(FILE* neighborsFile) {
   for (long i = 0; i < (long) numNeighbors->size(); ++i) {
-    fprintf(neighborsFile, "%ld\n", numNeighbors->at(i));
+    fprintf(neighborsFile, "%d\n", numNeighbors->at(i));
   }
 }
 

@@ -177,13 +177,10 @@ void Algo::receiver() {
 		  is_more = storeFromBinary(socket_index);
 		}
 
-		//if (clientSocketManager_->isFinished()) break;
 		if (!is_more)
 		{
-			//++finished;
 		  socketManager_->finishedSocket(socket_index);
 		  if (socketManager_->isFinishedAll())
-			//if (finished == expectedNumSocketFinish)
 			{
 				break;
 			}

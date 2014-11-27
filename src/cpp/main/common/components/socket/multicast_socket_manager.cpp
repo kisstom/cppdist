@@ -7,7 +7,6 @@ MulticastSocketManager::MulticastSocketManager(int _nodeIndex, int _startingHash
       char* _initMulticastHost, int _initMultiCastPort, int _clusterSize) :
       ipIndexMaker(_nodeIndex, _clusterSize) {
   nodeIndex = _nodeIndex;
-  //startingHash = _startingHash;
   strcpy(initMulticastHost, _initMulticastHost);
   initMultiCastPort = _initMultiCastPort;
   clusterSize = _clusterSize;
@@ -38,7 +37,6 @@ void MulticastSocketManager::sendToNode(int limit, char* buffer, int socketIndex
 void MulticastSocketManager::initConnections() {
   logger->info("Initing connections");
   initSockets();
-
 
   int limit = 1024;
   char msg[1024];
@@ -92,12 +90,13 @@ void MulticastSocketManager::initListeners() {
     listener = new UDPMulticastReceiver;
 
     sprintf(actHost, "%s%d", initMulticastHost, ipIndex);
-    logger->info("Connect to multicast %s %d index is %d", actHost, port, pi);
     listener->connectToMulticastIp(actHost, port);
     listeners[pi] = listener;
 
     // Also setting number of expected finishes.
     expectedFinish[pi] = getNumberOfZeros(ipIndex);
+    logger->info("Connect to multicast %s %d index is %d, waiting for %d finishes ",
+        actHost, port, pi, expectedFinish[pi]);
   }
 
 }
@@ -115,7 +114,8 @@ void MulticastSocketManager::initSockets() {
 }
 
 void MulticastSocketManager::initExpectedFinishCounters() {
-  int expectedNumFinishedSockets = pow(2, clusterSize - 1) - 1;
+  //logger->info("Initing expected num of finished sockets %d with cluster size %d", clusterSize);
+  expectedNumFinishedSockets = pow(2, clusterSize - 1) - 1;
   if (expectedNumFinishedSockets < 1) return;
 
   finishCounter.resize(expectedNumFinishedSockets, 0);
@@ -133,8 +133,11 @@ void MulticastSocketManager::resetFinishCount() {
 
 void MulticastSocketManager::finishedSocket(int socketIndex) {
   ++finishCounter[socketIndex];
+  logger->info("finish count for %d is %d expected %d",
+      socketIndex, finishCounter[socketIndex], expectedFinish[socketIndex]);
 
   if (finishCounter[socketIndex] == expectedFinish[socketIndex]) ++finishedSockets;
+  logger->info("Number of finished %d expected %d", finishedSockets, expectedNumFinishedSockets);
 }
 
 bool MulticastSocketManager::isFinishedAll() {

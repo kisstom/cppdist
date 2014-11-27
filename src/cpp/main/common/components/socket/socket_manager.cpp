@@ -26,6 +26,8 @@ SocketManager::SocketManager() {
   masterSocketManager = NULL;
   slave_port_ = -1;
   clusterSize = -1;
+  expectedFinish = -1;
+  numFinished = -1;
 }
 
 SocketManager::SocketManager (int _clusterSize, int port) {
@@ -35,6 +37,8 @@ SocketManager::SocketManager (int _clusterSize, int port) {
   masterSocketManager = NULL;
   slave_port_ = port;
   clusterSize = _clusterSize;
+  expectedFinish = clusterSize - 1;
+  numFinished = -1;
 }
 
 SocketManager::~SocketManager() {
@@ -63,7 +67,7 @@ void SocketManager::initConnections()
 {
   logger_->info("Initing connections.");
   initClient();
-
+  initSockets();
 
   char buf[1024], instr[1024], host[1024];
   int slave_index, port;
@@ -122,12 +126,16 @@ Selector* SocketManager::getSelector() {
 }
 
 
-void SocketManager::resetFinishCount() {}
+void SocketManager::resetFinishCount() {
+  numFinished = 0;
+}
 
-void SocketManager::finishedSocket(int socketIndex) {}
+void SocketManager::finishedSocket(int socketIndex) {
+  ++numFinished;
+}
 
 bool SocketManager::isFinishedAll() {
-  return false;
+  return numFinished == expectedFinish;
 }
 
 
