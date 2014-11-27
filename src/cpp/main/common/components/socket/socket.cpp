@@ -293,6 +293,6 @@ int Selector::SelectIndex() {
       }
     }
   }
-  // ide nem is johet
+
   return -1;
 }

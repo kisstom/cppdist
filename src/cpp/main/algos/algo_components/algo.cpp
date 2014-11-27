@@ -25,6 +25,12 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
   logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
   masterSocketManager_ = NULL;
   isMulticast = _isMulticast;
+
+  if (isMulticast) {
+    expectedNumSocketFinish = (int) pow(2, num_slaves_ - 1) - 1;
+  } else {
+    expectedNumSocketFinish = num_slaves_ - 1;
+  }
 }
 
 int Algo::getSlaveIndex() {
@@ -62,8 +68,6 @@ bool Algo::setUp() {
 		masterSocketManager_->connectToMaster(master_host_, master_port_);
 
 		initFromMaster();
-
-
 
 		if (isMulticast) {
 		  numSockets = (int) pow(2, num_slaves_ - 1) - 1;
@@ -164,9 +168,6 @@ void Algo::receiver() {
 	logger_->info("Starting receiver.");
 	int finished = 0, socket_index, size = 0;
 	bool is_more = true;
-	//Selector selector;
-	//selector.Init(socketManager_->getReceiverSockets());
-	//clientSocketManager_->resetFinishCounter();
 	Selector* selector = socketManager_->getSelector();
 
 	while (1)
@@ -184,7 +185,7 @@ void Algo::receiver() {
 		if (!is_more)
 		{
 			++finished;
-			if (finished == num_slaves_ - 1)
+			if (finished == expectedNumSocketFinish)
 			{
 				break;
 			}

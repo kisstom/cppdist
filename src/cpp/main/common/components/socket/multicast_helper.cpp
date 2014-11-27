@@ -5,7 +5,7 @@ MulticastHelper::MulticastHelper(int _nodeIndex) {
   nodeIndex = _nodeIndex;
 }
 
-int MulticastHelper::hash(short* outIndices, bool* shouldUpdateSelf) {
+int MulticastHelper::publishHashId(short* outIndices, bool* shouldUpdateSelf) {
   short size = *outIndices;
   int hash = 0;
   short value;

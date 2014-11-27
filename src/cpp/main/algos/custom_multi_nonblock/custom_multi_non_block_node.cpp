@@ -55,7 +55,7 @@ void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNo
     double importance, bool* shouldUpdateSelf) {
   //logger_->info("Starting serialize.");
 
-  int hashIndex = multicastHelper->hash(outIndices, shouldUpdateSelf);
+  int hashIndex = multicastHelper->publishHashId(outIndices, shouldUpdateSelf);
   if (hashIndex < 0) return;
 
   int shouldAdd = 1 + sizeof(long) + sizeof(double);

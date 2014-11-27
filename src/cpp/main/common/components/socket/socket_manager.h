@@ -24,8 +24,8 @@ public:
   virtual void sendToNode(int, char*, int);
 
   void setMasterSocketManager(MasterSocketManager* manager);
-  //virtual vector<SocketConnection*> getReceiverSockets();
   virtual Selector* getSelector();
+
   virtual ~SocketManager();
 private:
   MasterSocketManager* masterSocketManager;

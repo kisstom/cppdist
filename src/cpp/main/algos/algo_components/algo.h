@@ -87,6 +87,7 @@ private:
   long min_node_;
   int slave_index_;
   bool isMulticast;
+  int expectedNumSocketFinish;
 
 	ISocketManager* socketManager_;
 	MasterSocketManager* masterSocketManager_;
