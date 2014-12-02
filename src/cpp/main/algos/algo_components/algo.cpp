@@ -83,6 +83,8 @@ bool Algo::setUp() {
 		masterSocketManager_->sendReadyToMaster();
 		socketManager_->initConnections();
 
+		clientSocketManager_->setUp();
+
 	} catch (MasterException& e) {
     logger_->info("Master said i must die. I die.");
     return false;
@@ -164,27 +166,31 @@ void Algo::receiver() {
 	int finished = 0, socket_index, size = 0;
 	bool is_more = true;
 	Selector* selector = socketManager_->getSelector();
-  socketManager_->resetFinishCount();
+  //socketManager_->resetFinishCount();
 
 	while (1)
 	{
 		socket_index = selector->SelectIndex();
 		if (socket_index >= 0) {
+		  //logger_->info("Buffer size on socket %d is %d before", socket_index, storeFromBinary_->remains_size_[socket_index]);
 		  size = socketManager_->recvFromNode(
 		      send_limit_, storeFromBinary_->getEndOfBufferAt(socket_index), socket_index);
 
 		  storeFromBinary_->remains_size_[socket_index] += (unsigned) size;
+		  //logger_->info("Buffer size on socket %d is %d after", socket_index, storeFromBinary_->remains_size_[socket_index]);
 		  is_more = storeFromBinary(socket_index);
 		}
 
-		if (!is_more)
+		if (clientSocketManager_->isFinished()) break;
+
+		/*if (!is_more)
 		{
 		  socketManager_->finishedSocket(socket_index);
 		  if (socketManager_->isFinishedAll())
 			{
 				break;
 			}
-		}
+		}*/
 	}
 
 	delete selector;
@@ -222,19 +228,19 @@ void Algo::runThreads() {
 	logger_->info("run threads");
 	ReceiverThread *receiver = new ReceiverThread(this);
 	SenderThread *sender = new SenderThread(node_);
-	//RunThread* slaveCommunication = new RunThread(clientSocketManager_);
+	RunThread* slaveCommunication = new RunThread(clientSocketManager_);
 
 	receiver->start();
 	sender->start();
-	//slaveCommunication->start();
+	slaveCommunication->start();
 	receiver->waitForThread();
 	sender->waitForThread();
-	//slaveCommunication->waitForThread();
+	slaveCommunication->waitForThread();
 
 	logger_->info("threads ended");
 	delete receiver;
 	delete sender;
-	//delete slaveCommunication;
+	delete slaveCommunication;
 }
 
 
@@ -265,19 +271,14 @@ void Algo::setSenderBuffer(SenderBuffer* senderBuffer) {
 }
 
 void Algo::sendAndSignal(int self_index) {
+  logger_->info("Sending end signal.");
 	for (int part_index = 0; part_index < (int) senderBuffer_->getBufferNum(); ++part_index) {
 	  if (!isMulticast && part_index == self_index) continue;
-		//if (part_index == self_index) continue;
 
-		if (!senderBuffer_->canAdd(part_index , 1)) {
-	    senderBuffer_->emptyBuffer(part_index);
-		}
-
-    senderBuffer_->setFinish(part_index);
     senderBuffer_->emptyBuffer(part_index);
 	}
 
-	//clientSocketManager_->publishEndSignal();
+	clientSocketManager_->publishEndSignal();
 }
 
 long Algo::getNumberOfPartitionNodes() {

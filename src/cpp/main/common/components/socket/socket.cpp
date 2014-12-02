@@ -162,7 +162,11 @@ SocketConnection *SocketConnection::Connect(string host, int port) {
 }
 
 int SocketConnection::Send(int length, const char *buf) {
-  return ::send(socket_file_descriptor, buf, length, MSG_NOSIGNAL);
+  logger->info("Sending msg");
+  //int foo = ::send(socket_file_descriptor, buf, length, MSG_NOSIGNAL);
+  int foo = ::send(socket_file_descriptor, buf, length, 0);
+  logger->info("Msg sent.");
+  return foo;
 }
 
 int SocketConnection::SendCStr(const char *msg) {
@@ -272,14 +276,14 @@ int Selector::RandStart () {
 
 int Selector::SelectIndex() {
   BuilFdSet();
-  //struct timeval tv = {0, 20};
+  struct timeval tv = {0, 200};
   int readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
-                         (fd_set *) 0, NULL);
+                         (fd_set *) 0, &tv);
   if (readsocks < 0) {
     throw SelectError();
   }
   if (readsocks == 0) {
-    logger->info("Time expired.");
+    //logger->info("Time expired.");
   } else {
 
     int rand_start = RandStart();

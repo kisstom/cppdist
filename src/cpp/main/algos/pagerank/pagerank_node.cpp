@@ -38,10 +38,12 @@ void PagerankNode::sender() {
   int partIndex;
 
   for (long partitionNode = 0; partitionNode < matrix_->getNumberOfNodes(); ++partitionNode) {
+    //logger_->info("sender: %d", partitionNode);
     numNeighbors = matrix_->neighborhoodSizePart(partitionNode);
     if (0.0 == numNeighbors) continue;
 
     double imp = (*pagerankScore_)[partitionNode] / numNeighbors;
+
 
     for (long i = 0; i < numNeighbors; ++i) {
       outEdge = matrix_->getEdgeAtPosPart(partitionNode, i);
@@ -82,15 +84,19 @@ void PagerankNode::updateScore(long outEdge, double sc) {
 }
 
 void PagerankNode::serializeImportance(int bufferIndex, long outNode, double importance) {
+  //logger_->info("Beginning of serializeImportance");
   int shouldAdd = 1 + sizeof(long) + sizeof(double);
 
   if (!senderBuffer_->canAdd(bufferIndex, shouldAdd)) {
+    //logger_->info("Urites %d-nek", bufferIndex);
     senderBuffer_->emptyBuffer(bufferIndex);
+    //logger_->info("Urites vege");
   }
 
   senderBuffer_->setBreak(bufferIndex);
   senderBuffer_->store(bufferIndex, outNode);
   senderBuffer_->store(bufferIndex, importance);
+  //logger_->info("End of serializeImportance");
 }
 
 void PagerankNode::setEdgeListContainer(EdgelistContainer* matrix) {

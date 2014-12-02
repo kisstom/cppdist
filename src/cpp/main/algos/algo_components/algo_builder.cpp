@@ -25,6 +25,7 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   algo_->setSenderBuffer(senderBuffer_);
 
   int initSlavePort = atoi((*params)["INIT_SLAVE_PORT"].c_str());
+  int initCommPort = atoi((*params)["INIT_SLAVE_COMMUNICATION_PORT"].c_str());
   int slaveIndex = atoi((*params)["SLAVE_INDEX"].c_str());
   int numSlaves = atoi((*params)["NUM_SLAVES"].c_str());
 
@@ -46,15 +47,12 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   algo_->setMasterSocketManager(masterSocketManager_);
 
   socketManager_->setMasterSocketManager(masterSocketManager_);
-  clientSocketManager_ = NULL;
-  /*clientSocketManager_ = new ClientSocketManager(atoi((*params)["SLAVE_INDEX"].c_str()),
-      atoi((*params)["NUM_SLAVES"].c_str()));
+
+  clientSocketManager_ = new ClientSocketManager(slaveIndex, numSlaves);
   clientSocketManager_->setMasterSocketManager(masterSocketManager_);
 
-  clusterConfig = createClusterConfig(hostAndPort,
-      atoi((*params)["INIT_SLAVE_COMMUNICATION_PORT"].c_str()), atoi((*params)["NUM_SLAVES"].c_str()));
-  clientSocketManager_->setClusterConfig(clusterConfig);*/
-
+  clusterConfig = createClusterConfig(hostAndPort, initCommPort, numSlaves);
+  clientSocketManager_->setClusterConfig(clusterConfig);
   algo_->setClientSocketManager(clientSocketManager_);
 
   storeFromBinary_ = new StoreFromBinary;

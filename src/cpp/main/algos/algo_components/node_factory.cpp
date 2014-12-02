@@ -105,13 +105,13 @@ PagerankNonBlockNode* NodeFactory::createPagerankNonBlockNode(unordered_map<stri
 CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CleverPagerankNode* node = helper.initCleverPagerankNode(params);
-  util.checkParam(params, 7, "INPUT_PARTITION", "SLAVE_CONFIG",
+  util.checkParam(params, 7, "INPUT_PARTITION", "LOCAL_SLAVE_CONFIG",
       "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
   string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["SLAVE_CONFIG"];
+  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -175,14 +175,14 @@ CounterInversePagerankNode* NodeFactory::
 createCounterInversePagerankNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CounterInversePagerankNode* node = helper.initCounterInversePagerankNode(params);
-  util.checkParam(params, 8, "POINTER_TO_COUNTERS_DIR", "SLAVE_CONFIG",
+  util.checkParam(params, 8, "POINTER_TO_COUNTERS_DIR", "LOCAL_SLAVE_CONFIG",
       "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "OUT_PARTITION_INDICES_DIR", "LOCAL_DIR", "PARTITION_BOUNDS_DIR");
 
   int rowLen, numSlaves, slaveIndex;
   long minNode;
   string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["SLAVE_CONFIG"];
+  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -223,13 +223,13 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
 CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CustomNonBlockNode* node = helper.initCustomNonBlockNode(params);
-  util.checkParam(params, 7, "INPUT_PARTITION", "SLAVE_CONFIG",
+  util.checkParam(params, 7, "INPUT_PARTITION", "LOCAL_SLAVE_CONFIG",
       "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
   string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["SLAVE_CONFIG"];
+  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -261,13 +261,13 @@ CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, 
 CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CustomMultiNonBlockNode* node = helper.initCustomMultiNonBlockNode(params);
-  util.checkParam(params, 7, "INPUT_PARTITION", "SLAVE_CONFIG",
+  util.checkParam(params, 7, "INPUT_PARTITION", "LOCAL_SLAVE_CONFIG",
       "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
   string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["SLAVE_CONFIG"];
+  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);

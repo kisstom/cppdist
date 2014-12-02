@@ -72,6 +72,7 @@ class Selector {
   int max_fd_;
   void BuilFdSet();
   int RandStart();
+
  public:
   Selector();
   void Init(vector<SocketConnection*>* connections);

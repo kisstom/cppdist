@@ -68,6 +68,11 @@ def readCfg():
   MASTER_HOST = conf.get('ALGO', 'MASTER_HOST')
 
   conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
+
+  slaverCfg = conf.get("ALGO", "SLAVERY_CFG")
+  partitionDir = conf.get("ALGO", "REMOTE_DIR")
+  conf.set("ALGO", "LOCAL_SLAVE_CONFIG", BASE_LOCAL_DIR + "/" + slaverCfg)
+
   buildHosts(conf)
   return conf
 
@@ -131,6 +136,11 @@ def copyCfg():
 
   put(tempf, configFile)
   os.system('rm ' + tempf)
+
+  partitionDir = conf.get('ALGO', 'REMOTE_DIR')
+  slaveConfigName = conf.get('ALGO', 'SLAVERY_CFG')
+  run('mkdir -p %s' % partitionDir)
+  put(partitionDir + '/' + slaveConfigName, conf.get('ALGO', 'LOCAL_SLAVE_CONFIG'))
   
 
 def createLocalDir():
@@ -226,7 +236,8 @@ def putPartitionIfNeeded():
   global conf, numJobs
   try:
     putToLocal = conf.get('PREPROCESS', 'PUT_TO_LOCAL')
-  except Exception:
+  except Exception as e:
+    print 'Exception %s' % e
     return 
 
   if putToLocal == '0': return
@@ -237,6 +248,8 @@ def putPartitionIfNeeded():
         slave_index += int(conf.get('MACHINES', host))
         continue
       jobs_on_host = int(conf.get('MACHINES', host))
+      prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
+
       for x in xrange(jobs_on_host):
         putOnMachine(slave_index, host)
         slave_index += 1
@@ -256,10 +269,9 @@ def pagerankInversePreprocess():
   remoteDir = conf.get('ALGO', 'REMOTE_DIR')
   baseDir = conf.get('ALGO', 'BASE_DIR')
 
-  runOnAllNodes(lambda : put(remoteDir + '/' + slaveryFile, baseDir))
+  #runOnAllNodes(lambda : put(remoteDir + '/' + slaveryFile, baseDir))
   with settings(host_string=MASTER_HOST):
     
-    conf.set('ALGO', 'SLAVE_CONFIG', baseDir + '/' + slaveryFile)
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
 
     # making inverse parts
@@ -277,7 +289,8 @@ def pagerankInversePartition():
     inputData = conf.get('ALGO', 'INPUT_DATA')
     prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
-    slaveryCfg = conf.get('ALGO', 'SLAVE_CONFIG')
+    slaveryCfg = prPartitionDir + '/' + conf.get('ALGO', 'SLAVERY_CFG')
+
     rowLen = conf.get('PREPROCESS', 'ROWLEN')
     run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
       (bin_dir, inputData, inversePartDir, slaveryCfg, numJobs, rowLen))
@@ -286,7 +299,8 @@ def putPagerankInversePartitionIfNeeded():
   global conf, numJobs
   try:
     putToLocal = conf.get('PREPROCESS', 'PUT_PAGERANK_TO_LOCAL')
-  except Exception:
+  except Exception as e:
+    print 'Exception %s' % e
     return 
 
   if putToLocal == '0': return
@@ -348,7 +362,7 @@ def counterInversePreprocess():
 
 """
   ####################################################
-  ########  TOOLS FOR STARTING CLUSTER ############
+  ########  TOOLS FOR SETTING UP CLUSTER ############
   ####################################################
 """
 
@@ -394,6 +408,8 @@ def mainCompute():
   depDir = bin_dir + '../dep/'
   libPath = depDir + 'gmp/lib/'
   libPath += ':' + depDir + 'log4cpp/lib/'
+  libPath += ':' + depDir + 'zmq/'
+
   with  shell_env(LD_LIBRARY_PATH=libPath):
     gitInfo(debug)
     storePartitionCfg()
@@ -509,7 +525,6 @@ def gitInfo(debug):
       run("""git diff --quiet --exit-code || """ +
         """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
     out = run("""git log -1 --pretty=format:%H""")
-    print out.strip()
     f.write(out.strip())
 
   f.close()

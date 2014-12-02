@@ -75,9 +75,9 @@ bool StoreFromBinary::storeFromIndex(int socket_index) {
   			remains_size_[socket_index] -= stored;
   		}
 
-  		if (!cont) {
+  		/*if (!cont) {
   			remains_size_[socket_index] = 0;
-  		}
+  		}*/
 
   		return cont;
   	}
