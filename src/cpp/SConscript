@@ -21,7 +21,7 @@ env = Environment(
         CCFLAGS = flags,
         CPPPATH=[ '#.', GMOCK + '/include/', LOG4CPP + '/include/', GMP + 'include/', GTEST + 'include/', ZMQ + 'include/'],
         LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/', LOG4CPP + '/lib/', GMOCK + 'build/', GTEST + 'build/', ZMQ + 'lib/'],
-        LIBS=['gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx', 'zmq']
+        LIBS=['gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx', 'zmq', 'rt']
 )
 
 testCompile = ARGUMENTS.get('test', False)
