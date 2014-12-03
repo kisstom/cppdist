@@ -26,7 +26,7 @@ int PagerankDeserializer::storeFromBinary(char* buffer, unsigned length) {
   memcpy(&val, buffer + stored, sizeof(double));
   stored += sizeof(double);
 
-  logger_->info("deserialized values: %ld %lf", to, val);
+//  logger_->info("deserialized values: %ld %lf", to, val);
   return stored;
 }
 

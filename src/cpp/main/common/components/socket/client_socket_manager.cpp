@@ -64,9 +64,8 @@ void ClientSocketManager::initSubscribes() {
     listenerSockets[i]->setsockopt(ZMQ_SUBSCRIBE, "", 0);
   }
 
-  //pollItems.resize(numCluster - 1, NULL);
-  //pollItems = new zmq_pollitem_t[numCluster - 1];
-  //buildFDSet();
+  pollItems = new zmq::pollitem_t [numCluster - 1];
+  buildPoll();
 }
 
 int ClientSocketManager::findFdIsSet() {
@@ -78,11 +77,8 @@ int ClientSocketManager::findFdIsSet() {
   for (int i = 0; i < numCluster; ++i) {
     if (i == selfIndex) continue;
 
-    //listenerSockets[i]->getsockopt(ZMQ_EVENTS, &zevents, &zevents_len);
     listenerSockets[i]->getsockopt(ZMQ_FD, &fd, &sint);
     if (FD_ISSET(fd, &fdSet)) {
-
-    //if (zevents & ZMQ_POLLIN) {
       return i;
     }
   }
@@ -111,7 +107,8 @@ int ClientSocketManager::buildFDSet() {
 }
 
 void ClientSocketManager::buildPoll() {
-  /*for (int i = 0; i < numCluster; ++i) {
+  int actIndex;
+  for (int i = 0; i < numCluster; ++i) {
     if (i == selfIndex) continue;
     if (i > selfIndex) {
       actIndex = i - 1;
@@ -119,21 +116,12 @@ void ClientSocketManager::buildPoll() {
       actIndex = i;
     }
 
-    //pollItems[actIndex] = new zmq::pollitem_t;
-    logger->info("Socketindex %d", i);
-    pollItems[actIndex].socket = listenerSockets[i];
-    if (listenerSockets[i] == NULL) logger->info("Hat akkor mi ez?");
-    pollItems[actIndex].fd = 0;
-    pollItems[actIndex].events = ZMQ_POLLIN;
-    pollItems[actIndex].revents = 0;
-  }*/
+    pollItems[actIndex] = {*listenerSockets[i], 0, ZMQ_POLLIN, 0};
+  }
 
 }
 
 void ClientSocketManager::destroyPoll() {
-  /*for (int i = 0; i < (int) pollItems.size(); ++i) {
-    delete pollItems[i];
-  }*/
 }
 
 void ClientSocketManager::publishEndSignal() {
@@ -145,55 +133,66 @@ void ClientSocketManager::publishEndSignal() {
   publisherSocket->send(message);
 }
 
-void ClientSocketManager::run() {
-  logger->info("Starting run.");
+void ClientSocketManager::readFromPoll() {
   zmq::message_t m(1024);
-  resetFinishCounter();
+  int actIndex;
+  bool found = false;
+  for (int i = 0; i < numCluster; ++i) {
+    if (i == selfIndex) continue;
+    if (i > selfIndex) {
+      actIndex = i - 1;
+    } else {
+      actIndex = i;
+    }
 
-  int pollIndex;
-  if (selfIndex == 0) {
-    pollIndex = 1;
-  } else {
-    pollIndex = 0;
+    if (pollItems[actIndex].revents & ZMQ_POLLIN) {
+      listenerSockets[i]->recv(&m);
+      logger->info("Received from poll %s.", (char*) m.data());
+      found = true;
+      break;
+    }
   }
 
-  zmq::pollitem_t pollItems[] = {
-            {*listenerSockets[pollIndex], 0, ZMQ_POLLIN, 0}
-        };
+  if (!found) logger->info("Could not read from poll.");
+}
+
+void ClientSocketManager::run() {
+  logger->info("Starting run.");
+  //resetFinishCounter();
 
   while (1) {
-    //buildPoll();
+    zmq::poll (pollItems, numCluster - 1, -1);
 
-    logger->info("In the loop waiting for finish.");
-    zmq::poll (&pollItems[0], numCluster - 1, -1);
-
-    //logger->info("%d is set for reading.", si);
-    //listenerSockets[si]->recv(&m);
-    //logger->info("Received: %s.", (char*) m.data());
-    //listenerSocket->recv(&m);
-    // Check whether it is really 0
+    readFromPoll();
     incrementFinishCounter();
     if (isFinished()) break;
   }
 
-  //destroyPoll();
-
-  logger->info("ClientSocketManager finished.");
+  logger->info("Finished ClientSocketManager.");
 }
 
 void ClientSocketManager::resetFinishCounter() {
+  mutex.lock();
   finishCounter = 0;
   logger->info("Resetting finish counter to %d", finishCounter);
+  mutex.unlock();
 }
 
 bool ClientSocketManager::isFinished() {
-  //logger->info("Is finished counter %d cluster size %d", finishCounter, numCluster);
-  return numCluster - 1 == finishCounter;
+  bool isFinished;
+
+  mutex.lock();
+  isFinished = numCluster - 1 == finishCounter;
+  mutex.unlock();
+
+  return isFinished;
 }
 
 void ClientSocketManager::incrementFinishCounter() {
-  logger->info("Incrementing counter %d at node %d", finishCounter, selfIndex);
+  mutex.lock();
+  //logger->info("Incrementing counter %d at node %d", finishCounter, selfIndex);
   ++finishCounter;
+  mutex.unlock();
 }
 
 void ClientSocketManager::setMasterSocketManager(MasterSocketManager* manager) {

@@ -162,11 +162,7 @@ SocketConnection *SocketConnection::Connect(string host, int port) {
 }
 
 int SocketConnection::Send(int length, const char *buf) {
-  logger->info("Sending msg");
-  //int foo = ::send(socket_file_descriptor, buf, length, MSG_NOSIGNAL);
-  int foo = ::send(socket_file_descriptor, buf, length, 0);
-  logger->info("Msg sent.");
-  return foo;
+  return ::send(socket_file_descriptor, buf, length, MSG_NOSIGNAL);
 }
 
 int SocketConnection::SendCStr(const char *msg) {

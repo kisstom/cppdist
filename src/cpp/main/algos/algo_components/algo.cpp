@@ -131,6 +131,7 @@ void Algo::run()
 
     	logger_->info("Received instr %s.", instr);
     	node_->beforeIteration(instr);
+    	clientSocketManager_->resetFinishCounter();
     	runThreads();
     	bool cont = node_->afterIteration();
 
@@ -194,7 +195,7 @@ void Algo::receiver() {
 	}
 
 	delete selector;
-	logger_->info("Receiver finished.");
+	logger_->info("Finished receiver.");
 }
 
 bool Algo::storeFromBinary(int socket_index) {

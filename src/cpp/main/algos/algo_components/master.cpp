@@ -99,7 +99,9 @@ void Master::run()
 
       // Waiting for finish.
       retval = WaitForNodes();
+      logger_->info("Retval %d", retval);
       if (!retval) cont = retval;
+      logger_->info("Cont %d", cont);
       if (!cont) break;
 
     }

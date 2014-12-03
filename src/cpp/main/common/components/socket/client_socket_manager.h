@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "../mutex.h"
 
 class ClientSocketManager: public Runnable {
 public:
@@ -34,6 +35,7 @@ private:
   void incrementFinishCounter();
   void initSubscribes();
   void initPublisher();
+  void readFromPoll();
 
   int finishCounter;
   int numCluster;
@@ -44,11 +46,12 @@ private:
 
   MasterSocketManager* masterSocketManager;
 
+  Mutex mutex;
   ClusterConfig* clusterConfig;
   zmq::context_t* context;
   zmq::socket_t* publisherSocket;
   vector<zmq::socket_t*> listenerSockets;
-
+  zmq::pollitem_t* pollItems;
   log4cpp::Category* logger;
 };
 
