@@ -15,12 +15,12 @@ GMOCK= "#../dep/gmock/"
 LOG4CPP = "#../dep/log4cpp"
 GMP = "#../dep/gmp/"
 GTEST = "#../dep/gtest/"
-#GTEST = '/home/kisstom/sandbox/gtest/'
+ZMQ = '#../dep/zmq/'
 env = Environment(
         CXX = 'g++',
         CCFLAGS = flags,
-        CPPPATH=[ '#.', GMOCK + '/include/', LOG4CPP + '/include/', GMP + 'include/', GTEST + 'include/'],
-        LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/', LOG4CPP + '/lib/', GMOCK + 'build/', GTEST + 'build/'],
+        CPPPATH=[ '#.', GMOCK + '/include/', LOG4CPP + '/include/', GMP + 'include/', GTEST + 'include/', ZMQ + 'include/'],
+        LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/', LOG4CPP + '/lib/', GMOCK + 'build/', GTEST + 'build/', ZMQ + 'lib/'],
         LIBS=['gflags', 'gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx', 'zmq']
 )
 
