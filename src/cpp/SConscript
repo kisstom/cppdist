@@ -8,8 +8,8 @@
 # -pg gprof miatt?
 # -g valgrind mint ?
 
-#flags = ['-O3', '-g', '-ggdb', '-Wall']
-flags = [ '-g', '-ggdb', '-Wall']
+flags = ['-O3', '-g', '-ggdb', '-Wall']
+#flags = [ '-g', '-ggdb', '-Wall']
 
 GMOCK= "#../dep/gmock/"
 LOG4CPP = "#../dep/log4cpp"
