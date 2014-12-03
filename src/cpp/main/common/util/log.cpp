@@ -11,6 +11,7 @@
 #include <string.h>
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
 
 using std::string;
 

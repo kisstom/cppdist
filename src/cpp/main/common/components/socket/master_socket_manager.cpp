@@ -11,6 +11,7 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 MasterSocketManager::MasterSocketManager() {
   master_socket_ = NULL;
