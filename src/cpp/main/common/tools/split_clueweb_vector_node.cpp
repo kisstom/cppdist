@@ -5,27 +5,29 @@
 #include <stdlib.h>
 #include <sstream>
 #include <vector>
-#include <gflags/gflags.h>
 #include <string>
-
-DEFINE_int64(numedge_perpart, 0, "");
-DEFINE_int32(init_slave_port, 6001, "");
-DEFINE_string(part_prefix, "", "");
-DEFINE_string(input, "", "");
-DEFINE_string(partition_cfg, "", "");
-
 
 using namespace std;
 
 class makePart {
   public:
-    makePart() {
+    makePart(string _input, int _init_slave_port, int _numedge_perpart , string _part_prefix, string _partition_cfg) {
+      FLAGS_input = _input;
+      FLAGS_init_slave_port = _init_slave_port;
+      FLAGS_numedge_perpart = _numedge_perpart;
+      FLAGS_part_prefix = _part_prefix;
+      FLAGS_partition_cfg = _partition_cfg;
       ROWLEN = 15000000;
     }
     void Init(string fname);
     void process();
     void curr_time();
   private:
+    string FLAGS_input;
+    int FLAGS_init_slave_port;
+    int FLAGS_numedge_perpart;
+    string FLAGS_part_prefix;
+    string FLAGS_partition_cfg;
     FILE* input;
     int ROWLEN; 
 };
@@ -146,8 +148,15 @@ void makePart::process() {
 }
 
 int main (int argc, char* argv[]) {
-  google::ParseCommandLineFlags(&argc, &argv, true);
-  makePart mp;
+  string FLAGS_input = string(argv[1]);
+  int FLAGS_init_slave_port = atoi(argv[2]);
+  int FLAGS_numedge_perpart = atoi(argv[3]);
+  string FLAGS_part_prefix = string(argv[4]);
+  string FLAGS_partition_cfg = string(argv[5]);
+
+  cout << FLAGS_input << " " << FLAGS_init_slave_port << " " << FLAGS_numedge_perpart << " " << FLAGS_part_prefix << " " << FLAGS_partition_cfg << "\n";
+
+  makePart mp(FLAGS_input, FLAGS_init_slave_port, FLAGS_numedge_perpart, FLAGS_part_prefix, FLAGS_partition_cfg);
   mp.Init(FLAGS_input);
   mp.process();
 }
