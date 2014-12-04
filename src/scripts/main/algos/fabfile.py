@@ -196,7 +196,9 @@ def preprocess():
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
     if conf.has_section('PREPROCESS'):
       runPreprocessTask('MAKE_PARTITION', makePartition)
+      runPreprocessTask('PUT_TO_LOCAL', putPartitionIfNeeded)
       runPreprocessTask('PAGERANK_INVERSE', pagerankInversePreprocess)
+      runPreprocessTask('PUT_PAGERANK_TO_LOCAL', putPagerankInversePartitionIfNeeded)
       runPreprocessTask('OUTPARTITION_INDEX', outpartitionIndexCompute)
       runPreprocessTask('COUNTER_INVERSE', counterInversePreprocess)
 
@@ -230,7 +232,7 @@ def makePartition():
       logFile = conf.get('ALGO', 'LOCAL_DIR') + '/err'
       run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, remoteDir + slaveryCfg, initSlavePort))
     
-    putPartitionIfNeeded()  
+#putPartitionIfNeeded()  
 
 def putPartitionIfNeeded():
   global conf, numJobs
@@ -269,7 +271,6 @@ def pagerankInversePreprocess():
   remoteDir = conf.get('ALGO', 'REMOTE_DIR')
   baseDir = conf.get('ALGO', 'BASE_DIR')
 
-  #runOnAllNodes(lambda : put(remoteDir + '/' + slaveryFile, baseDir))
   with settings(host_string=MASTER_HOST):
     
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
@@ -278,7 +279,7 @@ def pagerankInversePreprocess():
     for i in xrange(numJobs):
       run('mkdir -p %s/part_%d'%(inversePartDir, i))
     pagerankInversePartition()
-    putPagerankInversePartitionIfNeeded()
+#putPagerankInversePartitionIfNeeded()
 
 
 def pagerankInversePartition():
@@ -399,7 +400,7 @@ def startOnMachine(slave_index, host):
     storePid(host, pid)
 
 def mainCompute():
-  global conf
+  global conf, MASTER_HOST
   debug = False
   if conf.has_option('ALGO', 'DEBUG'):
     debug = True
@@ -414,6 +415,7 @@ def mainCompute():
     gitInfo(debug)
     storePartitionCfg()
     runOnAllNodes(copyCfg)
+    execute(copyCfg)
     startMaster()
     startNodes() 
     waitForFinish()
@@ -510,7 +512,7 @@ def checkProcess(pid):
 def runOnAllNodes(function):
   env.hosts = cfg_hosts
   execute(function)
-  env.hosts = MASTER_HOST
+  env.hosts = [MASTER_HOST]
 
 @task
 def gitInfo(debug):
