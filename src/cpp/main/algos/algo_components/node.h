@@ -22,6 +22,7 @@ public:
 	virtual void beforeIteration(string msg) = 0;
 	virtual bool afterIteration() = 0;
 	virtual void sender() = 0;
+
 	virtual void initFromMaster(string) = 0;
 	virtual void final() = 0;
 	virtual void setPartitionIndex(int);

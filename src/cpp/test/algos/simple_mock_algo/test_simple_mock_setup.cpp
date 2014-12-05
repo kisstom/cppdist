@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include "../../../main/algos/algo_components/test_simrank_odd_even_node_factory.h"
 #include "../../../main/algos/algo_components/cluster.h"
 #include "../algo_test_base.h"

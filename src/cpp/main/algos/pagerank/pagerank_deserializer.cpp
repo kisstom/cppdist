@@ -9,7 +9,12 @@
 
 PagerankDeserializer::PagerankDeserializer() {
   logger_ = &log4cpp::Category::getInstance(std::string("PagerankDeserializer"));
+  messageCounter = 0;
   node_ = NULL;
+}
+
+PagerankDeserializer::~PagerankDeserializer() {
+  logger_->info("Received %d messages.", messageCounter);
 }
 
 void PagerankDeserializer::update(short partindex) {
@@ -26,6 +31,7 @@ int PagerankDeserializer::storeFromBinary(char* buffer, unsigned length) {
   memcpy(&val, buffer + stored, sizeof(double));
   stored += sizeof(double);
 
+  ++messageCounter;
   return stored;
 }
 

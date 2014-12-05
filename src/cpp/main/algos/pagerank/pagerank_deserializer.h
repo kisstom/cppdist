@@ -18,9 +18,12 @@ public:
   int storeFromBinary(char*, unsigned);
   bool checkReadable(char* buffer, unsigned length);
   void setNode(PagerankNode*);
+  ~PagerankDeserializer();
+
 private:
   long to;
   double val;
+  int messageCounter;
   PagerankNode* node_;
   log4cpp::Category* logger_;
 };
