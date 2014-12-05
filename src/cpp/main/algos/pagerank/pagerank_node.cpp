@@ -16,6 +16,11 @@ PagerankNode::PagerankNode(int maxIter, long allNode, double dump) {
   matrix_ = NULL;
   pagerankScore_ = NULL;
   tmpScore_ = NULL;
+  messageCounter = 0;
+}
+
+PagerankNode::~PagerankNode() {
+  logger_->info("%d messages sent.", messageCounter);
 }
 
 void PagerankNode::beforeIteration(string msg) {
@@ -96,6 +101,7 @@ void PagerankNode::serializeImportance(int bufferIndex, long outNode, double imp
   senderBuffer_->setBreak(bufferIndex);
   senderBuffer_->store(bufferIndex, outNode);
   senderBuffer_->store(bufferIndex, importance);
+  ++messageCounter;
   //logger_->info("End of serializeImportance");
 }
 

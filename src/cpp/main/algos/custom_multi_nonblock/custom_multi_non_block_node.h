@@ -39,6 +39,8 @@ public:
   void updateReceiverScore(long fromEdge, double sc);
   void readInverseNodeBounds(string);
   void readInverseOutEdges(string);
+
+  ~CustomMultiNonBlockNode();
 private:
   MulticastHelper* multicastHelper;
 
@@ -58,6 +60,7 @@ private:
   int actIter;
   int maxIter;
 
+  int messageCounter;
   log4cpp::Category* logger_;
 };
 

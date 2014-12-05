@@ -24,7 +24,13 @@ CustomMultiNonBlockNode::CustomMultiNonBlockNode(long _allnode, long _minnode, d
    tmpSenderScore_ = NULL;
    tmpReceiverScore_ = NULL;
    multicastHelper = NULL;
+   messageCounter = 0;
  }
+
+
+CustomMultiNonBlockNode::~CustomMultiNonBlockNode() {
+  logger_->info("%d messages sent.", messageCounter);
+}
 
  void CustomMultiNonBlockNode::setOutputFileName(string _outfile) {
    outfile = _outfile;
@@ -68,6 +74,7 @@ void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNo
   senderBuffer_->setBreak(hashIndex);
   senderBuffer_->store(hashIndex, fromNode);
   senderBuffer_->store(hashIndex, importance);
+  ++messageCounter;
 }
 
 void CustomMultiNonBlockNode::updateReceiverScore(long origNode, double imp) {

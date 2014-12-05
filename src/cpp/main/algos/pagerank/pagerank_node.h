@@ -26,6 +26,8 @@ public:
   void setOutputFile(string outputFile);
   void setEdgeListContainer(EdgelistContainer*);
   void initFromMaster(string) {}
+
+  ~PagerankNode();
 private:
   void serializeImportance(int partIndex, long outNode, double importance);
   EdgelistContainer* matrix_;
@@ -38,6 +40,7 @@ private:
   int actIter;
   int maxIter;
 
+  int messageCounter;
   log4cpp::Category* logger_;
 };
 
