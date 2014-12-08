@@ -57,6 +57,8 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
   vector<long> edges;
   set<short> outIndices;
 
+  bool shouldUseNetwork = false;
+  int numShouldUse = 0;
   while (fgets(line, rowlen, inputFile)) {
     if (strcmp(line, "\n") == 0) {
       (*outPartitions)[current_row] = new short[1];
@@ -69,6 +71,7 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
       line[strlen(line) - 1]= '\0';
     }
 
+    shouldUseNetwork = false;
     util.split(line, edges);
 
     (*numNeighbors)[current_row] = (int) edges.size();
@@ -79,9 +82,12 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
         outIndices.insert(partI);
         if (partI != partIndex) {
           ++numCrossEdge;
+          shouldUseNetwork = true;
         }
       }
     }
+
+    if (shouldUseNetwork) ++numShouldUse;
 
     short* indices = new short[outIndices.size() + 1];
     indices[0] = outIndices.size();
@@ -98,6 +104,7 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
     ++current_row;
   }
 
+  logger_->info("Num should use: %d", numShouldUse);
   logger_->info("Number of edges between partitions: %ld", numCrossEdge);
   logger_->info("Out partition count %ld", outPartSize);
 }
