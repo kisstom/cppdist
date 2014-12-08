@@ -25,11 +25,13 @@ CustomMultiNonBlockNode::CustomMultiNonBlockNode(long _allnode, long _minnode, d
    tmpReceiverScore_ = NULL;
    multicastHelper = NULL;
    messageCounter = 0;
+   numUpdates = 0;
  }
 
 
 CustomMultiNonBlockNode::~CustomMultiNonBlockNode() {
   logger_->info("%d messages sent.", messageCounter);
+  logger_->info("%d updates done.", numUpdates);
 }
 
  void CustomMultiNonBlockNode::setOutputFileName(string _outfile) {
@@ -85,6 +87,7 @@ void CustomMultiNonBlockNode::updateReceiverScore(long origNode, double imp) {
     end = (*inverseNodeBounds)[origNode].second;
     for (long outEdgeIt = start; outEdgeIt < end; ++outEdgeIt) {
       (*tmpReceiverScore_)[(*inverseOutEdges)[outEdgeIt] - minNode_] += imp;
+      ++numUpdates;
     }
   }
 }

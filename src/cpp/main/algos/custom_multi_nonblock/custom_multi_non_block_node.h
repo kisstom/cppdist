@@ -60,6 +60,7 @@ private:
   int actIter;
   int maxIter;
 
+  int numUpdates;
   int messageCounter;
   log4cpp::Category* logger_;
 };
