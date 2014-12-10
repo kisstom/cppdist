@@ -119,8 +119,8 @@ void SocketManager::initSockets() {
 	sender_sockets_.resize(clusterSize, NULL);
 }
 
-Selector* SocketManager::getSelector() {
-  Selector* selector = new Selector;
+Selector* SocketManager::getSelector(int timeout = 0) {
+  Selector* selector = new Selector(timeout);
   selector->Init(&receiver_sockets_);
   return selector;
 }

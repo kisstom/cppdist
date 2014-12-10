@@ -125,7 +125,6 @@ void ClientSocketManager::destroyPoll() {
 }
 
 void ClientSocketManager::publishEndSignal() {
-  //sleep(2);
   logger->info("Publishing finish %d", selfIndex);
   zmq::message_t message(2);
   char msg[2] = "0";
@@ -158,11 +157,9 @@ void ClientSocketManager::readFromPoll() {
 
 void ClientSocketManager::run() {
   logger->info("Starting run.");
-  //resetFinishCounter();
 
   while (1) {
     zmq::poll (pollItems, numCluster - 1, -1);
-
     readFromPoll();
     incrementFinishCounter();
     if (isFinished()) break;
@@ -190,7 +187,6 @@ bool ClientSocketManager::isFinished() {
 
 void ClientSocketManager::incrementFinishCounter() {
   mutex.lock();
-  //logger->info("Incrementing counter %d at node %d", finishCounter, selfIndex);
   ++finishCounter;
   mutex.unlock();
 }

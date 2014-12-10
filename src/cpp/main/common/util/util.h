@@ -33,6 +33,7 @@ public:
 	void splitByToken(char* line, vector<long>& edges);
 	vector<string> split(string str, char sep);
 	vector<long> convertToLong(vector<string>);
+	vector<short> convertToShort(vector<string>);
 	void checkParam(vector<string> , unordered_map<string, string>*);
 	void checkParam(unordered_map<string, string>*, int argc, ...);
 

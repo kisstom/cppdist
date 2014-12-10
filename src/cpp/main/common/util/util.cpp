@@ -105,6 +105,18 @@ vector<long> Util::convertToLong(vector<string> strs) {
   return retval;
 }
 
+vector<short> Util::convertToShort(vector<string> strs) {
+  vector<short> retval;
+  short tmp;
+
+  for (int i = 0; i < strs.size(); ++i) {
+    sscanf(strs[i].c_str(), "%hd", &tmp);
+    retval.push_back(tmp);
+  }
+
+  return retval;
+}
+
 void Util::checkParam(vector<string> shouldContain, unordered_map<string, string>* params) {
   for (int i = 0; i < shouldContain.size(); ++i) {
     if (params->find(shouldContain[i]) == params->end()) {

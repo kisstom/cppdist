@@ -72,9 +72,10 @@ class Selector {
   int max_fd_;
   void BuilFdSet();
   int RandStart();
+  int timeout;
 
  public:
-  Selector();
+  Selector(int timeout);
   void Init(vector<SocketConnection*>* connections);
   //SocketConnection *Select();
   int SelectIndex();

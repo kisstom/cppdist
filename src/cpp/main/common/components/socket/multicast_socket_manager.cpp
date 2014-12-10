@@ -34,6 +34,12 @@ void MulticastSocketManager::sendToNode(int limit, char* buffer, int socketIndex
   publishers[socketIndex]->send(limit, buffer);
 }
 
+void MulticastSocketManager::initConnectionsAlone() {
+  initSockets();
+  initPublishers();
+  initListeners();
+}
+
 void MulticastSocketManager::initConnections() {
   logger->info("Initing connections");
   initSockets();
@@ -144,8 +150,8 @@ bool MulticastSocketManager::isFinishedAll() {
   return finishedSockets == expectedNumFinishedSockets;
 }
 
-Selector* MulticastSocketManager::getSelector() {
-  Selector* selector = new Selector;
+Selector* MulticastSocketManager::getSelector(int timeout) {
+  Selector* selector = new Selector(timeout);
   selector->Init(&listeners);
   return selector;
 }

@@ -13,3 +13,5 @@ env.Program('server_perform_main', ['server_perform_main.cpp', '#/../bin/main/co
 '#/../bin/main/common/components/mutex.o'] + SOCKETS)
 env.Program('udp_multicast_sender', ['udp_multicast_sender.cpp', '#/../bin/main/common/components/mutex.o'] + SOCKETS + UTIL)
 env.Program('udp_multicast_listener', ['udp_multicast_listener.cpp', '#/../bin/main/common/components/mutex.o'] + SOCKETS + UTIL)
+env.Program('multicast_socket_manager_publisher', ['multicast_socket_manager_publisher.cpp', '#/../bin/main/common/components/mutex.o'] + SOCKETS + UTIL)
+env.Program('multicast_socket_manager_listener', ['multicast_socket_manager_listener.cpp', '#/../bin/main/common/components/mutex.o'] + SOCKETS + UTIL)

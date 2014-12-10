@@ -14,7 +14,7 @@ public:
   virtual void finishedSocket(int socketIndex) = 0;
   virtual bool isFinishedAll() = 0;
 
-  virtual Selector* getSelector() = 0;
+  virtual Selector* getSelector(int timeout = 0) = 0;
   virtual ~ISocketManager() {}
 };
 

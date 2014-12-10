@@ -28,7 +28,7 @@ public:
   virtual bool isFinishedAll();
 
   void setMasterSocketManager(MasterSocketManager* manager);
-  virtual Selector* getSelector();
+  virtual Selector* getSelector(int);
 
   virtual ~SocketManager();
 private:

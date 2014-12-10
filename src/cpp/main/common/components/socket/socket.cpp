@@ -200,7 +200,8 @@ string SocketConnection::GetHost() {
 // Selector
 //
 
-Selector::Selector() {
+Selector::Selector(int _timeout) {
+  timeout = _timeout;
   logger = &log4cpp::Category::getInstance(std::string("Selector"));
 }
 
@@ -239,42 +240,19 @@ int Selector::RandStart () {
   return (int) x;
 }
 
-/*SocketConnection *Selector::Select() {
-  BuilFdSet();
-
-  struct timeval tv = {0, 20};
-
-  int readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
-                         (fd_set *) 0, &tv);
-  if (readsocks < 0) {
-    throw SelectError();
-    //return NULL;
-  }
-  if (readsocks == 0) {
-    //throw SelectError();
-
-  } else {
-
-    int rand_start = RandStart();
-    for (int listnum = rand_start; listnum < (int)sockets_.size() + rand_start; listnum++) {
-      SocketConnection *socket = sockets_[listnum%((int)sockets_.size())];
-
-      // self socket is uninited
-      if (socket == NULL) continue;
-      if (FD_ISSET(socket->GetFileDescriptor(), &socks_)) {
-        return socket;
-      }
-    }
-  }
-
-  return NULL;
-}*/
-
 int Selector::SelectIndex() {
   BuilFdSet();
-  struct timeval tv = {0, 200};
-  int readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
+
+  int readsocks;
+  if (timeout > 0) {
+    struct timeval tv = {0, timeout};
+    readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
                          (fd_set *) 0, &tv);
+  } else {
+    readsocks = select(max_fd_ + 1, &socks_, (fd_set *) 0,
+                         (fd_set *) 0, NULL);
+  }
+
   if (readsocks < 0) {
     throw SelectError();
   }

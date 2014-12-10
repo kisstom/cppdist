@@ -153,8 +153,6 @@ void Algo::run()
     masterSocketManager_->sendFailToMaster();
     return;
   }
-
-  // destructor should destroy and send to master
 }
 
 void Algo::final() {
@@ -166,32 +164,21 @@ void Algo::receiver() {
 	logger_->info("Starting receiver.");
 	int finished = 0, socket_index, size = 0;
 	bool is_more = true;
-	Selector* selector = socketManager_->getSelector();
-  //socketManager_->resetFinishCount();
+	int timeout = 20;
+	Selector* selector = socketManager_->getSelector(timeout);
 
 	while (1)
 	{
 		socket_index = selector->SelectIndex();
 		if (socket_index >= 0) {
-		  //logger_->info("Buffer size on socket %d is %d before", socket_index, storeFromBinary_->remains_size_[socket_index]);
 		  size = socketManager_->recvFromNode(
 		      send_limit_, storeFromBinary_->getEndOfBufferAt(socket_index), socket_index);
 
 		  storeFromBinary_->remains_size_[socket_index] += (unsigned) size;
-		  //logger_->info("Buffer size on socket %d is %d after", socket_index, storeFromBinary_->remains_size_[socket_index]);
 		  is_more = storeFromBinary(socket_index);
 		}
 
 		if (clientSocketManager_->isFinished()) break;
-
-		/*if (!is_more)
-		{
-		  socketManager_->finishedSocket(socket_index);
-		  if (socketManager_->isFinishedAll())
-			{
-				break;
-			}
-		}*/
 	}
 
 	delete selector;

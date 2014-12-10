@@ -18,16 +18,11 @@ public:
   int recvFromNode(int, char*, int);
   void sendToNode(int, char*, int);
   void initConnections();
-
-  void resetFinishCount();
-  void finishedSocket(int socketIndex);
+  void initConnectionsAlone();
   bool isFinishedAll();
 
   void setMasterSocketManager(MasterSocketManager*);
-  Selector* getSelector();
-
-  int getLastBit(int number);
-  int getNumberOfZeros(int number);
+  Selector* getSelector(int timeout);
 
   ~MulticastSocketManager();
 private:
@@ -35,6 +30,13 @@ private:
   void initPublishers();
   void initListeners();
   void initExpectedFinishCounters();
+
+  int getLastBit(int number);
+  int getNumberOfZeros(int number);
+
+  void resetFinishCount();
+  void finishedSocket(int socketIndex);
+
 
   vector<UDPMulticastPublisher*> publishers;
   vector<SocketConnection*> listeners;
@@ -58,6 +60,7 @@ private:
   FRIEND_TEST(TestMulticastSocketManager, createMulticastPublisher);
   FRIEND_TEST(TestMulticastSocketManager, createMulticastListener);
   FRIEND_TEST(TestMulticastSocketManager, createIPIndex);
+  FRIEND_TEST(TestMulticastSocketManager, testIsLastBitOne);
 };
 
 

@@ -45,6 +45,33 @@ TEST(MulticastHelperTest, test3) {
   ASSERT_TRUE(shouldUpdateSelf);
 }
 
+TEST(MulticastHelperTest, test4) {
+  int nodeIndex = 2;
+  MulticastHelper helper(nodeIndex);
+  bool shouldUpdateSelf = false;
+  short* indices = new short[4];
+  // size of the neighbors
+  indices[0] = 3;
+  indices[1] = 1;
+  indices[2] = 3;
+  indices[3] = 4;
+
+  ASSERT_EQ(13, helper.publishHashId(indices, &shouldUpdateSelf));
+  ASSERT_FALSE(shouldUpdateSelf);
+}
+
+TEST(MulticastHelperTest, testEmpty) {
+  int nodeIndex = 1;
+  MulticastHelper helper(nodeIndex);
+  bool shouldUpdateSelf = false;
+  short* indices = new short[1];
+  // size of the neighbors
+  indices[0] = 0;
+
+  ASSERT_EQ(-1, helper.publishHashId(indices, &shouldUpdateSelf));
+  ASSERT_FALSE(shouldUpdateSelf);
+}
+
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
