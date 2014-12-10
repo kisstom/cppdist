@@ -43,7 +43,7 @@ public:
 			int send_limit, long all_node, int num_slaves, int slave_index,
 			long num_nodes, long min_node, bool isMulticast);
 	void run();
-	//void startLogger();
+
 	void setIp();
 	void initClient();
 	void connectToMaster();
@@ -78,21 +78,17 @@ private:
 	int slave_port_;
   long all_node_;
   long num_nodes_;
-  int current_iteration_;
 
 	vector<long> partition_min_node_;
 	int num_slaves_;
 	int send_limit_;
-	int part_index_;
   long min_node_;
   int slave_index_;
   bool isMulticast;
-  int expectedNumSocketFinish;
 
 	ISocketManager* socketManager_;
 	MasterSocketManager* masterSocketManager_;
 	ClientSocketManager* clientSocketManager_;
-	vector<int> numberOfEndOnSocket;
 
 	SenderBuffer* senderBuffer_;
 	Node* node_;

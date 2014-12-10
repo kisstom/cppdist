@@ -8,7 +8,7 @@
 #include "algo_builder.h"
 #include "../../common/components/socket/multicast_socket_manager.h"
 #include <cstdlib>
-
+#include <cmath>
 
 Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
     vector<std::pair<string, string> >* hostAndPort) {
@@ -24,10 +24,31 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   senderBuffer_ = new SenderBuffer;
   algo_->setSenderBuffer(senderBuffer_);
 
+  bool isMulticast = false;
   int initSlavePort = atoi((*params)["INIT_SLAVE_PORT"].c_str());
   int initCommPort = atoi((*params)["INIT_SLAVE_COMMUNICATION_PORT"].c_str());
   int slaveIndex = atoi((*params)["SLAVE_INDEX"].c_str());
   int numSlaves = atoi((*params)["NUM_SLAVES"].c_str());
+  int numSockets = -1;
+  int send_limit = -1;
+
+  int slavePort = slaveIndex + initSlavePort;
+  int master_port;
+
+  if (params->find("MULTI") != params->end()) {
+    isMulticast = atoi((*params)["MULTI"].c_str());
+  }
+
+  if (isMulticast) {
+    numSockets = (int) pow(2, numSlaves - 1) - 1;
+  } else {
+    numSockets = numSlaves;
+  }
+  sscanf((*params)["SEND_LIMIT"].c_str(), "%d", &send_limit);
+
+  senderBuffer_->resizeBufferNum(numSockets);
+  senderBuffer_->resizeBuffers(send_limit);
+
 
   if (params->find("MULTI") != params->end()) {
     bool isMulticast = atoi((*params)["MULTI"].c_str());
@@ -44,6 +65,7 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   algo_->setSocketManager(socketManager_);
 
   masterSocketManager_ = new MasterSocketManager;
+  masterSocketManager_->setPort(slavePort);
   algo_->setMasterSocketManager(masterSocketManager_);
 
   socketManager_->setMasterSocketManager(masterSocketManager_);
@@ -57,6 +79,8 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
 
   storeFromBinary_ = new StoreFromBinary;
   storeFromBinary_->setDeserializer(deserializer_);
+  storeFromBinary_->resizeSocketNum(numSockets);
+  storeFromBinary_->setBufferCapacity(send_limit * 2);
 
   algo_->setStoreFromBinary(storeFromBinary_);
 

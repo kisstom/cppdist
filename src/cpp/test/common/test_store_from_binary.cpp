@@ -5,7 +5,7 @@
  *      Author: kisstom
  */
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include "../../main/common/components/store_from_binary.h"
 #include "../../main/algos/simrank_update/simrank_update_deserializer.h"
 #include "../../main/common/components/serializer.h"

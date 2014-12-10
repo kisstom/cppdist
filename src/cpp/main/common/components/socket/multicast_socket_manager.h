@@ -18,8 +18,6 @@ public:
   int recvFromNode(int, char*, int);
   void sendToNode(int, char*, int);
   void initConnections();
-  void initConnectionsAlone();
-  bool isFinishedAll();
 
   void setMasterSocketManager(MasterSocketManager*);
   Selector* getSelector(int timeout);
@@ -31,6 +29,7 @@ private:
   void initListeners();
   void initExpectedFinishCounters();
 
+  bool isFinishedAll();
   int getLastBit(int number);
   int getNumberOfZeros(int number);
 

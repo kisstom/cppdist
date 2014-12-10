@@ -10,17 +10,17 @@
 class MasterSocketManager {
 public:
   MasterSocketManager();
-  void connectToMaster(char*, int);
-  int recvFromMaster(int, char*);
-  void sendFailToMaster();
-  void sendReadyToMaster();
-  void sendEmptyToMaster();
-  void setIp();
-  void setPort(int);
-  void initSockets();
+  virtual void connectToMaster(char*, int);
+  virtual int recvFromMaster(int, char*);
+  virtual void sendFailToMaster();
+  virtual void sendReadyToMaster();
+  virtual void sendEmptyToMaster();
+  virtual void setPort(int);
 
-  ~MasterSocketManager();
+  virtual ~MasterSocketManager();
 private:
+  void setIp();
+
   SocketConnection* master_socket_;
   char ip_[1024];
   int slave_port_;

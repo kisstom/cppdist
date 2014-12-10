@@ -9,15 +9,12 @@ thisDir=$(dirname $0)
 cd $thisDir/../../../../cpp
 scons -Q test=True -j4
 
-
 cd ..
 echo common tests
 test_dir ./bin/test/common
 
 echo dmoz tests
 test_dir ./bin/test/dmoz
-
-#./bin/test/algos/simrank_update/test_node
 
 
 if [ $# != 1 ]; then
@@ -34,7 +31,7 @@ test_dir ./bin/test/useFileSystem/ $resourcePath
 #test_dir ./bin/test/algos/simrank_odd_even/
 #test_dir ./bin/test/algos/psimrank/
 #test_dir ./bin/test/algos/bitprop/
-#test_dir ./bin/test/algos/simple_mock_algo/
+test_dir ./bin/test/algos/simple_mock_algo/
 
 echo script tests
 test_scripts ./scripts/test/

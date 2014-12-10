@@ -7,7 +7,7 @@
 
 #include "algo.h"
 #include "../../common/thread/run_thread.h"
-#include <cmath>
+
 
 Algo::Algo(char* master_host, int master_port, int slave_port,
 			int send_limit, long all_node, int num_slaves, int slave_index,
@@ -17,20 +17,20 @@ Algo::Algo(char* master_host, int master_port, int slave_port,
 	slave_port_ = slave_port;
 	send_limit_ = send_limit;
 	all_node_ = all_node;
-	current_iteration_ = 0;
 	num_slaves_ = num_slaves;
   slave_index_ = slave_index;
   num_nodes_ = num_nodes;
   min_node_ = min_node;
   logger_ = &log4cpp::Category::getInstance(std::string("Algo"));
-  masterSocketManager_ = NULL;
+
   isMulticast = _isMulticast;
 
-  if (isMulticast) {
-    expectedNumSocketFinish = (int) pow(2, num_slaves_ - 1) - 1;
-  } else {
-    expectedNumSocketFinish = num_slaves_ - 1;
-  }
+  masterSocketManager_ = NULL;
+  socketManager_ = NULL;
+  clientSocketManager_ = NULL;
+  senderBuffer_ = NULL;
+  node_ = NULL;
+  storeFromBinary_ = NULL;
 }
 
 int Algo::getSlaveIndex() {
@@ -62,29 +62,21 @@ bool Algo::setUp() {
 
 	int numSockets = -1;
 	try {
-
-		masterSocketManager_->setPort(slave_port_);
+	  // Connecting to master.
 		masterSocketManager_->connectToMaster(master_host_, master_port_);
 
+		// Getting config. Should be deleted.
 		initFromMaster();
 
-		if (isMulticast) {
-		  numSockets = (int) pow(2, num_slaves_ - 1) - 1;
-		} else {
-		  numSockets = num_slaves_;
-		}
-
-		senderBuffer_->resizeBufferNum(numSockets);
-		storeFromBinary_->resizeSocketNum(numSockets);
-
-		senderBuffer_->resizeBuffers(send_limit_);
-		storeFromBinary_->setBufferCapacity(send_limit_ * 2);
-
+		// Waiting for all nodes to finish.
 		masterSocketManager_->sendReadyToMaster();
+
+		// Initing connections between nodes.
+		// Ready to master is included.
 		socketManager_->initConnections();
 
+    // Setting up the client communication manager.
 		clientSocketManager_->setUp();
-
 	} catch (MasterException& e) {
     logger_->info("Master said i must die. I die.");
     return false;

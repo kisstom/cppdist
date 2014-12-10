@@ -34,12 +34,6 @@ void MulticastSocketManager::sendToNode(int limit, char* buffer, int socketIndex
   publishers[socketIndex]->send(limit, buffer);
 }
 
-void MulticastSocketManager::initConnectionsAlone() {
-  initSockets();
-  initPublishers();
-  initListeners();
-}
-
 void MulticastSocketManager::initConnections() {
   logger->info("Initing connections");
   initSockets();

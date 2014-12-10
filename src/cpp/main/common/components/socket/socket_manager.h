@@ -25,7 +25,7 @@ public:
 
   virtual void resetFinishCount();
   virtual void finishedSocket(int socketIndex);
-  virtual bool isFinishedAll();
+
 
   void setMasterSocketManager(MasterSocketManager* manager);
   virtual Selector* getSelector(int);
@@ -34,6 +34,7 @@ public:
 private:
   void initSockets();
   void initClient();
+  bool isFinishedAll();
 
   MasterSocketManager* masterSocketManager;
   ServerSocket* self_socket_;

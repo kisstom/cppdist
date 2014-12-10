@@ -1,6 +1,7 @@
 #include "../../../../main/common/util/util.h"
 #include "../../../../main/common/components/socket/multicast_socket_manager.h"
 #include "../../../../main/common/util/logger_factory.h"
+#include "../../../mock/mock_master_socket_manager.h"
 #include <stdio.h>
 #include <sstream>
 #include <string>
@@ -25,9 +26,11 @@ int main(int argc, char* argv[]) {
   sscanf(argv[4], "%d", &initMultiCastPort);
   sscanf(argv[5], "%d", &clusterSize);
 
+  MockMasterSocketManager* masterSocketManeger = new MockMasterSocketManager;
   MulticastSocketManager manager(nodeIndex, startingHash,
       initMulticastHost, initMultiCastPort, clusterSize);
-  manager.initConnectionsAlone();
+  manager.setMasterSocketManager(masterSocketManeger);
+  manager.initConnections();
 
   Selector* selector = manager.getSelector(0);
   int selectIndex = selector->SelectIndex();
@@ -41,8 +44,6 @@ int main(int argc, char* argv[]) {
   int size = manager.recvFromNode(1024, msg, selectIndex);
   msg[size] = '\0';
   std::cout << msg << '\n';
-
-
 
   return 0;
 }

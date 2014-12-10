@@ -2,6 +2,7 @@
 #include "../../../../main/common/util/logger_factory.h"
 #include "../../../../main/common/components/socket/multicast_socket_manager.h"
 #include "../../../../main/common/components/socket/multicast_helper.h"
+#include "../../../mock/mock_master_socket_manager.h"
 #include <stdio.h>
 #include <sstream>
 #include <string>
@@ -29,9 +30,11 @@ int main(int argc, char* argv[]) {
   strcpy(outIndices, argv[6]);
   logger->info("%s\n", string(outIndices).c_str());
 
+  MockMasterSocketManager* masterSocketManeger = new MockMasterSocketManager;
   MulticastSocketManager manager(nodeIndex, startingHash,
       initMulticastHost, initMultiCastPort, clusterSize);
-  manager.initConnectionsAlone();
+  manager.setMasterSocketManager(masterSocketManeger);
+  manager.initConnections();
 
   MulticastHelper helper(nodeIndex);
 
