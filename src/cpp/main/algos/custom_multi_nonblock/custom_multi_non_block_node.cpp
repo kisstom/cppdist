@@ -16,14 +16,14 @@ CustomMultiNonBlockNode::CustomMultiNonBlockNode(long _allnode, long _minnode, d
    actIter = 0;
    maxIter = _maxIter;
 
-   outPartitions = NULL;
+   outPartitionHashes = NULL;
    inverseNodeBounds = NULL;
    inverseOutEdges = NULL;
-   numNeighbors = NULL;
+   numneighbors = NULL;
+   updateFlags = NULL;
    pagerankScore_ = NULL;
    tmpSenderScore_ = NULL;
    tmpReceiverScore_ = NULL;
-   multicastHelper = NULL;
    messageCounter = 0;
    numUpdates = 0;
  }
@@ -40,16 +40,19 @@ CustomMultiNonBlockNode::~CustomMultiNonBlockNode() {
 
 void CustomMultiNonBlockNode::sender() {
   logger_->info("Starting sender.");
-  long origNode = minNode_ - 1, start, end;
-  bool shouldUpdateSelf = false;
+  long origNode = minNode_ - 1;
 
-  for (long partitionNode = 0; partitionNode < (long) outPartitions->size(); ++partitionNode) {
+  for (long partitionNode = 0; partitionNode < (long) outPartitionHashes->size(); ++partitionNode) {
     ++origNode;
-    if ((*numNeighbors)[partitionNode] == 0) continue;
-    double imp = (*pagerankScore_)[partitionNode] / (*numNeighbors)[partitionNode];
 
-    serializeImportance((*outPartitions)[partitionNode], origNode, imp, &shouldUpdateSelf);
-    if (shouldUpdateSelf) {
+    if ((*numneighbors)[partitionNode] == 0) continue;
+    double imp = (*pagerankScore_)[partitionNode] / (*numneighbors)[partitionNode];
+
+    if ((*outPartitionHashes)[partitionNode] >= 0) {
+      serializeImportance((*outPartitionHashes)[partitionNode], origNode, imp);
+    }
+
+    if (updateFlags->at(partitionNode)) {
       updateSenderScore(origNode, imp);
     }
   }
@@ -59,23 +62,19 @@ void CustomMultiNonBlockNode::sender() {
 }
 
 
-void CustomMultiNonBlockNode::serializeImportance(short* outIndices, long fromNode,
-    double importance, bool* shouldUpdateSelf) {
+void CustomMultiNonBlockNode::serializeImportance(short hash, long fromNode,
+    double importance) {
   //logger_->info("Starting serialize.");
-
-  int hashIndex = multicastHelper->publishHashId(outIndices, shouldUpdateSelf);
-  if (hashIndex < 0) return;
-
   int shouldAdd = 1 + sizeof(long) + sizeof(double);
 
-  if (!senderBuffer_->canAdd(hashIndex, shouldAdd)) {
-    senderBuffer_->emptyBuffer(hashIndex);
+  if (!senderBuffer_->canAdd(hash, shouldAdd)) {
+    senderBuffer_->emptyBuffer(hash);
   }
 
   //logger_->info("Serializing to %hd from %ld imp %.10lf.", hashIndex, fromNode, importance);
-  senderBuffer_->setBreak(hashIndex);
-  senderBuffer_->store(hashIndex, fromNode);
-  senderBuffer_->store(hashIndex, importance);
+  senderBuffer_->setBreak(hash);
+  senderBuffer_->store(hash, fromNode);
+  senderBuffer_->store(hash, importance);
   ++messageCounter;
 }
 
@@ -125,7 +124,7 @@ bool CustomMultiNonBlockNode::afterIteration() {
 }
 
 void CustomMultiNonBlockNode::initFromMaster(string) {
-  multicastHelper = new MulticastHelper(algo_->getSlaveIndex());
+  //multicastHelper = new MulticastHelper(algo_->getSlaveIndex());
 }
 
 void CustomMultiNonBlockNode::final() {
@@ -135,23 +134,27 @@ void CustomMultiNonBlockNode::final() {
     return;
   }
 
-  for (long node = 0; node < pagerankScore_->size(); ++node) {
+  for (long node = 0; node < (long) pagerankScore_->size(); ++node) {
     fprintf(outf, "%ld %.10lf\n", node + minNode_, (*pagerankScore_)[node]);
   }
 
   fclose(outf);
 }
 
-void CustomMultiNonBlockNode::setNumberNeighbors(vector<int>* nneighbors) {
-  numNeighbors = nneighbors;
+void CustomMultiNonBlockNode::setUpdateFlags(vector<bool>* _updateFlags) {
+  updateFlags = _updateFlags;
   double ini = 1.0 / allNode_;
-  pagerankScore_ = new vector<double>(nneighbors->size(), ini);
-  tmpSenderScore_ = new vector<double>(nneighbors->size(), 0.0);
-  tmpReceiverScore_ = new vector<double>(nneighbors->size(), 0.0);
+  pagerankScore_ = new vector<double>(updateFlags->size(), ini);
+  tmpSenderScore_ = new vector<double>(updateFlags->size(), 0.0);
+  tmpReceiverScore_ = new vector<double>(updateFlags->size(), 0.0);
 }
 
-void CustomMultiNonBlockNode::setOutPartitions(vector<short*>* _outPartitions) {
-  outPartitions = _outPartitions;
+void CustomMultiNonBlockNode::setOutpartitionHashes(vector<short>* _outPartitionHashes) {
+  outPartitionHashes = _outPartitionHashes;
+}
+
+void CustomMultiNonBlockNode::setNumneighbors(vector<int>* _numneighbors) {
+  numneighbors = _numneighbors;
 }
 
 void CustomMultiNonBlockNode::setInverseNodeBounds(

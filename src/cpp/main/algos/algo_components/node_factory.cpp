@@ -10,6 +10,7 @@
 #include "../../common/random/random_generator.h"
 #include "../../common/graph/edge_list_container_factory.h"
 #include "../../common/io/outpartition_index_computer.h"
+#include "../../common/io/outpartition_hash_computer.h"
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -281,10 +282,11 @@ CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_ma
       (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
 
   logger_->info("Starting computing out partition indices.");
-  OutPartitionIndexComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
+  OutpartitionHashComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
   computer.run();
-  node->setNumberNeighbors(computer.getNumNeighbors());
-  node->setOutPartitions(computer.getOutPartitions());
+  node->setNumneighbors(computer.getNumNeighbors());
+  node->setOutpartitionHashes(computer.getOutPartitionHashes());
+  node->setUpdateFlags(computer.getUpdateFlags());
 
   logger_->info("Reading inverse edges and bounds.");
   node->readInverseNodeBounds(string(inverseBounds));

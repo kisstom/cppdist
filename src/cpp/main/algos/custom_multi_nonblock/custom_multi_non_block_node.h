@@ -28,13 +28,14 @@ public:
   void initFromMaster(string);
   void final();
 
-  void setNumberNeighbors(vector<int>*);
-  void setOutPartitions(vector<short*>*);
+  void setUpdateFlags(vector<bool>*);
+  void setOutpartitionHashes(vector<short>*);
+  void setNumneighbors(vector<int>*);
   void setInverseNodeBounds(unordered_map<long, std::pair<long, long> >*);
   void setInverseOutEdges(vector<long>*);
   void setOutputFileName(string);
 
-  void serializeImportance(short*, long, double, bool*);
+  void serializeImportance(short, long, double);
   void updateSenderScore(long fromEdge, double sc);
   void updateReceiverScore(long fromEdge, double sc);
   void readInverseNodeBounds(string);
@@ -42,12 +43,11 @@ public:
 
   ~CustomMultiNonBlockNode();
 private:
-  MulticastHelper* multicastHelper;
-
-  vector<short*>* outPartitions;
+  vector<short>* outPartitionHashes;
   unordered_map<long, std::pair<long, long> >* inverseNodeBounds;
   vector<long>* inverseOutEdges;
-  vector<int>* numNeighbors;
+  vector<bool>* updateFlags;
+  vector<int>* numneighbors;
 
   vector<double>* pagerankScore_;
   vector<double>* tmpReceiverScore_;
