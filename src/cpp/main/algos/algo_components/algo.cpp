@@ -156,7 +156,7 @@ void Algo::receiver() {
 	logger_->info("Starting receiver.");
 	int finished = 0, socket_index, size = 0;
 	bool is_more = true;
-	int timeout = 20;
+	int timeout = 2;
 	Selector* selector = socketManager_->getSelector(timeout);
 
 	while (1)
