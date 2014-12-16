@@ -72,6 +72,71 @@ TEST(MulticastHelperTest, testEmpty) {
   ASSERT_FALSE(shouldUpdateSelf);
 }
 
+/***** TEST FOR SET *****/
+
+
+TEST(MulticastHelperTest, testSet1) {
+  int nodeIndex = 1;
+  MulticastHelper helper(nodeIndex);
+
+  bool shouldUpdateSelf = false;
+  set<short> myset;
+  myset.insert(0);
+  myset.insert(3);
+
+  ASSERT_EQ(4, helper.publishHashId(myset, &shouldUpdateSelf));
+  ASSERT_FALSE(shouldUpdateSelf);
+}
+
+TEST(MulticastHelperTest, testSet2) {
+  int nodeIndex = 1;
+  MulticastHelper helper(nodeIndex);
+  bool shouldUpdateSelf = false;
+
+  set<short> myset;
+  myset.insert(1);
+  myset.insert(3);
+
+  ASSERT_EQ(3, helper.publishHashId(myset, &shouldUpdateSelf));
+  ASSERT_TRUE(shouldUpdateSelf);
+}
+
+
+TEST(MulticastHelperTest, testSet3) {
+  int nodeIndex = 1;
+  MulticastHelper helper(nodeIndex);
+  bool shouldUpdateSelf = false;
+  set<short> myset;
+  myset.insert(1);
+
+  ASSERT_EQ(-1, helper.publishHashId(myset, &shouldUpdateSelf));
+  ASSERT_TRUE(shouldUpdateSelf);
+}
+
+TEST(MulticastHelperTest, testSet4) {
+  int nodeIndex = 2;
+  MulticastHelper helper(nodeIndex);
+  bool shouldUpdateSelf = false;
+  set<short> myset;
+  myset.insert(1);
+  myset.insert(3);
+  myset.insert(4);
+
+  ASSERT_EQ(13, helper.publishHashId(myset, &shouldUpdateSelf));
+  ASSERT_FALSE(shouldUpdateSelf);
+}
+
+TEST(MulticastHelperTest, testSet5) {
+  int nodeIndex = 1;
+  MulticastHelper helper(nodeIndex);
+  bool shouldUpdateSelf = false;
+  set<short> myset;
+
+  ASSERT_EQ(-1, helper.publishHashId(myset, &shouldUpdateSelf));
+  ASSERT_FALSE(shouldUpdateSelf);
+}
+
+
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
