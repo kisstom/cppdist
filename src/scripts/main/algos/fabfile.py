@@ -412,6 +412,7 @@ def mainCompute():
   libPath += ':' + depDir + 'zmq/'
 
   with  shell_env(LD_LIBRARY_PATH=libPath):
+    createLocalDir()
     gitInfo(debug)
     storePartitionCfg()
     runOnAllNodes(copyCfg)
