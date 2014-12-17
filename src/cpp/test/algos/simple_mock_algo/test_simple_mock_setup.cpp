@@ -15,7 +15,7 @@ protected:
 
   virtual void SetUp() {
     int numPart = 3;
-    params_["MULTI"] = "1";
+    //params_["MULTI"] = "1";
     initParams("SIMPLE_MOCK");
     initLogger();
 

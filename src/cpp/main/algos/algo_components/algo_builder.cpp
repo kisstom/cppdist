@@ -49,7 +49,6 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   senderBuffer_->resizeBufferNum(numSockets);
   senderBuffer_->resizeBuffers(send_limit);
 
-
   if (params->find("MULTI") != params->end()) {
     bool isMulticast = atoi((*params)["MULTI"].c_str());
     if (isMulticast) {
@@ -70,12 +69,12 @@ Algo* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
 
   socketManager_->setMasterSocketManager(masterSocketManager_);
 
-  clientSocketManager_ = new ClientSocketManager(slaveIndex, numSlaves);
+  /*clientSocketManager_ = new ClientSocketManager(slaveIndex, numSlaves);
   clientSocketManager_->setMasterSocketManager(masterSocketManager_);
 
   clusterConfig = createClusterConfig(hostAndPort, initCommPort, numSlaves);
   clientSocketManager_->setClusterConfig(clusterConfig);
-  algo_->setClientSocketManager(clientSocketManager_);
+  algo_->setClientSocketManager(clientSocketManager_);*/
 
   storeFromBinary_ = new StoreFromBinary;
   storeFromBinary_->setDeserializer(deserializer_);
@@ -107,7 +106,7 @@ AlgoBuilder::~AlgoBuilder() {
   delete node_;
   delete algo_;
   delete masterSocketManager_;
-  delete clientSocketManager_;
+  //delete clientSocketManager_;
 }
 
 Algo* AlgoBuilder::createAlgoFromConfig(unordered_map<string, string>* params) {

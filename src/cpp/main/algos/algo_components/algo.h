@@ -66,7 +66,7 @@ public:
 
 	void setNode(Node *);
   void setSocketManager(ISocketManager*);
-  void setClientSocketManager(ClientSocketManager*);
+  //void setClientSocketManager(ClientSocketManager*);
   void setMasterSocketManager(MasterSocketManager* manager);
   void setStoreFromBinary(StoreFromBinary*);
   void setSenderBuffer(SenderBuffer*);
@@ -88,7 +88,7 @@ private:
 
 	ISocketManager* socketManager_;
 	MasterSocketManager* masterSocketManager_;
-	ClientSocketManager* clientSocketManager_;
+	//ClientSocketManager* clientSocketManager_;
 
 	SenderBuffer* senderBuffer_;
 	Node* node_;

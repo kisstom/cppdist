@@ -32,7 +32,7 @@ private:
   SenderBuffer* senderBuffer_;
   ISocketManager* socketManager_;
   MasterSocketManager* masterSocketManager_;
-  ClientSocketManager* clientSocketManager_;
+  //ClientSocketManager* clientSocketManager_;
   StoreFromBinary* storeFromBinary_;
   ClusterConfig* clusterConfig;
   INodeFactory* nodeFactory_;
