@@ -17,6 +17,6 @@ void Node::setSenderBuffer(SenderBuffer* senderBuffer) {
 	senderBuffer_ = senderBuffer;
 }
 
-void Node::setAlgo(Algo* algo) {
+void Node::setAlgo(AlgoBase* algo) {
 	algo_ = algo;
 }

@@ -17,24 +17,23 @@
 
 class AlgoBuilder {
 public:
-  Algo* buildFromConfig(unordered_map<string, string>* params,vector<std::pair<string, string> >* hostAndPort);
+  AlgoBase* buildFromConfig(unordered_map<string, string>* params,vector<std::pair<string, string> >* hostAndPort);
   ~AlgoBuilder();
-  Algo* getAlgo();
+  AlgoBase* getAlgo();
   Node* getNode();
   ClusterConfig* createClusterConfig(vector<std::pair<string, string> >* params, int, int);
   void setNodeFactory(INodeFactory*);
 private:
   Util util_;
-  Algo* createAlgoFromConfig(unordered_map<string, string>* params);
-  Algo* algo_;
+  AlgoBase* createAlgoFromConfig(unordered_map<string, string>* params);
+  AlgoBase* algo_;
   Node* node_;
   Deserializer* deserializer_;
   SenderBuffer* senderBuffer_;
   ISocketManager* socketManager_;
   MasterSocketManager* masterSocketManager_;
-  //ClientSocketManager* clientSocketManager_;
+  ClientSocketManager* clientSocketManager_;
   StoreFromBinary* storeFromBinary_;
-  ClusterConfig* clusterConfig;
   INodeFactory* nodeFactory_;
 };
 

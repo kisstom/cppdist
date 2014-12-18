@@ -12,7 +12,7 @@
 #include "runnable.h"
 #include "../../common/components/sender_buffer.h"
 
-class Algo;
+class AlgoBase;
 
 using std::string;
 
@@ -27,12 +27,12 @@ public:
 	virtual void final() = 0;
 	virtual void setPartitionIndex(int);
 	virtual void setSenderBuffer(SenderBuffer*);
-	virtual void setAlgo(Algo*);
+	virtual void setAlgo(AlgoBase*);
 	virtual ~Node() {}
 protected:
   int partIndex_;
   SenderBuffer* senderBuffer_;
-  Algo* algo_;
+  AlgoBase* algo_;
 };
 
 #endif /* NODE_H_ */
