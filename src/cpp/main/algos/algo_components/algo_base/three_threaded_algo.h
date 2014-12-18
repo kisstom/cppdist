@@ -6,7 +6,7 @@
 
 class ThreeThreadedAlgo: public AlgoBase {
 public:
-  ThreeThreadedAlgo();
+  ThreeThreadedAlgo(unordered_map<string, string>* _params);
   bool setUp();
   void run();
   void receiver();

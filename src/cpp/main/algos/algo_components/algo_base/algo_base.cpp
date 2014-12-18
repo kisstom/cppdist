@@ -4,6 +4,31 @@ AlgoBase::AlgoBase(unordered_map<string, string>* _params) {
   logger_ = &log4cpp::Category::getInstance(std::string("AlgoBase"));
   initFromParams(_params);
 
+  socketManager_ = NULL;
+  masterSocketManager_ = NULL;
+  senderBuffer_ = NULL;
+  node_ = NULL;
+  storeFromBinary_ = NULL;
+}
+
+void AlgoBase::initFromParams(unordered_map<string, string>* params) {
+  int init_slave_port;
+  strcpy(master_host_, (*params)["MASTER_HOST"].c_str());
+
+  sscanf((*params)["MASTER_PORT"].c_str(), "%d", &master_port_);
+  sscanf((*params)["INIT_SLAVE_PORT"].c_str(), "%d", &init_slave_port);
+
+  vector<long> partition_min_node_;
+  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node_);
+
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &all_node_);
+  sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes_);
+
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slave_index_);
+  sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &num_slaves_);
+  sscanf((*params)["SEND_LIMIT"].c_str(), "%d", &send_limit_);
+
+  slave_port_ = init_slave_port + slave_index_;
 }
 
 int AlgoBase::getSlaveIndex() {
@@ -51,10 +76,6 @@ void AlgoBase::setSocketManager(ISocketManager* manager) {
 void AlgoBase::setMasterSocketManager(MasterSocketManager* manager) {
   masterSocketManager_ = manager;
 }
-
-/*void AlgoBase::setClientSocketManager(ClientSocketManager* manager) {
-  clientSocketManager_ = manager;
-}*/
 
 void AlgoBase::setStoreFromBinary(StoreFromBinary* storeFromBinary) {
   storeFromBinary_ = storeFromBinary;

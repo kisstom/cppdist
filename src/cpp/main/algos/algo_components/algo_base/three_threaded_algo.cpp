@@ -5,6 +5,12 @@
 #include "../../../common/thread/thread_manager.h"
 #include "../../../common/thread/run_thread.h"
 
+ThreeThreadedAlgo::ThreeThreadedAlgo(unordered_map<string, string>* _params):
+AlgoBase(_params) {
+  logger_ = &log4cpp::Category::getInstance(std::string("ThreeThreadedAlgo"));
+  clientSocketManager_ = NULL;
+}
+
 bool ThreeThreadedAlgo::setUp() {
   logger_->info("setting up node");
 

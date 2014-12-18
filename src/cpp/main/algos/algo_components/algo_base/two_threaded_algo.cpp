@@ -4,10 +4,14 @@
 #include "../../../common/thread/sender_thread.h"
 #include "../../../common/thread/thread_manager.h"
 
+TwoThreadedAlgo::TwoThreadedAlgo(unordered_map<string, string>* _params):
+AlgoBase(_params) {
+  logger_ = &log4cpp::Category::getInstance(std::string("TwoThreadedAlgo"));
+}
+
 bool TwoThreadedAlgo::setUp() {
   logger_->info("setting up node");
 
-  int numSockets = -1;
   try {
     // Connecting to master.
     masterSocketManager_->connectToMaster(master_host_, master_port_);
@@ -90,7 +94,7 @@ void TwoThreadedAlgo::run() {
 
 void TwoThreadedAlgo::receiver() {
   logger_->info("Starting receiver.");
-  int finished = 0, socket_index, size = 0;
+  int socket_index, size = 0;
   bool is_more = true;
   int timeout = 0;
   Selector* selector = socketManager_->getSelector(timeout);

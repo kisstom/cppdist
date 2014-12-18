@@ -5,7 +5,7 @@
 
 class TwoThreadedAlgo : public AlgoBase {
 public:
-  TwoThreadedAlgo();
+  TwoThreadedAlgo(unordered_map<string, string>* _params);
   bool setUp();
   void run();
   void receiver();
