@@ -72,6 +72,7 @@ ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse_pagerank/*.o')
 
 SConscript([
     'main/dmoz/SConscript',
+    'main/algos/algo_components/algo_base/SConscript',
     'main/algos/algo_components/SConscript',
     'main/algos/algo_components/test_node_factories/SConscript'
 	],
