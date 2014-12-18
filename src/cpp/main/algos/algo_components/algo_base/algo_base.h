@@ -32,7 +32,7 @@ public:
 
   virtual bool setUp() = 0;
   virtual void run() = 0;
-  virtual void reciever() = 0;
+  virtual void receiver() = 0;
   virtual void runThreads() = 0;
   virtual void sendAndSignal(int) = 0;
 
@@ -58,7 +58,7 @@ public:
 
   virtual ~AlgoBase();
 
-private:
+protected:
   void initFromParams(unordered_map<string, string>*);
 
   char master_host_[1024];

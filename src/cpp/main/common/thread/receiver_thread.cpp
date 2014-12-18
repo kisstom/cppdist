@@ -12,8 +12,12 @@ ReceiverThread::ReceiverThread(Algo* algo) {
 	logger_ = &log4cpp::Category::getInstance(std::string("ReceiverThread"));
 }
 
-void ReceiverThread::main() {
-	algo_->receiver();
+ReceiverThread::ReceiverThread(AlgoBase* algoBase) {
+  algoBase_ = algoBase;
+  logger_ = &log4cpp::Category::getInstance(std::string("ReceiverThread"));
 }
 
+void ReceiverThread::main() {
+	algoBase_->receiver();
+}
 
