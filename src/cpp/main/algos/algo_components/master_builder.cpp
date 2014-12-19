@@ -7,6 +7,11 @@
 
 #include "master_builder.h"
 
+
+MasterBuilder::MasterBuilder() {
+  logger_ = &log4cpp::Category::getInstance(std::string("MasterBuilder"));
+}
+
 MasterBase* MasterBuilder::buildFromConfig(unordered_map<string, string>* params) {
 	string masterType = (*params)["MASTER_TYPE"];
 	InnerMasterFactory innerMasterFactory;

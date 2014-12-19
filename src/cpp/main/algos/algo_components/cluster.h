@@ -8,7 +8,7 @@
 #ifndef CLUSTER_H_
 #define CLUSTER_H_
 
-//#include <tr1/unordered_map>
+#include <tr1/unordered_map>
 #include <string>
 #include <vector>
 

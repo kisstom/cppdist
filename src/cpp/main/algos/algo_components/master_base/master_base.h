@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "../../../common/components/socket/socket.h"
-//#include "../inner_master.h"
+#include "../inner_master.h"
 #include "../runnable.h"
 #include "slave.h"
 

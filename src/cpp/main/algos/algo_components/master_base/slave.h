@@ -1,6 +1,8 @@
 #ifndef SLAVE_H_
 #define SLAVE_H_
 
+class SocketConnection;
+
 struct Slave {
   int port;
   char ip[1024];

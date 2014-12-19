@@ -11,6 +11,7 @@
 #include <string>
 #include "runnable.h"
 #include "../../common/components/sender_buffer.h"
+#include "algo_base/algo_base.h"
 
 class AlgoBase;
 

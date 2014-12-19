@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 
   initLogger(params);
   MasterBuilder builder;
-  Master* master = builder.buildFromConfig(params);
+  MasterBase* master = builder.buildFromConfig(params);
   if (NULL == master) {
     fprintf(stderr, "Error creating master. Exiting.");
   }

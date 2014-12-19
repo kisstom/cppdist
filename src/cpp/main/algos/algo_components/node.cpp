@@ -6,7 +6,7 @@
  */
 
 #include "node.h"
-#include "algo.h"
+#include "algo_base/algo_base.h"
 // TODO ezek mind legyenek pure virtualisak
 
 void Node::setPartitionIndex(int partIndex) {

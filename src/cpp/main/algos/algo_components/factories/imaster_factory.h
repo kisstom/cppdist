@@ -3,13 +3,12 @@
 
 //#include "../master_base/master_base.h"
 #include <string>
-#include <tr1/unordered_map.h>
+#include <tr1/unordered_map>
 
 using std::string;
-//using std::tr1::unordered_map;
+using std::tr1::unordered_map;
 
 class MasterBase;
-
 
 class IMasterFactory {
 public:

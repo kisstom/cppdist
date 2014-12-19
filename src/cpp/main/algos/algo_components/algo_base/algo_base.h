@@ -26,6 +26,8 @@
 
 using std::tr1::unordered_map;
 
+class Node;
+
 class AlgoBase: public Runnable {
 public:
   AlgoBase(unordered_map<string, string>* _params);

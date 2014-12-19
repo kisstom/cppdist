@@ -9,7 +9,7 @@
 #define INNER_MASTER_H_
 
 #include <string>
-//#include "master_base/master_base.h"
+#include "master_base/master_base.h"
 #include "log4cpp/Category.hh"
 
 using std::string;

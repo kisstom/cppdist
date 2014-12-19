@@ -11,6 +11,7 @@
 #include "master_base/master_base.h"
 #include "inner_master_factory.h"
 #include "factories/imaster_factory.h"
+#include "log4cpp/Category.hh"
 
 using std::string;
 
@@ -21,6 +22,7 @@ public:
 
   ~MasterBuilder() {}
 private:
+  log4cpp::Category* logger_;
   IMasterFactory* masterFactory;
 };
 
