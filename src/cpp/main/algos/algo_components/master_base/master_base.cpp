@@ -4,7 +4,7 @@
 
 using std::vector;
 
-MasterBase::MasterBase(int master_port, vector<Slave>* slaves, long numNodes, bool _isMulti)
+MasterBase::MasterBase(int master_port, vector<Slave>* slaves, long numNodes)
 {
   master_port_ = master_port;
   slaves_ = slaves;
@@ -12,7 +12,6 @@ MasterBase::MasterBase(int master_port, vector<Slave>* slaves, long numNodes, bo
   numNodes_ = numNodes;
   master_socket_ = NULL;
   innerMaster_ = NULL;
-  isMulti = _isMulti;
 }
 
 MasterBase::~MasterBase()

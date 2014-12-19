@@ -21,7 +21,7 @@ class InnerMaster;
 
 class MasterBase : public Runnable {
   public:
-    MasterBase(int, vector<Slave>*, long, bool);
+    MasterBase(int, vector<Slave>*, long);
     virtual ~MasterBase();
     virtual void run();
     virtual void WaitForAccepts();
@@ -39,7 +39,6 @@ class MasterBase : public Runnable {
     virtual long getNumNodes();
   protected:
     long numNodes_;
-    bool isMulti;
     InnerMaster* innerMaster_;
     int master_port_;
     char master_host_[1024];
