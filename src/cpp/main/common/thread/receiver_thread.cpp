@@ -7,10 +7,10 @@
 
 #include "receiver_thread.h"
 
-ReceiverThread::ReceiverThread(Algo* algo) {
+/*ReceiverThread::ReceiverThread(Algo* algo) {
 	algo_ = algo;
 	logger_ = &log4cpp::Category::getInstance(std::string("ReceiverThread"));
-}
+}*/
 
 ReceiverThread::ReceiverThread(AlgoBase* algoBase) {
   algoBase_ = algoBase;

@@ -1,4 +1,7 @@
+#include <cstdlib>
+#include <cmath>
 #include "sender_buffer_factory.h"
+
 
 SenderBuffer* SenderBufferFactory::createSenderBuffer(unordered_map<string, string>* params) {
   bool isMulticast;

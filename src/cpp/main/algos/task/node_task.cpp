@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
   builder.setNodeFactory(nodeFactory);
 
   try {
-    Algo* algo = builder.buildFromConfig(params, hostAndPort);
+    AlgoBase* algo = builder.buildFromConfig(params, hostAndPort);
 
     if (algo->setUp()) {
       algo->run();

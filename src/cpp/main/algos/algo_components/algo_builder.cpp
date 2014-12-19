@@ -7,22 +7,17 @@
 
 #include "algo_builder.h"
 #include "factories/algo_factory.h"
+#include "algo_base/three_threaded_algo.h"
 #include "../../common/components/socket/multicast_socket_manager.h"
 #include <cstdlib>
 #include <cmath>
 
 AlgoBase* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
     vector<std::pair<string, string> >* hostAndPort) {
-	DeserializerFactory deserializerFactory;
-	AlgoFactory algoFactory;
-	SocketManagerFactory socketManagerFactory;
-	SenderBufferFactory senderBufferFactory;
-	StoreFromBinaryFactory storeFromBinaryFactory;
 
 	int init_slave_port, slave_index, slave_port;
 	sscanf((*params)["INIT_SLAVE_PORT"].c_str(), "%d", &init_slave_port);
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slave_index);
-	// Util ra?
 	slave_port = init_slave_port + slave_index;
 
 	algo_ = algoFactory.createAlgo(params);
@@ -41,19 +36,17 @@ AlgoBase* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   masterSocketManager_ = new MasterSocketManager;
   masterSocketManager_->setPort(slave_port);
   algo_->setMasterSocketManager(masterSocketManager_);
-
   socketManager_->setMasterSocketManager(masterSocketManager_);
+
   storeFromBinary_ = storeFromBinaryFactory.createStoreFromBinary(params);
   storeFromBinary_->setDeserializer(deserializer_);
 
-  clientSocketManager_ = NULL;
-  if (params->find("MULTI") != 0 &&
-      atoi((*params)["MULTI"]) == 1) {
-    ClientSocketManagerFactory clientSocketManagerFactory;
-    clientSocketManager_ = clientSocketManagerFactory.createClientSocketManager(params, hostAndPort);
+  if (params->find("MULTI") != params->end() && atoi((*params)["MULTI"].c_str()) == 1) {
+    clientSocketManager_ = clientSocketManagerFactory.
+        createClientSocketManager(params, hostAndPort);
     clientSocketManager_->setMasterSocketManager(masterSocketManager_);
-    // TODO cast?
-    algo_->setClientSocketManager(clientSocketManager_);
+    ThreeThreadedAlgo* tmpAlgo = dynamic_cast<ThreeThreadedAlgo*>(algo_);
+    tmpAlgo->setClientSocketManager(clientSocketManager_);
   }
 
   algo_->setStoreFromBinary(storeFromBinary_);

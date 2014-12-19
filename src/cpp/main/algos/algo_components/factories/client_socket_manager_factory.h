@@ -1,6 +1,9 @@
 #ifndef CLIENT_SOCKET_MANAGER_FACTORY_H_
 #define CLIENT_SOCKET_MANAGER_FACTORY_H_
 
+#include "../../../common/components/socket/client_socket_manager.h"
+#include "../../../common/components/socket/cluster_config.h"
+#include "../../../common/util/util.h"
 #include <tr1/unordered_map>
 #include <vector>
 #include <string>

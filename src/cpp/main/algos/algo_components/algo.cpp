@@ -213,7 +213,7 @@ void Algo::initFromMaster() {
 
 void Algo::runThreads() {
 	logger_->info("run threads");
-	ReceiverThread *receiver = new ReceiverThread(this);
+	ReceiverThread *receiver = NULL; //new ReceiverThread(this);
 	SenderThread *sender = new SenderThread(node_);
 	//RunThread* slaveCommunication = new RunThread(clientSocketManager_);
 

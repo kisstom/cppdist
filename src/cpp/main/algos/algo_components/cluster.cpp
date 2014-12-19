@@ -36,7 +36,7 @@ Node* Cluster::getNode(int slaveIndex) {
 	return builders_[slaveIndex]->getNode();
 }
 
-Algo* Cluster::getAlgo(int slaveIndex) {
+AlgoBase* Cluster::getAlgo(int slaveIndex) {
   return builders_[slaveIndex]->getAlgo();
 }
 
@@ -65,7 +65,7 @@ void Cluster::initMaster() {
 void Cluster::setUp() {
   logger_->info("Starting cluster.");
   SetupThread* masterThread = NULL;
-  Algo* algo = NULL;
+  AlgoBase* algo = NULL;
 
   vector<SetupThread*> nodes;
   masterThread = new SetupThread(master_);
@@ -92,7 +92,7 @@ void Cluster::setUp() {
 void Cluster::start() {
 	logger_->info("Starting cluster.");
 	MainThread* masterThread;
-	Algo* algo;
+	AlgoBase* algo;
 
 	vector<MainThread*> nodes;
 	masterThread = new MainThread(master_);

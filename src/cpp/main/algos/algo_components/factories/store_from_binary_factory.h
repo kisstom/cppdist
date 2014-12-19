@@ -1,6 +1,7 @@
 #ifndef STORE_FROM_BINARY_FACTORY_H_
 #define STORE_FROM_BINARY_FACTORY_H_
 
+#include "../../../common/components/store_from_binary.h"
 #include <tr1/unordered_map>
 #include <string>
 

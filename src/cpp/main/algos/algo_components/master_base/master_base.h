@@ -25,7 +25,6 @@ class MasterBase : public Runnable {
     virtual ~MasterBase();
     virtual void run();
     virtual void WaitForAccepts();
-    virtual void SendInfoToNodes();
     virtual bool WaitForNodes();
 
     virtual void MakeNodeConnections() = 0;
@@ -38,7 +37,6 @@ class MasterBase : public Runnable {
     virtual void setInnerMaster(InnerMaster*);
     virtual void sendMessageForAllNodes(char* msg);
     virtual long getNumNodes();
-    virtual void SetUpClientManager();
   protected:
     long numNodes_;
     bool isMulti;

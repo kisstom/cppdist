@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <cmath>
 #include "store_from_binary_factory.h"
 
 StoreFromBinary* StoreFromBinaryFactory::createStoreFromBinary(unordered_map<string, string>* params) {

@@ -51,6 +51,7 @@ public:
   void setSenderBuffer(SenderBuffer* senderBuffer);
   void setMasterSocketManager(MasterSocketManager* manager);
   void setStoreFromBinary(StoreFromBinary* storeFromBinary);
+  void setPartitionMinNodes(vector<long>*);
 
   // Calling Node object.
   void final();
@@ -65,7 +66,7 @@ protected:
   int master_port_;
   int slave_port_;
 
-  vector<long> partition_min_node_;
+  vector<long>* partition_min_node_;
   long min_node_;
 
   long all_node_;

@@ -32,7 +32,7 @@ public:
 	void start();
 	void setUp();
 	Node* getNode(int);
-	Algo* getAlgo(int);
+	AlgoBase* getAlgo(int);
 	~Cluster();
 private:
 	void initMaster();

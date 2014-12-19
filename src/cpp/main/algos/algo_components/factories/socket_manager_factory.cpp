@@ -1,4 +1,8 @@
+#include <cstdlib>
+
 #include "socket_manager_factory.h"
+#include "../../../common/components/socket/socket_manager.h"
+#include "../../../common/components/socket/multicast_socket_manager.h"
 
 ISocketManager* SocketManagerFactory::createSocketManager(unordered_map<string, string>* params) {
   ISocketManager* socketManager = NULL;

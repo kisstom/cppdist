@@ -1,6 +1,7 @@
 #ifndef SOCKET_MANAGER_FACTORY_H_
 #define SOCKET_MANAGER_FACTORY_H_
 
+#include "../../../common/components/socket/isocket/isocket_manager.h"
 #include <tr1/unordered_map>
 #include <string>
 

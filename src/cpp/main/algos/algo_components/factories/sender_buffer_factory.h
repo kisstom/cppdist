@@ -1,6 +1,7 @@
 #ifndef SENDER_BUFFER_FACTORY_H_
 #define SENDER_BUFFER_FACTORY_H_
 
+#include "../../../common/components/sender_buffer.h"
 #include <tr1/unordered_map>
 #include <string>
 

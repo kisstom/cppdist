@@ -74,6 +74,7 @@ SConscript([
     'main/dmoz/SConscript',
     'main/algos/algo_components/algo_base/SConscript',
     'main/algos/algo_components/master_base/SConscript',
+    'main/algos/algo_components/factories/SConscript',
     'main/algos/algo_components/SConscript',
     'main/algos/algo_components/test_node_factories/SConscript'
 	],
@@ -81,6 +82,9 @@ SConscript([
 
 ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/test_node_factories/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/algo_base/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/master_base/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/factories/*.o')
 
 SConscript([
     'main/algos/task/SConscript'
