@@ -2,7 +2,9 @@
 #define TEST_MASTER_FACTORY_H_
 
 #include "imaster_factory.h"
+#include "../master_base/master_base.h"
 #include <vector>
+#include "log4cpp/Category.hh"
 
 using std::vector;
 

@@ -27,3 +27,7 @@ MasterBase* MasterBuilder::buildFromConfig(unordered_map<string, string>* params
 
 	return master;
 }
+
+void MasterBuilder::setMasterFactory(IMasterFactory* _masterFactory) {
+  masterFactory = _masterFactory;
+}

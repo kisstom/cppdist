@@ -4,6 +4,7 @@
 #include <tr1/unordered_map>
 #include <vector>
 
+#include <gtest/gtest_prod.h>
 #include "../node.h"
 #include "../runnable.h"
 #include "../../../common/components/sender_buffer.h"
@@ -15,7 +16,6 @@
 #include <sstream>
 #include "log4cpp/PatternLayout.hh"
 #include <limits.h>
-#include <gtest/gtest_prod.h>
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -84,6 +84,9 @@ protected:
   Node* node_;
   StoreFromBinary* storeFromBinary_;
   log4cpp::Category* logger_;
+
+private:
+  FRIEND_TEST(SimpleMockTestSetup, testSetup);
 };
 
 

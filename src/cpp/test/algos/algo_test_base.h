@@ -10,7 +10,8 @@
 
 #include <gtest/gtest.h>
 #include "../../main/common/util/logger_factory.h"
-#include "../../main/algos/algo_components/test_master_builder.h"
+#include "../../main/algos/algo_components/factories/test_master_factory.h"
+#include "../../main/algos/algo_components/master_builder.h"
 #include "../../main/algos/algo_components/test_simrank_odd_even_node_factory.h"
 
 class AlgoTestBase: public ::testing::Test  {
@@ -152,12 +153,14 @@ protected:
   }
 
   void setUpBuilder() {
-    masterBuilder_ = new TestMasterBuilder;
-    masterBuilder_->setTestSlaveConfig(&slaves_);
+    TestMasterFactory* masterFactory_ = new TestMasterFactory;
+    masterFactory_->setTestSlaveConfig(&slaves_);
+    masterBuilder_ = new MasterBuilder;
+    masterBuilder_->setMasterFactory(masterFactory_);
   }
 
   vector<INodeFactory*> nodeFactories_;
-  TestMasterBuilder* masterBuilder_;
+  MasterBuilder* masterBuilder_;
   vector<Slave> slaves_;
   unordered_map<string, string> params_;
   vector<unordered_map<string, string> > nodeParams_;

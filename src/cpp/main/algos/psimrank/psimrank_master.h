@@ -9,7 +9,6 @@
 #define PSIMRANK_MASTER_H_
 
 #include "../algo_components/inner_master.h"
-#include "../algo_components/master.h"
 #include "gmp.h"
 #include "gmpxx.h"
 #include "psimrank_random_generator_iface.h"

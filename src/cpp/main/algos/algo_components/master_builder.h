@@ -19,7 +19,7 @@ class MasterBuilder {
 public:
   MasterBuilder();
 	MasterBase* buildFromConfig(unordered_map<string, string>* params);
-
+  void setMasterFactory(IMasterFactory*);
   ~MasterBuilder() {}
 private:
   log4cpp::Category* logger_;

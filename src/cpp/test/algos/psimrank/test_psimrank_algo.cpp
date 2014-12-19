@@ -7,9 +7,6 @@
 
 #include <gtest/gtest.h>
 
-
-#include "../../../main/algos/algo_components/algo.h"
-#include "../../../main/algos/algo_components/master.h"
 #include "../../../main/common/thread/node_thread.h"
 #include "../../../main/algos/simple_mock_algo/simple_mock_node.h"
 #include "../../../main/algos/simple_mock_algo/simple_mock_deserializer.h"
