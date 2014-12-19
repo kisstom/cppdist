@@ -9,7 +9,6 @@
 #define SIMRANK_STORE_FIRST_NODE_H_
 
 #include "../algo_components/node.h"
-#include "../algo_components/algo.h"
 #include <tr1/unordered_map>
 #include <vector>
 #include "../../common/graph/edgelist_container.h"

@@ -10,7 +10,6 @@
 
 #include "../algo_components/node.h"
 #include "../../../main/common/components/sender_buffer.h"
-#include "../algo_components/algo.h"
 #include "log4cpp/Category.hh"
 
 class SimpleMockNode : public Node {
@@ -27,9 +26,6 @@ public:
 private:
 	int iteration_;
 
-	//int partIndex_;
-	//SenderBuffer* senderBuffer_;
-	//Algo* algo_;
 	log4cpp::Category* logger_;
 };
 

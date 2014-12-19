@@ -8,7 +8,7 @@
 #include "cluster.h"
 
 Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
-		vector<INodeFactory*> nodeFactories, IMasterBuilder* masterBuilder,
+		vector<INodeFactory*> nodeFactories, MasterBuilder* masterBuilder,
 		vector<std::pair<string, string> >* clusterNodeParams) {
 	//numSlaves_ = numSlaves;
 	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves_);
@@ -17,6 +17,7 @@ Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<str
 	clusterNodeParams_ = clusterNodeParams;
 	nodeFactories_ = nodeFactories;
 	masterBuilder_ = masterBuilder;
+	master_ = NULL;
 	logger_ = &log4cpp::Category::getInstance(std::string("Cluster"));
 }
 

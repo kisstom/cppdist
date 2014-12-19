@@ -8,7 +8,6 @@
 #ifndef CUSTOM_NON_BLOCK_NODE_H_
 #define CUSTOM_NON_BLOCK_NODE_H_
 
-#include "../algo_components/algo.h"
 #include <tr1/unordered_map>
 #include <map>
 #include <vector>

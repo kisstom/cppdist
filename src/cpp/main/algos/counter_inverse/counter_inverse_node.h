@@ -8,7 +8,6 @@
 #ifndef COUNTER_INVERSE_NODE_H_
 #define COUNTER_INVERSE_NODE_H_
 
-#include "../algo_components/algo.h"
 #include "../algo_components/node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"

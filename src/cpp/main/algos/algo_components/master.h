@@ -25,14 +25,14 @@ using std::vector;
 
 class InnerMaster;
 
-struct Slave {
+/*struct Slave {
   int port;
   //char path[1024];
   char ip[1024];
   SocketConnection* socket;
   long minNode;
   long numNode;
-};
+};*/
 
 class Master : public Runnable {
   public:

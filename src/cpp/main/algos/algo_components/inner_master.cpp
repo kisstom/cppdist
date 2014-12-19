@@ -21,7 +21,7 @@ bool InnerMaster::nextIter() {
   return true;
 }
 
-void InnerMaster::setMaster(Master* master) {
+void InnerMaster::setMaster(MasterBase* master) {
   master_ = master;
 }
 

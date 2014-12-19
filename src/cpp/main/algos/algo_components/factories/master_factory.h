@@ -2,14 +2,14 @@
 #define MASTER_FACTORY_H_
 
 #include "log4cpp/Category.hh"
-#include "../master_base/master_base.h"
+#include "imaster_factory.h"
 #include <tr1/unordered_map>
 #include <string>
 
 using std::tr1::unordered_map;
 using std::string;
 
-class MasterFactory {
+class MasterFactory : public IMasterFactory {
 public:
   MasterFactory();
   MasterBase* createMaster(unordered_map<string, string>* params);

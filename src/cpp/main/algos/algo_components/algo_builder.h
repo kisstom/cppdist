@@ -8,7 +8,6 @@
 #ifndef ALGO_BUILDER_H_
 #define ALGO_BUILDER_H_
 
-#include "algo.h"
 #include "../../common/util/cfg_reader.h"
 #include "../../common/util/config/INIReader.h"
 #include "node_factory.h"

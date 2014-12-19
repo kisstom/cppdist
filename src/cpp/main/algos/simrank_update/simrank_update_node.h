@@ -15,7 +15,6 @@
 #include "../algo_components/node.h"
 //#include "simrank_update_deserializer.h"
 #include "../../common/components/mutex.h"
-#include "../algo_components/algo.h"
 #include "../../common/components/fingerprint_reader.h"
 
 #include "log4cpp/Category.hh"

@@ -19,7 +19,6 @@
 #include "../../common/components/mutex.h"
 #include "../../common/graph/edge_list_builder.h"
 #include "../algo_components/node.h"
-#include "../algo_components/algo.h"
 #include "../../common/util/uint128_t.h"
 
 using std::string;

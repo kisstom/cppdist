@@ -8,26 +8,24 @@
 #ifndef CLUSTER_H_
 #define CLUSTER_H_
 
-#include <tr1/unordered_map>
+//#include <tr1/unordered_map>
 #include <string>
 #include <vector>
 
 #include "algo_builder.h"
-#include "master.h"
-#include "test_master_builder.h"
-#include "IMasterBuilder.h"
+#include "master_builder.h"
 #include "../../common/thread/main_thread.h"
 #include "../../common/thread/setup_thread.h"
 #include "log4cpp/Category.hh"
 
-using std::tr1::unordered_map;
+//using std::tr1::unordered_map;
 using std::string;
 using std::vector;
 
 class Cluster {
 public:
 	Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
-			vector<INodeFactory*>, IMasterBuilder*, vector<std::pair<string, string> >*);
+			vector<INodeFactory*>, MasterBuilder*, vector<std::pair<string, string> >*);
 	void init();
 	void start();
 	void setUp();
@@ -43,9 +41,9 @@ private:
 	vector<unordered_map<string, string> >* nodeParams_;
 	vector<std::pair<string, string> >* clusterNodeParams_;
 	vector<AlgoBuilder*> builders_;
-	Master* master_;
+	MasterBase* master_;
 	vector<INodeFactory*> nodeFactories_;
-	IMasterBuilder* masterBuilder_;
+	MasterBuilder* masterBuilder_;
 	log4cpp::Category* logger_;
 };
 

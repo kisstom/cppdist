@@ -8,7 +8,6 @@
 #ifndef CLEVER_PAGERANK_NODE_H_
 #define CLEVER_PAGERANK_NODE_H_
 
-#include "../algo_components/algo.h"
 #include <tr1/unordered_map>
 #include <map>
 #include <vector>

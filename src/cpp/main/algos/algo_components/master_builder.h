@@ -1,30 +1,27 @@
 /*
- * master_builder.h
+ * IMasterBuilder.h
  *
- *  Created on: 2013.08.15.
+ *  Created on: 2014.02.04.
  *      Author: kisstom
  */
 
 #ifndef MASTER_BUILDER_H_
 #define MASTER_BUILDER_H_
 
-#include "../../common/util/cfg_reader.h"
-#include "master.h"
-#include "IMasterBuilder.h"
-#include <log4cpp/Category.hh>
-#include <vector>
+#include "master_base/master_base.h"
+#include "inner_master_factory.h"
+#include "factories/imaster_factory.h"
 
+using std::string;
 
-class MasterBuilder : public IMasterBuilder {
+class MasterBuilder {
 public:
-	MasterBuilder();
-	//Master* buildFromConfig(unordered_map<string, string>* params);
-protected:
-	Master* createMaster(unordered_map<string, string>*);
+  MasterBuilder();
+	MasterBase* buildFromConfig(unordered_map<string, string>* params);
+
+  ~MasterBuilder() {}
 private:
-	vector<Slave>* readSlaveConfigs(char* cfg, int num_slaves);
-	log4cpp::Category* logger_;
+  IMasterFactory* masterFactory;
 };
 
-
-#endif /* MASTER_BUILDER_H_ */
+#endif /* MASTERBUILDER_H_ */

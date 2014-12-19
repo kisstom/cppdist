@@ -1,7 +1,6 @@
 #ifndef PAGERANK_NON_BLOCK_NODE_H_
 #define PAGERANK_NON_BLOCK_NODE_H_
 
-#include "../algo_components/algo.h"
 #include "../../common/graph/edgelist_container.h"
 #include <tr1/unordered_map>
 #include <map>
