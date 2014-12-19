@@ -7,7 +7,7 @@
 #include "log4cpp/Category.hh"
 #include "../algo_base/algo_base.h"
 
-using std::tr1::unordered_map;
+//using std::tr1::unordered_map;
 using std::string;
 using std::vector;
 
