@@ -84,9 +84,7 @@ protected:
   Node* node_;
   StoreFromBinary* storeFromBinary_;
   log4cpp::Category* logger_;
-
-private:
-  FRIEND_TEST(SimpleMockTestSetup, testSetup);
+  friend class SimpleMockTestSetup;
 };
 
 
