@@ -6,6 +6,7 @@
  */
 
 #include "../algo_components/master_builder.h"
+#include "../algo_components/factories/master_factory.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -50,6 +51,7 @@ int main(int argc, char* argv[]) {
 
   initLogger(params);
   MasterBuilder builder;
+  builder.setMasterFactory(new MasterFactory);
   MasterBase* master = builder.buildFromConfig(params);
   if (NULL == master) {
     fprintf(stderr, "Error creating master. Exiting.");

@@ -15,17 +15,18 @@
 
 namespace {
 
-class SimpleMockTestRun: public AlgoTestBase {
+class SimpleMockTestMultiRun: public AlgoTestBase {
 protected:
 
-  SimpleMockTestRun() {
+  SimpleMockTestMultiRun() {
   }
 
-  virtual ~SimpleMockTestRun() {
+  virtual ~SimpleMockTestMultiRun() {
   }
 
   virtual void SetUp() {
     initLogger();
+    params_["MULTI"] = "1";
     initParams("SIMPLE_MOCK");
 
     addNodeFactory(2);
@@ -50,7 +51,7 @@ protected:
 };
 
 
-TEST_F(SimpleMockTestRun, test) {
+TEST_F(SimpleMockTestMultiRun, test) {
   Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_, &clusterNodeParams, &partitionMinNodes_);
   cluster.init();
   cluster.start();

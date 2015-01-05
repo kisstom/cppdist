@@ -14,6 +14,11 @@ Node* TestCounterInverseNodeFactory::createNodeFromConfig(unordered_map<string, 
   node = helper.initCounterInverseNode(params);
   node->setEdgeListContainer(container);
   node->setCounters(numSlaves);
+
+  int slaveIndex;
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  node->setPartitionIndex(slaveIndex);
+
   return node;
 }
 

@@ -17,6 +17,10 @@ Node* TestBitpropNodeFactory::createNodeFromConfig(unordered_map<string, string>
   node->setRandomBits(randomBits);
   node->initBuffers();
 
+  int slaveIndex;
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  node->setPartitionIndex(slaveIndex);
+
   return node;
 }
 

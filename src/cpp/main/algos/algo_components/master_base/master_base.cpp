@@ -122,6 +122,7 @@ bool MasterBase::WaitForNodes()
       logger_->info("Error! Received from node %d msg: %s.", i, msg);
       throw NodeFailException("Node failing while master waiting for it.");
     }
+    logger_->info("Slave %d finished iteration.", i);
   }
   logger_->info("Number of finished: %d numslaves %d", finished, (int)slaves_->size());
   return (finished != slaves_->size()) ;

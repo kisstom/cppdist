@@ -36,7 +36,7 @@ void SimpleMockNode::sender() {
 		}
 	}
 	algo_->sendAndSignal(partIndex_);
-	logger_->info("Sender finished.");
+	logger_->info("Sender %d finished.", partIndex_);
 }
 
 void SimpleMockNode::update(int imsg, long lmsg) {

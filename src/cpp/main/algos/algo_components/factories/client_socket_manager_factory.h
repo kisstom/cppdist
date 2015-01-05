@@ -7,6 +7,7 @@
 #include <tr1/unordered_map>
 #include <vector>
 #include <string>
+#include "log4cpp/Category.hh"
 
 using std::tr1::unordered_map;
 using std::string;
@@ -15,6 +16,7 @@ using std::vector;
 
 class ClientSocketManagerFactory {
 public:
+  ClientSocketManagerFactory();
   ClientSocketManager* createClientSocketManager(unordered_map<string, string>* params,
       vector<std::pair<string, string> >* hostAndPort);
 private:
@@ -22,6 +24,7 @@ private:
       int initSlavePort, int numSlaves);
 
   Util util_;
+  log4cpp::Category* logger;
 };
 
 

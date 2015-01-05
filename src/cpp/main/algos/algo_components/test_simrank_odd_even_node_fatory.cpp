@@ -26,6 +26,10 @@ Node* TestSimrankOddEvenNodeFactory::createNodeFromConfig(unordered_map<string, 
     logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
   }
 
+  int slaveIndex;
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  node->setPartitionIndex(slaveIndex);
+
 	return node;
 }
 

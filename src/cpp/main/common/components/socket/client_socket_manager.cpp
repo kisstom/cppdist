@@ -25,17 +25,24 @@ ClientSocketManager::~ClientSocketManager () {
 
 bool ClientSocketManager::setUp() {
   char msg[1024];
-  masterSocketManager->recvFromMaster(1024, msg);
+  //masterSocketManager->recvFromMaster(1024, msg);
   initPublisher();
+
   masterSocketManager->sendReadyToMaster();
 
-  masterSocketManager->recvFromMaster(1024, msg);
+  int size = masterSocketManager->recvFromMaster(1024, msg);
+  msg[size] = '\0';
+  logger->info("Received %s.", msg);
+
   initSubscribes();
   masterSocketManager->sendReadyToMaster();
+
+  logger->info("Set up done.");
   return true;
 }
 
 void ClientSocketManager::initPublisher() {
+  logger->info("Initing publishers.");
   char ip[1024];
   publisherSocket->setsockopt(ZMQ_SNDHWM, &sendHWM, sizeof(sendHWM));
   logger->info("Publishing on port %d.", clusterConfig->getPort(selfIndex));
@@ -48,6 +55,7 @@ void ClientSocketManager::setClusterConfig(ClusterConfig* _clusterConfig) {
 }
 
 void ClientSocketManager::initSubscribes() {
+  logger->info("Initing subscribers.");
   listenerSockets.resize(numCluster);
 
   char ip[1024];
@@ -146,7 +154,7 @@ void ClientSocketManager::readFromPoll() {
 
     if (pollItems[actIndex].revents & ZMQ_POLLIN) {
       listenerSockets[i]->recv(&m);
-      logger->info("Received from poll %s.", (char*) m.data());
+      logger->info("Received from poll %s in %d.", (char*) m.data(), selfIndex);
       found = true;
       break;
     }
@@ -165,7 +173,7 @@ void ClientSocketManager::run() {
     if (isFinished()) break;
   }
 
-  logger->info("Finished ClientSocketManager.");
+  logger->info("Finished ClientSocketManager at node %d.", selfIndex);
 }
 
 void ClientSocketManager::resetFinishCounter() {
@@ -176,6 +184,7 @@ void ClientSocketManager::resetFinishCounter() {
 }
 
 bool ClientSocketManager::isFinished() {
+  logger->info("is finished %d %d", numCluster-1, finishCounter);
   bool isFinished;
 
   mutex.lock();

@@ -85,6 +85,7 @@ protected:
   StoreFromBinary* storeFromBinary_;
   log4cpp::Category* logger_;
   friend class SimpleMockTestSetup;
+  friend class SimpleMockTestMultiSetup;
 };
 
 

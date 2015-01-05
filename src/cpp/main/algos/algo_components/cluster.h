@@ -25,7 +25,7 @@ using std::vector;
 class Cluster {
 public:
 	Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
-			vector<INodeFactory*>, MasterBuilder*, vector<std::pair<string, string> >*);
+			vector<INodeFactory*>, MasterBuilder*, vector<std::pair<string, string> >*, vector<long>*);
 	void init();
 	void start();
 	void setUp();
@@ -44,6 +44,7 @@ private:
 	MasterBase* master_;
 	vector<INodeFactory*> nodeFactories_;
 	MasterBuilder* masterBuilder_;
+	vector<long>* partMinNodes;
 	log4cpp::Category* logger_;
 };
 

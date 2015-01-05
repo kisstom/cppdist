@@ -5,19 +5,19 @@
 
 //namespace {
 
-class SimpleMockTestSetup: public AlgoTestBase {
+class SimpleMockTestMultiSetup: public AlgoTestBase {
 protected:
 
 
-  SimpleMockTestSetup() {
+  SimpleMockTestMultiSetup() {
   }
 
-  virtual ~SimpleMockTestSetup() {
+  virtual ~SimpleMockTestMultiSetup() {
   }
 
   virtual void SetUp() {
     int numPart = 3;
-    //params_["MULTI"] = "1";
+    params_["MULTI"] = "1";
     initParams("SIMPLE_MOCK");
     initLogger();
 
@@ -65,7 +65,7 @@ protected:
 
 };
 
-TEST_F(SimpleMockTestSetup, testSetup) {
+TEST_F(SimpleMockTestMultiSetup, testSetup) {
   Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_, &clusterNodeParams, &partitionMinNodes_);
   cluster.init();
   cluster.setUp();

@@ -103,7 +103,7 @@ protected:
 };
 
 TEST_F(SimrankTestSmall, testRun) {
-	Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_, &clusterNodeParams);
+	Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_, &clusterNodeParams, NULL);
 	cluster.init();
 	cluster.start();
 	concat(cluster);

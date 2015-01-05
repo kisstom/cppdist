@@ -17,6 +17,10 @@ Node* TestCounterInversePagerankNodeFactory::createNodeFromConfig(unordered_map<
   node->setPointerToCounters(pointerToCounters);
   node->setNumNeighbors(numNeighbors);
 
+  int slaveIndex;
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  node->setPartitionIndex(slaveIndex);
+
   return node;
 }
 

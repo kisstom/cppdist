@@ -13,7 +13,7 @@
 #include "node_factory.h"
 #include "../../common/components/deserializer_factory.h"
 #include "../../common/components/socket/cluster_config.h"
-#include "factories/algo_factory.h"
+#include "factories/ialgo_factory.h"
 #include "factories/socket_manager_factory.h"
 #include "factories/sender_buffer_factory.h"
 #include "factories/store_from_binary_factory.h"
@@ -25,14 +25,16 @@ public:
   ~AlgoBuilder();
   AlgoBase* getAlgo();
   Node* getNode();
-  //ClusterConfig* createClusterConfig(vector<std::pair<string, string> >* params, int, int);
+
   void setNodeFactory(INodeFactory*);
+  void setAlgoFactory(IAlgoFactory*);
 private:
   Util util_;
   AlgoBase* createAlgoFromConfig(unordered_map<string, string>* params);
   AlgoBase* algo_;
   Node* node_;
   INodeFactory* nodeFactory_;
+  IAlgoFactory* algoFactory_;
 
   Deserializer* deserializer_;
   SenderBuffer* senderBuffer_;
@@ -43,7 +45,6 @@ private:
 
 
   DeserializerFactory deserializerFactory;
-  AlgoFactory algoFactory;
   SocketManagerFactory socketManagerFactory;
   SenderBufferFactory senderBufferFactory;
   StoreFromBinaryFactory storeFromBinaryFactory;

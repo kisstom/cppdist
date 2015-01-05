@@ -12,6 +12,7 @@ MulticastSocketManager::MulticastSocketManager(int _nodeIndex, int _startingHash
   clusterSize = _clusterSize;
   masterSocketManager = NULL;
   logger = &log4cpp::Category::getInstance(std::string("MulticastSocketManager"));
+  logger->info("Constructor called.");
 }
 
 MulticastSocketManager::~MulticastSocketManager() {
@@ -41,12 +42,14 @@ void MulticastSocketManager::initConnections() {
   int limit = 1024;
   char msg[1024];
 
-  masterSocketManager->recvFromMaster(limit, msg);
   initPublishers();
   masterSocketManager->sendReadyToMaster();
-  masterSocketManager->recvFromMaster(limit, msg);
+  int size = masterSocketManager->recvFromMaster(limit, msg);
+  msg[size] = '\0';
+  logger->info("Received %s", msg);
+
   initListeners();
-  masterSocketManager->sendReadyToMaster();
+  //masterSocketManager->sendReadyToMaster();
 }
 
 void MulticastSocketManager::setMasterSocketManager(

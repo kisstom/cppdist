@@ -1,6 +1,7 @@
 #include "algo_factory.h"
 #include "../algo_base/two_threaded_algo.h"
 #include "../algo_base/three_threaded_algo.h"
+#include "algo_factory_helper.h"
 #include <cstdio>
 #include <cstdlib>
 
@@ -9,12 +10,8 @@ AlgoFactory::AlgoFactory() {
 }
 
 AlgoBase* AlgoFactory::createAlgo(unordered_map<string, string>* params) {
-  AlgoBase* retval = NULL;
-  if (params->find("MULTI") != params->end()) {
-    retval = new ThreeThreadedAlgo(params);
-  }
-
-  retval = new TwoThreadedAlgo(params);
+  AlgoFactoryHelper helper;
+  AlgoBase* retval = helper.initAlgo(params);
 
   vector<long>* partitionMinNodes = readSlaveConfig(params);
   retval->setPartitionMinNodes(partitionMinNodes);

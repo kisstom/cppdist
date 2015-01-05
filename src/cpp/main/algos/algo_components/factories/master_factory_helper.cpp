@@ -24,9 +24,8 @@ MasterBase* MasterFactoryHelper::initMaster(unordered_map<string, string>* param
 
   if (params->find("MULTI") != params->end() &&
       atoi((*params)["MULTI"].c_str()) == 1) {
-    master = new ThreeThreadedMaster(master_port, slaves, numLine);
+    return new ThreeThreadedMaster(master_port, slaves, numLine);
   }
 
-  master = new TwoThreadedMaster(master_port, slaves, numLine);
-  return master;
+  return new TwoThreadedMaster(master_port, slaves, numLine);
 }

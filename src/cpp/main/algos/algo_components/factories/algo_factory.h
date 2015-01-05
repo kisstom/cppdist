@@ -6,12 +6,13 @@
 #include <vector>
 #include "log4cpp/Category.hh"
 #include "../algo_base/algo_base.h"
+#include "ialgo_factory.h"
 
 //using std::tr1::unordered_map;
 using std::string;
 using std::vector;
 
-class AlgoFactory {
+class AlgoFactory : public IAlgoFactory {
 public:
   AlgoFactory();
   AlgoBase* createAlgo(unordered_map<string, string>* params);

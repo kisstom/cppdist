@@ -39,6 +39,7 @@ SocketManager::SocketManager (int _clusterSize, int port) {
   clusterSize = _clusterSize;
   expectedFinish = clusterSize - 1;
   numFinished = -1;
+  logger_->info("Constructor called.");
 }
 
 SocketManager::~SocketManager() {

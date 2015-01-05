@@ -157,10 +157,15 @@ protected:
     masterFactory_->setTestSlaveConfig(&slaves_);
     masterBuilder_ = new MasterBuilder;
     masterBuilder_->setMasterFactory(masterFactory_);
+
+    for (int i = 0; i < (int) slaves_.size(); ++i) {
+      partitionMinNodes_.push_back(slaves_[i].minNode);
+    }
   }
 
   vector<INodeFactory*> nodeFactories_;
   MasterBuilder* masterBuilder_;
+  vector<long> partitionMinNodes_;
   vector<Slave> slaves_;
   unordered_map<string, string> params_;
   vector<unordered_map<string, string> > nodeParams_;

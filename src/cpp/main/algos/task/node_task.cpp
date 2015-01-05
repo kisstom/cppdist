@@ -6,6 +6,7 @@
  */
 
 #include "../algo_components/algo_builder.h"
+#include "../algo_components/factories/algo_factory.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -68,6 +69,7 @@ int main(int argc, char* argv[]) {
   AlgoBuilder builder;
   INodeFactory* nodeFactory = new NodeFactory;
   builder.setNodeFactory(nodeFactory);
+  builder.setAlgoFactory(new AlgoFactory);
 
   try {
     AlgoBase* algo = builder.buildFromConfig(params, hostAndPort);

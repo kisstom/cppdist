@@ -4,12 +4,21 @@ ThreeThreadedMaster::ThreeThreadedMaster(int master_port, vector<Slave>* slaves,
 MasterBase(master_port, slaves, numNodes) {}
 
 void ThreeThreadedMaster::MakeNodeConnections() {
-  sendMessageForAllNodes("HAVA NAGILA");
+  char fakeMessage[1024] = "HAVA NAGILA";
+  // Waiting for initing publishers.
   WaitForNodes();
-  sendMessageForAllNodes("HAVA NAGILA");
+
+  // Inits listeners.
+  sendMessageForAllNodes(fakeMessage);
+
+  // ... initing listeners...
+  // ... initing publishers ...
+  // waiting for publishers
   WaitForNodes();
-  sendMessageForAllNodes("HAVA NAGILA");
-  WaitForNodes();
-  sendMessageForAllNodes("HAVA NAGILA");
+
+  // initing subscribers
+  sendMessageForAllNodes(fakeMessage);
+
+  // waiting for subscribers
   WaitForNodes();
 }

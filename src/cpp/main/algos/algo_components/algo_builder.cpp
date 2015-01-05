@@ -20,7 +20,7 @@ AlgoBase* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slave_index);
 	slave_port = init_slave_port + slave_index;
 
-	algo_ = algoFactory.createAlgo(params);
+	algo_ = algoFactory_->createAlgo(params);
   node_ = nodeFactory_->createNodeFromConfig(params);
 
   deserializer_ = deserializerFactory.createDeserializerFromConfig(params, node_);
@@ -56,6 +56,10 @@ AlgoBase* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
 
 void AlgoBuilder::setNodeFactory(INodeFactory* nodeFactory) {
 	nodeFactory_ = nodeFactory;
+}
+
+void AlgoBuilder::setAlgoFactory(IAlgoFactory* algoFactory) {
+  algoFactory_ = algoFactory;
 }
 
 AlgoBase* AlgoBuilder::getAlgo() {

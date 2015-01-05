@@ -16,11 +16,6 @@ bool TwoThreadedAlgo::setUp() {
     // Connecting to master.
     masterSocketManager_->connectToMaster(master_host_, master_port_);
 
-    // Waiting for all nodes to finish.
-    masterSocketManager_->sendReadyToMaster();
-
-    // Initing connections between nodes.
-    // Ready to master is included.
     socketManager_->initConnections();
 
   } catch (MasterException& e) {

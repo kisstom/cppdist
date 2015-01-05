@@ -92,7 +92,7 @@ protected:
 
 
 TEST_F(BitpropTest3, test) {
-  Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_, &clusterNodeParams);
+  Cluster cluster(&params_, &nodeParams_, nodeFactories_, masterBuilder_, &clusterNodeParams, &partitionMinNodes_);
   cluster.init();
   cluster.start();
 

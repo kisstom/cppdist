@@ -18,11 +18,6 @@ bool ThreeThreadedAlgo::setUp() {
     // Connecting to master.
     masterSocketManager_->connectToMaster(master_host_, master_port_);
 
-    // Waiting for all nodes to finish.
-    masterSocketManager_->sendReadyToMaster();
-
-    // Initing connections between nodes.
-    // Ready to master is included.
     socketManager_->initConnections();
 
     clientSocketManager_->setUp();
@@ -98,7 +93,7 @@ void ThreeThreadedAlgo::run() {
 void ThreeThreadedAlgo::receiver() {
   logger_->info("Starting receiver.");
   int socket_index, size = 0;
-  int timeout = 0;
+  int timeout = 20;
   Selector* selector = socketManager_->getSelector(timeout);
 
   while (1)
@@ -110,9 +105,9 @@ void ThreeThreadedAlgo::receiver() {
 
       storeFromBinary_->remains_size_[socket_index] += (unsigned) size;
       storeFromBinary(socket_index);
-
-      if (clientSocketManager_->isFinished()) break;
     }
+
+    if (clientSocketManager_->isFinished()) break;
   }
 
   delete selector;
@@ -128,9 +123,9 @@ void ThreeThreadedAlgo::runThreads() {
   receiver->start();
   sender->start();
   slaveCommunication->start();
-  receiver->waitForThread();
-  sender->waitForThread();
   slaveCommunication->waitForThread();
+  sender->waitForThread();
+  receiver->waitForThread();
 
   logger_->info("threads ended");
   delete receiver;

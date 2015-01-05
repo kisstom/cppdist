@@ -1,16 +1,28 @@
 #include "client_socket_manager_factory.h"
 
+ClientSocketManagerFactory::ClientSocketManagerFactory() {
+  logger = &log4cpp::Category::getInstance(std::string("MulticastSocketManager"));
+}
+
 ClientSocketManager* ClientSocketManagerFactory::
 createClientSocketManager(unordered_map<string, string>* params, vector<std::pair<string, string> >* hostAndPort) {
+  logger->info("Creating client csm.");
   int slaveIndex;
   int numSlaves;
   int initCommPort;
 
-  ClientSocketManager* clientSocketManager_ = new ClientSocketManager(slaveIndex, numSlaves);
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
+  sscanf((*params)["INIT_SLAVE_COMMUNICATION_PORT"].c_str(), "%d", &initCommPort);
+
+  ClientSocketManager* clientSocketManager = new ClientSocketManager(slaveIndex, numSlaves);
   ClusterConfig* clusterConfig = NULL;
 
   clusterConfig = createClusterConfig(hostAndPort, initCommPort, numSlaves);
-  clientSocketManager_->setClusterConfig(clusterConfig);
+  clientSocketManager->setClusterConfig(clusterConfig);
+
+  logger->info("Created client csm.");
+  return clientSocketManager;
 }
 
 ClusterConfig* ClientSocketManagerFactory::createClusterConfig(

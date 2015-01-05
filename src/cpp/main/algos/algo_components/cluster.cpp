@@ -6,11 +6,11 @@
  */
 
 #include "cluster.h"
+#include "factories/test_algo_factory.h"
 
 Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
 		vector<INodeFactory*> nodeFactories, MasterBuilder* masterBuilder,
-		vector<std::pair<string, string> >* clusterNodeParams) {
-	//numSlaves_ = numSlaves;
+		vector<std::pair<string, string> >* clusterNodeParams, vector<long>* _partMinNodes) {
 	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves_);
 	params_ = params;
 	nodeParams_ = nodeParams;
@@ -18,6 +18,7 @@ Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<str
 	nodeFactories_ = nodeFactories;
 	masterBuilder_ = masterBuilder;
 	master_ = NULL;
+	partMinNodes = _partMinNodes;
 	logger_ = &log4cpp::Category::getInstance(std::string("Cluster"));
 }
 
@@ -53,7 +54,11 @@ void Cluster::initNode(int nodeId) {
 	AlgoBuilder* builder = new AlgoBuilder;
 
 	INodeFactory* nodeFactory = nodeFactories_[nodeId];
+	// can you press delete
+  TestAlgoFactory* algoFactory = new TestAlgoFactory;
+  algoFactory->setPartitionMinNodes(partMinNodes);
 
+  builder->setAlgoFactory(algoFactory);
 	builder->setNodeFactory(nodeFactory);
 	builder->buildFromConfig(&(nodeParams_->at(nodeId)), clusterNodeParams_);
 	builders_.push_back(builder);
