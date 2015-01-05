@@ -46,6 +46,10 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
   } else {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
+
+	int slaveIndex;
+	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+	node->setPartitionIndex(slaveIndex);
 	return node;
 }
 

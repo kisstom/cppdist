@@ -140,7 +140,7 @@ void TwoThreadedAlgo::runThreads() {
 void TwoThreadedAlgo::sendAndSignal(int self_index) {
   logger_->info("Sending end signal.");
   for (int part_index = 0; part_index < (int) senderBuffer_->getBufferNum(); ++part_index) {
-    if (part_index == self_index) continue;
+    if (part_index == slave_index_) continue;
 
     if (!senderBuffer_->canAdd(part_index, 1)) {
       senderBuffer_->emptyBuffer(part_index);
