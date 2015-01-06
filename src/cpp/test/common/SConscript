@@ -19,3 +19,4 @@ env.Program('ip_index_maker_test', ['ip_index_maker_test.cpp'] + COMMON_OBJ + AL
 
 SConscript(['./util/config/SConscript'], exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])
 SConscript(['./socket/SConscript'], exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])
+SConscript(['./adjacency_list/SConscript'], exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])
