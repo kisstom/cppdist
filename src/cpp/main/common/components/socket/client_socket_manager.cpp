@@ -25,15 +25,10 @@ ClientSocketManager::~ClientSocketManager () {
 
 bool ClientSocketManager::setUp() {
   char msg[1024];
-  //masterSocketManager->recvFromMaster(1024, msg);
   initPublisher();
 
   masterSocketManager->sendReadyToMaster();
-
-  int size = masterSocketManager->recvFromMaster(1024, msg);
-  msg[size] = '\0';
-  logger->info("Received %s.", msg);
-
+  masterSocketManager->recvFromMaster(1024, msg);
   initSubscribes();
   masterSocketManager->sendReadyToMaster();
 
@@ -154,7 +149,7 @@ void ClientSocketManager::readFromPoll() {
 
     if (pollItems[actIndex].revents & ZMQ_POLLIN) {
       listenerSockets[i]->recv(&m);
-      logger->info("Received from poll %s in %d.", (char*) m.data(), selfIndex);
+      //logger->info("Received from poll %s in %d.", (char*) m.data(), selfIndex);
       found = true;
       break;
     }
@@ -184,7 +179,6 @@ void ClientSocketManager::resetFinishCounter() {
 }
 
 bool ClientSocketManager::isFinished() {
-  logger->info("is finished %d %d", numCluster-1, finishCounter);
   bool isFinished;
 
   mutex.lock();

@@ -7,5 +7,4 @@ RunThread::RunThread(Runnable* runnable) {
 
 void RunThread::main() {
   runnable_->run();
-  logger_->info("main finished");
 }

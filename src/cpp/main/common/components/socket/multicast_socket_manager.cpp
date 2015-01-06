@@ -44,12 +44,9 @@ void MulticastSocketManager::initConnections() {
 
   initPublishers();
   masterSocketManager->sendReadyToMaster();
-  int size = masterSocketManager->recvFromMaster(limit, msg);
-  msg[size] = '\0';
-  logger->info("Received %s", msg);
+  masterSocketManager->recvFromMaster(limit, msg);
 
   initListeners();
-  //masterSocketManager->sendReadyToMaster();
 }
 
 void MulticastSocketManager::setMasterSocketManager(
