@@ -1,0 +1,3 @@
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
+
+env.Program('test_als_utils', ['test_als_utils.cpp']  + COMMON_OBJ + ALGO_OBJ)

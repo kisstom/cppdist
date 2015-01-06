@@ -51,7 +51,8 @@ SConscript([
     'main/algos/counter_inverse/SConscript',
     'main/algos/counter_inverse_pagerank/SConscript',
     'main/algos/psimrank/SConscript',
-    'main/algos/bitprop/SConscript'
+    'main/algos/bitprop/SConscript',
+    'main/algos/als/SConscript'
      ],
     exports = ['env', 'COMMON_OBJ'])
 
@@ -69,6 +70,7 @@ ALGO_OBJ += Glob('#/../bin/main/algos/custom_non_block/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/custom_multi_nonblock/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse_pagerank/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/als/*.o')
 
 SConscript([
     'main/dmoz/SConscript',
@@ -96,6 +98,7 @@ if testCompile:
     'test/common/SConscript',
     'test/common/graph_converter/SConscript',
     'test/algos/SConscript',
+    'test/algos/als/SConscript',
     'test/algos/simple_mock_algo/SConscript',
     'test/algos/simrank_update/SConscript',
     'test/algos/simrank_store_first/SConscript',
