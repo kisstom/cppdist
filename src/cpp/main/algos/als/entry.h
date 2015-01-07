@@ -1,13 +1,18 @@
+#ifndef ENTRY_H_
+#define ENTRY_H_
+
 struct Entry {
-  Entry(long _id, double _value) : id(_id), value(_value) {}
+  Entry();
+  Entry(long _id, double _value);
+
+  static const Entry& getNullItem();
 
   long id;
   double value;
   bool operator==(const Entry& entry) const;
+
+private:
+  static Entry nullItem;
 };
 
-bool Entry::operator==(const Entry& entry) const {
-  if (entry.id != id) return false;
-  if (entry.value != value) return false;
-  return true;
-}
+#endif // ENTRY_H_

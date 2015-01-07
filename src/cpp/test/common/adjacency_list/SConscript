@@ -1,3 +1,4 @@
 Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
 
 env.Program('test_adjacency_list', ['test_adjacency_list.cpp'] + COMMON_OBJ + ALGO_OBJ)
+env.Program('test_adjacency_list_iterator', ['test_adjacency_list_iterator.cpp'] + COMMON_OBJ + ALGO_OBJ)

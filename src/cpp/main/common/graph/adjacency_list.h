@@ -3,11 +3,15 @@
 
 #include <vector>
 #include "../util/util.h"
+//#include "adjacency_list_iterator.h"
 #include "log4cpp/Category.hh"
 
-using std::vector;
+using namespace std;
 
-template<class T>
+template<typename T>
+class AdjacencyListIterator;
+
+template<typename T>
 class AdjacencyList {
 public:
   AdjacencyList();
@@ -27,12 +31,12 @@ public:
 
   bool containsEdge(long, T entry);
   bool operator==(AdjacencyList& rhs) const;
-  //virtual void flush(FILE* f) = 0;
+  const AdjacencyListIterator<T> createIterator() const;
 
-  long neighborhoodSize(long key);
-  long neighborhoodSizePart(long key);
-  T getEdgeAtPos(long, int);
-  T getEdgeAtPosPart(long, int);
+  const long neighborhoodSize(long key) const;
+  const long neighborhoodSizePart(long key) const;
+  const T getEdgeAtPos(long, int) const;
+  const T getEdgeAtPosPart(long, int) const;
   long getMinnode() const;
   long getNumberOfNodes() const;
   long getNumberOfEdges() const;
@@ -44,12 +48,17 @@ private:
   log4cpp::Category* logger_;
 };
 
-template<class  T>
+template<typename T>
+const AdjacencyListIterator<T> AdjacencyList<T>::createIterator() const {
+  return AdjacencyListIterator<T>(this);
+}
+
+template<typename T>
 bool AdjacencyList<T>::shouldDeleteContainers() {
   return shouldDeleteContainers_;
 }
 
-template<class  T>
+template<typename  T>
 AdjacencyList<T>::AdjacencyList() {
   minnode_ = -1;
   shouldDeleteContainers_ = false;
@@ -58,19 +67,19 @@ AdjacencyList<T>::AdjacencyList() {
   edge_list_ = NULL;
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::setMinnode(long minnode) {
   minnode_ = minnode;
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::initContainers() {
   shouldDeleteContainers_ = true;
   start_edges_ = new vector<long>;
   edge_list_ = new vector<long>;
 }
 
-template <class T>
+template <typename T>
 AdjacencyList<T>::~AdjacencyList() {
   if (shouldDeleteContainers_) {
     delete start_edges_;
@@ -78,7 +87,7 @@ AdjacencyList<T>::~AdjacencyList() {
   }
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::addEdgePart(long nodeId, T edge) {
   long start = 0;
 
@@ -89,7 +98,7 @@ void AdjacencyList<T>::addEdgePart(long nodeId, T edge) {
   edge_list_->push_back(edge);
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::addSinkPart(long nodeId) {
   long start = 0;
 
@@ -99,7 +108,7 @@ void AdjacencyList<T>::addSinkPart(long nodeId) {
   }
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::addSink(long nodeId) {
   long nodeIndex = nodeId - minnode_;
   long start = 0;
@@ -110,7 +119,7 @@ void AdjacencyList<T>::addSink(long nodeId) {
   }
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::addEdge(long nodeId, T edge) {
   long nodeIndex = nodeId - minnode_;
   long start = 0;
@@ -122,52 +131,52 @@ void AdjacencyList<T>::addEdge(long nodeId, T edge) {
   edge_list_->push_back(edge);
 }
 
-template <class T>
-long AdjacencyList<T>::neighborhoodSize(long nodeId) {
+template <typename T>
+const long AdjacencyList<T>::neighborhoodSize(long nodeId) const {
   long nodeIndex = nodeId - minnode_;
   if (nodeIndex + 1 >= (long) start_edges_->size() || nodeIndex < 0) return -1;
 
   return start_edges_->at(nodeIndex + 1) - start_edges_->at(nodeIndex);
 }
 
-template <class T>
-long AdjacencyList<T>::neighborhoodSizePart(long nodeId) {
+template <typename T>
+const long AdjacencyList<T>::neighborhoodSizePart(long nodeId) const {
   if (nodeId + 1 >= (long) start_edges_->size() || nodeId < 0) return -1;
 
   return start_edges_->at(nodeId + 1) - start_edges_->at(nodeId);
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::setFinish() {
   start_edges_->push_back((long) edge_list_->size());
 }
 
-template <class T>
+template <typename T>
 long AdjacencyList<T>::getMinnode() const {
   return minnode_;
 }
 
-template <class T>
+template <typename T>
 long AdjacencyList<T>::getNumberOfNodes() const {
   return start_edges_->size() - 1;
 }
 
-template <class T>
+template <typename T>
 long AdjacencyList<T>::getNumberOfEdges() const {
   return edge_list_->size();
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::setStartEdges(vector<long>* start_edges) {
   start_edges_ = start_edges;
 }
 
-template <class T>
+template <typename T>
 void AdjacencyList<T>::setEdgeList(vector<T>* edge_list) {
   edge_list_ = edge_list;
 }
 
-template <class T>
+template <typename T>
 bool AdjacencyList<T>::containsEdge(long from, T to) {
   if (from - minnode_ >= getNumberOfNodes() || from - minnode_ < 0) return false;
   int neighborHood = neighborhoodSize(from);
@@ -178,22 +187,22 @@ bool AdjacencyList<T>::containsEdge(long from, T to) {
   return found;
 }
 
-template <class T>
-T AdjacencyList<T>::getEdgeAtPos(long node, int index) {
+template <typename T>
+const T AdjacencyList<T>::getEdgeAtPos(long node, int index) const {
   long nodeIndex = node - minnode_;
-  if (nodeIndex < 0) return -1;
+  if (nodeIndex < 0) return T();
 
   return edge_list_->at(start_edges_->at(nodeIndex) + index);
 }
 
-template <class T>
-T AdjacencyList<T>::getEdgeAtPosPart(long node, int index) {
-  if (node < 0) return -1;
+template <typename T>
+const T AdjacencyList<T>::getEdgeAtPosPart(long node, int index) const {
+  if (node < 0) return T();
 
   return edge_list_->at(start_edges_->at(node) + index);
 }
 
-template <class T>
+template <typename T>
 bool AdjacencyList<T>::operator==(AdjacencyList& rhs) const {
   if (rhs.getMinnode() != getMinnode()) return false;
   if (rhs.getNumberOfNodes() != getNumberOfNodes()) return false;
