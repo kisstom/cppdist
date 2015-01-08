@@ -4,7 +4,7 @@
 #include <gsl/gsl_multifit.h>
 #include "feature_matrix.h"
 #include "../../common/graph/adjacency_list_iterator.h"
-#include "entry.h"
+#include "../../common/graph/entry.h"
 
 class AlsUtil {
 public:

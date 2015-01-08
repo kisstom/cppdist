@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include "../../../main/algos/als/als_util.h"
-//#include "../../../main/algos/als/entry.h"
 
 namespace {
 

@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "../util/util.h"
-//#include "adjacency_list_iterator.h"
 #include "log4cpp/Category.hh"
 
 using namespace std;
@@ -35,8 +34,8 @@ public:
 
   const long neighborhoodSize(long key) const;
   const long neighborhoodSizePart(long key) const;
-  const T getEdgeAtPos(long, int) const;
-  const T getEdgeAtPosPart(long, int) const;
+  const T& getEdgeAtPos(long, int) const;
+  const T& getEdgeAtPosPart(long, int) const;
   long getMinnode() const;
   long getNumberOfNodes() const;
   long getNumberOfEdges() const;
@@ -177,32 +176,6 @@ void AdjacencyList<T>::setEdgeList(vector<T>* edge_list) {
 }
 
 template <typename T>
-bool AdjacencyList<T>::containsEdge(long from, T to) {
-  if (from - minnode_ >= getNumberOfNodes() || from - minnode_ < 0) return false;
-  int neighborHood = neighborhoodSize(from);
-  if (neighborHood == 0) return false;
-  bool found = Util::search(to, edge_list_->begin() + start_edges_->at(from - minnode_),
-      neighborHood);
-
-  return found;
-}
-
-template <typename T>
-const T AdjacencyList<T>::getEdgeAtPos(long node, int index) const {
-  long nodeIndex = node - minnode_;
-  if (nodeIndex < 0) return T();
-
-  return edge_list_->at(start_edges_->at(nodeIndex) + index);
-}
-
-template <typename T>
-const T AdjacencyList<T>::getEdgeAtPosPart(long node, int index) const {
-  if (node < 0) return T();
-
-  return edge_list_->at(start_edges_->at(node) + index);
-}
-
-template <typename T>
 bool AdjacencyList<T>::operator==(AdjacencyList& rhs) const {
   if (rhs.getMinnode() != getMinnode()) return false;
   if (rhs.getNumberOfNodes() != getNumberOfNodes()) return false;
@@ -216,6 +189,17 @@ bool AdjacencyList<T>::operator==(AdjacencyList& rhs) const {
     if ((*rhs.edge_list_)[i] != (*edge_list_)[i]) return false;
   }
   return true;
+}
+
+template <typename T>
+bool AdjacencyList<T>::containsEdge(long from, T to) {
+  if (from - minnode_ >= getNumberOfNodes() || from - minnode_ < 0) return false;
+  int neighborHood = neighborhoodSize(from);
+  if (neighborHood == 0) return false;
+  bool found = Util::search(to, edge_list_->begin() + start_edges_->at(from - minnode_),
+      neighborHood);
+
+  return found;
 }
 
 #endif  // ADJACENCY_LIST_H_

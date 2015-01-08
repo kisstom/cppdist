@@ -10,7 +10,7 @@ class AdjacencyListIterator {
 public:
   AdjacencyListIterator(const AdjacencyList<T>* adjList);
   bool hasNext() const;
-  const T next();
+  const T& next();
   void resetRow(long);
   void resetCounter();
 private:
@@ -32,7 +32,7 @@ bool AdjacencyListIterator<T>::hasNext() const {
 }
 
 template<typename T>
-const T AdjacencyListIterator<T>::next() {
+const T& AdjacencyListIterator<T>::next() {
   return adjList->getEdgeAtPos(row, ++pos);
 }
 
