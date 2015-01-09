@@ -1,6 +1,6 @@
 #include "feature_matrix.h"
 
-FeatureMatrix::FeatureMatrix(int _featureSize, int _numItems):
+FeatureMatrix::FeatureMatrix(int _numItems, int _featureSize):
 featureSize(_featureSize), numItems(_numItems) {
   entries = new double[numItems * featureSize];
 }

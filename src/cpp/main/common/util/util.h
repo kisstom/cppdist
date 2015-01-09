@@ -44,6 +44,7 @@ public:
 	bool hasSection(std::set<T>, std::set<T>);
 
 	int stringToInt(const string&);
+	double stringToDouble(const string&);
 	string intToString(const int val);
 
 	int digi(int index);

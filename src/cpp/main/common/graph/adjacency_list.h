@@ -75,7 +75,7 @@ template <typename T>
 void AdjacencyList<T>::initContainers() {
   shouldDeleteContainers_ = true;
   start_edges_ = new vector<long>;
-  edge_list_ = new vector<long>;
+  edge_list_ = new vector<T>;
 }
 
 template <typename T>

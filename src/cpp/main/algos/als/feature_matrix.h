@@ -7,7 +7,7 @@ using std::vector;
 
 class FeatureMatrix {
 public:
-  FeatureMatrix(int featureSize, int numItems);
+  FeatureMatrix(int numItems, int featureSize);
   void updateEntry(long item, int feature, const double& value);
   const double& getEntry(long item, int feature) const;
   const int& getFeatureSize() const;

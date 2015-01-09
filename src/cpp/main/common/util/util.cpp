@@ -181,6 +181,14 @@ int Util::stringToInt(const string& str) {
   return retval;
 }
 
+double Util::stringToDouble(const string& str) {
+  stringstream ss(stringstream::in | stringstream::out);
+  ss << str;
+  double retval;
+  ss >> retval;
+  return retval;
+}
+
 string Util::intToString(const int val) {
   stringstream ss(stringstream::in | stringstream::out);
   ss << val;
