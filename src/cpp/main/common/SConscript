@@ -4,6 +4,7 @@ env.Object(Glob('*.cpp'))
 
 SConscript(['./components/SConscript'], exports = 'env')
 SConscript(['./graph/SConscript'], exports = 'env')
+SConscript(['./graph/builder/SConscript'], exports = 'env')
 SConscript(['./graph_converter/SConscript'], exports = 'env')
 SConscript(['./io/SConscript'], exports = 'env')
 SConscript(['./old/SConscript'], exports = 'env')
