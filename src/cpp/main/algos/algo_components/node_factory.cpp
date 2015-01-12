@@ -11,6 +11,8 @@
 #include "../../common/graph/edge_list_container_factory.h"
 #include "../../common/io/outpartition_index_computer.h"
 #include "../../common/io/outpartition_hash_computer.h"
+#include "../../common/graph/adjacency_list.h"
+#include "../../common/graph/builder/adjacency_list_builder.h"
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -43,6 +45,8 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
     node = createCounterInversePagerankNode(params);
   } else if (nodeType.compare("CUSTOM_MULTI_NONBLOCK") == 0) {
     node = createCustomMultiNonBlockNode(params);
+  } else if (nodeType.compare("ALS") == 0) {
+    node = createAlsNode(params);
   } else {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
@@ -51,6 +55,51 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
 	node->setPartitionIndex(slaveIndex);
 	return node;
+}
+
+AlsNode* NodeFactory::createAlsNode(unordered_map<string, string>* params) {
+  NodeFactoryHelper helper;
+  AlsNode* node = helper.initAlsNode(params);
+
+  // Sets partitioner.
+  Partitioner* userPartitioner = new Partitioner;
+  Partitioner* itemPartitioner = new Partitioner;
+
+  string userPartConfig = (*params)["REMOTE_DIR"] + "/user_part.cfg";
+  string itemPartConfig = (*params)["REMOTE_DIR"] + "/item_part.cfg";
+
+  vector<long>* userPartMinNodes = util.readSlaveConfig(userPartConfig,
+      util.stringToLong((*params)["NUM_USERS"]));
+  vector<long>* itemPartMinNodes = util.readSlaveConfig(itemPartConfig,
+      util.stringToLong((*params)["NUM_ITEMS"]));
+
+  userPartitioner->setPartMinNodes(userPartMinNodes);
+  itemPartitioner->setPartMinNodes(itemPartMinNodes);
+
+  string userPartFile = (*params)["REMOTE_DIR"] + "/user_part_" + (*params)["SLAVE_INDEX"];
+  string itemPartFile = (*params)["REMOTE_DIR"] + "/item_part_" + (*params)["SLAVE_INDEX"];
+
+  long userMinNode = (*userPartMinNodes)[util.stringToInt((*params)["SLAVE_INDEX"])];
+  long itemMinNode = (*itemPartMinNodes)[util.stringToInt((*params)["SLAVE_INDEX"])];
+
+  // Sets partition.
+  AdjacencyListBuilder builder;
+  AdjacencyList<Entry>* userPartition = new AdjacencyList<Entry>();
+  userPartition->setMinnode(userMinNode);
+  builder.buildFromFile(userPartFile, userPartition);
+
+  AdjacencyList<Entry>* itemPartition = new AdjacencyList<Entry>();
+  itemPartition->setMinnode(itemMinNode);
+  builder.buildTransposeFromFile(itemPartFile, itemPartition);
+
+  // Sets node.
+  node->setUserPartition(userPartition);
+  node->setItemPartition(itemPartition);
+
+  node->setUserPartitioner(userPartitioner);
+  node->setItemPartitioner(itemPartitioner);
+
+  return node;
 }
 
 SimrankStoreFirstNode* NodeFactory::createSimrankStoreFirstNode(

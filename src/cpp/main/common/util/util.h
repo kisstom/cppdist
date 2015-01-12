@@ -12,9 +12,10 @@
 #include <vector>
 #include <sstream>
 #include <tr1/unordered_map>
-#include "param_miss_exception.h"
 #include <stdarg.h>
 #include <set>
+#include "log4cpp/Category.hh"
+#include "param_miss_exception.h"
 
 using std::vector;
 using std::stringstream;
@@ -24,6 +25,7 @@ using std::tr1::unordered_map;
 
 class Util {
 public:
+  Util();
 	static size_t nextLong(char* line, size_t from, long& element);
 	static size_t nextShort(char* line, size_t from, short& element);
 	static void readEdges(char* line, vector<long>* edges);
@@ -44,6 +46,7 @@ public:
 	bool hasSection(std::set<T>, std::set<T>);
 
 	int stringToInt(const string&);
+	int stringToLong(const string&);
 	double stringToDouble(const string&);
 	string intToString(const int val);
 
@@ -51,6 +54,9 @@ public:
 	char* createBufferAtSize(int size, int index);
 	void zmqSocketBlock(int);
 	void setIpByHost(const char* hostName, char* ip);
+	vector<long>* readSlaveConfig(string cfg, int num_slaves);
+private:
+	log4cpp::Category* logger_;
 };
 
 template<typename T>

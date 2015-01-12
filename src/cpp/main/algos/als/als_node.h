@@ -22,6 +22,11 @@ public:
   virtual void initFromMaster(string) {}
   virtual void final();
 
+  void setUserPartition(AdjacencyList<Entry>*);
+  void setItemPartition(AdjacencyList<Entry>*);
+  void setUserPartitioner(Partitioner*);
+  void setItemPartitioner(Partitioner*);
+
   void broadCastFeatVect(FeatureMatrix* featMx, long id);
   void sendFeatVectTo(FeatureMatrix* featMx, long id, short partI);
   void updateUserFeats(long key, double*);

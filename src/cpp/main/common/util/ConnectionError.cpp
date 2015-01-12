@@ -89,3 +89,9 @@ ConnectError::ConnectError(string host, int port) : SocketError(port), host_(hos
       self_host, host_.c_str(), port_);
 }
 
+NotImplementedException::NotImplementedException(): msg("NotImplementedException") {}
+
+const char* NotImplementedException::what() {
+  return msg;
+}
+

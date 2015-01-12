@@ -12,11 +12,15 @@
 #include <algorithm>
 #include <math.h>
 #include "../components/socket/zmq_sockets/zmq.hpp"
-
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+
+
+Util::Util() {
+  logger_ = &log4cpp::Category::getInstance(std::string("Util"));
+}
 
 size_t Util::nextLong(char* line, size_t from, long& element) {
 	sscanf(line + from, "%ld", &element);
@@ -181,6 +185,14 @@ int Util::stringToInt(const string& str) {
   return retval;
 }
 
+int Util::stringToLong(const string& str) {
+  stringstream ss(stringstream::in | stringstream::out);
+  ss << str;
+  long retval;
+  ss >> retval;
+  return retval;
+}
+
 double Util::stringToDouble(const string& str) {
   stringstream ss(stringstream::in | stringstream::out);
   ss << str;
@@ -229,6 +241,25 @@ void Util::zmqSocketBlock(int triggerPort) {
   zmq::message_t m(20);
   instrSocket.recv(&m);
 }
+
+vector<long>* Util::readSlaveConfig(string cfg, int num_slaves) {
+  FILE* slavery_par = fopen(cfg.c_str(), "r");
+  if (slavery_par == NULL) {
+    logger_->error("Error opening %s in algo factory.", cfg.c_str());
+    return NULL;
+  }
+
+  vector<long>* partitionMinNodes = new vector<long>();
+  int minNode = -1;
+
+  for (int i = 0; i < num_slaves; ++i) {
+    fscanf(slavery_par,"%ld\n", &minNode);
+    partitionMinNodes->push_back(minNode);
+  }
+
+  return partitionMinNodes;
+}
+
 
 void Util::setIpByHost(const char* host, char* ip) {
   struct addrinfo hints, *res;

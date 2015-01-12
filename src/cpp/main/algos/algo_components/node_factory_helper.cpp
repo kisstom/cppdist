@@ -6,16 +6,17 @@ NodeFactoryHelper::NodeFactoryHelper() {
 }
 
 BitpropNode* NodeFactoryHelper::initBitpropNode(unordered_map<string, string>* params) {
-  util.checkParam(params, 4, "NUM_CODING_BYTES", "EPSILON", "EST_INDEX", "MIN_NODE");
+  util.checkParam(params, 4, "NUM_CODING_BYTES", "EPSILON", "EST_INDEX");
   int numCodingBytes;
   double epsilon;
   int estIndex;
-  long min_node;
 
   sscanf((*params)["NUM_CODING_BYTES"].c_str(), "%d", &numCodingBytes);
   sscanf((*params)["EPSILON"].c_str(), "%lf", &epsilon);
   sscanf((*params)["EST_INDEX"].c_str(), "%d", &estIndex);
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
+
+  reader.readSlaveConfig(params);
+  long min_node = reader.getMinNodeFromParams(params);
 
   return new BitpropNode(numCodingBytes, estIndex, epsilon, min_node);
 }
@@ -38,11 +39,11 @@ PagerankNonBlockNode* NodeFactoryHelper::initPagerankNonBlockNode(unordered_map<
   long allNode, min_node;
   int maxIter;
   double dump;
+  long min_node = reader.getMinNodeFromParams(params);
 
   sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
 
   PagerankNonBlockNode* node = new PagerankNonBlockNode(allNode, min_node, dump, maxIter);
   return node;
@@ -53,7 +54,7 @@ SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<stri
 	int seed;
 	short numPathes;
 	short pathLen;
-	long num_nodes, min_node, next_min_node;
+
 	sscanf((*params)["NUM_PATHES"].c_str(), "%hd", &numPathes);
 	sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
 
@@ -76,9 +77,11 @@ SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<stri
 		}
 	}
 
-	sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes);
-	sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
-	sscanf((*params)["NEXT_MIN_NODE"].c_str(), "%ld", &next_min_node);
+	reader.readSlaveConfig(params);
+	long min_node = reader.getMinNodeFromParams(params);
+	long num_nodes = reader.getNumNodeFromParams(params);
+	long next_min_node = reader.getNextMinNodeFromParams(params);
+
 
 	SimrankOddEvenNode* node = new SimrankOddEvenNode(numPathes, pathLen, seed,
 			type, num_nodes, min_node, next_min_node);
@@ -90,55 +93,63 @@ PSimrankNode* NodeFactoryHelper::initPSimrankNode(unordered_map<string, string>*
   int seed;
   short numPathes;
   short pathLen;
-  long num_nodes, min_node, next_min_node;
+
   sscanf((*params)["NUM_PATHES"].c_str(), "%hd", &numPathes);
   sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
 
-  sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes);
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
-  sscanf((*params)["NEXT_MIN_NODE"].c_str(), "%ld", &next_min_node);
+  reader.readSlaveConfig(params);
+  long min_node = reader.getMinNodeFromParams(params);
+  long num_nodes = reader.getNumNodeFromParams(params);
+  long next_min_node = reader.getNextMinNodeFromParams(params);
+
 
   PSimrankNode* node = new PSimrankNode(numPathes, pathLen, num_nodes, min_node, next_min_node);
   return node;
 }
 
 CleverPagerankNode* NodeFactoryHelper::initCleverPagerankNode(unordered_map<string, string>* params) {
-  long allNode, minNode;
+  long allNode;
   int maxIter;
   double dump;
 
   sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &minNode);
+
+  reader.readSlaveConfig(params);
+  long min_node = reader.getMinNodeFromParams(params);
 
   CleverPagerankNode* node = new CleverPagerankNode(allNode, minNode, dump, maxIter);
   return node;
 }
 
 CustomNonBlockNode* NodeFactoryHelper::initCustomNonBlockNode(unordered_map<string, string>* params) {
-  long allNode, minNode;
+  long allNode;
   int maxIter;
   double dump;
 
   sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &minNode);
+
+  reader.readSlaveConfig(params);
+  long min_node = reader.getMinNodeFromParams(params);
 
   CustomNonBlockNode* node = new CustomNonBlockNode(allNode, minNode, dump, maxIter);
   return node;
 }
 
 CustomMultiNonBlockNode* NodeFactoryHelper::initCustomMultiNonBlockNode(unordered_map<string, string>* params) {
-  long allNode, minNode;
+  long allNode;
   int maxIter;
   double dump;
 
   sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &minNode);
+
+  reader.readSlaveConfig(params);
+  long min_node = reader.getMinNodeFromParams(params);
 
   CustomMultiNonBlockNode* node = new CustomMultiNonBlockNode(allNode, minNode, dump, maxIter);
   return node;
@@ -160,4 +171,8 @@ CounterInversePagerankNode* NodeFactoryHelper::initCounterInversePagerankNode(un
 
 CounterInverseNode* NodeFactoryHelper::initCounterInverseNode(unordered_map<string, string>* params) {
   return new CounterInverseNode();
+}
+
+AlsNode* NodeFactoryHelper::initAlsNode(unordered_map<string, string>* params) {
+  return new AlsNode(params);
 }

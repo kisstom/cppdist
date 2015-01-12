@@ -19,6 +19,7 @@
 #include "../custom_multi_nonblock/custom_multi_non_block_node.h"
 #include "../counter_inverse/counter_inverse_node.h"
 #include "../counter_inverse_pagerank/counter_inverse_pagerank_node.h"
+#include "../als/als_node.h"
 #include "../../common/util/util.h"
 #include "inode_factory.h"
 
@@ -38,7 +39,9 @@ public:
 	CustomMultiNonBlockNode* initCustomMultiNonBlockNode(unordered_map<string, string>* params);
 	CounterInverseNode* initCounterInverseNode(unordered_map<string, string>* params);
 	CounterInversePagerankNode* initCounterInversePagerankNode(unordered_map<string, string>* params);
+	AlsNode* initAlsNode(unordered_map<string, string>* params);
 private:
+	GraphSlaveConfigReader reader;
 	log4cpp::Category* logger_;
 	Util util;
 };

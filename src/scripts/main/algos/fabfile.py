@@ -182,10 +182,10 @@ def concatFromHost(slave_index, host):
 def runPreprocessTask(section, function):
   global conf
   if conf.has_section('PREPROCESS'):
-      if conf.has_option('PREPROCESS', section):
-        sectionValue = conf.get('PREPROCESS', section)
-        if sectionValue == '1':
-          function()
+    if conf.has_option('PREPROCESS', section):
+      sectionValue = conf.get('PREPROCESS', section)
+      if sectionValue == '1':
+        function()
 
 
 @task
@@ -194,13 +194,15 @@ def preprocess():
   global conf
 
   with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
-    if conf.has_section('PREPROCESS'):
-      runPreprocessTask('MAKE_PARTITION', makePartition)
-      runPreprocessTask('PUT_TO_LOCAL', putPartitionIfNeeded)
-      runPreprocessTask('PAGERANK_INVERSE', pagerankInversePreprocess)
-      runPreprocessTask('PUT_PAGERANK_TO_LOCAL', putPagerankInversePartitionIfNeeded)
-      runPreprocessTask('OUTPARTITION_INDEX', outpartitionIndexCompute)
-      runPreprocessTask('COUNTER_INVERSE', counterInversePreprocess)
+    runPreprocessTask('MAKE_PARTITION', makePartition)
+    runPreprocessTask('PUT_TO_LOCAL', putPartitionIfNeeded)
+    runPreprocessTask('PAGERANK_INVERSE', pagerankInversePreprocess)
+    runPreprocessTask('PUT_PAGERANK_TO_LOCAL', putPagerankInversePartitionIfNeeded)
+    runPreprocessTask('OUTPARTITION_INDEX', outpartitionIndexCompute)
+    runPreprocessTask('COUNTER_INVERSE', counterInversePreprocess)
+    runPreprocessTask('RATING_MX_SPLITTER', ratingMxSplitter)
+    runPreprocessTask('RATING_MX_PUT', putRatingSplitsToCluster)
+
 
 ########### For partitioning ##################
 
@@ -232,7 +234,6 @@ def makePartition():
       logFile = conf.get('ALGO', 'LOCAL_DIR') + '/err'
       run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, remoteDir + slaveryCfg, initSlavePort))
     
-#putPartitionIfNeeded()  
 
 def putPartitionIfNeeded():
   global conf, numJobs
@@ -262,6 +263,72 @@ def putOnMachine(slave_index, host):
     run('mkdir -p %s'%remoteDir)
     partitionFile = conf.get('ALGO', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
     put(partitionFile, remoteDir)
+
+########### Rating matrix splitter ################
+
+def ratingMxSplitter():
+  with settings(host_string=MASTER_HOST):
+    global conf, numJobs
+    
+    createRemoteDirForRatingSplit(MASTER_HOST)
+
+    bin_dir = conf.get('ALGO', 'BIN')
+    numEdgePerPart = getNumEdgePerPart()
+    remoteDir =  conf.get('ALGO', 'REMOTE_DIR')
+
+    inputData =  conf.get('ALGO', 'USER_RATING_DATA')
+    configFile = remoteDir + '/user_part.cfg'
+    prefix = remoteDir + '/user_part_'
+    run('%s/main/common/tools/sparse_rating_splitter_tool  %s %d %s %s'%(bin_dir, prefix, numEdgePerPart, inputData, configFile))
+
+
+    inputData =  conf.get('ALGO', 'ITEM_RATING_DATA')
+    configFile = remoteDir + '/item_part.cfg'
+    prefix = remoteDir + '/item_part_'
+    run('%s/main/common/tools/sparse_rating_splitter_tool  %s %d %s %s'%(bin_dir, prefix, numEdgePerPart, inputData, configFile))
+
+def putRatingSplitsToCluster():
+  global conf
+  slave_index = 0
+  for host in cfg_hosts:
+      if host == MASTER_HOST:
+        slave_index += int(conf.get('MACHINES', host))
+        continue
+      jobs_on_host = int(conf.get('MACHINES', host))
+
+      createRemoteDirForRatingSplit(host)
+      putRatingSplitConfigOnMachine(host)
+      for x in xrange(jobs_on_host):
+        putRatingSplitOnMachine(slave_index, host)
+        slave_index += 1
+
+def putRatingSplitOnMachine(slave_index, host):
+  global conf
+  remoteDir = conf.get('ALGO', 'REMOTE_DIR') 
+  with settings(host_string=host):
+    partitionFile = remoteDir + '/user_part_' + str(slave_index)
+    put(partitionFile, remoteDir)
+
+    partitionFile = remoteDir + '/item_part_' + str(slave_index)
+    put(partitionFile, remoteDir)
+
+def putRatingSplitConfigOnMachine(host):
+  global conf
+  with settings(host_string=host):
+    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+  
+    configFile = remoteDir + '/user_part.cfg'
+    put(configFile, remoteDir)
+
+    configFile = remoteDir + '/item_part.cfg'
+    put(configFile, remoteDir)
+
+def createRemoteDirForRatingSplit(host):
+  global conf
+  with settings(host_string=host):
+    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    run('mkdir -p %s'%remoteDir)
+
 
 ########### For pagerank inverse ##################
 def pagerankInversePreprocess():
@@ -502,7 +569,7 @@ def getNumEdgePerPart():
     if numEdge % numJobs:
       numEdgePerPart = numEdge // numJobs + 1
     else:
-      numEdgePerPart = numEdge // numJobs
+      NumEdgePerPart = numEdge // numJobs
 
     return numEdgePerPart
 

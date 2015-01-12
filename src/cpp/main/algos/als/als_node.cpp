@@ -6,8 +6,8 @@ AlsNode::AlsNode(unordered_map<string, string>* params) {
   maxIter = util.stringToInt((*params)["MAX_ITER"]);
   int numItem, numUser;
   numFeat = util.stringToInt((*params)["NUM_FEAT"]);
-  numItem = util.stringToInt((*params)["NUM_ITEM"]);
-  numUser = util.stringToInt((*params)["NUM_USER"]);
+  numItem = util.stringToInt((*params)["NUM_ITEMS"]);
+  numUser = util.stringToInt((*params)["NUM_USERS"]);
 
 
   featP = new FeatureMatrix(numUser, numFeat);
@@ -114,6 +114,22 @@ void AlsNode::broadCastFeatVect(FeatureMatrix* featMx, long id) {
     if (i == algo_->getSlaveIndex()) continue;
     sendFeatVectTo(featMx, id, i);
   }
+}
+
+void AlsNode::setUserPartition(AdjacencyList<Entry>* _userPart) {
+  userPartition = _userPart;
+}
+
+void AlsNode::setItemPartition(AdjacencyList<Entry>* _itemPart) {
+  itemPartition = _itemPart;
+}
+
+void AlsNode::setUserPartitioner(Partitioner* _userPartitioner) {
+  userPartitioner = _userPartitioner;
+}
+
+void AlsNode::setItemPartitioner(Partitioner* _itemPartitioner) {
+  itemPartitioner = _itemPartitioner;
 }
 
 AlsNode::~AlsNode() {

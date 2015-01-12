@@ -8,17 +8,24 @@ SparseRatingSplitter::SparseRatingSplitter(string _outputPrefix,
   numEdgePerPart = _numEdgePerPart;
   partitionCounter = -1;
   actPartition = NULL;
+  partiConfig = NULL;
+}
+
+void SparseRatingSplitter::setPartiConfig(FILE* _partiConfig) {
+  partiConfig = _partiConfig;
 }
 
 void SparseRatingSplitter::process(FILE* input) {
   openNextPartition();
+  fprintf(partiConfig, "0\n");
 
   long from, to;
   double value;
-
   long numEdges = 0;
+
   while (fscanf(input, "%ld %ld %lf\n", &from, &to, &value) != EOF) {
     if (numEdges >= numEdgePerPart) {
+      fprintf(partiConfig, "%ld\n", from);
       fclose(actPartition);
       openNextPartition();
       numEdges = 0;
@@ -28,7 +35,6 @@ void SparseRatingSplitter::process(FILE* input) {
     ++numEdges;
   }
 }
-
 
 void SparseRatingSplitter::openNextPartition() {
   ++partitionCounter;

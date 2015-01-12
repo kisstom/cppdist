@@ -12,6 +12,14 @@
 
 using namespace std;
 
+class NotImplementedException: public exception {
+public:
+  NotImplementedException();
+  virtual const char* what();
+private:
+  const char msg[1024];
+};
+
 class ConnectionError: public exception {
   public:
     ConnectionError() {};

@@ -10,11 +10,13 @@ using std::string;
 class SparseRatingSplitter {
 public:
   SparseRatingSplitter(string, long);
+  void setPartiConfig(FILE*);
   void process(FILE*);
 private:
   void openNextPartition();
 
   FILE* actPartition;
+  FILE* partiConfig;
   string outputPrefix;
   long numEdgePerPart;
   int partitionCounter;
