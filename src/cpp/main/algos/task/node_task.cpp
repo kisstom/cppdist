@@ -51,6 +51,7 @@ void initLogger(unordered_map<string, string>* params) {
 }
 
 INodeFactory* createFactory(unordered_map<string, string>* params) {
+  // TODO nemcsak ALS
   if ((*params)["NODE_TYPE"].compare("ALS") == 0) {
     AlsNodeFactory* nodeFactory = new AlsNodeFactory;
     AlsPartitionConfigHandler* handler = new AlsPartitionConfigHandler;

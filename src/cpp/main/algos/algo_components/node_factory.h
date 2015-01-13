@@ -24,7 +24,6 @@
 #include "../bitprop/bitprop_node.h"
 #include "../counter_inverse/counter_inverse_node.h"
 #include "../counter_inverse_pagerank/counter_inverse_pagerank_node.h"
-#include "../als/als_node.h"
 
 #include "../../common/util/util.h"
 #include "../bitprop/estimation_handler.h"
@@ -58,7 +57,6 @@ private:
 	CustomMultiNonBlockNode* createCustomMultiNonBlockNode(unordered_map<string, string>* params);
   CounterInverseNode* createCounterInverseNode(unordered_map<string, string>* params);
   CounterInversePagerankNode* createCounterInversePagerankNode(unordered_map<string, string>* params);
-  AlsNode* createAlsNode(unordered_map<string, string>* params);
 	log4cpp::Category* logger_;
 	Util util;
 };

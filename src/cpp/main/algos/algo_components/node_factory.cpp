@@ -11,8 +11,8 @@
 #include "../../common/graph/edge_list_container_factory.h"
 #include "../../common/io/outpartition_index_computer.h"
 #include "../../common/io/outpartition_hash_computer.h"
-#include "../../common/graph/adjacency_list.h"
-#include "../../common/graph/builder/adjacency_list_builder.h"
+//#include "../../common/graph/adjacency_list.h"
+
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -51,8 +51,6 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
     node = createCounterInversePagerankNode(params);
   } else if (nodeType.compare("CUSTOM_MULTI_NONBLOCK") == 0) {
     node = createCustomMultiNonBlockNode(params);
-  } else if (nodeType.compare("ALS") == 0) {
-    node = createAlsNode(params);
   } else {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
@@ -61,52 +59,6 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
 	node->setPartitionIndex(slaveIndex);
 	return node;
-}
-
-AlsNode* NodeFactory::createAlsNode(unordered_map<string, string>* params) {
-  /*NodeFactoryHelper helper;
-  AlsNode* node = helper.initAlsNode(params);
-
-  // Sets partitioner.
-  Partitioner* userPartitioner = new Partitioner;
-  Partitioner* itemPartitioner = new Partitioner;
-
-  string userPartConfig = (*params)["REMOTE_DIR"] + "/user_part.cfg";
-  string itemPartConfig = (*params)["REMOTE_DIR"] + "/item_part.cfg";
-
-  vector<long>* userPartMinNodes = util.readSlaveConfig(userPartConfig,
-      util.stringToLong((*params)["NUM_USERS"]));
-  vector<long>* itemPartMinNodes = util.readSlaveConfig(itemPartConfig,
-      util.stringToLong((*params)["NUM_ITEMS"]));
-
-  userPartitioner->setPartMinNodes(userPartMinNodes);
-  itemPartitioner->setPartMinNodes(itemPartMinNodes);
-
-  string userPartFile = (*params)["REMOTE_DIR"] + "/user_part_" + (*params)["SLAVE_INDEX"];
-  string itemPartFile = (*params)["REMOTE_DIR"] + "/item_part_" + (*params)["SLAVE_INDEX"];
-
-  long userMinNode = (*userPartMinNodes)[util.stringToInt((*params)["SLAVE_INDEX"])];
-  long itemMinNode = (*itemPartMinNodes)[util.stringToInt((*params)["SLAVE_INDEX"])];
-
-  // Sets partition.
-  AdjacencyListBuilder builder;
-  AdjacencyList<Entry>* userPartition = new AdjacencyList<Entry>();
-  userPartition->setMinnode(userMinNode);
-  builder.buildFromFile(userPartFile, userPartition);
-
-  AdjacencyList<Entry>* itemPartition = new AdjacencyList<Entry>();
-  itemPartition->setMinnode(itemMinNode);
-  builder.buildTransposeFromFile(itemPartFile, itemPartition);
-
-  // Sets node.
-  node->setUserPartition(userPartition);
-  node->setItemPartition(itemPartition);
-
-  //node->setUserPartitioner(userPartitioner);
-  //node->setItemPartitioner(itemPartitioner);
-
-  return node;*/
-  return NULL;
 }
 
 SimrankStoreFirstNode* NodeFactory::createSimrankStoreFirstNode(
@@ -376,8 +328,11 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
   NodeFactoryHelper helper;
   BitpropNode* node = helper.initBitpropNode(params);
 
-  EdgeListContainerFactory edgeListContainerFactory;
-  EdgelistContainer* container = edgeListContainerFactory.createEdgeListContainer(params);
+  long minNode = partConfigHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
+  string partN = (*params)["REMOTE_DIR"] + "/slaver_" +
+      (*params)["SLAVE_INDEX"] + ".txt";
+
+  EdgelistContainer* container = createEdgeListContainer(params);
   node->setContainer(container);
 
   std::vector<FailedEstimate>* failedEstimatedNodes = readFailedEstimations(params);
@@ -399,7 +354,6 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
 
   int seed = 13;
   if (params->find(string("SEED")) != params->end()) {
-    //sscanf((*params)["SEED"].c_str(), "%d", &seed);
     seed = atoi((*params)["SEED"].c_str());
   }
 
@@ -439,46 +393,13 @@ EstimationHandler* NodeFactory::createEstimationHandler(unordered_map<string, st
 
 
 EdgelistContainer* NodeFactory::createEdgeListContainer(unordered_map<string, string>* params) {
-  IEdgeListBuilder* builder = createEdgeListBuilder(params);
   long minNode = partConfigHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
-  logger_->info("Initing edge list container.");
+  string partN = (*params)["REMOTE_DIR"] + "/slaver_" +
+      (*params)["SLAVE_INDEX"] + ".txt";
 
-  EdgelistContainer* matrix = new EdgelistContainer();
-  matrix->initContainers();
-  matrix->setMinnode(minNode);
-
-  builder->setContainer(matrix);
-  builder->buildFromFile((*params)["INPUT_PARTITION"]);
-
-  logger_->info("Edge list container inited.");
-  return matrix;
-}
-
-IEdgeListBuilder* NodeFactory::createEdgeListBuilder(unordered_map<string, string>* params) {
-  IEdgeListBuilder* edgeListBuilder = NULL;
-
-  if (params->find("USE_PREPROCESS") == params->end()) {
-    edgeListBuilder = new EdgeListBuilder;
-  } else {
-    if ((*params)["USE_PREPROCESS"].compare("CRAWL") == 0) {
-      long maxNodeToKeep;
-      sscanf((*params)["MAX_NODE_TO_KEEP"].c_str(), "%ld", &maxNodeToKeep);
-      CrawlEdgeListBuilder* crawlEdgeListBuilder = new CrawlEdgeListBuilder(
-          maxNodeToKeep);
-      edgeListBuilder = crawlEdgeListBuilder;
-    } else if ((*params)["USE_PREPROCESS"].compare("FILTER") == 0) {
-      FilterEdgeListBuilder* filterEdgeListBuilder = new FilterEdgeListBuilder;
-      string nodesToDeleteFile = (*params)["FILTER_NODE_FILE"];
-      filterEdgeListBuilder->readNodesToDelete(nodesToDeleteFile);
-      edgeListBuilder = filterEdgeListBuilder;
-    } else {
-      logger_->error("ERROR. Unknown type of preprcessing %s.\n",
-          (*params)["USE_PREPROCESS"].c_str());
-      return NULL;
-    }
-  }
-
-  return edgeListBuilder;
+  EdgeListContainerFactory edgeListContainerFactory;
+  EdgelistContainer* container = edgeListContainerFactory.createEdgeListContainer(params, minNode, partN);
+  return container;
 }
 
 std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<string, string>* params) {
@@ -523,3 +444,30 @@ std::vector<FailedEstimate>* NodeFactory::readFailedEstimations(unordered_map<st
 
   return failedEstimations;
 }
+
+IEdgeListBuilder* NodeFactory::createEdgeListBuilder(unordered_map<string, string>* params) {
+  IEdgeListBuilder* edgeListBuilder = NULL;
+
+  if (params->find("USE_PREPROCESS") == params->end()) {
+    edgeListBuilder = new EdgeListBuilder;
+  } else {
+    if ((*params)["USE_PREPROCESS"].compare("CRAWL") == 0) {
+      long maxNodeToKeep;
+      sscanf((*params)["MAX_NODE_TO_KEEP"].c_str(), "%ld", &maxNodeToKeep);
+      CrawlEdgeListBuilder* crawlEdgeListBuilder = new CrawlEdgeListBuilder(
+          maxNodeToKeep);
+      edgeListBuilder = crawlEdgeListBuilder;
+    } else if ((*params)["USE_PREPROCESS"].compare("FILTER") == 0) {
+      FilterEdgeListBuilder* filterEdgeListBuilder = new FilterEdgeListBuilder;
+      string nodesToDeleteFile = (*params)["FILTER_NODE_FILE"];
+      filterEdgeListBuilder->readNodesToDelete(nodesToDeleteFile);
+      edgeListBuilder = filterEdgeListBuilder;
+    } else {
+      logger_->error("ERROR. Unknown type of preprcessing %s.\n",
+          (*params)["USE_PREPROCESS"].c_str());
+      return NULL;
+    }
+  }
+  return edgeListBuilder;
+}
+

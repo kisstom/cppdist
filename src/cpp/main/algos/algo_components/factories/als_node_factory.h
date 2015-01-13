@@ -3,7 +3,7 @@
 
 #include <log4cpp/Category.hh>
 #include "../inode_factory.h"
-#include "../node_factory_helper.h"
+#include "../../../common/util/util.h"
 #include "als_partition_config_handler.h"
 
 class AlsNodeFactory : public INodeFactory {
@@ -12,6 +12,7 @@ public:
   Node* createNodeFromConfig(unordered_map<string, string>* params);
   void setPartitionConfigHandler(AlsPartitionConfigHandler* handler);
 private:
+  Util util;
   AlsPartitionConfigHandler* partConfigHandler;
 };
 

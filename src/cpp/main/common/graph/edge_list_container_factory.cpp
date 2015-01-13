@@ -39,20 +39,19 @@ IEdgeListBuilder* EdgeListContainerFactory::createEdgeListBuilder(unordered_map<
   return edgeListBuilder;
 }
 
-EdgelistContainer* EdgeListContainerFactory::createEdgeListContainer(unordered_map<string, string>* params) {
+EdgelistContainer* EdgeListContainerFactory::createEdgeListContainer(unordered_map<string, string>* params,
+    long minNode, string fName) {
   util.checkParam(params, 2, "INPUT_PARTITION", "MIN_NODE");
 
   IEdgeListBuilder* builder = createEdgeListBuilder(params);
-  long min_node;
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
   logger_->info("Initing edge list container.");
 
   EdgelistContainer* matrix = new EdgelistContainer();
   matrix->initContainers();
-  matrix->setMinnode(min_node);
+  matrix->setMinnode(minNode);
 
   builder->setContainer(matrix);
-  builder->buildFromFile((*params)["INPUT_PARTITION"]);
+  builder->buildFromFile(fName);
 
   logger_->info("Edge list container inited.");
   return matrix;

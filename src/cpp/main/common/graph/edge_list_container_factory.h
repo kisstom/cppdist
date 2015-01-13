@@ -19,7 +19,8 @@ class EdgeListContainerFactory {
 public:
   EdgeListContainerFactory();
   IEdgeListBuilder* createEdgeListBuilder(unordered_map<string, string>* params);
-  EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params);
+  EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params,
+      long minNode, string fName);
 private:
   log4cpp::Category* logger_;
   Util util;
