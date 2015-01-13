@@ -13,6 +13,7 @@
 #include "../../common/components/mutex.h"
 #include <gtest/gtest_prod.h>
 #include <stdio.h>
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 class CounterInversePagerankNode : public Node {
 public:
@@ -26,6 +27,7 @@ public:
   void updateWithIncomingPr();
   void serializeImportance(int bufferIndex, long from, double importance);
 
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
   void setOutputFile(string outputFile);
   void setPointerToCounters(EdgelistContainer*);
   void setOutpartitionIndices(EdgelistContainer*);
@@ -38,6 +40,7 @@ public:
 private:
   EdgelistContainer* pointerToCounters;
   EdgelistContainer* outPartitionIndices;
+  GraphPartitionConfigHandler* partConfHandler;
 
   vector<double>* incomingPageranks;
   vector<double>* pagerankScore;

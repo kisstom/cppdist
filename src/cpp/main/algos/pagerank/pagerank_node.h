@@ -12,6 +12,7 @@
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
 #include <stdio.h>
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 class PagerankNode : public Node {
 public:
@@ -23,12 +24,15 @@ public:
   void updateScore(long outdge, double sc);
   void setOutputFile(string outputFile);
   void setEdgeListContainer(EdgelistContainer*);
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
+
   void initFromMaster(string) {}
 
   ~PagerankNode();
 private:
   void serializeImportance(int partIndex, long outNode, double importance);
   EdgelistContainer* matrix_;
+  GraphPartitionConfigHandler* partConfHandler;
   vector<double>* pagerankScore_;
   vector<double>* tmpScore_;
   Mutex tmpScoreMutex_;

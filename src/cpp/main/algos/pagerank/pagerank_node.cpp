@@ -16,7 +16,12 @@ PagerankNode::PagerankNode(int maxIter, long allNode, double dump) {
   matrix_ = NULL;
   pagerankScore_ = NULL;
   tmpScore_ = NULL;
+  partConfHandler = NULL;
   messageCounter = 0;
+}
+
+void PagerankNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 PagerankNode::~PagerankNode() {
@@ -52,7 +57,7 @@ void PagerankNode::sender() {
 
     for (long i = 0; i < numNeighbors; ++i) {
       outEdge = matrix_->getEdgeAtPosPart(partitionNode, i);
-      partIndex = algo_->getPartitionIndex(outEdge);
+      partIndex = partConfHandler->getPartitionIndex(outEdge);
 
       if (partIndex == partIndex_) {
         tmpScoreMutex_.lock();

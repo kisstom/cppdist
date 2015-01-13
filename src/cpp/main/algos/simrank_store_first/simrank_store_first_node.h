@@ -15,6 +15,7 @@
 #include "../../common/random/random_generator.h"
 #include "../../common/components/mutex.h"
 #include "../../common/graph/edge_list_builder.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 #include <log4cpp/Category.hh>
 #include <unistd.h>
 #include <limits.h>
@@ -53,6 +54,7 @@ public:
 
 	void setFingerprints(vector<list<long*> >);
 	void setNextNodes(unordered_map<long, long>);
+	void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 	void initFinishedPathes(vector<vector<long*> >);
 	vector<list<long*> >* getPathes();
 	vector<vector<long*> >* getFinishedPathes();
@@ -75,6 +77,7 @@ private:
 	// TODO ebbol mock-ot csinalni
 	RandomGenerator* generator_;
 	EdgelistContainer* matrix_;
+	GraphPartitionConfigHandler* partConfHandler;
 
 	Mutex sendeBufferLock_;
 	Mutex nextNodesMutex_;

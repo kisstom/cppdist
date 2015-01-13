@@ -17,6 +17,7 @@
 #include "failed_estimate.h"
 #include "IEstimationHandler.h"
 #include "../../common/graph/iedge_list_builder.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 #include <gtest/gtest_prod.h>
 
 using std::string;
@@ -45,7 +46,7 @@ public:
   void setEstimatonHandler(IEstimationHandler*);
   void setContainer(EdgelistContainer*);
   void setRandomBits(unsigned char*);
-
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 
   ~BitpropNode() {}
 
@@ -63,6 +64,7 @@ private:
   double epsilon;
   short neighborhoodDistance;
 
+  GraphPartitionConfigHandler* partConfHandler;
   std::vector<FailedEstimate>* failedEstimatedNodes;
   IEstimationHandler* estimationHandler;
 

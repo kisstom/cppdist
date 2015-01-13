@@ -17,6 +17,11 @@ PSimrankNode::PSimrankNode() {
   aCoef_ = 0;
   bCoef_ = 0;
   modulo_ = 0;
+  partConfHandler = NULL;
+}
+
+void PSimrankNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 PSimrankNode::PSimrankNode(short numFingerprints, short pathLen,
@@ -32,6 +37,7 @@ PSimrankNode::PSimrankNode(short numFingerprints, short pathLen,
   nextMinNode_ = nextMinNode;
   matrix_ = NULL;
   edgeListbuilder_ = NULL;
+  partConfHandler = NULL;
   oddIter_ = true;
   aCoef_ = 0;
   bCoef_ = 0;
@@ -194,7 +200,7 @@ void PSimrankNode::senderOdd() {
       it != fingerprints_[fpIndex_].end(); ++it) {
 
     pathEnd = (*it)[pathIndex_];
-    partIndex = algo_->getPartitionIndex(pathEnd);
+    partIndex = partConfHandler->getPartitionIndex(pathEnd);
 
     if (partIndex == partIndex_) {
       if (nextNodes_.find(pathEnd) == nextNodes_.end()) {

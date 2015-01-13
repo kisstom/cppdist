@@ -16,7 +16,7 @@ class AlgoFactory : public IAlgoFactory {
 public:
   AlgoFactory();
   AlgoBase* createAlgo(unordered_map<string, string>* params);
-  vector<long>*  readSlaveConfig(unordered_map<string, string>* params);
+  //vector<long>*  readSlaveConfig(unordered_map<string, string>* params);
 private:
   log4cpp::Category* logger_;
 };

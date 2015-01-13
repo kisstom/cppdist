@@ -22,7 +22,12 @@ BitpropNode::BitpropNode(int _numCodingBytes, int _estIndex, double _epsilon, lo
   estimationHandler = NULL;
   edgeListBuilder = NULL;
   minnode = _minnode;
+  partConfHandler = NULL;
   logger = &log4cpp::Category::getInstance(std::string("BitpropNode"));
+}
+
+void BitpropNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 void BitpropNode::sender() {
@@ -35,7 +40,7 @@ void BitpropNode::sender() {
 
     for (long i = 0; i < numNeighbors; ++i) {
       outEdge = matrix->getEdgeAtPosPart(partitionNode, i);
-      partIndex = algo_->getPartitionIndex(outEdge);
+      partIndex = partConfHandler->getPartitionIndex(outEdge);
 
       //logger->info("my part %d target part %d", partIndex_, partIndex);
       if (partIndex == partIndex_) {

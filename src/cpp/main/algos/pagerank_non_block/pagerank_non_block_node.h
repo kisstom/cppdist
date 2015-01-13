@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include "../algo_components/node.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 using std::tr1::unordered_map;
 using std::vector;
@@ -25,9 +26,10 @@ public:
   void serializeImportance(short, long, double);
   void updateSenderScore(long fromEdge, double sc);
   void updateReceiverScore(long fromEdge, double sc);
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 
 private:
-
+  GraphPartitionConfigHandler* partConfHandler;
   EdgelistContainer* matrix;
   vector<double>* pagerankScore;
   vector<double>* tmpReceiverScore;
@@ -35,7 +37,6 @@ private:
 
   string outfile;
   long allNode_;
-  long minNode_;
   double dump_;
   int actIter;
   int maxIter;

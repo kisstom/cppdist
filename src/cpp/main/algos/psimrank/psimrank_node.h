@@ -20,6 +20,7 @@
 #include "../../common/graph/edge_list_builder.h"
 #include "../algo_components/node.h"
 #include "../../common/util/uint128_t.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 using std::string;
 using std::vector;
@@ -63,6 +64,7 @@ public:
   vector<vector<long*> >* getFinishedPathes();
   bool* getOddIter() {return &oddIter_;}
   void setEdgeListBuilder(IEdgeListBuilder*);
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 
 private:
   Mutex nextNodesMutex_;
@@ -86,6 +88,7 @@ private:
 
   EdgelistContainer* matrix_;
   IEdgeListBuilder* edgeListbuilder_;
+  GraphPartitionConfigHandler* partConfHandler;
   long aCoef_, bCoef_, modulo_;
   log4cpp::Category* logger_;
 };

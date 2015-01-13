@@ -3,7 +3,8 @@
 
 #include "feature_matrix.h"
 #include "als_util.h"
-#include "partitioner.h"
+//#include "partitioner.h"
+#include "../algo_components/factories/als_partition_config_handler.h"
 #include "../../common/graph/adjacency_list.h"
 #include "../../common/graph/entry.h"
 #include "../../common/util/util.h"
@@ -24,8 +25,9 @@ public:
 
   void setUserPartition(AdjacencyList<Entry>*);
   void setItemPartition(AdjacencyList<Entry>*);
-  void setUserPartitioner(Partitioner*);
-  void setItemPartitioner(Partitioner*);
+  void setAlsPartConfigHandler(AlsPartitionConfigHandler*);
+  //void setUserPartitioner(Partitioner*);
+  //void setItemPartitioner(Partitioner*);
 
   void broadCastFeatVect(FeatureMatrix* featMx, long id);
   void sendFeatVectTo(FeatureMatrix* featMx, long id, short partI);
@@ -40,8 +42,9 @@ private:
   AdjacencyList<Entry>* itemPartition;
   FeatureMatrix* featP;
   FeatureMatrix* featQ;
-  Partitioner* itemPartitioner;
-  Partitioner* userPartitioner;
+  AlsPartitionConfigHandler* configHandler;
+  //Partitioner* itemPartitioner;
+  //Partitioner* userPartitioner;
 
   AlsUtil* alsUtil;
   Util util;

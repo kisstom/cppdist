@@ -7,6 +7,9 @@
 
 #include "../algo_components/algo_builder.h"
 #include "../algo_components/factories/algo_factory.h"
+#include "../algo_components/factories/als_node_factory.h"
+#include "../algo_components/factories/als_partition_config_handler.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -47,10 +50,27 @@ void initLogger(unordered_map<string, string>* params) {
 	logger->info("Logger started. Level %s.", debugLevel.c_str());
 }
 
+INodeFactory* createFactory(unordered_map<string, string>* params) {
+  if ((*params)["NODE_TYPE"].compare("ALS") == 0) {
+    AlsNodeFactory* nodeFactory = new AlsNodeFactory;
+    AlsPartitionConfigHandler* handler = new AlsPartitionConfigHandler;
+    handler->readItemConfig((*params)["REMOTE_DIR"] + "/item_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
+    handler->readUserConfig((*params)["REMOTE_DIR"] + "/user_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
+    nodeFactory->setPartitionConfigHandler(handler);
+    return nodeFactory;
+  }
+
+  NodeFactory* nodeFactory = new NodeFactory;
+  GraphPartitionConfigHandler* handler = new GraphPartitionConfigHandler;
+  handler->readSlaveConfig((*params)["LOCAL_SLAVE_CONFIG"], atoi((*params)["NUM_SLAVES"].c_str()));
+  nodeFactory->setPartitionConfigHandler(handler);
+
+  return nodeFactory;
+}
+
 int main(int argc, char* argv[]) {
 	CfgReader cfgreader;
 
-  // should add checking
   cfgreader.read(argv[1]);
   unordered_map<string, string>* params = cfgreader.getParams();
   vector<std::pair<string, string> >* hostAndPort = cfgreader.getHostAndPort();
@@ -58,16 +78,12 @@ int main(int argc, char* argv[]) {
   (*params)["SLAVE_INDEX"] = string(argv[2]);
   (*params)["NUM_SLAVES"] = string(argv[3]);
 
-  /*(*params)["INPUT_PARTITION"] = string(argv[4]);
-  (*params)["NUM_NODES"] = string(argv[5]);
-  (*params)["MIN_NODE"] = string(argv[6]);
-  (*params)["NEXT_MIN_NODE"] = string(argv[7]);*/
-
   initLogger(params);
   log4cpp::Category* logger = &log4cpp::Category::getInstance(std::string("NodeTask"));
 
   AlgoBuilder builder;
-  INodeFactory* nodeFactory = new NodeFactory;
+  INodeFactory* nodeFactory = createFactory(params);
+
   builder.setNodeFactory(nodeFactory);
   builder.setAlgoFactory(new AlgoFactory);
 

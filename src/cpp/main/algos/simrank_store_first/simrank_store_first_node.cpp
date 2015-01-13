@@ -12,6 +12,7 @@ SimrankStoreFirstNode::SimrankStoreFirstNode() {
 	pathIndex_ = 0;
 	pathLen_ = 0;
 	numFingerprints_ = 0;
+	partConfHandler = NULL;
 }
 
 SimrankStoreFirstNode::~SimrankStoreFirstNode() {
@@ -41,9 +42,13 @@ SimrankStoreFirstNode::SimrankStoreFirstNode(short numFingerprints, short pathLe
 	fpStartFname_ = fpStartFname;
 	outFileName_ = outFileName;
 	generator_ = new RandomGenerator(13);
-	//generator_->setSeed(13);
+	partConfHandler = NULL;
 	matrix_ = NULL;
 	logger_ = &log4cpp::Category::getInstance(std::string("SimrankStoreFirstNode"));
+}
+
+void SimrankStoreFirstNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 void SimrankStoreFirstNode::beforeIteration(string msg) {
@@ -145,7 +150,7 @@ void SimrankStoreFirstNode::sender() {
   	}
 
   	pathEnd = (*it)[pathIndex_];
-  	partIndex = algo_->getPartitionIndex(pathEnd);
+  	partIndex = partConfHandler->getPartitionIndex(pathEnd);
 
     if (partIndex == partIndex_) {
     	nextNodesMutex_.lock();
@@ -193,14 +198,14 @@ void SimrankStoreFirstNode::senderFinishedDaemon() {
 void SimrankStoreFirstNode::registerNodeFinished(short bufferI) {
 	++receiverFinished_;
 
-	if (receiverFinished_ == algo_->getNumberOfPartitions() - 1) {
+	if (receiverFinished_ == algo_->getNumSlaves() - 1) {
 		// TODO lock ?
 		senderShouldStop_ = true;
 	}
 }
 
 void SimrankStoreFirstNode::showSenderEndForAll() {
-	for (short bufferI = 0; bufferI < algo_->getNumberOfPartitions(); ++bufferI) {
+	for (short bufferI = 0; bufferI < algo_->getNumSlaves(); ++bufferI) {
 		if (bufferI == partIndex_) continue;
 		showSenderEnd(bufferI);
 	}
@@ -264,12 +269,12 @@ void SimrankStoreFirstNode::initData(string partName, long minnode, long numnode
 
 	logger_->info("matrix data read");
 	if (fpStartFname_.compare("NULL") == 0) {
-		initStartForAll(algo_->getPartitionStartNode(partIndex_),
-				algo_->getPartitionStartNode(partIndex_ + 1), numnodes, numFingerprints_);
+		initStartForAll(partConfHandler->getMinNode(partIndex_),
+		    partConfHandler->getNextMinNode(partIndex_), numnodes, numFingerprints_);
 	} else {
 		FileUtil util(1024);
-	  util.readFingerprintStart(algo_->getPartitionStartNode(partIndex_),
-			algo_->getPartitionStartNode(partIndex_ + 1), numFingerprints_, &fingerprints_,
+	  util.readFingerprintStart(partConfHandler->getMinNode(partIndex_),
+	      partConfHandler->getNextMinNode(partIndex_), numFingerprints_, &fingerprints_,
 			fpStartFname_, pathLen_ + 1);
 	}
 	finishedPathes_.resize(fingerprints_.size());

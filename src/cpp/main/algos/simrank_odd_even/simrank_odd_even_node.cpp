@@ -14,6 +14,7 @@ SimrankOddEvenNode::SimrankOddEvenNode() {
 	pathLen_ = 0;
 	numFingerprints_ = 0;
 	oddIter_ = true;
+	partConfHandler = NULL;
 }
 
 SimrankOddEvenNode::SimrankOddEvenNode(short numFingerprints, short pathLen,
@@ -29,7 +30,12 @@ SimrankOddEvenNode::SimrankOddEvenNode(short numFingerprints, short pathLen,
 	nextMinNode_ = nextMinNode;
 	initRandomGenerator(seed, genType);
 	matrix_ = NULL;
+	partConfHandler = NULL;
 	oddIter_ = true;
+}
+
+void SimrankOddEvenNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 SimrankOddEvenNode::~SimrankOddEvenNode() {
@@ -215,7 +221,7 @@ void SimrankOddEvenNode::senderOdd() {
   		it != fingerprints_[fpIndex_].end(); ++it) {
 
   	pathEnd = (*it)[pathIndex_];
-  	partIndex = algo_->getPartitionIndex(pathEnd);
+  	partIndex = partConfHandler->getPartitionIndex(pathEnd);
 
     if (partIndex == partIndex_) {
     	if (nextNodes_.find(pathEnd) == nextNodes_.end()) {

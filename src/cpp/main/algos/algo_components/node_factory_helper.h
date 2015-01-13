@@ -22,6 +22,7 @@
 #include "../als/als_node.h"
 #include "../../common/util/util.h"
 #include "inode_factory.h"
+#include "factories/graph_partition_config_handler.h"
 
 using std::tr1::unordered_map;
 using std::string;
@@ -29,6 +30,7 @@ using std::string;
 class NodeFactoryHelper {
 public:
 	NodeFactoryHelper();
+	void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 	SimrankOddEvenNode* initSimrankOddEvenNode(unordered_map<string, string>* params);
 	PSimrankNode* initPSimrankNode(unordered_map<string, string>* params);
 	PagerankNode* initPagerankNode(unordered_map<string, string>* params);
@@ -41,7 +43,7 @@ public:
 	CounterInversePagerankNode* initCounterInversePagerankNode(unordered_map<string, string>* params);
 	AlsNode* initAlsNode(unordered_map<string, string>* params);
 private:
-	GraphSlaveConfigReader reader;
+  GraphPartitionConfigHandler* graphPartitionHandler;
 	log4cpp::Category* logger_;
 	Util util;
 };

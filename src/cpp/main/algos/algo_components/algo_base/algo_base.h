@@ -40,12 +40,12 @@ public:
 
   // Getters.
   int getSlaveIndex();
-  int getPartitionIndex(long node);
-  long getPartitionStartNode(int part_index);
-  short getNumberOfPartitions();
-  long getNumberOfPartitionNodes();
+  //int getPartitionIndex(long node);
+  //long getPartitionStartNode(int part_index);
+  //short getNumberOfPartitions();
+  //long getNumberOfPartitionNodes();
   long getAllNodes();
-  long getMinnode();
+  int getNumSlaves();
 
   // Setters.
   void setNode(Node * node);
@@ -53,7 +53,6 @@ public:
   void setSenderBuffer(SenderBuffer* senderBuffer);
   void setMasterSocketManager(MasterSocketManager* manager);
   void setStoreFromBinary(StoreFromBinary* storeFromBinary);
-  void setPartitionMinNodes(vector<long>*);
 
   // Calling Node object.
   void final();
@@ -68,11 +67,7 @@ protected:
   int master_port_;
   int slave_port_;
 
-  vector<long>* partition_min_node_;
-  long min_node_;
-
   long all_node_;
-  long num_nodes_;
 
   int slave_index_;
   int num_slaves_;

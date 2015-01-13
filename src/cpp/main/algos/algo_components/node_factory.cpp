@@ -16,6 +16,12 @@
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
+	partConfigHandler = NULL;
+}
+
+void NodeFactory::setPartitionConfigHandler(GraphPartitionConfigHandler* handler) {
+  helper.setPartitionConfigHandler(handler);
+  partConfigHandler = handler;
 }
 
 Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
@@ -58,7 +64,7 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 }
 
 AlsNode* NodeFactory::createAlsNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  /*NodeFactoryHelper helper;
   AlsNode* node = helper.initAlsNode(params);
 
   // Sets partitioner.
@@ -96,10 +102,11 @@ AlsNode* NodeFactory::createAlsNode(unordered_map<string, string>* params) {
   node->setUserPartition(userPartition);
   node->setItemPartition(itemPartition);
 
-  node->setUserPartitioner(userPartitioner);
-  node->setItemPartitioner(itemPartitioner);
+  //node->setUserPartitioner(userPartitioner);
+  //node->setItemPartitioner(itemPartitioner);
 
-  return node;
+  return node;*/
+  return NULL;
 }
 
 SimrankStoreFirstNode* NodeFactory::createSimrankStoreFirstNode(
@@ -208,7 +215,6 @@ createCounterInverseNode(unordered_map<string, string>* params) {
   sprintf(outputFileN, "%s/inverse_counter_%s.txt", (*params)["COUNTER_INVERSE_OUTPUT_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   node->setOutputFile(string(outputFileN));
 
-  char partitionFileN[1024];
   sprintf(outputFileN, "%s/partition_bounds_%s.txt", (*params)["PARTITION_BOUNDS_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
   node->setPartitionBoundFile(string(outputFileN));
 
@@ -240,7 +246,8 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &minNode);
+
+  minNode = partConfigHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
   char inverseCounters[1024];
   sprintf(inverseCounters, "%s/inverse_counter_%s.txt",
@@ -392,7 +399,8 @@ BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* param
 
   int seed = 13;
   if (params->find(string("SEED")) != params->end()) {
-    sscanf((*params)["SEED"].c_str(), "%d", &seed);
+    //sscanf((*params)["SEED"].c_str(), "%d", &seed);
+    seed = atoi((*params)["SEED"].c_str());
   }
 
   unsigned char* randomVectorBits = initRandomVectorBits(numNodes, numCodingBytes, epsilon, seed);
@@ -432,13 +440,12 @@ EstimationHandler* NodeFactory::createEstimationHandler(unordered_map<string, st
 
 EdgelistContainer* NodeFactory::createEdgeListContainer(unordered_map<string, string>* params) {
   IEdgeListBuilder* builder = createEdgeListBuilder(params);
-  long min_node;
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node);
+  long minNode = partConfigHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
   logger_->info("Initing edge list container.");
 
   EdgelistContainer* matrix = new EdgelistContainer();
   matrix->initContainers();
-  matrix->setMinnode(min_node);
+  matrix->setMinnode(minNode);
 
   builder->setContainer(matrix);
   builder->buildFromFile((*params)["INPUT_PARTITION"]);

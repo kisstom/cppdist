@@ -13,6 +13,7 @@ SimrankUpdateNode::SimrankUpdateNode() {
   edgeInPath_ = 0;
   fpReader_ = NULL;
   setSeed(13);
+  partConfHandler = NULL;
 }
 
 SimrankUpdateNode::SimrankUpdateNode(char* fpFile, char* slaveryConfigFile, int numPathes, FILE* output_file) {
@@ -24,12 +25,17 @@ SimrankUpdateNode::SimrankUpdateNode(char* fpFile, char* slaveryConfigFile, int 
 	output_file_ = output_file;
 	fpReader_ = NULL;
 	setSeed(13);
+	partConfHandler = NULL;
 	logger_ = &log4cpp::Category::getInstance(std::string("SimrankUpdateNode"));
 }
 
 SimrankUpdateNode::~SimrankUpdateNode() {
 	//delete matrix_;
 	if (NULL != fpReader_) delete fpReader_;
+}
+
+void SimrankUpdateNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 long SimrankUpdateNode::genEdge(RandomWalk* rw) {
@@ -90,7 +96,7 @@ void SimrankUpdateNode::sender() {
   while (it != currentFp_->end()) {
   	//logger_->info("currentFp_ size %d", n++);
     if (fpIndex_ == it->fp_index) {
-      int partIndex = algo_->getPartitionIndex(it->buf[edgeInPath_]);
+      int partIndex = partConfHandler->getPartitionIndex(it->buf[edgeInPath_]);
       if (partIndex == partIndex_) {
       	//logger_->info("Part index %d for node %ld", partIndex_, it->buf[edgeInPath_]);
         edge = nextEdge(&(*it));
@@ -177,8 +183,8 @@ void SimrankUpdateNode::initData(string path, long minnode, long numNodes) {
 	//char prefix[1024];
 	//sprintf(prefix, "/home/kisstom/tmpPartitions/part_%d_", partIndex_);
 	//matrix_->flushAll(string(prefix));
-	fpReader_->readFile(fpFileName_, algo_->getPartitionStartNode(partIndex_),
-			algo_->getPartitionStartNode(partIndex_ + 1));
+	fpReader_->readFile(fpFileName_, partConfHandler->getMinNode(partIndex_),
+	    partConfHandler->getNextMinNode(partIndex_));
 }
 
 void SimrankUpdateNode::initFromMaster(string ss) {

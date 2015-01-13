@@ -10,6 +10,11 @@ PagerankNonBlockNode::PagerankNonBlockNode(long _allnode, long _minnode, double 
   pagerankScore = NULL;
   tmpSenderScore = NULL;
   tmpReceiverScore = NULL;
+  partConfHandler = NULL;
+}
+
+void PagerankNonBlockNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 void PagerankNonBlockNode::beforeIteration(string msg) {
@@ -42,7 +47,7 @@ void PagerankNonBlockNode::sender() {
 
     for (long i = 0; i < numNeighbors; ++i) {
       outEdge = matrix->getEdgeAtPosPart(partitionNode, i);
-      partIndex = algo_->getPartitionIndex(outEdge);
+      partIndex = partConfHandler->getPartitionIndex(outEdge);
 
       if (partIndex == partIndex_) {
         updateSenderScore(outEdge, imp);

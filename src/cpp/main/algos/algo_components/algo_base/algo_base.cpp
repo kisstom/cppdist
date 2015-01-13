@@ -18,10 +18,10 @@ void AlgoBase::initFromParams(unordered_map<string, string>* params) {
   sscanf((*params)["MASTER_PORT"].c_str(), "%d", &master_port_);
   sscanf((*params)["INIT_SLAVE_PORT"].c_str(), "%d", &init_slave_port);
 
-  sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node_);
+  //sscanf((*params)["MIN_NODE"].c_str(), "%ld", &min_node_);
 
   sscanf((*params)["NUMLINE"].c_str(), "%ld", &all_node_);
-  sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes_);
+  //sscanf((*params)["NUM_NODES"].c_str(), "%ld", &num_nodes_);
 
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slave_index_);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &num_slaves_);
@@ -34,7 +34,7 @@ int AlgoBase::getSlaveIndex() {
   return slave_index_;
 }
 
-int AlgoBase::getPartitionIndex(long node) {
+/*int AlgoBase::getPartitionIndex(long node) {
   for (int i = partition_min_node_->size() - 1; i >= 0; --i) {
     if ((*partition_min_node_)[i] <= node) return i;
   }
@@ -52,7 +52,7 @@ long AlgoBase::getPartitionStartNode(int part_index) {
 
 short AlgoBase::getNumberOfPartitions() {
   return (short) partition_min_node_->size();
-}
+}*/
 
 void AlgoBase::final() {
    node_->final();
@@ -84,21 +84,26 @@ void AlgoBase::setSenderBuffer(SenderBuffer* senderBuffer) {
   senderBuffer_ = senderBuffer;
   node_->setSenderBuffer(senderBuffer);
 }
-void AlgoBase::setPartitionMinNodes(vector<long>* partitionMinNode) {
+/*void AlgoBase::setPartitionMinNodes(vector<long>* partitionMinNode) {
   partition_min_node_ = partitionMinNode;
 }
 
 long AlgoBase::getNumberOfPartitionNodes() {
   return num_nodes_;
-}
+}*/
 
 long AlgoBase::getAllNodes() {
   return all_node_;
 }
 
-long AlgoBase::getMinnode() {
-  return min_node_;
+int AlgoBase::getNumSlaves() {
+  return num_slaves_;
 }
+
+
+/*long AlgoBase::getMinnode() {
+  return min_node_;
+}*/
 
 AlgoBase::~AlgoBase() {
 }

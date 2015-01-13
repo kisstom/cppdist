@@ -25,6 +25,11 @@ CounterInversePagerankNode::CounterInversePagerankNode(
   partitionBound = NULL;
   newComer = NULL;
   numNeighbors = NULL;
+  partConfHandler = NULL;
+}
+
+void CounterInversePagerankNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
 void CounterInversePagerankNode::sender() {
@@ -116,7 +121,7 @@ void CounterInversePagerankNode::updateWithIncomingPr() {
 
 void CounterInversePagerankNode::initFromMaster(string) {
   double ini = 1.0 / allNode;
-  pagerankScore = new vector<double>(algo_->getNumberOfPartitionNodes(), ini);
+  pagerankScore = new vector<double>(partConfHandler->getNumNode(algo_->getSlaveIndex()), ini);
 }
 
 bool CounterInversePagerankNode::afterIteration() {
@@ -132,7 +137,7 @@ void CounterInversePagerankNode::final() {
   }
 
   for (long node = 0; node < pagerankScore->size(); ++node) {
-    fprintf(outf, "%ld %.10lf\n", node + algo_->getMinnode(), (*pagerankScore)[node]);
+    fprintf(outf, "%ld %.10lf\n", node + partConfHandler->getMinNode(algo_->getSlaveIndex()), (*pagerankScore)[node]);
   }
 
   fclose(outf);

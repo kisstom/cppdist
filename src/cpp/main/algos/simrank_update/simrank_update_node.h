@@ -13,7 +13,7 @@
 #include "../../common/random/random_generator.h"
 #include "../../common/old/random_walk.h"
 #include "../algo_components/node.h"
-//#include "simrank_update_deserializer.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 #include "../../common/components/mutex.h"
 #include "../../common/components/fingerprint_reader.h"
 
@@ -42,6 +42,7 @@ public:
   void initFromMaster(string);
   void initData(string, long, long);
   void final();
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 
 	void setSeed(int);
 	void setFpIndex(short);
@@ -52,25 +53,24 @@ public:
 	~SimrankUpdateNode();
 private:
 	SortedVectorNodeMatrix* matrix_;
-	//SenderBuffer* senderBuffer_;
 	FingerprintReader* fpReader_;
 	RandomGenerator* randomGenerator_;
+	GraphPartitionConfigHandler* partConfHandler;
 
 	list<RandomWalk>* currentFp_;
 	vector<RandomWalk> finishedFp_;
   vector<RandomWalk> tmpFp_;
   tr1::unordered_map<long, long> nextEdgeMap_;
-	//tr1::unordered_map<long, long> rand_outlinks_;
 
   char fpFileName_[1024];
   char slaveryConfigFileName_[1024];
-	//int partIndex_;
+
 	int numPathes_;
 	short edgeInPath_;
 	short fpIndex_;
 	Mutex threadLock_;
 	Mutex genEdgethreadLock_;
-	//Algo* algo_;
+
 	log4cpp::Category* logger_;
 	FILE* output_file_;
 };

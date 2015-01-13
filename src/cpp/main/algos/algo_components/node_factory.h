@@ -36,11 +36,14 @@
 class NodeFactory : public INodeFactory {
 public:
 	NodeFactory();
+	void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 	Node* createNodeFromConfig(unordered_map<string, string>* params);
 	std::vector<FailedEstimate>* readFailedEstimations(unordered_map<string, string>* params);
 	EstimationHandler* createEstimationHandler(unordered_map<string, string>* params);
 	unsigned char* initRandomVectorBits(long, int, double, int);
 private:
+	GraphPartitionConfigHandler* partConfigHandler;
+	NodeFactoryHelper helper;
 	EdgelistContainer* createEdgeListContainer(unordered_map<string, string>* params);
 	EdgelistContainer* createEdgeListContainer(string, long, IEdgeListBuilder*);
 	IEdgeListBuilder* createEdgeListBuilder(unordered_map<string, string>* params);

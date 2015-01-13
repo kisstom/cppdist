@@ -3,6 +3,11 @@
 
 NodeFactoryHelper::NodeFactoryHelper() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactoryHelper"));
+	graphPartitionHandler = NULL;
+}
+
+void NodeFactoryHelper::setPartitionConfigHandler(GraphPartitionConfigHandler* handler) {
+  graphPartitionHandler = handler;
 }
 
 BitpropNode* NodeFactoryHelper::initBitpropNode(unordered_map<string, string>* params) {
@@ -15,8 +20,7 @@ BitpropNode* NodeFactoryHelper::initBitpropNode(unordered_map<string, string>* p
   sscanf((*params)["EPSILON"].c_str(), "%lf", &epsilon);
   sscanf((*params)["EST_INDEX"].c_str(), "%d", &estIndex);
 
-  reader.readSlaveConfig(params);
-  long min_node = reader.getMinNodeFromParams(params);
+  long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
   return new BitpropNode(numCodingBytes, estIndex, epsilon, min_node);
 }
@@ -36,10 +40,10 @@ PagerankNode* NodeFactoryHelper::initPagerankNode(unordered_map<string, string>*
 }
 
 PagerankNonBlockNode* NodeFactoryHelper::initPagerankNonBlockNode(unordered_map<string, string>* params) {
-  long allNode, min_node;
+  long allNode;
   int maxIter;
   double dump;
-  long min_node = reader.getMinNodeFromParams(params);
+  long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
   sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
@@ -77,11 +81,9 @@ SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<stri
 		}
 	}
 
-	reader.readSlaveConfig(params);
-	long min_node = reader.getMinNodeFromParams(params);
-	long num_nodes = reader.getNumNodeFromParams(params);
-	long next_min_node = reader.getNextMinNodeFromParams(params);
-
+	long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
+	long num_nodes = graphPartitionHandler->getNumNode(util.stringToInt((*params)["SLAVE_INDEX"]));
+	long next_min_node = graphPartitionHandler->getNextMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
 	SimrankOddEvenNode* node = new SimrankOddEvenNode(numPathes, pathLen, seed,
 			type, num_nodes, min_node, next_min_node);
@@ -89,19 +91,15 @@ SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<stri
 }
 
 PSimrankNode* NodeFactoryHelper::initPSimrankNode(unordered_map<string, string>* params) {
-  GeneratorType type = SRAND;
-  int seed;
   short numPathes;
   short pathLen;
 
   sscanf((*params)["NUM_PATHES"].c_str(), "%hd", &numPathes);
   sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
 
-  reader.readSlaveConfig(params);
-  long min_node = reader.getMinNodeFromParams(params);
-  long num_nodes = reader.getNumNodeFromParams(params);
-  long next_min_node = reader.getNextMinNodeFromParams(params);
-
+  long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
+  long num_nodes = graphPartitionHandler->getNumNode(util.stringToInt((*params)["SLAVE_INDEX"]));
+  long next_min_node = graphPartitionHandler->getNextMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
   PSimrankNode* node = new PSimrankNode(numPathes, pathLen, num_nodes, min_node, next_min_node);
   return node;
@@ -116,10 +114,9 @@ CleverPagerankNode* NodeFactoryHelper::initCleverPagerankNode(unordered_map<stri
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
 
-  reader.readSlaveConfig(params);
-  long min_node = reader.getMinNodeFromParams(params);
+  long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
-  CleverPagerankNode* node = new CleverPagerankNode(allNode, minNode, dump, maxIter);
+  CleverPagerankNode* node = new CleverPagerankNode(allNode, min_node, dump, maxIter);
   return node;
 }
 
@@ -132,10 +129,9 @@ CustomNonBlockNode* NodeFactoryHelper::initCustomNonBlockNode(unordered_map<stri
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
 
-  reader.readSlaveConfig(params);
-  long min_node = reader.getMinNodeFromParams(params);
+  long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
-  CustomNonBlockNode* node = new CustomNonBlockNode(allNode, minNode, dump, maxIter);
+  CustomNonBlockNode* node = new CustomNonBlockNode(allNode, min_node, dump, maxIter);
   return node;
 }
 
@@ -148,10 +144,9 @@ CustomMultiNonBlockNode* NodeFactoryHelper::initCustomMultiNonBlockNode(unordere
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
 
-  reader.readSlaveConfig(params);
-  long min_node = reader.getMinNodeFromParams(params);
+  long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
-  CustomMultiNonBlockNode* node = new CustomMultiNonBlockNode(allNode, minNode, dump, maxIter);
+  CustomMultiNonBlockNode* node = new CustomMultiNonBlockNode(allNode, min_node, dump, maxIter);
   return node;
 }
 
@@ -163,7 +158,6 @@ CounterInversePagerankNode* NodeFactoryHelper::initCounterInversePagerankNode(un
   sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
   sscanf((*params)["MAX_ITER"].c_str(), "%d", &maxIter);
   sscanf((*params)["DUMP"].c_str(), "%lf", &dump);
-
 
   CounterInversePagerankNode* node = new CounterInversePagerankNode(allNode, dump, maxIter);
   return node;

@@ -16,11 +16,14 @@ AlsNode::AlsNode(unordered_map<string, string>* params) {
 
   userPartition = NULL;
   itemPartition = NULL;
-  userPartitioner = NULL;
-  itemPartitioner = NULL;
+  configHandler = NULL;
 
   actIter = 0;
   wantAdd = sizeof(long) + numFeat * sizeof(double);
+}
+
+void AlsNode::setAlsPartConfigHandler(AlsPartitionConfigHandler* _configHandler ) {
+  configHandler = _configHandler;
 }
 
 void AlsNode::beforeIteration(string msg) {
@@ -49,10 +52,12 @@ void AlsNode::senderUserUpdate() {
     alsUtil->solveOptimisation(featQ, userPartition, partitionNode, featP, lambda);
 
     mutex.lock();
-    alsUtil->updateFeature(featP, partitionNode + algo_->getMinnode());
+    alsUtil->updateFeature(featP, partitionNode +
+        configHandler->getUserMinNode(algo_->getSlaveIndex()));
     mutex.unlock();
 
-    broadCastFeatVect(featP, partitionNode + algo_->getMinnode());
+    broadCastFeatVect(featP, partitionNode +
+        configHandler->getUserMinNode(algo_->getSlaveIndex()));
   }
 
   algo_->sendAndSignal(partIndex_);
@@ -69,10 +74,12 @@ void AlsNode::senderItemUpdate() {
     alsUtil->solveOptimisation(featP, itemPartition, partitionNode, featQ, lambda);
 
     mutex.lock();
-    alsUtil->updateFeature(featQ, partitionNode + algo_->getMinnode());
+    alsUtil->updateFeature(featQ, partitionNode +
+        configHandler->getItemMinNode(algo_->getSlaveIndex()));
     mutex.unlock();
 
-    broadCastFeatVect(featQ, partitionNode + algo_->getMinnode());
+    broadCastFeatVect(featQ, partitionNode +
+        configHandler->getItemMinNode(algo_->getSlaveIndex()));
   }
 
   algo_->sendAndSignal(partIndex_);
@@ -110,7 +117,7 @@ void AlsNode::sendFeatVectTo(FeatureMatrix* featMx, long id, short partI) {
 }
 
 void AlsNode::broadCastFeatVect(FeatureMatrix* featMx, long id) {
-  for (short i = 0; i < algo_->getNumberOfPartitions(); ++i) {
+  for (short i = 0; i < algo_->getNumSlaves(); ++i) {
     if (i == algo_->getSlaveIndex()) continue;
     sendFeatVectTo(featMx, id, i);
   }
@@ -122,14 +129,6 @@ void AlsNode::setUserPartition(AdjacencyList<Entry>* _userPart) {
 
 void AlsNode::setItemPartition(AdjacencyList<Entry>* _itemPart) {
   itemPartition = _itemPart;
-}
-
-void AlsNode::setUserPartitioner(Partitioner* _userPartitioner) {
-  userPartitioner = _userPartitioner;
-}
-
-void AlsNode::setItemPartitioner(Partitioner* _itemPartitioner) {
-  itemPartitioner = _itemPartitioner;
 }
 
 AlsNode::~AlsNode() {

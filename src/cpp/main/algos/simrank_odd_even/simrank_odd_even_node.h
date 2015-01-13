@@ -19,7 +19,7 @@
 #include "../../common/components/mutex.h"
 #include "../../common/graph/edge_list_builder.h"
 #include "../algo_components/node.h"
-
+#include "../algo_components/factories/graph_partition_config_handler.h"
 #include "random_generator_type.h"
 
 
@@ -66,6 +66,8 @@ public:
 	bool* getOddIter() {return &oddIter_;}
 	void initRandomGenerator(int, GeneratorType);
 	void setEdgeListBuilder(IEdgeListBuilder*);
+	void setPartitionConfigHandler(GraphPartitionConfigHandler*);
+
 private:
 	Mutex nextNodesMutex_;
 	unordered_map<long, long> nextNodes_;
@@ -89,6 +91,7 @@ private:
 	PseudoRandom* random_;
 	EdgelistContainer* matrix_;
 	IEdgeListBuilder* edgeListbuilder_;
+	GraphPartitionConfigHandler* partConfHandler;
 
 	log4cpp::Category* logger_;
 };

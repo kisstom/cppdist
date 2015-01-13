@@ -4,7 +4,7 @@
 AlgoBase* TestAlgoFactory::createAlgo(unordered_map<string, string>* params) {
   AlgoFactoryHelper helper;
   AlgoBase* retval = helper.initAlgo(params);
-  retval->setPartitionMinNodes(partitionMinNodes);
+  //retval->setPartitionMinNodes(partitionMinNodes);
   return retval;
 }
 

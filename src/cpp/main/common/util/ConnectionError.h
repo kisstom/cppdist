@@ -17,7 +17,7 @@ public:
   NotImplementedException();
   virtual const char* what();
 private:
-  const char msg[1024];
+  static const char* msg;
 };
 
 class ConnectionError: public exception {

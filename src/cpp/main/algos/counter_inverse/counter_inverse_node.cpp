@@ -16,8 +16,12 @@ CounterInverseNode::CounterInverseNode() {
   bounds = NULL;
   newComer = NULL;
   partitionBound = NULL;
+  partConfHandler = NULL;
 }
 
+void CounterInverseNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
+}
 
 void CounterInverseNode::sender() {
   long outEdge, numNeighbors;
@@ -29,7 +33,7 @@ void CounterInverseNode::sender() {
 
     for (long i = 0; i < numNeighbors; ++i) {
       outEdge = matrix->getEdgeAtPosPart(partitionNode, i);
-      partIndex = algo_->getPartitionIndex(outEdge);
+      partIndex = partConfHandler->getPartitionIndex(outEdge);
 
       if (partIndex == partIndex_) {
         update(partIndex, partitionNode, outEdge);
@@ -96,7 +100,7 @@ void CounterInverseNode::setPartitionBoundFile(string file) {
 }
 
 void CounterInverseNode::determineBounds() {
-  bounds = new vector<long>(algo_->getNumberOfPartitions() + 1, 0);
+  bounds = new vector<long>(algo_->getNumSlaves() + 1, 0);
   for (int i = 0; i < (int) counter->size() + 1; ++i) {
     if (i  > 0) {
       (*bounds)[i] = (*bounds)[i - 1] + (*counter)[i - 1];

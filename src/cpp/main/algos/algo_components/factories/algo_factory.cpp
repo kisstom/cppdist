@@ -13,13 +13,13 @@ AlgoBase* AlgoFactory::createAlgo(unordered_map<string, string>* params) {
   AlgoFactoryHelper helper;
   AlgoBase* retval = helper.initAlgo(params);
 
-  vector<long>* partitionMinNodes = readSlaveConfig(params);
-  retval->setPartitionMinNodes(partitionMinNodes);
+  //vector<long>* partitionMinNodes = readSlaveConfig(params);
+  //retval->setPartitionMinNodes(partitionMinNodes);
 
   return retval;
 }
 
-vector<long>*  AlgoFactory::readSlaveConfig(unordered_map<string, string>* params) {
+/*vector<long>*  AlgoFactory::readSlaveConfig(unordered_map<string, string>* params) {
   string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
   FILE* slavery_par = fopen(cfg.c_str(), "r");
   if (slavery_par == NULL) {
@@ -37,4 +37,4 @@ vector<long>*  AlgoFactory::readSlaveConfig(unordered_map<string, string>* param
   }
 
   return partitionMinNodes;
-}
+}*/

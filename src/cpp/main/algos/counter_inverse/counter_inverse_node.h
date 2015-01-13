@@ -13,6 +13,7 @@
 #include "../../common/components/mutex.h"
 #include <stdio.h>
 #include <gtest/gtest_prod.h>
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 struct InverseTriple {
   InverseTriple(long c, long t, short _fromPartition):
@@ -39,6 +40,7 @@ public:
   void setOutputFile(string outputFile);
   void setPartitionBoundFile(string file);
   void setEdgeListContainer(EdgelistContainer*);
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
   void initFromMaster(string) {}
   void update(short partIndex, long from, long to);
   void determineBounds();
@@ -47,6 +49,7 @@ private:
   void serializeEdge(int partIndex, long from, long to);
   EdgelistContainer* matrix;
   vector<InverseTriple>* inversePartsEdges;
+  GraphPartitionConfigHandler* partConfHandler;
   vector<long>* counter;
   vector<long>* newComer;
   vector<long>* partitionBound;
