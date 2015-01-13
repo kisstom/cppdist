@@ -8,7 +8,7 @@
 #ifndef SIMRANK_STORE_FIRST_NODE_H_
 #define SIMRANK_STORE_FIRST_NODE_H_
 
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include <tr1/unordered_map>
 #include <vector>
 #include "../../common/graph/edgelist_container.h"
@@ -25,7 +25,7 @@ using std::tr1::unordered_map;
 using std::vector;
 using std::list;
 
-class SimrankStoreFirstNode : public Node {
+class SimrankStoreFirstNode : public OldPartitionNode {
 public:
 	SimrankStoreFirstNode();
 	~SimrankStoreFirstNode();

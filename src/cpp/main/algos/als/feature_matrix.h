@@ -7,10 +7,11 @@ using std::vector;
 
 class FeatureMatrix {
 public:
-  FeatureMatrix(int numItems, int featureSize);
+  FeatureMatrix(int numItems, int featureSize, double initValue = 0.0, bool random = false);
   void updateEntry(long item, int feature, const double& value);
   const double& getEntry(long item, int feature) const;
   const int& getFeatureSize() const;
+  const int& getRowSize() const;
   ~FeatureMatrix();
 private:
   double* entries;

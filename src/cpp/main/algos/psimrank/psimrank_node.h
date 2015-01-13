@@ -18,7 +18,7 @@
 #include "../../common/random/hash_pseudo_random.h"
 #include "../../common/components/mutex.h"
 #include "../../common/graph/edge_list_builder.h"
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../../common/util/uint128_t.h"
 #include "../algo_components/factories/graph_partition_config_handler.h"
 
@@ -26,7 +26,7 @@ using std::string;
 using std::vector;
 using std::tr1::unordered_map;
 
-class PSimrankNode : public Node {
+class PSimrankNode : public OldPartitionNode {
 public:
   PSimrankNode();
   ~PSimrankNode();

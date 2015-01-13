@@ -26,8 +26,6 @@ public:
   void setUserPartition(AdjacencyList<Entry>*);
   void setItemPartition(AdjacencyList<Entry>*);
   void setAlsPartConfigHandler(AlsPartitionConfigHandler*);
-  //void setUserPartitioner(Partitioner*);
-  //void setItemPartitioner(Partitioner*);
 
   void broadCastFeatVect(FeatureMatrix* featMx, long id);
   void sendFeatVectTo(FeatureMatrix* featMx, long id, short partI);
@@ -35,7 +33,9 @@ public:
   void updateItemFeats(long key, double*);
   void senderUserUpdate();
   void senderItemUpdate();
-
+  void setUserFeatFile(string fname);
+  void setItemFeatFile(string fname);
+  void flushToFile(FeatureMatrix*, string fname);
   ~AlsNode();
 private:
   AdjacencyList<Entry>* userPartition;
@@ -43,14 +43,13 @@ private:
   FeatureMatrix* featP;
   FeatureMatrix* featQ;
   AlsPartitionConfigHandler* configHandler;
-  //Partitioner* itemPartitioner;
-  //Partitioner* userPartitioner;
 
   AlsUtil* alsUtil;
   Util util;
   Mutex mutex;
 
-  string outfile;
+  string itemFeatfile;
+  string userFeatfile;
   double lambda;
   int actIter;
   int maxIter;

@@ -8,14 +8,14 @@
 #ifndef COUNTER_INVERSE_PAGERANK_NODE_H_
 #define COUNTER_INVERSE_PAGERANK_NODE_H_
 
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
 #include <gtest/gtest_prod.h>
 #include <stdio.h>
 #include "../algo_components/factories/graph_partition_config_handler.h"
 
-class CounterInversePagerankNode : public Node {
+class CounterInversePagerankNode : public OldPartitionNode {
 public:
   CounterInversePagerankNode(long, double, int);
   void beforeIteration(string msg);

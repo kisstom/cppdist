@@ -8,13 +8,13 @@
 #ifndef PAGERANK_NODE_H_
 #define PAGERANK_NODE_H_
 
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
 #include <stdio.h>
 #include "../algo_components/factories/graph_partition_config_handler.h"
 
-class PagerankNode : public Node {
+class PagerankNode : public OldPartitionNode {
 public:
   PagerankNode(int maxIter, long allNode, double dump);
   void beforeIteration(string msg);

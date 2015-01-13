@@ -11,7 +11,6 @@ global isConfReaded
 global conf
 global cfg_hosts
 global numJobs
-global partCfg
 global pids
 global crawlMaxNodes
 global BASE_LOCAL_DIR
@@ -22,7 +21,6 @@ configFile = None
 isConfReaded = False
 cfg_hosts = []
 numJobs = 0
-partCfg = []
 pids = dict()
 crawlMaxNodes = []
 BASE_LOCAL_DIR = ""
@@ -69,10 +67,6 @@ def readCfg():
 
   conf.set("ALGO", "MASTER_LOG", BASE_LOCAL_DIR + "master.log")
 
-  slaverCfg = conf.get("ALGO", "SLAVERY_CFG")
-  partitionDir = conf.get("ALGO", "REMOTE_DIR")
-  conf.set("ALGO", "LOCAL_SLAVE_CONFIG", BASE_LOCAL_DIR + "/" + slaverCfg)
-
   buildHosts(conf)
   return conf
 
@@ -90,24 +84,6 @@ def buildHosts(cfg):
     numJobs += int(cfg.get(section, option))
     cfg_hosts += [option]
   env.hosts = [MASTER_HOST]
-
-def storePartitionCfg():
-  global partCfg
-  
-  partitionDir = conf.get('ALGO', 'REMOTE_DIR')
-  partCfgName = conf.get('ALGO', 'SLAVERY_CFG')
-  cfg = partitionDir + '/' + partCfgName
-
-  partCfgFile = open(cfg, 'r')
-  for line in partCfgFile:
-    spl = line.strip().split(' ')
-    partCfg += [(spl[1], spl[2], spl[4])]
-
-  lastMaxNode = int(partCfg[-1][1]) + int(partCfg[-1][2])
-  partCfg += [('', -1, str(lastMaxNode))]
-
-  partCfgFile.close()
-
 
 """
   ####################################################
@@ -136,12 +112,6 @@ def copyCfg():
 
   put(tempf, configFile)
   os.system('rm ' + tempf)
-
-  partitionDir = conf.get('ALGO', 'REMOTE_DIR')
-  slaveConfigName = conf.get('ALGO', 'SLAVERY_CFG')
-  run('mkdir -p %s' % partitionDir)
-  put(partitionDir + '/' + slaveConfigName, conf.get('ALGO', 'LOCAL_SLAVE_CONFIG'))
-  
 
 def createLocalDir():
   global conf
@@ -253,6 +223,8 @@ def putPartitionIfNeeded():
       jobs_on_host = int(conf.get('MACHINES', host))
       prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
 
+      createRemoteDir(host)
+      putOldSplitConfigOnMachine(host)
       for x in xrange(jobs_on_host):
         putOnMachine(slave_index, host)
         slave_index += 1
@@ -264,13 +236,22 @@ def putOnMachine(slave_index, host):
     partitionFile = conf.get('ALGO', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
     put(partitionFile, remoteDir)
 
+def putOldSplitConfigOnMachine(host):
+  global conf
+
+  with settings(host_string=host):
+    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+  
+    configFile = remoteDir + '/' + conf.get('SLAVERY_CFG')
+    put(configFile, remoteDir)
+
 ########### Rating matrix splitter ################
 
 def ratingMxSplitter():
   with settings(host_string=MASTER_HOST):
     global conf, numJobs
     
-    createRemoteDirForRatingSplit(MASTER_HOST)
+    createRemoteDir(MASTER_HOST)
 
     bin_dir = conf.get('ALGO', 'BIN')
     numEdgePerPart = getNumEdgePerPart()
@@ -296,7 +277,7 @@ def putRatingSplitsToCluster():
         continue
       jobs_on_host = int(conf.get('MACHINES', host))
 
-      createRemoteDirForRatingSplit(host)
+      createRemoteDir(host)
       putRatingSplitConfigOnMachine(host)
       for x in xrange(jobs_on_host):
         putRatingSplitOnMachine(slave_index, host)
@@ -323,7 +304,7 @@ def putRatingSplitConfigOnMachine(host):
     configFile = remoteDir + '/item_part.cfg'
     put(configFile, remoteDir)
 
-def createRemoteDirForRatingSplit(host):
+def createRemoteDir(host):
   global conf
   with settings(host_string=host):
     remoteDir = conf.get('ALGO', 'REMOTE_DIR')
@@ -462,8 +443,8 @@ def startOnMachine(slave_index, host):
   with settings(host_string=host):
     bin_dir = conf.get('ALGO', 'BIN') 
     logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
-    pid = run('''(nohup %s/main/algos/task/node_task %s %d %d %s %s %s %s 1> %s 2>&1 < /dev/null &
-      echo $!)'''%(bin_dir, configFile, slave_index, numJobs, partCfg[slave_index][0], partCfg[slave_index][1], partCfg[slave_index][2], partCfg[slave_index + 1][2], logfile), pty = False)
+    pid = run('''(nohup %s/main/algos/task/node_task %s %d %d 1> %s 2>&1 < /dev/null &
+      echo $!)'''%(bin_dir, configFile, slave_index, numJobs, logfile), pty = False)
     storePid(host, pid)
 
 def mainCompute():
@@ -481,7 +462,6 @@ def mainCompute():
   with  shell_env(LD_LIBRARY_PATH=libPath):
     createLocalDir()
     gitInfo(debug)
-    storePartitionCfg()
     runOnAllNodes(copyCfg)
     execute(copyCfg)
     startMaster()
@@ -569,7 +549,7 @@ def getNumEdgePerPart():
     if numEdge % numJobs:
       numEdgePerPart = numEdge // numJobs + 1
     else:
-      NumEdgePerPart = numEdge // numJobs
+      numEdgePerPart = numEdge // numJobs
 
     return numEdgePerPart
 

@@ -21,6 +21,7 @@
 
 class AlgoBuilder {
 public:
+  AlgoBuilder();
   AlgoBase* buildFromConfig(unordered_map<string, string>* params,vector<std::pair<string, string> >* hostAndPort);
   ~AlgoBuilder();
   AlgoBase* getAlgo();

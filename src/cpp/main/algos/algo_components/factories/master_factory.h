@@ -4,6 +4,7 @@
 #include "log4cpp/Category.hh"
 #include "imaster_factory.h"
 #include "../master_base/slave.h"
+#include "../../../common/util/util.h"
 
 #include <tr1/unordered_map>
 #include <string>
@@ -19,8 +20,9 @@ public:
   MasterFactory();
   MasterBase* createMaster(unordered_map<string, string>* params);
 private:
-  vector<Slave>* readSlaveConfigs(char* cfg, int num_slaves);
+  vector<Slave>* initSlaves(int initSlavePort, int num_slaves);
   log4cpp::Category* logger_;
+  Util util;
 };
 
 

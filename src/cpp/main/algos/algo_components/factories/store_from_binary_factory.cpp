@@ -4,7 +4,7 @@
 
 StoreFromBinary* StoreFromBinaryFactory::createStoreFromBinary(unordered_map<string, string>* params) {
   StoreFromBinary* storeFromBinary = new StoreFromBinary;
-  bool isMulticast;
+  bool isMulticast = false;
   int numSockets;
   int numSlaves = atoi((*params)["NUM_SLAVES"].c_str());
   int send_limit;

@@ -23,7 +23,12 @@ CustomNonBlockNode::CustomNonBlockNode(long _allnode, long _minnode, double _dum
    pagerankScore_ = NULL;
    tmpSenderScore_ = NULL;
    tmpReceiverScore_ = NULL;
+   partConfHandler = NULL;
  }
+
+void CustomNonBlockNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
+}
 
  void CustomNonBlockNode::setOutputFileName(string _outfile) {
    outfile = _outfile;

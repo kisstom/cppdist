@@ -11,8 +11,7 @@
 #include "../../common/graph/edge_list_container_factory.h"
 #include "../../common/io/outpartition_index_computer.h"
 #include "../../common/io/outpartition_hash_computer.h"
-//#include "../../common/graph/adjacency_list.h"
-
+#include "old_partition_node.h"
 
 NodeFactory::NodeFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("NodeFactory"));
@@ -26,7 +25,7 @@ void NodeFactory::setPartitionConfigHandler(GraphPartitionConfigHandler* handler
 
 Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 	string nodeType = (*params)["NODE_TYPE"];
-	Node* node = NULL;
+	OldPartitionNode* node = NULL;
 	if (nodeType.compare("SIMRANK_UPDATE") == 0) {
 		node = NULL;
 	} else if (nodeType.compare("SIMRANK_STORE_FIRST") == 0) {
@@ -55,6 +54,7 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 		logger_->error("ERROR. Unknown type of algo %s.\n", nodeType.c_str());
 	}
 
+	node->setPartitionConfigHandler(partConfigHandler);
 	int slaveIndex;
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
 	node->setPartitionIndex(slaveIndex);
@@ -73,6 +73,7 @@ SimrankStoreFirstNode* NodeFactory::createSimrankStoreFirstNode(
 	sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
 
 	SimrankStoreFirstNode* node = new SimrankStoreFirstNode(numPathes, pathLen, fpStartName, string(outputFileN));
+	//node->setPartitionConfigHandler(partConfigHandler);
   return node;
 }
 
@@ -87,7 +88,10 @@ SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
   node->setEdgeListBuilder(edgeListBuilder);
   node->setOutputFile(string(outputFileN));
   node->setFingerPrintFile((*params)["FP_START_NAME"]);
-  node->initData((*params)["INPUT_PARTITION"]);
+
+  string input = (*params)["REMOTE_DIR"] + "/slavery_" +
+      (*params)["SLAVE_INDEX"] + ".txt";
+  node->initData(input);
   return node;
 }
 
@@ -118,13 +122,12 @@ PagerankNonBlockNode* NodeFactory::createPagerankNonBlockNode(unordered_map<stri
 CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CleverPagerankNode* node = helper.initCleverPagerankNode(params);
-  util.checkParam(params, 7, "INPUT_PARTITION", "LOCAL_SLAVE_CONFIG",
-      "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
+  util.checkParam(params, 5, "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
-  string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
+
+  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -138,6 +141,8 @@ CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, 
       (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
 
   logger_->info("Starting computing out partition indices.");
+  string input = (*params)["REMOTE_DIR"] + "/slavery_" +
+         (*params)["SLAVE_INDEX"] + ".txt";
   OutPartitionIndexComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
   computer.run();
   node->setNumberNeighbors(computer.getNumNeighbors());
@@ -187,14 +192,12 @@ CounterInversePagerankNode* NodeFactory::
 createCounterInversePagerankNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CounterInversePagerankNode* node = helper.initCounterInversePagerankNode(params);
-  util.checkParam(params, 8, "POINTER_TO_COUNTERS_DIR", "LOCAL_SLAVE_CONFIG",
-      "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
+  util.checkParam(params, 7, "POINTER_TO_COUNTERS_DIR", "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "OUT_PARTITION_INDICES_DIR", "LOCAL_DIR", "PARTITION_BOUNDS_DIR");
 
   int rowLen, numSlaves, slaveIndex;
   long minNode;
-  string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
+  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -236,13 +239,11 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
 CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CustomNonBlockNode* node = helper.initCustomNonBlockNode(params);
-  util.checkParam(params, 7, "INPUT_PARTITION", "LOCAL_SLAVE_CONFIG",
-      "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
+  util.checkParam(params, 5, "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
-  string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
+  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -256,6 +257,8 @@ CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, 
       (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
 
   logger_->info("Starting computing out partition indices.");
+  string input = (*params)["REMOTE_DIR"] + "/slavery_" +
+       (*params)["SLAVE_INDEX"] + ".txt";
   OutPartitionIndexComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
   computer.run();
   node->setNumberNeighbors(computer.getNumNeighbors());
@@ -274,13 +277,11 @@ CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, 
 CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
   CustomMultiNonBlockNode* node = helper.initCustomMultiNonBlockNode(params);
-  util.checkParam(params, 7, "INPUT_PARTITION", "LOCAL_SLAVE_CONFIG",
-      "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
+  util.checkParam(params, 5, "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
-  string input = (*params)["INPUT_PARTITION"];
-  string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
+  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -294,6 +295,8 @@ CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_ma
       (*params)["INVERSE_PARTITION_DIR"].c_str(), (*params)["SLAVE_INDEX"].c_str());
 
   logger_->info("Starting computing out partition indices.");
+  string input = (*params)["REMOTE_DIR"] + "/slavery_" +
+         (*params)["SLAVE_INDEX"] + ".txt";
   OutpartitionHashComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
   computer.run();
   node->setNumneighbors(computer.getNumNeighbors());
@@ -320,7 +323,10 @@ PSimrankNode* NodeFactory::createPSimrankNode(unordered_map<string, string>* par
   node->setEdgeListBuilder(edgeListBuilder);
   node->setOutputFile(string(outputFileN));
   node->setFingerPrintFile((*params)["FP_START_NAME"]);
-  node->initData((*params)["INPUT_PARTITION"]);
+
+  string input = (*params)["REMOTE_DIR"] + "/slavery_" +
+      (*params)["SLAVE_INDEX"] + ".txt";
+  node->initData(input);
   return node;
 }
 
@@ -394,7 +400,7 @@ EstimationHandler* NodeFactory::createEstimationHandler(unordered_map<string, st
 
 EdgelistContainer* NodeFactory::createEdgeListContainer(unordered_map<string, string>* params) {
   long minNode = partConfigHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
-  string partN = (*params)["REMOTE_DIR"] + "/slaver_" +
+  string partN = (*params)["REMOTE_DIR"] + "/slavery_" +
       (*params)["SLAVE_INDEX"] + ".txt";
 
   EdgeListContainerFactory edgeListContainerFactory;

@@ -18,7 +18,7 @@
 #include "../../common/random/hash_pseudo_random.h"
 #include "../../common/components/mutex.h"
 #include "../../common/graph/edge_list_builder.h"
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../algo_components/factories/graph_partition_config_handler.h"
 #include "random_generator_type.h"
 
@@ -27,7 +27,7 @@ using std::string;
 using std::vector;
 using std::tr1::unordered_map;
 
-class SimrankOddEvenNode : public Node {
+class SimrankOddEvenNode : public OldPartitionNode {
 public:
 	SimrankOddEvenNode();
 	~SimrankOddEvenNode();

@@ -38,6 +38,8 @@
 #include "../../algos/simple_mock_algo/simple_mock_node.h"
 #include "../../algos/bitprop/bitprop_deserializer.h"
 #include "../../algos/bitprop/bitprop_node.h"
+#include "../../algos/als/als_deserializer.h"
+#include "../../algos/als/als_node.h"
 
 #include <log4cpp/Category.hh>
 
@@ -59,6 +61,7 @@ private:
   Deserializer* createCustomMultiNonBlock(unordered_map<string, string>* params, Node* node);
   Deserializer* createCounterInverseDeserializer(unordered_map<string, string>* params, Node* node);
   Deserializer* createCounterInversePagerankDeserializer(unordered_map<string, string>* params, Node* node);
+  Deserializer* createAls(unordered_map<string, string>* params, Node* node);
 	log4cpp::Category* logger_;
 	Util util_;
 };

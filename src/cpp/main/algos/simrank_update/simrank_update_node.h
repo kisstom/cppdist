@@ -12,7 +12,7 @@
 #include "../../common/graph/sorted_vector_node_matrix.h"
 #include "../../common/random/random_generator.h"
 #include "../../common/old/random_walk.h"
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../algo_components/factories/graph_partition_config_handler.h"
 #include "../../common/components/mutex.h"
 #include "../../common/components/fingerprint_reader.h"
@@ -21,7 +21,7 @@
 
 using std::list;
 
-class SimrankUpdateNode : public Node {
+class SimrankUpdateNode : public OldPartitionNode {
 public:
 	SimrankUpdateNode();
 	SimrankUpdateNode(char* fpFile, char* slaveryConfigFile, int numPathes, FILE* outputFile);

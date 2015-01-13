@@ -12,6 +12,20 @@
 #include <cstdlib>
 #include <cmath>
 
+AlgoBuilder::AlgoBuilder() {
+  algo_ = NULL;
+  node_ = NULL;
+  nodeFactory_ = NULL;
+  algoFactory_ = NULL;
+
+  deserializer_ = NULL;
+  senderBuffer_ = NULL;
+  socketManager_ = NULL;
+  masterSocketManager_ = NULL;
+  clientSocketManager_ = NULL;
+  storeFromBinary_ = NULL;
+}
+
 AlgoBase* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
     vector<std::pair<string, string> >* hostAndPort) {
 

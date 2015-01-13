@@ -26,12 +26,16 @@ CustomMultiNonBlockNode::CustomMultiNonBlockNode(long _allnode, long _minnode, d
    tmpReceiverScore_ = NULL;
    messageCounter = 0;
    numUpdates = 0;
+   partConfHandler = NULL;
  }
-
 
 CustomMultiNonBlockNode::~CustomMultiNonBlockNode() {
   logger_->info("%d messages sent.", messageCounter);
   logger_->info("%d updates done.", numUpdates);
+}
+
+void CustomMultiNonBlockNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
 }
 
  void CustomMultiNonBlockNode::setOutputFileName(string _outfile) {

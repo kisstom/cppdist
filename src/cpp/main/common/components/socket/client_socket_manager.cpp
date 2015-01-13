@@ -5,6 +5,7 @@ ClientSocketManager::ClientSocketManager(
     int _selfIndex, int _numCluster) {
   context = new zmq::context_t(1);
   logger = &log4cpp::Category::getInstance(std::string("ClientSocketManager"));
+  logger->info("ClientSocketManager inited.");
   publisherSocket = new zmq::socket_t(*context, ZMQ_PUB);
 
   selfIndex = _selfIndex;

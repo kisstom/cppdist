@@ -4,7 +4,7 @@
 
 
 SenderBuffer* SenderBufferFactory::createSenderBuffer(unordered_map<string, string>* params) {
-  bool isMulticast;
+  bool isMulticast = false;
   int numSockets;
   int numSlaves = atoi((*params)["NUM_SLAVES"].c_str());
   int send_limit;

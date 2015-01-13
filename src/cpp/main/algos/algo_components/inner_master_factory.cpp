@@ -11,6 +11,7 @@
 #include "../pagerank_non_block/pagerank_non_block_master.h"
 #include "../counter_inverse/counter_inverse_master.h"
 #include "../counter_inverse_pagerank/counter_inverse_pagerank_master.h"
+#include "../als/als_master.h"
 
 InnerMasterFactory::InnerMasterFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("InnerMasterFactory"));
@@ -46,6 +47,8 @@ InnerMaster* InnerMasterFactory::createInnerInnerMaster(unordered_map<string, st
     innerMaster = new CounterInversePagerankMaster;
   } else if (innerMasterType.compare("CUSTOM_MULTI_NONBLOCK") == 0) {
     innerMaster = new CustomMultiNonBlockMaster;
+  } else if (innerMasterType.compare("ALS") == 0) {
+    innerMaster = new AlsMaster;
   } else {
 		logger_->error("Unknown inner master type %s", innerMasterType.c_str());
 	}

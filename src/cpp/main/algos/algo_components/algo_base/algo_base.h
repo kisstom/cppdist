@@ -40,10 +40,6 @@ public:
 
   // Getters.
   int getSlaveIndex();
-  //int getPartitionIndex(long node);
-  //long getPartitionStartNode(int part_index);
-  //short getNumberOfPartitions();
-  //long getNumberOfPartitionNodes();
   long getAllNodes();
   int getNumSlaves();
 

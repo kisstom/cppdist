@@ -63,7 +63,8 @@ INodeFactory* createFactory(unordered_map<string, string>* params) {
 
   NodeFactory* nodeFactory = new NodeFactory;
   GraphPartitionConfigHandler* handler = new GraphPartitionConfigHandler;
-  handler->readSlaveConfig((*params)["LOCAL_SLAVE_CONFIG"], atoi((*params)["NUM_SLAVES"].c_str()));
+  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
+  handler->readSlaveConfig(cfg, atoi((*params)["NUM_SLAVES"].c_str()));
   nodeFactory->setPartitionConfigHandler(handler);
 
   return nodeFactory;

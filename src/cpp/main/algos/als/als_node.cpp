@@ -8,10 +8,10 @@ AlsNode::AlsNode(unordered_map<string, string>* params) {
   numFeat = util.stringToInt((*params)["NUM_FEAT"]);
   numItem = util.stringToInt((*params)["NUM_ITEMS"]);
   numUser = util.stringToInt((*params)["NUM_USERS"]);
+  double defIniVal = util.stringToDouble((*params)["DEF_INI_VAL"]);
 
-
-  featP = new FeatureMatrix(numUser, numFeat);
-  featQ = new FeatureMatrix(numItem, numFeat);
+  featP = new FeatureMatrix(numUser, numFeat, defIniVal, true);
+  featQ = new FeatureMatrix(numItem, numFeat, defIniVal, true);
   alsUtil = new AlsUtil(numFeat);
 
   userPartition = NULL;
@@ -20,6 +20,14 @@ AlsNode::AlsNode(unordered_map<string, string>* params) {
 
   actIter = 0;
   wantAdd = sizeof(long) + numFeat * sizeof(double);
+}
+
+void AlsNode::setUserFeatFile(string _fname) {
+  userFeatfile = _fname;
+}
+
+void AlsNode::setItemFeatFile(string _fname) {
+  itemFeatfile = _fname;
 }
 
 void AlsNode::setAlsPartConfigHandler(AlsPartitionConfigHandler* _configHandler ) {
@@ -102,7 +110,27 @@ void AlsNode::updateItemFeats(long key, double * feats) {
   mutex.unlock();
 }
 
-void AlsNode::final() {}
+void AlsNode::flushToFile(FeatureMatrix*, string fname) {
+  FILE* out = fopen(fname.c_str(), "w");
+  if (NULL == out) {
+    logger_->error("Error opening file %s", fname.c_str());
+    return;
+  }
+
+  for (int i = 0; i < featP->getRowSize(); ++i) {
+    for (int j = 0; j < featP->getFeatureSize(); ++j) {
+      fprintf(out, "%lf ", featP->getEntry(i, j));
+    }
+    fprintf(out, "\n");
+  }
+
+  fclose(out);
+}
+
+void AlsNode::final() {
+  flushToFile(featP, userFeatfile);
+  flushToFile(featQ, itemFeatfile);
+}
 
 void AlsNode::sendFeatVectTo(FeatureMatrix* featMx, long id, short partI) {
   if (!senderBuffer_->canAdd(wantAdd, partI)) {
@@ -112,7 +140,7 @@ void AlsNode::sendFeatVectTo(FeatureMatrix* featMx, long id, short partI) {
   senderBuffer_->setBreak(partI);
   senderBuffer_->store(partI, id);
   for (int i = 0; i < numFeat; ++i) {
-    senderBuffer_->store(id, featMx->getEntry(id, i));
+    senderBuffer_->store(partI, featMx->getEntry(id, i));
   }
 }
 

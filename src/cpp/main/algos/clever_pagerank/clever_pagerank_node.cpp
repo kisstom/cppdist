@@ -22,7 +22,12 @@ CleverPagerankNode::CleverPagerankNode(long _allnode, long _minnode, double _dum
    numNeighbors = NULL;
    pagerankScore_ = NULL;
    tmpScore_ = NULL;
+   partConfHandler = NULL;
  }
+
+void CleverPagerankNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
+  partConfHandler = configHandler;
+}
 
  void CleverPagerankNode::setOutputFileName(string _outfile) {
    outfile = _outfile;
@@ -30,7 +35,7 @@ CleverPagerankNode::CleverPagerankNode(long _allnode, long _minnode, double _dum
 
 void CleverPagerankNode::sender() {
   logger_->info("Starting sender.");
-  long origNode = minNode_ - 1, start, end;
+  long origNode = minNode_ - 1;
   short size;
 
   for (long partitionNode = 0; partitionNode < (long) outPartitions->size(); ++partitionNode) {
@@ -101,7 +106,7 @@ void CleverPagerankNode::final() {
     return;
   }
 
-  for (long node = 0; node < pagerankScore_->size(); ++node) {
+  for (long node = 0; node < (long) pagerankScore_->size(); ++node) {
     fprintf(outf, "%ld %.10lf\n", node + minNode_, (*pagerankScore_)[node]);
   }
 

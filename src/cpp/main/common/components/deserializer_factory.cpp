@@ -40,6 +40,8 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
     deserializer = createCounterInversePagerankDeserializer(params, node);
   } else if (nodeType.compare("CUSTOM_MULTI_NONBLOCK") == 0) {
     deserializer = createCustomMultiNonBlock(params, node);
+  } else if (nodeType.compare("ALS") == 0) {
+    deserializer = createAls(params, node);
   } else {
     logger_->error("Unknown tpye of deserializer %s", nodeType.c_str());
 	}
@@ -129,6 +131,16 @@ Deserializer* DeserializerFactory::
 createCounterInversePagerankDeserializer(unordered_map<string, string>* params, Node* node) {
   CounterInversePagerankNode* simrankUpdateNode = static_cast<CounterInversePagerankNode*>(node);
   CounterInversePagerankDeserializer* deserializer = new CounterInversePagerankDeserializer;
+  deserializer->setNode(simrankUpdateNode);
+  return deserializer;
+}
+
+Deserializer* DeserializerFactory::createAls(unordered_map<string, string>* params, Node* node) {
+  AlsNode* simrankUpdateNode = static_cast<AlsNode*>(node);
+  int featSize;
+  sscanf((*params)["NUM_FEAT"].c_str(), "%d", &featSize);
+
+  AlsDeserializer* deserializer = new AlsDeserializer(featSize);
   deserializer->setNode(simrankUpdateNode);
   return deserializer;
 }

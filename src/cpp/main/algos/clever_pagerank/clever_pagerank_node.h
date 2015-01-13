@@ -11,14 +11,15 @@
 #include <tr1/unordered_map>
 #include <map>
 #include <vector>
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../../common/components/mutex.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 using std::tr1::unordered_map;
 using std::vector;
 using std::map;
 
-class CleverPagerankNode: public Node {
+class CleverPagerankNode: public OldPartitionNode {
 public:
   CleverPagerankNode(long _allnode, long _minnode, double _dump, int _maxIter);
   void beforeIteration(string msg);
@@ -33,6 +34,7 @@ public:
   void setInverseOutEdges(vector<long>*);
   void setOutputFileName(string);
 
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
   void serializeImportance(int, long, double);
   void updateSelfScore(long fromEdge, double sc);
   void readInverseNodeBounds(string);
@@ -46,6 +48,7 @@ private:
   vector<double>* pagerankScore_;
   vector<double>* tmpScore_;
   Mutex tmpScoreMutex_;
+  GraphPartitionConfigHandler* partConfHandler;
 
   string outfile;
   long allNode_;

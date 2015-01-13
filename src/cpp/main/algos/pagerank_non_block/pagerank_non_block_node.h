@@ -5,14 +5,14 @@
 #include <tr1/unordered_map>
 #include <map>
 #include <vector>
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../algo_components/factories/graph_partition_config_handler.h"
 
 using std::tr1::unordered_map;
 using std::vector;
 using std::map;
 
-class PagerankNonBlockNode: public Node {
+class PagerankNonBlockNode: public OldPartitionNode {
 public:
   PagerankNonBlockNode(long _allnode, long _minnode, double _dump, int _maxIter);
   void beforeIteration(string msg);

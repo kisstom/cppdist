@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
 #include "failed_estimate.h"
@@ -22,7 +22,7 @@
 
 using std::string;
 
-class BitpropNode: public Node {
+class BitpropNode: public OldPartitionNode {
 public:
   BitpropNode(int, int, double, long);
   void beforeIteration(string msg);

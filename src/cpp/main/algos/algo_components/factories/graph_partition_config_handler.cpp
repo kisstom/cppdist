@@ -22,7 +22,8 @@ int GraphPartitionConfigHandler::getPartitionIndex(long key) {
 }
 
 void GraphPartitionConfigHandler::readSlaveConfig(string cfg, int numSlaves) {
-  //string cfg = (*params)["LOCAL_SLAVE_CONFIG"];
+  logger_->info("Reading slave config.");
+
   FILE* slavery_par = fopen(cfg.c_str(), "r");
   if (slavery_par == NULL) {
     logger_->error("Error opening %s in algo factory.", cfg.c_str());
@@ -30,7 +31,6 @@ void GraphPartitionConfigHandler::readSlaveConfig(string cfg, int numSlaves) {
 
   partitionMinNodes = new vector<long>();
   partitionNumNodes = new vector<long>();
-  //int num_slaves = atoi((*params)["NUM_SLAVES"].c_str());
   long minNode = -1;
   long numNode;
 

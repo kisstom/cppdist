@@ -2,8 +2,13 @@
 
 AlsPartitionConfigHandler::AlsPartitionConfigHandler() {
   logger_ = &log4cpp::Category::getInstance(std::string("AlsPartitionConfigHandler"));
-  userPartitionHandler = NULL;
-  itemPartitionHandler = NULL;
+  userPartitionHandler = new GraphPartitionConfigHandler;
+  itemPartitionHandler = new GraphPartitionConfigHandler;
+}
+
+AlsPartitionConfigHandler::~AlsPartitionConfigHandler() {
+  delete userPartitionHandler;
+  delete itemPartitionHandler;
 }
 
 void AlsPartitionConfigHandler::

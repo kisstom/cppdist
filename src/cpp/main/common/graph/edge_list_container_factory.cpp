@@ -41,8 +41,6 @@ IEdgeListBuilder* EdgeListContainerFactory::createEdgeListBuilder(unordered_map<
 
 EdgelistContainer* EdgeListContainerFactory::createEdgeListContainer(unordered_map<string, string>* params,
     long minNode, string fName) {
-  util.checkParam(params, 2, "INPUT_PARTITION", "MIN_NODE");
-
   IEdgeListBuilder* builder = createEdgeListBuilder(params);
   logger_->info("Initing edge list container.");
 

@@ -8,7 +8,7 @@
 #ifndef COUNTER_INVERSE_NODE_H_
 #define COUNTER_INVERSE_NODE_H_
 
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
 #include "../../common/graph/edgelist_container.h"
 #include "../../common/components/mutex.h"
 #include <stdio.h>
@@ -30,7 +30,7 @@ struct InverseTriple {
 };
 
 
-class CounterInverseNode : public Node {
+class CounterInverseNode : public OldPartitionNode {
 public:
   CounterInverseNode();
   void beforeIteration(string msg);

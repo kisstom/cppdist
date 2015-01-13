@@ -11,13 +11,14 @@
 #include <tr1/unordered_map>
 #include <map>
 #include <vector>
-#include "../algo_components/node.h"
+#include "../algo_components/old_partition_node.h"
+#include "../algo_components/factories/graph_partition_config_handler.h"
 
 using std::tr1::unordered_map;
 using std::vector;
 using std::map;
 
-class CustomNonBlockNode: public Node {
+class CustomNonBlockNode: public OldPartitionNode {
 public:
   CustomNonBlockNode(long _allnode, long _minnode, double _dump, int _maxIter);
   void beforeIteration(string msg);
@@ -31,6 +32,7 @@ public:
   void setInverseNodeBounds(unordered_map<long, std::pair<long, long> >*);
   void setInverseOutEdges(vector<long>*);
   void setOutputFileName(string);
+  void setPartitionConfigHandler(GraphPartitionConfigHandler*);
 
   void serializeImportance(short, long, double);
   void updateSenderScore(long fromEdge, double sc);
@@ -46,6 +48,7 @@ private:
   vector<double>* pagerankScore_;
   vector<double>* tmpReceiverScore_;
   vector<double>* tmpSenderScore_;
+  GraphPartitionConfigHandler* partConfHandler;
 
   string outfile;
   long allNode_;
