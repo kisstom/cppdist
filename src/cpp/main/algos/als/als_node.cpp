@@ -35,10 +35,11 @@ void AlsNode::setAlsPartConfigHandler(AlsPartitionConfigHandler* _configHandler 
 }
 
 void AlsNode::beforeIteration(string msg) {
-
+  logger_->info("Starting iteration %d", actIter);
 }
 
 bool AlsNode::afterIteration() {
+  logger_->info("Finished iteration %d", actIter);
   return (++actIter < maxIter);
 }
 
