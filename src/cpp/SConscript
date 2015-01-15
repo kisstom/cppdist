@@ -16,11 +16,12 @@ LOG4CPP = "#../dep/log4cpp"
 GMP = "#../dep/gmp/"
 GTEST = "#../dep/gtest/"
 ZMQ = '#../dep/zmq/'
+GSL = '#../dep/gsl/'
 env = Environment(
         CXX = 'g++',
         CCFLAGS = flags,
-        CPPPATH=[ '#.', GMOCK + '/include/', LOG4CPP + '/include/', GMP + 'include/', GTEST + 'include/', ZMQ + 'include/'],
-        LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/', LOG4CPP + '/lib/', GMOCK + 'build/', GTEST + 'build/', ZMQ + 'lib/'],
+        CPPPATH=[ '#.', GMOCK + '/include/', LOG4CPP + '/include/', GMP + 'include/', GTEST + 'include/', ZMQ + 'include/', GSL + 'include/'],
+        LIBPATH=['/usr/local/googlecode/lib', GMP + 'lib/', LOG4CPP + '/lib/', GMOCK + 'build/', GTEST + 'build/', ZMQ + 'lib/', GSL + 'lib/'],
         LIBS=['gtest', 'pthread', 'log4cpp', 'gmock', 'gmp', 'gmpxx', 'zmq', 'rt', 'gsl', 'gslcblas']
 )
 
