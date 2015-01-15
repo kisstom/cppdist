@@ -10,3 +10,4 @@ env.Program('file_util_test', ['file_util_test.cpp'] + COMMON_OBJ)
 env.Program('edge_list_builder_tool', ['edge_list_builder_tool.cpp'] + COMMON_OBJ)
 
 SConscript(['util/SConscript'], exports = ['env'])
+SConscript(['adjacency_list_builder/SConscript'], exports = ['env'])

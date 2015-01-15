@@ -12,6 +12,7 @@ public:
   SparseRatingSplitter(string, long);
   void setPartiConfig(FILE*);
   void process(FILE*);
+  void processTranspose(FILE*);
 private:
   void openNextPartition();
 

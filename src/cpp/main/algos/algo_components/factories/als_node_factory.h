@@ -14,6 +14,7 @@ public:
 private:
   Util util;
   AlsPartitionConfigHandler* partConfigHandler;
+  log4cpp::Category* logger_;
 };
 
 

@@ -35,7 +35,7 @@ void GraphPartitionConfigHandler::readSlaveConfig(string cfg, int numSlaves) {
   long numNode;
 
   for (int i = 0; i < numSlaves; ++i) {
-    fscanf(slavery_par,"%*d %*s %ld %*ld %ld", &numNode, &minNode);
+    fscanf(slavery_par,"%ld %*ld %ld", &numNode, &minNode);
     partitionMinNodes->push_back(minNode);
     partitionNumNodes->push_back(numNode);
   }

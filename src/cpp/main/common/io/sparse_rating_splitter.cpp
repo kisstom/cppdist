@@ -17,23 +17,52 @@ void SparseRatingSplitter::setPartiConfig(FILE* _partiConfig) {
 
 void SparseRatingSplitter::process(FILE* input) {
   openNextPartition();
-  fprintf(partiConfig, "0\n");
 
-  long from, to;
+  long from, to, lastFromId;
   double value;
   long numEdges = 0;
+  long lastMinNode = 0;
 
   while (fscanf(input, "%ld %ld %lf\n", &from, &to, &value) != EOF) {
-    if (numEdges >= numEdgePerPart) {
-      fprintf(partiConfig, "%ld\n", from);
+    if (numEdges >= numEdgePerPart && lastFromId != from) {
+      fprintf(partiConfig, "%ld %ld %ld\n", from - lastMinNode, numEdges, lastMinNode);
       fclose(actPartition);
       openNextPartition();
       numEdges = 0;
+      lastMinNode = from;
     }
 
     fprintf(actPartition, "%ld %ld %lf\n", from, to, value);
     ++numEdges;
+    lastFromId = from;
   }
+
+  fprintf(partiConfig, "%ld %ld %ld\n", from - lastMinNode + 1, numEdges, lastMinNode);
+}
+
+void SparseRatingSplitter::processTranspose(FILE* input) {
+  openNextPartition();
+
+  long from, to, lastToId;
+  double value;
+  long numEdges = 0;
+  long lastMinNode = 0;
+
+  while (fscanf(input, "%ld %ld %lf\n", &from, &to, &value) != EOF) {
+    if (numEdges >= numEdgePerPart && lastToId != to) {
+      fprintf(partiConfig, "%ld %ld %ld\n", to - lastMinNode, numEdges, lastMinNode);
+      fclose(actPartition);
+      openNextPartition();
+      numEdges = 0;
+      lastMinNode = to;
+    }
+
+    fprintf(actPartition, "%ld %ld %lf\n", from, to, value);
+    ++numEdges;
+    lastToId = to;
+  }
+
+  fprintf(partiConfig, "%ld %ld %ld\n", from - lastMinNode + 1, numEdges, lastMinNode);
 }
 
 void SparseRatingSplitter::openNextPartition() {

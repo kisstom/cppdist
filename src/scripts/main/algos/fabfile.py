@@ -266,7 +266,7 @@ def ratingMxSplitter():
     inputData =  conf.get('ALGO', 'ITEM_RATING_DATA')
     configFile = remoteDir + '/item_part.cfg'
     prefix = remoteDir + '/item_part_'
-    run('%s/main/common/tools/sparse_rating_splitter_tool  %s %d %s %s'%(bin_dir, prefix, numEdgePerPart, inputData, configFile))
+    run('%s/main/common/tools/sparse_transposed_rating_splitter_tool  %s %d %s %s'%(bin_dir, prefix, numEdgePerPart, inputData, configFile))
 
 def putRatingSplitsToCluster():
   global conf

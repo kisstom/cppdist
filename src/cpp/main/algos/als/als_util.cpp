@@ -1,4 +1,6 @@
 #include "als_util.h"
+#include "../../common/graph/adjacency_list.h"
+#include "../../common/graph/adjacency_list_iterator_part.h"
 
 AlsUtil::AlsUtil(int _featDim) {
   featDim = _featDim;
@@ -17,7 +19,7 @@ AlsUtil::~AlsUtil() {
   gsl_multifit_linear_free(work);
 }
 
-void AlsUtil::setRegressionMatrix(const FeatureMatrix* featMx, AdjacencyListIterator<Entry>* matrixEntries,
+void AlsUtil::setRegressionMatrix(const FeatureMatrix* featMx, AbstractAdjacencyListIterator<Entry>* matrixEntries,
     double lambda, gsl_matrix* regrMx) {
 
   double br = 0.0;
@@ -31,7 +33,7 @@ void AlsUtil::setRegressionMatrix(const FeatureMatrix* featMx, AdjacencyListIter
   }
 }
 
-void AlsUtil::setObjective(AdjacencyListIterator<Entry>* matrixEntries,
+void AlsUtil::setObjective(AbstractAdjacencyListIterator<Entry>* matrixEntries,
     const FeatureMatrix* featMx, gsl_vector *objective) {
   double pr = 0.0;
   for (int colI = 0; colI < featMx->getFeatureSize(); ++colI) {
@@ -41,7 +43,7 @@ void AlsUtil::setObjective(AdjacencyListIterator<Entry>* matrixEntries,
 }
 
 double AlsUtil::scalarProduct(const FeatureMatrix* featMx,
-    AdjacencyListIterator<Entry>* matrixEntries, long colI, long colJ) {
+    AbstractAdjacencyListIterator<Entry>* matrixEntries, long colI, long colJ) {
   double retval = 0.0;
   long id = 0;
   while (matrixEntries->hasNext()) {
@@ -51,36 +53,22 @@ double AlsUtil::scalarProduct(const FeatureMatrix* featMx,
   return retval;
 }
 
-double AlsUtil::scalarProduct(AdjacencyListIterator<Entry>* matrixEntries, const FeatureMatrix* featMx,
-    int featI) {
+double AlsUtil::scalarProduct(AbstractAdjacencyListIterator<Entry>* matrixEntries,
+    const FeatureMatrix* featMx, int featI) {
   double retval = 0.0;
   Entry e;
 
   matrixEntries->resetCounter();
   while (matrixEntries->hasNext()) {
     e = matrixEntries->next();
-    retval +=  e.value * featMx->getEntry(e.id, featI);
+    retval += e.value * featMx->getEntry(e.id, featI);
   }
   return retval;
 }
 
-/*void AlsUtil::solveOptimisationAndUpdate(const FeatureMatrix* featQ,
-    const AdjacencyList<Entry>* mx, long id, FeatureMatrix* featP, double lambda) {
-  AdjacencyListIterator<Entry> ratingRow = mx->createIterator();
-  ratingRow.resetRow(id);
-
-  setRegressionMatrix(featQ, &ratingRow, lambda, regrMx);
-  setObjective(&ratingRow, featQ, objective);
-
-  double chisq = 0.0;
-  gsl_multifit_linear (regrMx, objective, optimum, covariance, &chisq, work);
-
-  updateFeature(featP, id);
-}*/
-
 void AlsUtil::solveOptimisation(const FeatureMatrix* featQ,
-    const AdjacencyList<Entry>* mx, long id, FeatureMatrix* featP, double lambda) {
-  AdjacencyListIterator<Entry> ratingRow = mx->createIterator();
+    const AdjacencyList<Entry>* mx, long id, double lambda) {
+  AdjacencyListIteratorPart<Entry> ratingRow = mx->createIteratorPart();
   ratingRow.resetRow(id);
 
   setRegressionMatrix(featQ, &ratingRow, lambda, regrMx);
@@ -102,7 +90,7 @@ double AlsUtil::computeObjective(AdjacencyList<Entry>* ratings,
   double pr = 0.0;
   double obj = 0.0;
 
-  AdjacencyListIterator<Entry> matrixEntries = ratings->createIterator();
+  AdjacencyListIteratorPart<Entry> matrixEntries = ratings->createIteratorPart();
   matrixEntries.resetRow(id);
 
   while (matrixEntries.hasNext()) {

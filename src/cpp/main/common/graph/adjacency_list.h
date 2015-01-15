@@ -11,6 +11,9 @@ template<typename T>
 class AdjacencyListIterator;
 
 template<typename T>
+class AdjacencyListIteratorPart;
+
+template<typename T>
 class AdjacencyList {
 public:
   AdjacencyList();
@@ -27,10 +30,12 @@ public:
   bool shouldDeleteContainers();
   void initContainers();
   void setFinish();
+  void flush(FILE*) const;
 
   bool containsEdge(long, T entry);
   bool operator==(AdjacencyList& rhs) const;
-  const AdjacencyListIterator<T> createIterator() const;
+  AdjacencyListIterator<T> createIterator() const;
+  AdjacencyListIteratorPart<T> createIteratorPart() const;
 
   const long neighborhoodSize(long key) const;
   const long neighborhoodSizePart(long key) const;
@@ -48,8 +53,13 @@ private:
 };
 
 template<typename T>
-const AdjacencyListIterator<T> AdjacencyList<T>::createIterator() const {
+AdjacencyListIterator<T> AdjacencyList<T>::createIterator() const {
   return AdjacencyListIterator<T>(this);
+}
+
+template<typename T>
+AdjacencyListIteratorPart<T> AdjacencyList<T>::createIteratorPart() const {
+  return AdjacencyListIteratorPart<T>(this);
 }
 
 template<typename T>

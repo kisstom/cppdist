@@ -104,8 +104,7 @@ void makePart::process() {
       last_minnode = minnode;
       minnode = current_row;
       numnode = minnode - last_minnode;
-      fprintf(partition_cfg, "%d %s_%d.txt %ld %ld %ld\n",
-         slave_port, FLAGS_part_prefix.c_str(), partition, numnode, numedge, last_minnode);
+      fprintf(partition_cfg, "%ld %ld %ld\n", numnode, numedge, last_minnode);
 
       // Updates the attrs.
       numedge = 0;
@@ -139,8 +138,7 @@ void makePart::process() {
   last_minnode = minnode;
   minnode = current_row;
   numnode = minnode - last_minnode;
-  fprintf(partition_cfg, "%d %s_%d.txt %ld %ld %ld\n",
-      slave_port, FLAGS_part_prefix.c_str(), partition, numnode, numedge, last_minnode);
+  fprintf(partition_cfg, "%ld %ld %ld\n", numnode, numedge, last_minnode);
 
   fclose(current_output);
   fclose(partition_cfg);

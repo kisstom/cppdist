@@ -5,6 +5,7 @@
 
 AlsNodeFactory::AlsNodeFactory() {
   partConfigHandler = NULL;
+  logger_ = &log4cpp::Category::getInstance(std::string("AlsNodeFactory"));
 }
 
 Node* AlsNodeFactory::createNodeFromConfig(

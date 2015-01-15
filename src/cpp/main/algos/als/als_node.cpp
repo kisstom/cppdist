@@ -57,7 +57,7 @@ void AlsNode::senderUserUpdate() {
   for (long partitionNode = 0; partitionNode < userPartition->getNumberOfNodes(); ++partitionNode) {
     numNeighbors = userPartition->neighborhoodSizePart(partitionNode);
     if (0.0 == numNeighbors) continue;
-    alsUtil->solveOptimisation(featQ, userPartition, partitionNode, featP, lambda);
+    alsUtil->solveOptimisation(featQ, userPartition, partitionNode, lambda);
 
     mutex.lock();
     alsUtil->updateFeature(featP, partitionNode +
@@ -79,7 +79,7 @@ void AlsNode::senderItemUpdate() {
   for (long partitionNode = 0; partitionNode < itemPartition->getNumberOfNodes(); ++partitionNode) {
     numNeighbors = itemPartition->neighborhoodSizePart(partitionNode);
     if (0.0 == numNeighbors) continue;
-    alsUtil->solveOptimisation(featP, itemPartition, partitionNode, featQ, lambda);
+    alsUtil->solveOptimisation(featP, itemPartition, partitionNode, lambda);
 
     mutex.lock();
     alsUtil->updateFeature(featQ, partitionNode +
@@ -110,16 +110,16 @@ void AlsNode::updateItemFeats(long key, double * feats) {
   mutex.unlock();
 }
 
-void AlsNode::flushToFile(FeatureMatrix*, string fname) {
+void AlsNode::flushToFile(FeatureMatrix* featMx, string fname) {
   FILE* out = fopen(fname.c_str(), "w");
   if (NULL == out) {
     logger_->error("Error opening file %s", fname.c_str());
     return;
   }
 
-  for (int i = 0; i < featP->getRowSize(); ++i) {
-    for (int j = 0; j < featP->getFeatureSize(); ++j) {
-      fprintf(out, "%lf ", featP->getEntry(i, j));
+  for (int i = 0; i < featMx->getRowSize(); ++i) {
+    for (int j = 0; j < featMx->getFeatureSize(); ++j) {
+      fprintf(out, "%lf ", featMx->getEntry(i, j));
     }
     fprintf(out, "\n");
   }
@@ -128,8 +128,10 @@ void AlsNode::flushToFile(FeatureMatrix*, string fname) {
 }
 
 void AlsNode::final() {
-  flushToFile(featP, userFeatfile);
-  flushToFile(featQ, itemFeatfile);
+  if (algo_->getSlaveIndex() == 0) {
+    flushToFile(featP, userFeatfile);
+    flushToFile(featQ, itemFeatfile);
+  }
 }
 
 void AlsNode::sendFeatVectTo(FeatureMatrix* featMx, long id, short partI) {

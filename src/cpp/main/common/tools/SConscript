@@ -20,3 +20,4 @@ env.Program('shuffle_reindexer_job', ['shuffle_reindexer_job.cpp', '../graph_con
 env.Program('shuffle_continue_reindexer_job', ['shuffle_continue_reindexer_job.cpp', '../graph_converter/shuffle_continue_reindexer.o'])
 env.Program('outpartition_index_as_edgelist_computer', ['outpartition_index_as_edgelist_computer.cpp', '../io/outpartition_index_computer.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o'])
 env.Program('sparse_rating_splitter_tool', ['sparse_rating_splitter_tool.cpp', '../io/sparse_rating_splitter.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o'])
+env.Program('sparse_transposed_rating_splitter_tool', ['sparse_transposed_rating_splitter_tool.cpp', '../io/sparse_rating_splitter.o', '../util/param_miss_exception.o', '../util/util.o', '../util/logger_factory.o'])

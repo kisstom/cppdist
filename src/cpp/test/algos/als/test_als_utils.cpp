@@ -3,6 +3,7 @@
 #include <string>
 #include "../../../main/algos/als/als_util.h"
 #include "../../../main/common/graph/entry.h"
+#include "../../../main/common/graph/adjacency_list_iterator_part.h"
 
 namespace {
 
@@ -79,7 +80,7 @@ TEST_F(AlsUtilTest, testObjective) {
   double lambda;
   gsl_vector* obj = gsl_vector_alloc (featDim);
 
-  AdjacencyListIterator<Entry> ratingRow = ratings->createIterator();
+  AdjacencyListIteratorPart<Entry> ratingRow = ratings->createIteratorPart();
   ratingRow.resetRow(id);
   AlsUtil util(featDim);
 
@@ -93,7 +94,7 @@ TEST_F(AlsUtilTest, testSetMatrix) {
   double lambda = 0.1;
   gsl_matrix* regrMx = gsl_matrix_alloc (featDim, featDim);
 
-  AdjacencyListIterator<Entry> ratingRow = ratings->createIterator();
+  AdjacencyListIteratorPart<Entry> ratingRow = ratings->createIteratorPart();
   ratingRow.resetRow(id);
   AlsUtil util(featDim);
 
@@ -109,7 +110,7 @@ TEST_F(AlsUtilTest, testSolveAndUpdate) {
   double lambda = 0.2;
   std::cout << "objective " << util.computeObjective(ratings, featP, featQ, lambda, 0) << '\n';
 
-  util.solveOptimisation(featQ, ratings, 0, featP, lambda);
+  util.solveOptimisation(featQ, ratings, 0, lambda);
   util.updateFeature(featP, lambda);
   std::cout << "objective " << util.computeObjective(ratings, featP, featQ, lambda, 0) << '\n';
 

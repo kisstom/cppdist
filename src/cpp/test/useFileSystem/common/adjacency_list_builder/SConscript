@@ -1,0 +1,8 @@
+Import('env')
+
+env.Object(Glob('*.cpp'))
+
+GRAPH_COMPONENTS = Glob('#/../bin/main/common/graph/*.o') + Glob('#/../bin/main/common/util/*.o')
+GRAPH_COMPONENTS += Glob('#/../bin/main/common/graph/builder/*.o')
+
+env.Program('adjacency_list_builder_main', ['adjacency_list_builder_main.cpp'] + GRAPH_COMPONENTS)

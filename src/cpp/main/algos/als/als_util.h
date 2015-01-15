@@ -3,27 +3,26 @@
 
 #include <gsl/gsl_multifit.h>
 #include "feature_matrix.h"
-#include "../../common/graph/adjacency_list_iterator.h"
+#include "../../common/graph/abstract_adjacency_list_iterator.h"
+#include "../../common/graph/adjacency_list.h"
 #include "../../common/graph/entry.h"
 
 class AlsUtil {
 public:
   AlsUtil(int featDim);
 
-  void setRegressionMatrix(const FeatureMatrix* featMx, AdjacencyListIterator<Entry>* matrixEntries,
+  void setRegressionMatrix(const FeatureMatrix* featMx, AbstractAdjacencyListIterator<Entry>* matrixEntries,
       double lambda, gsl_matrix* regrMx);
-  void setObjective(AdjacencyListIterator<Entry>* matrixEntries,
+  void setObjective(AbstractAdjacencyListIterator<Entry>* matrixEntries,
       const FeatureMatrix* featMx, gsl_vector *objective);
 
   double scalarProduct(const FeatureMatrix* featMx,
-      AdjacencyListIterator<Entry>* matrixEntries, long colI, long colJ);
-  double scalarProduct(AdjacencyListIterator<Entry>* matrixEntries, const FeatureMatrix* featMx,
+      AbstractAdjacencyListIterator<Entry>* matrixEntries, long colI, long colJ);
+  double scalarProduct(AbstractAdjacencyListIterator<Entry>* matrixEntries, const FeatureMatrix* featMx,
       int featI);
 
-  //void solveOptimisationAndUpdate(const FeatureMatrix* featQ,
-  //    const AdjacencyList<Entry>* mx, long id, FeatureMatrix* featP, double lambda);
   void solveOptimisation(const FeatureMatrix* featQ,
-      const AdjacencyList<Entry>* mx, long id, FeatureMatrix* featP, double lambda);
+      const AdjacencyList<Entry>* mx, long id, double lambda);
 
   void updateFeature(FeatureMatrix* featP, long id);
 
