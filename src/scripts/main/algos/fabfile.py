@@ -458,6 +458,7 @@ def mainCompute():
   libPath = depDir + 'gmp/lib/'
   libPath += ':' + depDir + 'log4cpp/lib/'
   libPath += ':' + depDir + 'zmq/'
+  libPath += ':' + depDir + 'gsl/lib/'
 
   with  shell_env(LD_LIBRARY_PATH=libPath):
     createLocalDir()
