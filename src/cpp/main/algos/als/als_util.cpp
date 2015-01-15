@@ -3,6 +3,7 @@
 #include "../../common/graph/adjacency_list_iterator_part.h"
 
 AlsUtil::AlsUtil(int _featDim) {
+  logger_ = &log4cpp::Category::getInstance(std::string("AlsUtil"));
   featDim = _featDim;
   optimum = gsl_vector_alloc (featDim);
   objective = gsl_vector_alloc (featDim);
@@ -76,6 +77,8 @@ void AlsUtil::solveOptimisation(const FeatureMatrix* featQ,
 
   double chisq = 0.0;
   gsl_multifit_linear (regrMx, objective, optimum, covariance, &chisq, work);
+
+  //logger_->info("Chsq stat %lf", chisq);
 }
 
 void AlsUtil::updateFeature(FeatureMatrix* featP, long id) {

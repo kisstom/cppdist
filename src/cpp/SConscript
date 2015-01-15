@@ -90,6 +90,11 @@ ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/master_base/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/algo_components/factories/*.o')
 
 SConscript([
+    'main/common/tools/SConscript'
+	],
+    exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])
+
+SConscript([
     'main/algos/task/SConscript'
 	],
     exports = ['env', 'COMMON_OBJ', 'ALGO_OBJ'])

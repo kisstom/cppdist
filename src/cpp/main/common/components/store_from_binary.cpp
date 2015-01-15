@@ -65,7 +65,6 @@ bool StoreFromBinary::storeFromIndex(int socket_index) {
   		bool cont = true;
 
   	  if (!serializer_.hasNext(receiver_remains_[socket_index] + stored)) {
-  	    logger_->info("Received end signal.");
   	    cont = false;
   	  }
 

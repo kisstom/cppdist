@@ -6,6 +6,7 @@
 #include "../../common/graph/abstract_adjacency_list_iterator.h"
 #include "../../common/graph/adjacency_list.h"
 #include "../../common/graph/entry.h"
+#include "log4cpp/Category.hh"
 
 class AlsUtil {
 public:
@@ -37,6 +38,7 @@ private:
   gsl_vector* objective;
   gsl_multifit_linear_workspace * work;
   int featDim;
+  log4cpp::Category* logger_;
 };
 
 #endif  // ALS_UTIL_H_

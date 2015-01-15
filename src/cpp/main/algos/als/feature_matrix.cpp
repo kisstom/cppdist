@@ -16,6 +16,25 @@ featureSize(_featureSize), numItems(_numItems) {
       entries[i] = initValue;
     }
   }
+
+  logger_ = &log4cpp::Category::getInstance(std::string("FeatureMatrix"));
+}
+
+void FeatureMatrix::loadFromFile(string fname) {
+  FILE* in = fopen(fname.c_str(), "r");
+  if (in == NULL) {
+    logger_->error("Error opening file %s", fname.c_str());
+  }
+
+  double value;
+  for (long i = 0; i < numItems; ++i) {
+    for (int j = 0; j < featureSize; ++j) {
+      fscanf(in, "%lf", &value);
+      updateEntry(i, j, value);
+    }
+  }
+
+  fclose(in);
 }
 
 void FeatureMatrix::updateEntry(long item, int feature, const double& value) {
