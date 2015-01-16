@@ -41,6 +41,10 @@ Node* AlsNodeFactory::createNodeFromConfig(
   node->setUserFeatFile(userFeatOutFile);
   node->setItemFeatFile(itemFeatOutFile);
 
+  int slaveIndex;
+  sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  node->setPartitionIndex(slaveIndex);
+
   return node;
 }
 

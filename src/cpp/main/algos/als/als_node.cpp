@@ -136,7 +136,7 @@ void AlsNode::final() {
 }
 
 void AlsNode::sendFeatVectTo(FeatureMatrix* featMx, long id, short partI) {
-  if (!senderBuffer_->canAdd(wantAdd, partI)) {
+  if (!senderBuffer_->canAdd(partI, wantAdd + 1)) {
     senderBuffer_->emptyBuffer(partI);
   }
 
