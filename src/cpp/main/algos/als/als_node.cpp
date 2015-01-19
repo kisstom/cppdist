@@ -60,10 +60,10 @@ void AlsNode::senderUserUpdate() {
     if (0.0 == numNeighbors) continue;
     alsUtil->solveOptimisation(featQ, userPartition, partitionNode, lambda);
 
-    mutex.lock();
+    //mutex.lock();
     alsUtil->updateFeature(featP, partitionNode +
         configHandler->getUserMinNode(algo_->getSlaveIndex()));
-    mutex.unlock();
+    //mutex.unlock();
 
     broadCastFeatVect(featP, partitionNode +
         configHandler->getUserMinNode(algo_->getSlaveIndex()));
@@ -82,10 +82,10 @@ void AlsNode::senderItemUpdate() {
     if (0.0 == numNeighbors) continue;
     alsUtil->solveOptimisation(featP, itemPartition, partitionNode, lambda);
 
-    mutex.lock();
+    //mutex.lock();
     alsUtil->updateFeature(featQ, partitionNode +
         configHandler->getItemMinNode(algo_->getSlaveIndex()));
-    mutex.unlock();
+    //mutex.unlock();
 
     broadCastFeatVect(featQ, partitionNode +
         configHandler->getItemMinNode(algo_->getSlaveIndex()));
@@ -96,19 +96,19 @@ void AlsNode::senderItemUpdate() {
 }
 
 void AlsNode::updateUserFeats(long key, double * feats) {
-  mutex.lock();
+  //mutex.lock();
   for (int featI = 0; featI < featP->getFeatureSize(); ++featI) {
     featP->updateEntry(key, featI, *(feats + featI));
   }
-  mutex.unlock();
+  //mutex.unlock();
 }
 
 void AlsNode::updateItemFeats(long key, double * feats) {
-  mutex.lock();
+  //mutex.lock();
   for (int featI = 0; featI < featQ->getFeatureSize(); ++featI) {
     featQ->updateEntry(key, featI, *(feats + featI));
   }
-  mutex.unlock();
+  //mutex.unlock();
 }
 
 void AlsNode::flushToFile(FeatureMatrix* featMx, string fname) {
