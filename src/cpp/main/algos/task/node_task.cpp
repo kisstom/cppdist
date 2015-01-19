@@ -21,6 +21,7 @@
 #include "log4cpp/PatternLayout.hh"
 
 #include "../../common/util/logger_factory.h"
+#include "../algo_components/factories/abstract_node_factory.h"
 #include <string.h>
 
 void initLogger(unordered_map<string, string>* params) {
@@ -50,26 +51,6 @@ void initLogger(unordered_map<string, string>* params) {
 	logger->info("Logger started. Level %s.", debugLevel.c_str());
 }
 
-INodeFactory* createFactory(unordered_map<string, string>* params) {
-  // TODO nemcsak ALS
-  if ((*params)["NODE_TYPE"].compare("ALS") == 0) {
-    AlsNodeFactory* nodeFactory = new AlsNodeFactory;
-    AlsPartitionConfigHandler* handler = new AlsPartitionConfigHandler;
-    handler->readItemConfig((*params)["REMOTE_DIR"] + "/item_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
-    handler->readUserConfig((*params)["REMOTE_DIR"] + "/user_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
-    nodeFactory->setPartitionConfigHandler(handler);
-    return nodeFactory;
-  }
-
-  NodeFactory* nodeFactory = new NodeFactory;
-  GraphPartitionConfigHandler* handler = new GraphPartitionConfigHandler;
-  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
-  handler->readSlaveConfig(cfg, atoi((*params)["NUM_SLAVES"].c_str()));
-  nodeFactory->setPartitionConfigHandler(handler);
-
-  return nodeFactory;
-}
-
 int main(int argc, char* argv[]) {
 	CfgReader cfgreader;
 
@@ -84,7 +65,8 @@ int main(int argc, char* argv[]) {
   log4cpp::Category* logger = &log4cpp::Category::getInstance(std::string("NodeTask"));
 
   AlgoBuilder builder;
-  INodeFactory* nodeFactory = createFactory(params);
+  AbstractNodeFactory abstractNodeFactory;
+  INodeFactory* nodeFactory = abstractNodeFactory.provideNodeFactory(params);
 
   builder.setNodeFactory(nodeFactory);
   builder.setAlgoFactory(new AlgoFactory);

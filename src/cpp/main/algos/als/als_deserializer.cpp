@@ -7,6 +7,7 @@ AlsDeserializer::AlsDeserializer(int _numFeat) {
   numFeat = _numFeat;
   key = -1;
   node_ = NULL;
+  messageCounter = 0;
 }
 
 void AlsDeserializer::update(short partindex) {
@@ -30,6 +31,7 @@ int AlsDeserializer::storeFromBinary(char* buffer, unsigned length) {
     stored += sizeof(double);
   }
 
+  ++messageCounter;
   return stored;
 }
 
@@ -42,5 +44,6 @@ void AlsDeserializer::setNode(AlsNode* node) {
 }
 
 AlsDeserializer::~AlsDeserializer() {
+  logger_->info("Received %d messages.", messageCounter);
   delete[] feats;
 }

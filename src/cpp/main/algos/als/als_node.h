@@ -27,7 +27,7 @@ public:
   void setItemPartition(AdjacencyList<Entry>*);
   void setAlsPartConfigHandler(AlsPartitionConfigHandler*);
 
-  void broadCastFeatVect(FeatureMatrix* featMx, long id);
+  virtual void broadCastFeatVect(FeatureMatrix* featMx, long id);
   void sendFeatVectTo(FeatureMatrix* featMx, long id, short partI);
   void updateUserFeats(long key, double*);
   void updateItemFeats(long key, double*);
@@ -37,7 +37,7 @@ public:
   void setItemFeatFile(string fname);
   void flushToFile(FeatureMatrix*, string fname);
   ~AlsNode();
-private:
+protected:
   AdjacencyList<Entry>* userPartition;
   AdjacencyList<Entry>* itemPartition;
   FeatureMatrix* featP;

@@ -17,6 +17,7 @@ public:
   ~AlsDeserializer();
 
 private:
+  int messageCounter;
   double* feats;
   long key;
   int numFeat;
