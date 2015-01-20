@@ -18,14 +18,11 @@ MasterBase* MasterFactoryHelper::initMaster(unordered_map<string, string>* param
 
   sscanf((*params)["MASTER_PORT"].c_str(), "%d", &master_port);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &num_slaves);
-  sscanf((*params)["NUMLINE"].c_str(), "%ld", &numLine);
-
-  logger_->info("numline %ld", numLine);
 
   if (params->find("MULTI") != params->end() &&
       atoi((*params)["MULTI"].c_str()) == 1) {
-    return new ThreeThreadedMaster(master_port, slaves, numLine);
+    return new ThreeThreadedMaster(master_port, slaves);
   }
 
-  return new TwoThreadedMaster(master_port, slaves, numLine);
+  return new TwoThreadedMaster(master_port, slaves);
 }

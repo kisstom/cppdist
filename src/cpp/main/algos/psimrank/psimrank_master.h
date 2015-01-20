@@ -15,7 +15,7 @@
 
 class PSimrankMaster : public InnerMaster {
 public:
-  PSimrankMaster();
+  PSimrankMaster(long numNodes);
   bool nextIter();
   void setRandomGenerator(PSimrankRandomGeneratorIFace*);
 private:
@@ -25,6 +25,7 @@ private:
   PSimrankRandomGeneratorIFace* randomGenerator_;
 
   int iterNum_;
+  long numNodes_;
   log4cpp::Category* logger_;
 };
 

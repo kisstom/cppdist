@@ -7,10 +7,11 @@
 
 #include "psimrank_master.h"
 
-PSimrankMaster::PSimrankMaster() {
+PSimrankMaster::PSimrankMaster(long numNodes) {
   logger_ = &log4cpp::Category::getInstance(std::string("PSimrankMaster"));
   logger_->info("PSimrankMaster inited.");
   iterNum_ = 0;
+  numNodes_ = numNodes;
 }
 
 void PSimrankMaster::setRandomGenerator(PSimrankRandomGeneratorIFace* rgen) {
@@ -37,10 +38,10 @@ bool PSimrankMaster::nextIter() {
 }
 
 long PSimrankMaster::generateRandomPrime() {
-  return randomGenerator_->generateRandomPrime(master_->getNumNodes());
+  return randomGenerator_->generateRandomPrime(numNodes_);
 }
 
 long PSimrankMaster::generateRandomAdd() {
   //logger_->info("nn %ld", master_->getNumNodes());
-  return randomGenerator_->generateRandomAdd(master_->getNumNodes());
+  return randomGenerator_->generateRandomAdd(numNodes_);
 }

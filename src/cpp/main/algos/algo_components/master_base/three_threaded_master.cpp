@@ -1,7 +1,7 @@
 #include "three_threaded_master.h"
 
-ThreeThreadedMaster::ThreeThreadedMaster(int master_port, vector<Slave>* slaves, long numNodes):
-MasterBase(master_port, slaves, numNodes) {}
+ThreeThreadedMaster::ThreeThreadedMaster(int master_port, vector<Slave>* slaves):
+MasterBase(master_port, slaves) {}
 
 void ThreeThreadedMaster::MakeNodeConnections() {
   char fakeMessage[1024] = "HAVA NAGILA";

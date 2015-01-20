@@ -4,12 +4,11 @@
 
 using std::vector;
 
-MasterBase::MasterBase(int master_port, vector<Slave>* slaves, long numNodes)
+MasterBase::MasterBase(int master_port, vector<Slave>* slaves)
 {
   master_port_ = master_port;
   slaves_ = slaves;
   logger_ = &log4cpp::Category::getInstance(std::string("Master"));
-  numNodes_ = numNodes;
   master_socket_ = NULL;
   innerMaster_ = NULL;
 }
@@ -157,6 +156,3 @@ void MasterBase::sendMessageForAllNodes(char* msg) {
   }
 }
 
-long MasterBase::getNumNodes() {
-  return numNodes_;
-}

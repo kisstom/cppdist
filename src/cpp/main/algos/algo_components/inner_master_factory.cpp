@@ -79,7 +79,9 @@ InnerMaster* InnerMasterFactory::createPSimrankMaster(unordered_map<string, stri
     }
   }
 
-  PSimrankMaster* innerMaster = new PSimrankMaster;
+  long numNodes = -1;
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &numNodes);
+  PSimrankMaster* innerMaster = new PSimrankMaster(numNodes);
   innerMaster->setRandomGenerator(randomGen);
 
   return innerMaster;

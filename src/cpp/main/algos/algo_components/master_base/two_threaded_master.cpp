@@ -1,7 +1,7 @@
 #include "two_threaded_master.h"
 
-TwoThreadedMaster::TwoThreadedMaster(int master_port, vector<Slave>* slaves, long numNodes):
-MasterBase(master_port, slaves, numNodes) {}
+TwoThreadedMaster::TwoThreadedMaster(int master_port, vector<Slave>* slaves):
+MasterBase(master_port, slaves) {}
 
 void TwoThreadedMaster::MakeNodeConnections()
 {

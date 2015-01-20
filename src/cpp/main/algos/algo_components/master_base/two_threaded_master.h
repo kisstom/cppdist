@@ -5,7 +5,7 @@
 
 class TwoThreadedMaster: public MasterBase {
 public:
-  TwoThreadedMaster(int master_port, vector<Slave>* slaves, long numNodes);
+  TwoThreadedMaster(int master_port, vector<Slave>* slaves);
   void MakeNodeConnections();
   vector<vector<int> >* MakeTournament();
   void MakeConnection(int i, int j);

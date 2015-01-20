@@ -7,6 +7,7 @@ AlsMultiNode::AlsMultiNode(unordered_map<string, string>* params) : AlsNode(para
 }
 
 void AlsMultiNode::broadCastFeatVect(FeatureMatrix* featMx, long id) {
+  //logger_->info("broadCastFeatVect");
   sendFeatVectTo(featMx, id, broadcastIndex);
 }
 

@@ -5,7 +5,7 @@
 
 class ThreeThreadedMaster: public MasterBase {
 public:
-  ThreeThreadedMaster(int master_port, vector<Slave>* slaves, long numNodes);
+  ThreeThreadedMaster(int master_port, vector<Slave>* slaves);
   void MakeNodeConnections();
 };
 
