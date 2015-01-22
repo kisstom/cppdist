@@ -69,6 +69,7 @@ double AlsUtil::scalarProduct(AbstractAdjacencyListIterator<Entry>* matrixEntrie
 
 void AlsUtil::solveOptimisation(const FeatureMatrix* featQ,
     const AdjacencyList<Entry>* mx, long id, double lambda) {
+  // TODO ezt innen at lehetne rakni a hivo oldalra
   AdjacencyListIteratorPart<Entry> ratingRow = mx->createIteratorPart();
   ratingRow.resetRow(id);
 

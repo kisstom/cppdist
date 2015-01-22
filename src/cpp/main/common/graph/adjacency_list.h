@@ -4,6 +4,7 @@
 #include <vector>
 #include "../util/util.h"
 #include "log4cpp/Category.hh"
+#include "entry.h"
 
 using namespace std;
 
