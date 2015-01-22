@@ -31,12 +31,12 @@ adjList(_adjList) {
 }
 
 template<typename T>
-bool AdjacencyListIteratorPart<T>::hasNext() const {
+inline bool AdjacencyListIteratorPart<T>::hasNext() const {
   return pos + 1 < adjList->neighborhoodSizePart(row);
 }
 
 template<typename T>
-const T& AdjacencyListIteratorPart<T>::next() {
+inline const T& AdjacencyListIteratorPart<T>::next() {
   return adjList->getEdgeAtPosPart(row, ++pos);
 }
 

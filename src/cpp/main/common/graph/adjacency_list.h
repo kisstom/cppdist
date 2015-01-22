@@ -142,7 +142,7 @@ void AdjacencyList<T>::addEdge(long nodeId, T edge) {
 }
 
 template <typename T>
-const long AdjacencyList<T>::neighborhoodSize(long nodeId) const {
+inline const long AdjacencyList<T>::neighborhoodSize(long nodeId) const {
   long nodeIndex = nodeId - minnode_;
   if (nodeIndex + 1 >= (long) start_edges_->size() || nodeIndex < 0) return -1;
 
@@ -150,7 +150,7 @@ const long AdjacencyList<T>::neighborhoodSize(long nodeId) const {
 }
 
 template <typename T>
-const long AdjacencyList<T>::neighborhoodSizePart(long nodeId) const {
+inline const long AdjacencyList<T>::neighborhoodSizePart(long nodeId) const {
   if (nodeId + 1 >= (long) start_edges_->size() || nodeId < 0) return -1;
 
   return start_edges_->at(nodeId + 1) - start_edges_->at(nodeId);
@@ -211,6 +211,21 @@ bool AdjacencyList<T>::containsEdge(long from, T to) {
       neighborHood);
 
   return found;
+}
+
+template <>
+inline const Entry& AdjacencyList<Entry>::getEdgeAtPos(long node, int index) const {
+  long nodeIndex = node - minnode_;
+  if (nodeIndex < 0) return Entry::getNullItem();
+
+  return edge_list_->at(start_edges_->at(nodeIndex) + index);
+}
+
+template <>
+inline const Entry& AdjacencyList<Entry>::getEdgeAtPosPart(long node, int index) const {
+  if (node < 0) return Entry::getNullItem();
+
+  return edge_list_->at(start_edges_->at(node) + index);
 }
 
 #endif  // ADJACENCY_LIST_H_

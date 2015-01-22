@@ -24,4 +24,20 @@ private:
   const int numItems;
 };
 
+inline void FeatureMatrix::updateEntry(long item, int feature, const double& value) {
+  * (entries + featureSize * item + feature) = value;
+}
+
+inline const double& FeatureMatrix::getEntry(long item, int feature) const {
+  return * (entries + featureSize * item + feature);
+}
+
+inline const int& FeatureMatrix::getFeatureSize() const {
+  return featureSize;
+}
+
+inline const int& FeatureMatrix::getRowSize() const {
+  return numItems;
+}
+
 #endif // FEATURE_MATRIX_H_

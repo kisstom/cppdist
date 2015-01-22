@@ -37,22 +37,6 @@ void FeatureMatrix::loadFromFile(string fname) {
   fclose(in);
 }
 
-void FeatureMatrix::updateEntry(long item, int feature, const double& value) {
-  * (entries + featureSize * item + feature) = value;
-}
-
-const double& FeatureMatrix::getEntry(long item, int feature) const {
-  return * (entries + featureSize * item + feature);
-}
-
-const int& FeatureMatrix::getFeatureSize() const {
-  return featureSize;
-}
-
-const int& FeatureMatrix::getRowSize() const {
-  return numItems;
-}
-
 FeatureMatrix::~FeatureMatrix() {
   delete [] entries;
 }
