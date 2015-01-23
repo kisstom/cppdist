@@ -57,7 +57,11 @@ void AlsMulti2Step::setAlsPartConfigHandler(AlsPartitionConfigHandler* _configHa
 }
 
 void AlsMulti2Step::beforeIteration(string msg) {
-  logger_->info("Starting inner iter %d at iteration %d", innerIter, actIter);
+  if (innerIter == -1) {
+    logger_->info("Starting iteration %d", actIter);
+  } else {
+    logger_->info("Starting inner iter %d at iteration %d", innerIter, actIter);
+  }
 }
 
 bool AlsMulti2Step::afterIteration() {
