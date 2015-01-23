@@ -18,6 +18,7 @@ PSimrankNode::PSimrankNode() {
   bCoef_ = 0;
   modulo_ = 0;
   partConfHandler = NULL;
+  allNode_ = -1;
 }
 
 void PSimrankNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
@@ -25,7 +26,7 @@ void PSimrankNode::setPartitionConfigHandler(GraphPartitionConfigHandler* config
 }
 
 PSimrankNode::PSimrankNode(short numFingerprints, short pathLen,
-    long num_nodes, long min_node, long nextMinNode) {
+    long num_nodes, long min_node, long nextMinNode, long allNode) {
   logger_ = &log4cpp::Category::getInstance(std::string("PSimrankNode"));
   logger_->info("Next min node %ld",  nextMinNode);
   fpIndex_ = 0;
@@ -42,6 +43,7 @@ PSimrankNode::PSimrankNode(short numFingerprints, short pathLen,
   aCoef_ = 0;
   bCoef_ = 0;
   modulo_ = 0;
+  allNode_ = allNode;
 }
 
 PSimrankNode::~PSimrankNode() {
@@ -133,7 +135,7 @@ long PSimrankNode::genEdge(long from) {
   for (int i = 0; i < numNeighbors; ++i) {
     uint128_t ui128_node(matrix_->getEdgeAtPos(from, i));
     //logger_->info("bef %ld %ld %ld %ld", aCoef_, (uint64_t)ui128_node, bCoef_, algo_->getAllNodes());
-    hash = (ui128_node * aCoef_ + bCoef_) % algo_->getAllNodes();
+    hash = (ui128_node * aCoef_ + bCoef_) % allNode_;
 
     //logger_->info("ind %d pl %d from %ld to %ld hash %ld", fpIndex_, pathIndex_, from , matrix_->getEdgeAtPos(from, i), (uint64_t) hash);
     if (hash < min) {

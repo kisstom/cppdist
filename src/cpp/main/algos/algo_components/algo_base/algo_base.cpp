@@ -17,7 +17,6 @@ void AlgoBase::initFromParams(unordered_map<string, string>* params) {
 
   sscanf((*params)["MASTER_PORT"].c_str(), "%d", &master_port_);
   sscanf((*params)["INIT_SLAVE_PORT"].c_str(), "%d", &init_slave_port);
-  sscanf((*params)["NUMLINE"].c_str(), "%ld", &all_node_);
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slave_index_);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &num_slaves_);
   sscanf((*params)["SEND_LIMIT"].c_str(), "%d", &send_limit_);
@@ -58,10 +57,6 @@ void AlgoBase::setStoreFromBinary(StoreFromBinary* storeFromBinary) {
 void AlgoBase::setSenderBuffer(SenderBuffer* senderBuffer) {
   senderBuffer_ = senderBuffer;
   node_->setSenderBuffer(senderBuffer);
-}
-
-long AlgoBase::getAllNodes() {
-  return all_node_;
 }
 
 int AlgoBase::getNumSlaves() {

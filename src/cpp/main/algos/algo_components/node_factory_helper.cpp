@@ -93,15 +93,17 @@ SimrankOddEvenNode* NodeFactoryHelper::initSimrankOddEvenNode(unordered_map<stri
 PSimrankNode* NodeFactoryHelper::initPSimrankNode(unordered_map<string, string>* params) {
   short numPathes;
   short pathLen;
+  long allNode;
 
   sscanf((*params)["NUM_PATHES"].c_str(), "%hd", &numPathes);
   sscanf((*params)["PATH_LEN"].c_str(), "%hd", &pathLen);
+  sscanf((*params)["NUMLINE"].c_str(), "%ld", &allNode);
 
   long min_node = graphPartitionHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
   long num_nodes = graphPartitionHandler->getNumNode(util.stringToInt((*params)["SLAVE_INDEX"]));
   long next_min_node = graphPartitionHandler->getNextMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));
 
-  PSimrankNode* node = new PSimrankNode(numPathes, pathLen, num_nodes, min_node, next_min_node);
+  PSimrankNode* node = new PSimrankNode(numPathes, pathLen, num_nodes, min_node, next_min_node, allNode);
   return node;
 }
 

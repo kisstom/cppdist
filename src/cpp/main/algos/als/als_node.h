@@ -3,12 +3,10 @@
 
 #include "feature_matrix.h"
 #include "als_util.h"
-//#include "partitioner.h"
 #include "../algo_components/factories/als_partition_config_handler.h"
 #include "../../common/graph/adjacency_list.h"
 #include "../../common/graph/entry.h"
 #include "../../common/util/util.h"
-#include "../../common/components/mutex.h"
 #include "../algo_components/node.h"
 #include "log4cpp/Category.hh"
 
@@ -46,7 +44,6 @@ protected:
 
   AlsUtil* alsUtil;
   Util util;
-  Mutex mutex;
 
   string itemFeatfile;
   string userFeatfile;

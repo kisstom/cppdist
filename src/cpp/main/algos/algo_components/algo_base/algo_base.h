@@ -40,7 +40,6 @@ public:
 
   // Getters.
   int getSlaveIndex();
-  long getAllNodes();
   int getNumSlaves();
 
   // Setters.
@@ -62,8 +61,6 @@ protected:
   char master_host_[1024];
   int master_port_;
   int slave_port_;
-
-  long all_node_;
 
   int slave_index_;
   int num_slaves_;
