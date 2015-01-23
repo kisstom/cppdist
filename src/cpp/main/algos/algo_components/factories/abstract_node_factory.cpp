@@ -4,8 +4,13 @@
 #include "als_multi_2step_factory.h"
 #include "../node_factory.h"
 
+AbstractNodeFactory::AbstractNodeFactory() {
+  logger_ = &log4cpp::Category::getInstance(std::string("AbstractNodeFactory"));
+}
+
 INodeFactory* AbstractNodeFactory::provideNodeFactory(unordered_map<string, string>* params) {
   INodeFactory* nodeFactory = NULL;
+  logger_->info("Using node type %s", (*params)["NODE_TYPE"].c_str());
 
   if ((*params)["NODE_TYPE"].compare("ALS") == 0) {
     AlsNodeFactory* concreteFactory = new AlsNodeFactory;
