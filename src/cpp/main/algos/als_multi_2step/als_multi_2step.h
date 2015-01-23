@@ -63,6 +63,7 @@ protected:
   int wantAdd;
   short broadcastIndex;
   int innerIter;
+  int numBroadCasts;
 
   log4cpp::Category* logger_;
 };

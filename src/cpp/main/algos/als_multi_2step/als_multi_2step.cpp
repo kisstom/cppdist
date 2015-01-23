@@ -5,10 +5,10 @@ AlsMulti2Step::AlsMulti2Step(unordered_map<string, string>* params) {
   logger_ = &log4cpp::Category::getInstance(std::string("AlsMulti2Step"));
   lambda = util.stringToDouble((*params)["LAMBDA"]);
   maxIter = util.stringToInt((*params)["MAX_ITER"]);
-  int numItem, numUser;
   numFeat = util.stringToInt((*params)["NUM_FEAT"]);
-  numItem = util.stringToInt((*params)["NUM_ITEMS"]);
-  numUser = util.stringToInt((*params)["NUM_USERS"]);
+
+  int numItem = util.stringToInt((*params)["NUM_ITEMS"]);
+  int numUser = util.stringToInt((*params)["NUM_USERS"]);
   double defIniVal = util.stringToDouble((*params)["DEF_INI_VAL"]);
 
   featP = new FeatureMatrix(numUser, numFeat, defIniVal, true);
@@ -24,6 +24,7 @@ AlsMulti2Step::AlsMulti2Step(unordered_map<string, string>* params) {
   wantAdd = sizeof(long) + numFeat * sizeof(double);
 
   setBroadCastIndex(params);
+  numBroadCasts = 0;
 }
 
 int AlsMulti2Step::getWantAdd() {
@@ -67,8 +68,7 @@ void AlsMulti2Step::beforeIteration(string msg) {
 bool AlsMulti2Step::afterIteration() {
   logger_->info("Finished inner it %d at iteration %d", innerIter, actIter);
 
-  ++innerIter;
-  if (innerIter < algo_->getNumSlaves()) {
+  if (++innerIter < algo_->getNumSlaves()) {
     return true;
   }
 
@@ -207,6 +207,7 @@ void AlsMulti2Step::sendFeatVectTo(FeatureMatrix* featMx, long id, short partI) 
 }
 
 void AlsMulti2Step::broadCastFeatVect(FeatureMatrix* featMx, long id) {
+  ++numBroadCasts;
   sendFeatVectTo(featMx, id, broadcastIndex);
 }
 
@@ -224,8 +225,7 @@ void AlsMulti2Step::skipSender() {
 }
 
 bool AlsMulti2Step::isReceivingUpdates() {
-  if (innerIter == -1) return false;
-  if (innerIter == algo_->getSlaveIndex()) {
+  if (innerIter == algo_->getSlaveIndex() || innerIter == -1) {
     return false;
   }
   return true;
@@ -236,6 +236,7 @@ bool AlsMulti2Step::isUserIteration() {
 }
 
 AlsMulti2Step::~AlsMulti2Step() {
+  logger_->info("Num broadcasts %d", numBroadCasts);
   delete featP;
   delete featQ;
   delete alsUtil;
