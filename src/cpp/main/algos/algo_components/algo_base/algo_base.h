@@ -38,6 +38,9 @@ public:
   virtual void runThreads() = 0;
   virtual void sendAndSignal(int) = 0;
 
+  // Master sync methods
+  void sendReadyToMaster();
+
   // Getters.
   int getSlaveIndex();
   int getNumSlaves();

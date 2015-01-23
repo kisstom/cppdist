@@ -55,7 +55,8 @@ SConscript([
     'main/algos/psimrank/SConscript',
     'main/algos/bitprop/SConscript',
     'main/algos/als/SConscript',
-    'main/algos/als_multi/SConscript'
+    'main/algos/als_multi/SConscript',
+    'main/algos/als_multi_2step/SConscript'
      ],
     exports = ['env', 'COMMON_OBJ'])
 
@@ -75,6 +76,7 @@ ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/counter_inverse_pagerank/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/als/*.o')
 ALGO_OBJ += Glob('#/../bin/main/algos/als_multi/*.o')
+ALGO_OBJ += Glob('#/../bin/main/algos/als_multi_2step/*.o')
 
 SConscript([
     'main/dmoz/SConscript',

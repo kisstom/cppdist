@@ -24,6 +24,10 @@ void AlgoBase::initFromParams(unordered_map<string, string>* params) {
   slave_port_ = init_slave_port + slave_index_;
 }
 
+void AlgoBase::sendReadyToMaster() {
+  masterSocketManager_->sendReadyToMaster();
+}
+
 int AlgoBase::getSlaveIndex() {
   return slave_index_;
 }

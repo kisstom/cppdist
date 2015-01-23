@@ -11,35 +11,7 @@
 #include "../util/cfg_reader.h"
 #include "../util/util.h"
 #include "deserializer.h"
-#include "../../algos/simrank_update/simrank_update_deserializer.h"
-#include "../../algos/simrank_store_first/simrank_store_first_deserializer.h"
 #include "../../algos/algo_components/node.h"
-#include "../../algos/simrank_update/simrank_update_node.h"
-#include "../../algos/simrank_store_first/simrank_store_first_node.h"
-#include "../../algos/simrank_odd_even/simrank_odd_even_deserializer.h"
-#include "../../algos/simrank_odd_even/simrank_odd_even_node.h"
-#include "../../algos/pagerank/pagerank_deserializer.h"
-#include "../../algos/pagerank/pagerank_node.h"
-#include "../../algos/pagerank_non_block/pagerank_non_block_node.h"
-#include "../../algos/pagerank_non_block/pagerank_non_block_deserializer.h"
-#include "../../algos/clever_pagerank/clever_pagerank_deserializer.h"
-#include "../../algos/clever_pagerank/clever_pagerank_node.h"
-#include "../../algos/custom_non_block/custom_non_block_deserializer.h"
-#include "../../algos/custom_non_block/custom_non_block_node.h"
-#include "../../algos/custom_multi_nonblock/custom_multi_non_block_deserializer.h"
-#include "../../algos/custom_multi_nonblock/custom_multi_non_block_node.h"
-#include "../../algos/counter_inverse/counter_inverse_node.h"
-#include "../../algos/counter_inverse/counter_inverse_deserializer.h"
-#include "../../algos/counter_inverse_pagerank/counter_inverse_pagerank_node.h"
-#include "../../algos/counter_inverse_pagerank/counter_inverse_pagerank_deserializer.h"
-#include "../../algos/psimrank/psimrank_node.h"
-#include "../../algos/psimrank/psimrank_deserializer.h"
-#include "../../algos/simple_mock_algo/simple_mock_deserializer.h"
-#include "../../algos/simple_mock_algo/simple_mock_node.h"
-#include "../../algos/bitprop/bitprop_deserializer.h"
-#include "../../algos/bitprop/bitprop_node.h"
-#include "../../algos/als/als_deserializer.h"
-#include "../../algos/als/als_node.h"
 
 #include <log4cpp/Category.hh>
 
@@ -62,6 +34,7 @@ private:
   Deserializer* createCounterInverseDeserializer(unordered_map<string, string>* params, Node* node);
   Deserializer* createCounterInversePagerankDeserializer(unordered_map<string, string>* params, Node* node);
   Deserializer* createAls(unordered_map<string, string>* params, Node* node);
+  Deserializer* createAlsMulti2Step(unordered_map<string, string>* params, Node* node);
 	log4cpp::Category* logger_;
 	Util util_;
 };

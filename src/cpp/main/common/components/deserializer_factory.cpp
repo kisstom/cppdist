@@ -6,6 +6,36 @@
  */
 
 #include "deserializer_factory.h"
+#include "../../algos/simrank_update/simrank_update_deserializer.h"
+#include "../../algos/simrank_store_first/simrank_store_first_deserializer.h"
+#include "../../algos/simrank_update/simrank_update_node.h"
+#include "../../algos/simrank_store_first/simrank_store_first_node.h"
+#include "../../algos/simrank_odd_even/simrank_odd_even_deserializer.h"
+#include "../../algos/simrank_odd_even/simrank_odd_even_node.h"
+#include "../../algos/pagerank/pagerank_deserializer.h"
+#include "../../algos/pagerank/pagerank_node.h"
+#include "../../algos/pagerank_non_block/pagerank_non_block_node.h"
+#include "../../algos/pagerank_non_block/pagerank_non_block_deserializer.h"
+#include "../../algos/clever_pagerank/clever_pagerank_deserializer.h"
+#include "../../algos/clever_pagerank/clever_pagerank_node.h"
+#include "../../algos/custom_non_block/custom_non_block_deserializer.h"
+#include "../../algos/custom_non_block/custom_non_block_node.h"
+#include "../../algos/custom_multi_nonblock/custom_multi_non_block_deserializer.h"
+#include "../../algos/custom_multi_nonblock/custom_multi_non_block_node.h"
+#include "../../algos/counter_inverse/counter_inverse_node.h"
+#include "../../algos/counter_inverse/counter_inverse_deserializer.h"
+#include "../../algos/counter_inverse_pagerank/counter_inverse_pagerank_node.h"
+#include "../../algos/counter_inverse_pagerank/counter_inverse_pagerank_deserializer.h"
+#include "../../algos/psimrank/psimrank_node.h"
+#include "../../algos/psimrank/psimrank_deserializer.h"
+#include "../../algos/simple_mock_algo/simple_mock_deserializer.h"
+#include "../../algos/simple_mock_algo/simple_mock_node.h"
+#include "../../algos/bitprop/bitprop_deserializer.h"
+#include "../../algos/bitprop/bitprop_node.h"
+#include "../../algos/als/als_deserializer.h"
+#include "../../algos/als/als_node.h"
+#include "../../algos/als_multi_2step/als_multi_2step_deserializer.h"
+#include "../../algos/als_multi_2step/als_multi_2step.h"
 
 DeserializerFactory::DeserializerFactory() {
 	logger_ = &log4cpp::Category::getInstance(std::string("DeserializerFactory"));
@@ -40,8 +70,10 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
     deserializer = createCounterInversePagerankDeserializer(params, node);
   } else if (nodeType.compare("CUSTOM_MULTI_NONBLOCK") == 0) {
     deserializer = createCustomMultiNonBlock(params, node);
-  } else if (nodeType.compare("ALS") == 0) {
+  } else if (nodeType.compare("ALS") == 0 || nodeType.compare("ALS_MULTI") == 0) {
     deserializer = createAls(params, node);
+  } else if (nodeType.compare("ALS_MULTI_2STEP") == 0) {
+    deserializer = createAlsMulti2Step(params, node);
   } else {
     logger_->error("Unknown tpye of deserializer %s", nodeType.c_str());
 	}
@@ -141,6 +173,16 @@ Deserializer* DeserializerFactory::createAls(unordered_map<string, string>* para
   sscanf((*params)["NUM_FEAT"].c_str(), "%d", &featSize);
 
   AlsDeserializer* deserializer = new AlsDeserializer(featSize);
+  deserializer->setNode(simrankUpdateNode);
+  return deserializer;
+}
+
+Deserializer* DeserializerFactory::createAlsMulti2Step(unordered_map<string, string>* params, Node* node) {
+  AlsMulti2Step* simrankUpdateNode = static_cast<AlsMulti2Step*>(node);
+  int featSize;
+  sscanf((*params)["NUM_FEAT"].c_str(), "%d", &featSize);
+
+  AlsMulti2StepDeserializer* deserializer = new AlsMulti2StepDeserializer(featSize);
   deserializer->setNode(simrankUpdateNode);
   return deserializer;
 }
