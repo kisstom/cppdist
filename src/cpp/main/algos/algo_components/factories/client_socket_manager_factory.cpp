@@ -1,7 +1,7 @@
 #include "client_socket_manager_factory.h"
 
 ClientSocketManagerFactory::ClientSocketManagerFactory() {
-  logger = &log4cpp::Category::getInstance(std::string("MulticastSocketManager"));
+  logger = &log4cpp::Category::getInstance(std::string("ClientSocketManagerFactory"));
 }
 
 ClientSocketManager* ClientSocketManagerFactory::

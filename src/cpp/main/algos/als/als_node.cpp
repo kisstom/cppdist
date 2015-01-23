@@ -166,4 +166,6 @@ AlsNode::~AlsNode() {
   delete featP;
   delete featQ;
   delete alsUtil;
+  if (userPartition) delete userPartition;
+  if (itemPartition) delete itemPartition;
 }

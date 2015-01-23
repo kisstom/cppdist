@@ -4,6 +4,7 @@
 AlsMultiNode::AlsMultiNode(unordered_map<string, string>* params) : AlsNode(params) {
   logger_ = &log4cpp::Category::getInstance(std::string("AlsMultiNode"));
   setBroadCastIndex(params);
+  logger_->info("Broadcast index %d", broadcastIndex);
 }
 
 void AlsMultiNode::broadCastFeatVect(FeatureMatrix* featMx, long id) {

@@ -31,4 +31,4 @@ do
   cumulate=`echo "$cumulate+$max"|bc -l`
 done
 
-echo "$cumulate/10"|bc -l
+echo "$cumulate/($numIter+1)"|bc -l

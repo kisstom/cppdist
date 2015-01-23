@@ -70,9 +70,9 @@ int main(int argc, char* argv[]) {
 
   builder.setNodeFactory(nodeFactory);
   builder.setAlgoFactory(new AlgoFactory);
-
+  AlgoBase* algo = NULL;
   try {
-    AlgoBase* algo = builder.buildFromConfig(params, hostAndPort);
+    algo = builder.buildFromConfig(params, hostAndPort);
 
     if (algo->setUp()) {
       algo->run();
@@ -82,6 +82,7 @@ int main(int argc, char* argv[]) {
   } catch (ConnectionError& e) {
     logger->info("Exception: %s", e.what());
   }
+
   delete params;
 }
 

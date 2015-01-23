@@ -13,6 +13,8 @@ ClientSocketManager::ClientSocketManager(
 
   finishCounter = 0;
   clusterConfig = NULL;
+  pollItems = NULL;
+  masterSocketManager = NULL;
   sendHWM = 1024;
 }
 
@@ -21,6 +23,12 @@ ClientSocketManager::~ClientSocketManager () {
     if (listenerSockets[i])
       delete listenerSockets[i];
   }
+
+  if (pollItems) {
+    delete[] pollItems;
+  }
+
+  /*delete context;*/
   delete publisherSocket;
 }
 
