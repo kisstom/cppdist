@@ -10,7 +10,7 @@
 
 #include <gtest/gtest.h>
 #include "../../main/common/util/logger_factory.h"
-#include "../../main/algos/algo_components/factories/test_master_factory.h"
+#include "../../main/algos/algo_components/factories/master_factory.h"
 #include "../../main/algos/algo_components/master_builder.h"
 #include "../../main/algos/algo_components/test_simrank_odd_even_node_factory.h"
 
@@ -98,19 +98,10 @@ protected:
   virtual void addNodeFactory(INodeFactory* nodeFactory, vector<string> part, long numSlaves) {
     nodeFactories_.push_back(nodeFactory);
     long minNode = numNodes_;
-    long numNodes = (long) part.size();
-
-    Slave slave;
-    slave.minNode = minNode;
-    slave.numNode = numNodes;
-    numNodes_ += slave.numNode;
-    slave.port = slavePort_++;
-    slaves_.push_back(slave);
+    //long numNodes = (long) part.size();
+    partitionMinNodes_.push_back(minNode);
 
     std::stringstream ss;
-    ss << numNodes;
-    params_["NUM_NODES"] = ss.str();
-    ss.str("");
 
     ss << slaveIndex_;
     params_["SLAVE_INDEX"] = ss.str();
@@ -119,15 +110,6 @@ protected:
 
     ss << numSlaves;
     params_["NUM_SLAVES"] = ss.str();
-    ss.str("");
-
-    long nextMinNode = minNode + numNodes;
-    ss << nextMinNode;
-    params_["NEXT_MIN_NODE"] = ss.str();
-    ss.str("");
-
-    ss << minNode;
-    params_["MIN_NODE"] = ss.str();
     ss.str("");
 
     nodeParams_.push_back(params_);
@@ -153,20 +135,14 @@ protected:
   }
 
   void setUpBuilder() {
-    TestMasterFactory* masterFactory_ = new TestMasterFactory;
-    masterFactory_->setTestSlaveConfig(&slaves_);
+    MasterFactory* masterFactory_ = new MasterFactory;
     masterBuilder_ = new MasterBuilder;
     masterBuilder_->setMasterFactory(masterFactory_);
-
-    for (int i = 0; i < (int) slaves_.size(); ++i) {
-      partitionMinNodes_.push_back(slaves_[i].minNode);
-    }
   }
 
   vector<INodeFactory*> nodeFactories_;
   MasterBuilder* masterBuilder_;
   vector<long> partitionMinNodes_;
-  vector<Slave> slaves_;
   unordered_map<string, string> params_;
   vector<unordered_map<string, string> > nodeParams_;
   vector<std::pair<string, string> > clusterNodeParams;
