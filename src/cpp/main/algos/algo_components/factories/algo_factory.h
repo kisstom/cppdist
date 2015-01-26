@@ -17,6 +17,7 @@ public:
   AlgoFactory();
   AlgoBase* createAlgo(unordered_map<string, string>* params);
   //vector<long>*  readSlaveConfig(unordered_map<string, string>* params);
+  //~AlgoFactory();
 private:
   log4cpp::Category* logger_;
 };

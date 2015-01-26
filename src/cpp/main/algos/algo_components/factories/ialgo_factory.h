@@ -9,6 +9,7 @@
 class IAlgoFactory {
 public:
   virtual AlgoBase* createAlgo(unordered_map<string, string>* params) = 0;
+  virtual ~IAlgoFactory() {}
 };
 
 

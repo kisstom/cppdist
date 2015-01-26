@@ -6,10 +6,12 @@
  */
 
 #include "master_builder.h"
+#include "factories/master_factory.h"
 
 
 MasterBuilder::MasterBuilder() {
   logger_ = &log4cpp::Category::getInstance(std::string("MasterBuilder"));
+  masterFactory = new MasterFactory;
 }
 
 MasterBase* MasterBuilder::buildFromConfig(unordered_map<string, string>* params) {
@@ -28,6 +30,6 @@ MasterBase* MasterBuilder::buildFromConfig(unordered_map<string, string>* params
 	return master;
 }
 
-void MasterBuilder::setMasterFactory(IMasterFactory* _masterFactory) {
+/*void MasterBuilder::setMasterFactory(IMasterFactory* _masterFactory) {
   masterFactory = _masterFactory;
-}
+}*/

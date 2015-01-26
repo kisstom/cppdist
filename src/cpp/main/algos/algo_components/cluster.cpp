@@ -6,20 +6,20 @@
  */
 
 #include "cluster.h"
-#include "factories/test_algo_factory.h"
+#include "factories/algo_factory.h"
 
-Cluster::Cluster(unordered_map<string, string>* params, vector<unordered_map<string, string> >* nodeParams,
-		vector<INodeFactory*> nodeFactories, MasterBuilder* masterBuilder,
-		vector<std::pair<string, string> >* clusterNodeParams, vector<long>* _partMinNodes) {
-	sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves_);
+Cluster::Cluster(unordered_map<string, string> params,
+    vector<std::pair<string, string> > clusterNodeParams,
+    vector<INodeFactory*> nodeFactories) {
+  logger_ = &log4cpp::Category::getInstance(std::string("Cluster"));
+
+	sscanf(params["NUM_SLAVES"].c_str(), "%d", &numSlaves_);
+	logger_->info("Num slaves %d.", numSlaves_);
 	params_ = params;
-	nodeParams_ = nodeParams;
 	clusterNodeParams_ = clusterNodeParams;
 	nodeFactories_ = nodeFactories;
-	masterBuilder_ = masterBuilder;
+	masterBuilder_ = new MasterBuilder;
 	master_ = NULL;
-	partMinNodes = _partMinNodes;
-	logger_ = &log4cpp::Category::getInstance(std::string("Cluster"));
 }
 
 Cluster::~Cluster() {
@@ -51,21 +51,22 @@ void Cluster::initNodes() {
 
 void Cluster::initNode(int nodeId) {
 	logger_->info("Initing node %d.", nodeId);
-	AlgoBuilder* builder = new AlgoBuilder;
 
+	nodeParams.push_back(params_);
+  nodeParams[nodeId]["SLAVE_INDEX"] = util.intToString(nodeId);
+
+	AlgoBuilder* builder = new AlgoBuilder;
 	INodeFactory* nodeFactory = nodeFactories_[nodeId];
-	// can you press delete
-  TestAlgoFactory* algoFactory = new TestAlgoFactory;
-  algoFactory->setPartitionMinNodes(partMinNodes);
+  AlgoFactory* algoFactory = new AlgoFactory;
 
   builder->setAlgoFactory(algoFactory);
 	builder->setNodeFactory(nodeFactory);
-	builder->buildFromConfig(&(nodeParams_->at(nodeId)), clusterNodeParams_);
+	builder->buildFromConfig(&(nodeParams[nodeId]), &clusterNodeParams_);
 	builders_.push_back(builder);
 }
 
 void Cluster::initMaster() {
-	master_ = masterBuilder_->buildFromConfig(params_);
+	master_ = masterBuilder_->buildFromConfig(&params_);
 }
 
 void Cluster::setUp() {

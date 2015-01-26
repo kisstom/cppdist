@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 
   initLogger(params);
   MasterBuilder builder;
-  builder.setMasterFactory(new MasterFactory);
+  //builder.setMasterFactory(new MasterFactory);
   MasterBase* master = builder.buildFromConfig(params);
   if (NULL == master) {
     fprintf(stderr, "Error creating master. Exiting.");
