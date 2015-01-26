@@ -38,7 +38,7 @@ TEST_F(SimpleMockTestRun, test) {
   AlgoBase* algo = cluster->getAlgo(0);
   algo = cluster->getAlgo(1);
 
-  //deleteCluster();
+  deleteCluster();
 }
 
 }

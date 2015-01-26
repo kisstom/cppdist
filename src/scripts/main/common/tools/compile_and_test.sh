@@ -31,7 +31,7 @@ test_dir ./bin/test/useFileSystem/ $resourcePath
 #test_dir ./bin/test/algos/simrank_odd_even/
 #test_dir ./bin/test/algos/psimrank/
 #test_dir ./bin/test/algos/bitprop/
-test_dir ./bin/test/algos/simple_mock_algo/
+test_dir ./bin/test/algos/new_simple_mock_algo/
 
 echo script tests
 test_scripts ./scripts/test/
