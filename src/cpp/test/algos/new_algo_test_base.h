@@ -26,12 +26,11 @@ protected:
 
   Cluster* cluster;
   log4cpp::Category* logger_;
+  Util util;
 private:
   vector<INodeFactory*> nodeFactories;
   int numSlaves;
-
   unordered_map<string, string> params;
-  Util util;
 };
 
 NewAlgoTestBase::NewAlgoTestBase() {

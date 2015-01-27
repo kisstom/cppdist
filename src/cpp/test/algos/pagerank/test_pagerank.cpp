@@ -76,7 +76,6 @@ protected:
 
 TEST_F(PagerankTest, test) {
   initCluster();
-  //setupCluster();
   runCluster();
 
   AlgoBase* algo = cluster->getAlgo(0);
@@ -97,7 +96,7 @@ TEST_F(PagerankTest, test) {
   ASSERT_NEAR(0.0125, prScore_->at(2), 0.0001);
   ASSERT_NEAR(0.0125, prScore_->at(3), 0.0001);
 
-  //deleteCluster();
+  deleteCluster();
 }
 
 //}

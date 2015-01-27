@@ -112,6 +112,7 @@ if testCompile:
     'test/algos/als/SConscript',
     'test/algos/new_simple_mock_algo/SConscript',
     'test/algos/pagerank/SConscript',
+    'test/algos/new_simrank_odd_even/SConscript',
     #'test/algos/simple_mock_algo/SConscript',
     #'test/algos/simrank_update/SConscript',
     #'test/algos/simrank_store_first/SConscript',

@@ -1,0 +1,4 @@
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
+
+
+env.Program('simrank_odd_even_test', ['simrank_odd_even_test.cpp'] + COMMON_OBJ + ALGO_OBJ)

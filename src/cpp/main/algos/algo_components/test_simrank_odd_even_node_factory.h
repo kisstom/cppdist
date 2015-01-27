@@ -14,6 +14,7 @@
 #include "inode_factory.h"
 #include "node_factory_helper.h"
 #include <log4cpp/Category.hh>
+#include "factories/graph_partition_config_handler.h"
 #include "../simple_mock_algo/simple_mock_node.h"
 
 using std::vector;
@@ -26,11 +27,13 @@ public:
 	Node* createNodeFromConfig(unordered_map<string, string>* params);
 	void setEdgelistContainer(EdgelistContainer* container);
 	void setFingerprints(vector<list<long*> >);
+	void setPartConfHandler(GraphPartitionConfigHandler*);
 private:
 	Node* createSimrankOddEvenNode(unordered_map<string, string>* params);
 	Node* createPSimrankNode(unordered_map<string, string>* params);
 	Node* createSimpleMockNode(unordered_map<string, string>* params);
 	EdgelistContainer* container_;
+	GraphPartitionConfigHandler* partConfigHandler;
 	vector<list<long*> > fprints_;
 	log4cpp::Category* logger_;
 };

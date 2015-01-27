@@ -33,12 +33,19 @@ Node* TestSimrankOddEvenNodeFactory::createNodeFromConfig(unordered_map<string, 
 	return node;
 }
 
+void TestSimrankOddEvenNodeFactory::
+setPartConfHandler(GraphPartitionConfigHandler* _partConfigHandler) {
+  partConfigHandler = _partConfigHandler;
+}
+
 Node* TestSimrankOddEvenNodeFactory::createSimrankOddEvenNode(unordered_map<string, string>* params) {
   NodeFactoryHelper helper;
+  helper.setPartitionConfigHandler(partConfigHandler);
   SimrankOddEvenNode* node = NULL;
   node = helper.initSimrankOddEvenNode(params);
   node->setMatrix(container_);
   node->setFingerprints(fprints_);
+  node->setPartitionConfigHandler(partConfigHandler);
   return node;
 }
 
