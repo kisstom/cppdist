@@ -54,7 +54,6 @@ void PagerankNode::sender() {
 
     double imp = (*pagerankScore_)[partitionNode] / numNeighbors;
 
-
     for (long i = 0; i < numNeighbors; ++i) {
       outEdge = matrix_->getEdgeAtPosPart(partitionNode, i);
       partIndex = partConfHandler->getPartitionIndex(outEdge);
@@ -115,6 +114,10 @@ void PagerankNode::setEdgeListContainer(EdgelistContainer* matrix) {
   double ini = 1.0 / allNode_;
   pagerankScore_ = new vector<double>(matrix->getNumberOfNodes(), ini);
   tmpScore_ = new vector<double>(matrix->getNumberOfNodes(), 0.0);
+}
+
+vector<double>* PagerankNode::getPagerankScore() {
+  return pagerankScore_;
 }
 
 void PagerankNode::setOutputFile(string outputFile) {

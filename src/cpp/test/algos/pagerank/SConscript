@@ -1,0 +1,4 @@
+Import('env', 'COMMON_OBJ', 'ALGO_OBJ')
+
+
+env.Program('test_pagerank', ['test_pagerank.cpp'] + COMMON_OBJ + ALGO_OBJ)

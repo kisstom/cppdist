@@ -15,11 +15,13 @@ class GraphPartitionConfigHandler {
 public:
   GraphPartitionConfigHandler();
   void readSlaveConfig(string, int);
+  void setPartitionMinNodes(vector<long>*);
+  void setPartitionNumNodes(vector<long>*);
 
-  long getMinNode(int);
-  long getNextMinNode(int);
-  long getNumNode(int);
-  int getPartitionIndex(long);
+  long getMinNode(int) const;
+  long getNextMinNode(int) const;
+  long getNumNode(int) const;
+  int getPartitionIndex(long) const;
 
   ~GraphPartitionConfigHandler();
 private:

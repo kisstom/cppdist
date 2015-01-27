@@ -22,12 +22,11 @@ protected:
   void runCluster();
   void deleteCluster();
   void setDefaultConfig();
+  void initLogger();
 
   Cluster* cluster;
   log4cpp::Category* logger_;
 private:
-  void initLogger();
-
   vector<INodeFactory*> nodeFactories;
   int numSlaves;
 
@@ -67,7 +66,6 @@ void NewAlgoTestBase::addNodeFactory(INodeFactory* nodeFactory) {
 }
 
 void NewAlgoTestBase::initCluster() {
-  initLogger();
   setDefaultConfig();
   vector<std::pair<string, string> > clusterNodeParams;
   clusterNodeParams.push_back(std::make_pair<string, string>("localhost", util.intToString(numSlaves)));

@@ -14,7 +14,7 @@ GraphPartitionConfigHandler::~GraphPartitionConfigHandler() {
   }
 }
 
-int GraphPartitionConfigHandler::getPartitionIndex(long key) {
+int GraphPartitionConfigHandler::getPartitionIndex(long key) const {
   for (int i = partitionMinNodes->size() - 1; i >= 0; --i) {
     if ((*partitionMinNodes)[i] <= key) return i;
   }
@@ -43,11 +43,11 @@ void GraphPartitionConfigHandler::readSlaveConfig(string cfg, int numSlaves) {
   fclose(slavery_par);
 }
 
-long GraphPartitionConfigHandler::getMinNode(int index) {
+long GraphPartitionConfigHandler::getMinNode(int index) const {
   return (*partitionMinNodes)[index];
 }
 
-long GraphPartitionConfigHandler::getNextMinNode(int index) {
+long GraphPartitionConfigHandler::getNextMinNode(int index) const {
   ++index;
   if (index >= (int) partitionNumNodes->size()) {
     return (*partitionMinNodes)[(int) partitionMinNodes->size() - 1] +
@@ -57,6 +57,14 @@ long GraphPartitionConfigHandler::getNextMinNode(int index) {
   return (*partitionMinNodes)[index];
 }
 
-long GraphPartitionConfigHandler::getNumNode(int index) {
+long GraphPartitionConfigHandler::getNumNode(int index) const {
   return (*partitionNumNodes)[index];
+}
+
+void GraphPartitionConfigHandler::setPartitionMinNodes(vector<long>* minNodes) {
+  partitionMinNodes = minNodes;
+}
+
+void GraphPartitionConfigHandler::setPartitionNumNodes(vector<long>* numNodes) {
+  partitionNumNodes = numNodes;
 }

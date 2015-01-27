@@ -25,11 +25,12 @@ public:
   void setOutputFile(string outputFile);
   void setEdgeListContainer(EdgelistContainer*);
   void setPartitionConfigHandler(GraphPartitionConfigHandler*);
-
+  vector<double>* getPagerankScore();
   void initFromMaster(string) {}
 
   ~PagerankNode();
 private:
+  friend class PagerankTest;
   void serializeImportance(int partIndex, long outNode, double importance);
   EdgelistContainer* matrix_;
   GraphPartitionConfigHandler* partConfHandler;
