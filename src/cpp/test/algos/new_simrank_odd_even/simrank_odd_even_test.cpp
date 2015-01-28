@@ -6,12 +6,12 @@
 #include "../new_algo_test_base.h"
 #include "../../../main/common/graph/builder/test_edge_list_builder.h"
 
-//namespace {
-
 class SimrankOddEvenTest: public NewAlgoTestBase {
 protected:
 
   SimrankOddEvenTest() {
+    pathLen = 2;
+    numPathes = 1;
   }
 
   virtual ~SimrankOddEvenTest() {
@@ -19,8 +19,6 @@ protected:
 
   virtual void SetUp() {
     initLogger();
-    int pathLen = 2;
-    int numPathes = 1;
     addConfigParam("NODE_TYPE", "SIMRANK_ODD_EVEN");
     addConfigParam("INNER_MASTER_TYPE", "SIMRANK_ODD_EVEN");
     addConfigParam("DESERIALIZER_TYPE", "SIMRANK_ODD_EVEN");
@@ -101,6 +99,9 @@ protected:
 
     addNodeFactory(nodeFactory2);
   }
+
+  int pathLen;
+  int numPathes;
 };
 
 
@@ -113,7 +114,7 @@ TEST_F(SimrankOddEvenTest, test) {
     for (list<long*>::iterator it = (*pathes)[i].begin(); it != (*pathes)[i].end(); ++it) {
       int j = 0;
       long *foo = *it;
-      while (*(foo + j) >= 0 && j < 2 + 1) {
+      while (*(foo + j) >= 0 && j < pathLen + 1) {
         printf("%ld ", *(foo + j));
         ++j;
       }
@@ -126,7 +127,7 @@ TEST_F(SimrankOddEvenTest, test) {
     for (vector<long*>::iterator it = (*finishedPathes)[i].begin(); it != (*finishedPathes)[i].end(); ++it) {
       int j = 0;
       long *foo = *it;
-      while (*(foo + j) >= 0 && j < 2 + 1) {
+      while (*(foo + j) >= 0 && j < pathLen + 1) {
         printf("%ld ", *(foo + j));
         ++j;
       }
@@ -140,13 +141,12 @@ TEST_F(SimrankOddEvenTest, test) {
     for (list<long*>::iterator it = (*pathes)[i].begin(); it != (*pathes)[i].end(); ++it) {
       int j = 0;
       long *foo = *it;
-      while (*(foo + j) >= 0 && j < 2 + 1) {
+      while (*(foo + j) >= 0 && j < pathLen + 1) {
         printf("%ld ", *(foo + j));
         ++j;
       }
       printf("\n");
     }
-
   }
 
   finishedPathes = node->getFinishedPathes();
@@ -154,7 +154,7 @@ TEST_F(SimrankOddEvenTest, test) {
     for (vector<long*>::iterator it = (*finishedPathes)[i].begin(); it != (*finishedPathes)[i].end(); ++it) {
       int j = 0;
       long *foo = *it;
-      while (*(foo + j) >= 0 && j < 2 + 1) {
+      while (*(foo + j) >= 0 && j < pathLen + 1) {
         printf("%ld ", *(foo + j));
         ++j;
       }
@@ -164,8 +164,6 @@ TEST_F(SimrankOddEvenTest, test) {
 
   deleteCluster();
 }
-
-//}
 
 int main (int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);

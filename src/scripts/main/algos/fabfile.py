@@ -242,7 +242,7 @@ def putOldSplitConfigOnMachine(host):
   with settings(host_string=host):
     remoteDir = conf.get('ALGO', 'REMOTE_DIR')
   
-    configFile = remoteDir + '/' + conf.get('SLAVERY_CFG')
+    configFile = remoteDir + '/' + conf.get('ALGO', 'SLAVERY_CFG')
     put(configFile, remoteDir)
 
 ########### Rating matrix splitter ################
