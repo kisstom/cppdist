@@ -12,6 +12,8 @@ using std::string;
 class StoreFromBinaryFactory {
 public:
   StoreFromBinary* createStoreFromBinary(unordered_map<string, string>* params);
+private:
+  int getBufferNum(unordered_map<string, string>* params);
 };
 
 

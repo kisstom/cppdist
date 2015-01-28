@@ -4,26 +4,32 @@
 
 
 SenderBuffer* SenderBufferFactory::createSenderBuffer(unordered_map<string, string>* params) {
-  bool isMulticast = false;
-  int numSockets;
+  int numSockets = getBufferNum(params);
+  int send_limit = sscanf((*params)["SEND_LIMIT"].c_str(),
+      "%d", &send_limit);
+
+  SenderBuffer* senderBuffer = new SenderBuffer;
+  senderBuffer->resizeBufferNum(numSockets);
+  senderBuffer->resizeBuffers(send_limit);
+
+  return senderBuffer;
+}
+
+int SenderBufferFactory::getBufferNum(unordered_map<string, string>* params) {
+  int numSockets = -1;
   int numSlaves = atoi((*params)["NUM_SLAVES"].c_str());
-  int send_limit;
 
   if (params->find("MULTI") != params->end()) {
-    isMulticast = atoi((*params)["MULTI"].c_str());
-  }
-
-  if (isMulticast) {
-    numSockets = (int) pow(2, numSlaves - 1) - 1;
+    if ((*params)["MULTI"].compare("MULTICAST") == 0) {
+      numSockets = (int) pow(2, numSlaves - 1) - 1;
+    } else if ((*params)["MULTI"].compare("BROADCAST") == 0) {
+      numSockets = 1;
+    } else {
+      throw std::exception();
+    }
   } else {
     numSockets = numSlaves;
   }
 
-  sscanf((*params)["SEND_LIMIT"].c_str(), "%d", &send_limit);
-
-  SenderBuffer* senderBuffer_ = new SenderBuffer;
-  senderBuffer_->resizeBufferNum(numSockets);
-  senderBuffer_->resizeBuffers(send_limit);
-
-  return senderBuffer_;
+  return numSockets;
 }

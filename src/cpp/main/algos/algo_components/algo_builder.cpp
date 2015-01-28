@@ -55,7 +55,7 @@ AlgoBase* AlgoBuilder::buildFromConfig(unordered_map<string, string>* params,
   storeFromBinary_ = storeFromBinaryFactory.createStoreFromBinary(params);
   storeFromBinary_->setDeserializer(deserializer_);
 
-  if (params->find("MULTI") != params->end() && atoi((*params)["MULTI"].c_str()) == 1) {
+  if (params->find("MULTI") != params->end()) {
     clientSocketManager_ = clientSocketManagerFactory.
         createClientSocketManager(params, hostAndPort);
     clientSocketManager_->setMasterSocketManager(masterSocketManager_);

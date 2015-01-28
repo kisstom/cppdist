@@ -11,6 +11,8 @@ using std::string;
 class SenderBufferFactory {
 public:
   SenderBuffer* createSenderBuffer(unordered_map<string, string>* params);
+private:
+  int getBufferNum(unordered_map<string, string>* params);
 };
 
 
