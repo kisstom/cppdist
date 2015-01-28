@@ -2,6 +2,7 @@
 #include "als_node_factory.h"
 #include "als_multi_node_factory.h"
 #include "als_multi_2step_factory.h"
+#include "als_broadcast_node_factory.h"
 #include "../node_factory.h"
 
 AbstractNodeFactory::AbstractNodeFactory() {
@@ -28,6 +29,13 @@ INodeFactory* AbstractNodeFactory::provideNodeFactory(unordered_map<string, stri
     nodeFactory = concreteFactory;
   } else if ((*params)["NODE_TYPE"].compare("ALS_MULTI_2STEP") == 0) {
     AlsMulti2StepFactory* concreteFactory = new AlsMulti2StepFactory;
+    AlsPartitionConfigHandler* handler = new AlsPartitionConfigHandler;
+    handler->readItemConfig((*params)["REMOTE_DIR"] + "/item_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
+    handler->readUserConfig((*params)["REMOTE_DIR"] + "/user_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
+    concreteFactory->setPartitionConfigHandler(handler);
+    nodeFactory = concreteFactory;
+  } else if ((*params)["NODE_TYPE"].compare("ALS_BROADCAST") == 0) {
+    AlsBroadcastNodeFactory* concreteFactory = new AlsBroadcastNodeFactory;
     AlsPartitionConfigHandler* handler = new AlsPartitionConfigHandler;
     handler->readItemConfig((*params)["REMOTE_DIR"] + "/item_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
     handler->readUserConfig((*params)["REMOTE_DIR"] + "/user_part.cfg", atoi((*params)["NUM_SLAVES"].c_str()));
