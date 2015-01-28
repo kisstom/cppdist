@@ -17,5 +17,4 @@ private:
   log4cpp::Category* logger_;
 };
 
-
 #endif  // ALS_BROADCAST_NODE_FACTORY_H_

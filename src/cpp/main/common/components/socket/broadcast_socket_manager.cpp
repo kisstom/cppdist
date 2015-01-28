@@ -68,10 +68,12 @@ Selector* BroadCastSocketManeger::getSelector(int timeout) {
 }
 
 void BroadCastSocketManeger::initSockets() {
+  logger->info("Initing listener size to %d", clusterSize - 1);
   listeners.resize(clusterSize - 1, NULL);
 }
 
 void BroadCastSocketManeger::initBroadcaster() {
+  logger->info("Initing broadcasters.");
   int broadCastPort = initMultiCastPort + nodeIndex;
   char broadCastHost[1024];
   sprintf(broadCastHost, "%s%d", initMulticastHost, nodeIndex);
@@ -80,6 +82,7 @@ void BroadCastSocketManeger::initBroadcaster() {
 }
 
 void BroadCastSocketManeger::initListeners() {
+  logger->info("Initing listeners.");
   UDPMulticastReceiver* listener = NULL;
   char actHost[1024];
   int port;
