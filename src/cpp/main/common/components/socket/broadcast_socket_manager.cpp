@@ -73,7 +73,7 @@ void BroadCastSocketManeger::initSockets() {
 }
 
 void BroadCastSocketManeger::initBroadcaster() {
-  logger->info("Initing broadcasters.");
+  logger->info("Initing broadcast.");
   int broadCastPort = initMultiCastPort + nodeIndex;
   char broadCastHost[1024];
   sprintf(broadCastHost, "%s%d", initMulticastHost, nodeIndex);
@@ -92,6 +92,8 @@ void BroadCastSocketManeger::initListeners() {
 
     sprintf(actHost, "%s%d", initMulticastHost, listenerIndex);
     port = listenerIndex + initMultiCastPort;
+
+    listener = new UDPMulticastReceiver;
     listener->connectToMulticastIp(actHost, port);
 
     if (listenerIndex < nodeIndex) {

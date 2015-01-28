@@ -5,8 +5,8 @@
 
 SenderBuffer* SenderBufferFactory::createSenderBuffer(unordered_map<string, string>* params) {
   int numSockets = getBufferNum(params);
-  int send_limit = sscanf((*params)["SEND_LIMIT"].c_str(),
-      "%d", &send_limit);
+  int send_limit;
+  sscanf((*params)["SEND_LIMIT"].c_str(),"%d", &send_limit);
 
   SenderBuffer* senderBuffer = new SenderBuffer;
   senderBuffer->resizeBufferNum(numSockets);

@@ -4,8 +4,8 @@
 
 StoreFromBinary* StoreFromBinaryFactory::createStoreFromBinary(unordered_map<string, string>* params) {
   int numSockets = getBufferNum(params);
-  int send_limit = sscanf((*params)["SEND_LIMIT"].c_str(),
-      "%d", &send_limit);
+  int send_limit;
+  sscanf((*params)["SEND_LIMIT"].c_str(), "%d", &send_limit);
 
   StoreFromBinary* storeFromBinary = new StoreFromBinary;
   storeFromBinary->resizeSocketNum(numSockets);
@@ -22,7 +22,7 @@ int StoreFromBinaryFactory::getBufferNum(unordered_map<string, string>* params) 
     if ((*params)["MULTI"].compare("MULTICAST") == 0) {
       numSockets = (int) pow(2, numSlaves - 1) - 1;
     } else if ((*params)["MULTI"].compare("BROADCAST") == 0) {
-      numSockets = 1;
+      numSockets = numSlaves - 1;
     } else {
       throw std::exception();
     }
