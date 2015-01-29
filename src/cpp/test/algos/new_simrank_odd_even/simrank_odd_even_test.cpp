@@ -5,6 +5,7 @@
 #include "../../../main/algos/algo_components/cluster.h"
 #include "../new_algo_test_base.h"
 #include "../../../main/common/graph/builder/test_edge_list_builder.h"
+#include "../algo_test_util.h"
 
 class SimrankOddEvenTest: public NewAlgoTestBase {
 protected:
@@ -28,10 +29,9 @@ protected:
     addConfigParam("SEED", "13");
     addConfigParam("RANDOM_TYPE", "PSEUDO");
 
-    TestSimrankOddEvenNodeFactory* nodeFactory1 =
-            new TestSimrankOddEvenNodeFactory;
-    TestEdgeListBuilder builder;
+    TestSimrankOddEvenNodeFactory* nodeFactory = NULL;
 
+    vector<vector<string> > partitions;
     vector<string> part1;
     vector<string> part2;
 
@@ -39,67 +39,36 @@ protected:
     part1.push_back("5");
     part1.push_back("5");
     part1.push_back("");
-    EdgelistContainer* cont1 = builder.buildFromString(part1, 0);
-    nodeFactory1->setEdgelistContainer(cont1);
-
-    vector<list<long*> > fpStarts1((int) part1.size());
-    for (int start = 0; start < (int) part1.size(); ++start) {
-      for (int pathI = 0; pathI < numPathes; ++pathI) {
-        long* path = new long[pathLen + 1];
-        std::fill_n(path, pathLen + 1, -1);
-        path[0] = start + 0;
-        path[1] = start + 0;
-        fpStarts1[pathI].push_back(path);
-      }
-    }
-
-    vector<long>* partMinNodes = new vector<long>();
-    vector<long>* partNumNodes = new vector<long>();
-    partMinNodes->push_back(0);
-    partNumNodes->push_back((int) part1.size());
-
-    GraphPartitionConfigHandler* handler1 = new GraphPartitionConfigHandler;
 
     part2.push_back("");
     part2.push_back("4");
     part2.push_back("0 5");
     part2.push_back("1 4");
-    EdgelistContainer* cont2 = builder.buildFromString(part2, (int) part1.size());
 
-    vector<list<long*> > fpStarts2((int) part2.size());
-    for (int start = 0; start < (int) part2.size(); ++start) {
-      for (int pathI = 0; pathI < numPathes; ++pathI) {
-        long* path = new long[pathLen + 1];
-        std::fill_n(path, pathLen + 1, -1);
-        path[0] = start + (int) part1.size();
-        path[1] = start + (int) part1.size();
-        fpStarts2[pathI].push_back(path);
-      }
+    partitions.push_back(part1);
+    partitions.push_back(part2);
+
+    vector<OldPartitionNodeFactory*> factories;
+    long minnode = 0;
+    for (int i = 0; i < (int) partitions.size(); ++i) {
+      nodeFactory = new TestSimrankOddEvenNodeFactory;
+      vector<list<long*> > fpStarts((int) partitions[i].size());
+
+      algoTestUtil.setFingerPrintStarts(&fpStarts, partitions[i], pathLen, numPathes, minnode);
+
+      nodeFactory->setFingerprints(fpStarts);
+      factories.push_back(nodeFactory);
+      minnode += (long) partitions[i].size();
     }
 
-    partMinNodes->push_back((int) part1.size());
-    partNumNodes->push_back((int) part2.size());
+    algoTestUtil.createFactoriesFromPart(partitions, &factories);
 
-    handler1->setPartitionMinNodes(partMinNodes);
-    handler1->setPartitionNumNodes(partNumNodes);
-
-    nodeFactory1->setPartConfHandler(handler1);
-    nodeFactory1->setFingerprints(fpStarts1);
-    addNodeFactory(nodeFactory1);
-
-    GraphPartitionConfigHandler* handler2 = new GraphPartitionConfigHandler;
-    handler2->setPartitionMinNodes(partMinNodes);
-    handler2->setPartitionNumNodes(partNumNodes);
-
-    TestSimrankOddEvenNodeFactory* nodeFactory2 =
-                new TestSimrankOddEvenNodeFactory;
-    nodeFactory2->setEdgelistContainer(cont2);
-    nodeFactory2->setPartConfHandler(handler2);
-    nodeFactory2->setFingerprints(fpStarts2);
-
-    addNodeFactory(nodeFactory2);
+    for (int i = 0; i < (int) factories.size(); ++i) {
+      addNodeFactory(factories[i]);
+    }
   }
 
+  AlgoTestUtil algoTestUtil;
   int pathLen;
   int numPathes;
 };

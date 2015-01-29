@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <list>
 
 using std::string;
 using std::vector;
@@ -12,7 +13,8 @@ using std::vector;
 class AlgoTestUtil {
 public:
   void createFactoriesFromPart(vector<vector<string> >,vector<OldPartitionNodeFactory*>*);
-
+  void setFingerPrintStarts(vector<list<long*> >*,
+      vector<string> part, int pathLen, int numPathes, long minnode);
 };
 
 #endif  // ALGO_TEST_UTIL_H_

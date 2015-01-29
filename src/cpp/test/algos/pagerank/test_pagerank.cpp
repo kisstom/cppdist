@@ -57,61 +57,6 @@ protected:
 
   }
 
-  /*virtual void SetUp() {
-    initLogger();
-    addConfigParam("NODE_TYPE", "PAGERANK");
-    addConfigParam("INNER_MASTER_TYPE", "PAGERANK");
-    addConfigParam("DESERIALIZER_TYPE", "PAGERANK");
-    addConfigParam("MAX_ITER", "1");
-    addConfigParam("DUMP", "0.1");
-    addConfigParam("NUMLINE", "8");
-
-    TestPagerankNodeFactory* nodeFactory1 = new TestPagerankNodeFactory;
-    TestEdgeListBuilder builder;
-
-    vector<string> part1;
-    vector<string> part2;
-
-    part1.push_back("1 2 3");
-    part1.push_back("5");
-    part1.push_back("5");
-    part1.push_back("");
-    EdgelistContainer* cont1 = builder.buildFromString(part1, 0);
-    nodeFactory1->setEdgelistContainer(cont1);
-
-    vector<long>* partMinNodes = new vector<long>();
-    vector<long>* partNumNodes = new vector<long>();
-    partMinNodes->push_back(0);
-    partNumNodes->push_back((int) part1.size());
-
-    GraphPartitionConfigHandler* handler1 = new GraphPartitionConfigHandler;
-
-    part2.push_back("");
-    part2.push_back("4");
-    part2.push_back("0 5");
-    part2.push_back("1 4");
-    EdgelistContainer* cont2 = builder.buildFromString(part2, (int) part1.size());
-
-    partMinNodes->push_back((int) part1.size());
-    partNumNodes->push_back((int) part2.size());
-
-    handler1->setPartitionMinNodes(partMinNodes);
-    handler1->setPartitionNumNodes(partNumNodes);
-
-    nodeFactory1->setPartConfHandler(handler1);
-    addNodeFactory(nodeFactory1);
-
-    GraphPartitionConfigHandler* handler2 = new GraphPartitionConfigHandler;
-    handler2->setPartitionMinNodes(partMinNodes);
-    handler2->setPartitionNumNodes(partNumNodes);
-
-    TestPagerankNodeFactory* nodeFactory2 = new TestPagerankNodeFactory();
-    nodeFactory2->setEdgelistContainer(cont2);
-    nodeFactory2->setPartConfHandler(handler2);
-
-    addNodeFactory(nodeFactory2);
-  }*/
-
   AlgoTestUtil algoTestUtil;
 };
 

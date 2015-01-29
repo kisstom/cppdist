@@ -30,3 +30,16 @@ void AlgoTestUtil::createFactoriesFromPart(vector<vector<string> > partitions,
     (*factories)[partI]->setPartConfHandler(handler);
   }
 }
+
+void AlgoTestUtil::setFingerPrintStarts(
+    vector<list<long*> >* fpStarts, vector<string> part, int pathLen, int numPathes, long minnode) {
+  for (int start = 0; start < (int) part.size(); ++start) {
+    for (int pathI = 0; pathI < numPathes; ++pathI) {
+      long* path = new long[pathLen + 1];
+      std::fill_n(path, pathLen + 1, -1);
+      path[0] = start + minnode;
+      path[1] = start + minnode;
+      (*fpStarts)[pathI].push_back(path);
+    }
+  }
+}

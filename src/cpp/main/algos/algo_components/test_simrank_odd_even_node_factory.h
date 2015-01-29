@@ -11,7 +11,7 @@
 #include <vector>
 #include <list>
 
-#include "inode_factory.h"
+#include "factories/old_partition_node_factory.h"
 #include "node_factory_helper.h"
 #include <log4cpp/Category.hh>
 #include "factories/graph_partition_config_handler.h"
@@ -21,7 +21,7 @@ using std::vector;
 using std::list;
 
 
-class TestSimrankOddEvenNodeFactory : public INodeFactory {
+class TestSimrankOddEvenNodeFactory : public OldPartitionNodeFactory {
 public:
   TestSimrankOddEvenNodeFactory();
 	Node* createNodeFromConfig(unordered_map<string, string>* params);
