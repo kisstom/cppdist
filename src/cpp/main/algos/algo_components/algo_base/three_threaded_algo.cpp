@@ -25,11 +25,6 @@ bool ThreeThreadedAlgo::setUp() {
     logger_->info("Master said i must die. I die.");
     return false;
   }
-  catch (LogError& e) {
-    logger_->info("Error: %s.\nExiting.", e.what());
-    masterSocketManager_->sendFailToMaster();
-    return false;
-  }
   catch (ConnectionError& e) {
     logger_->info("Error: %s.\nExiting.", e.what());
     masterSocketManager_->sendFailToMaster();
@@ -52,6 +47,7 @@ void ThreeThreadedAlgo::run() {
       if (!strcmp(instr, "exit")) {
         break;
       }
+
       if (!strcmp(instr, "die")) {
         throw MasterException();
       }
@@ -78,10 +74,6 @@ void ThreeThreadedAlgo::run() {
     }
   }
   catch (MasterException& e) {
-    return;
-  }
-  catch (LogError& e) {
-    masterSocketManager_->sendFailToMaster();
     return;
   }
   catch (ConnectionError& e) {

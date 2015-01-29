@@ -22,11 +22,6 @@ bool TwoThreadedAlgo::setUp() {
     logger_->info("Master said i must die. I die.");
     return false;
   }
-  catch (LogError& e) {
-    logger_->info("Error: %s.\nExiting.", e.what());
-    masterSocketManager_->sendFailToMaster();
-    return false;
-  }
   catch (ConnectionError& e) {
     logger_->info("Error: %s.\nExiting.", e.what());
     masterSocketManager_->sendFailToMaster();
@@ -75,10 +70,6 @@ void TwoThreadedAlgo::run() {
     }
   }
   catch (MasterException& e) {
-    return;
-  }
-  catch (LogError& e) {
-    masterSocketManager_->sendFailToMaster();
     return;
   }
   catch (ConnectionError& e) {

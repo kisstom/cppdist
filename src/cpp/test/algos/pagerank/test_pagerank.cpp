@@ -5,6 +5,7 @@
 #include "../../../main/algos/algo_components/cluster.h"
 #include "../new_algo_test_base.h"
 #include "../../../main/common/graph/builder/test_edge_list_builder.h"
+#include "../algo_test_util.h"
 
 //namespace {
 
@@ -18,6 +19,45 @@ protected:
   }
 
   virtual void SetUp() {
+    initLogger();
+    addConfigParam("NODE_TYPE", "PAGERANK");
+    addConfigParam("INNER_MASTER_TYPE", "PAGERANK");
+    addConfigParam("DESERIALIZER_TYPE", "PAGERANK");
+    addConfigParam("MAX_ITER", "1");
+    addConfigParam("DUMP", "0.1");
+    addConfigParam("NUMLINE", "8");
+
+    vector<vector<string> > partitions;
+    vector<string> part1;
+    vector<string> part2;
+
+    part1.push_back("1 2 3");
+    part1.push_back("5");
+    part1.push_back("5");
+    part1.push_back("");
+
+    part2.push_back("");
+    part2.push_back("4");
+    part2.push_back("0 5");
+    part2.push_back("1 4");
+
+    partitions.push_back(part1);
+    partitions.push_back(part2);
+
+    vector<OldPartitionNodeFactory*> factories;
+    for (int i = 0; i < (int) partitions.size(); ++i) {
+      factories.push_back(new TestPagerankNodeFactory);
+    }
+
+    algoTestUtil.createFactoriesFromPart(partitions, &factories);
+
+    for (int i = 0; i < (int) factories.size(); ++i) {
+      addNodeFactory(factories[i]);
+    }
+
+  }
+
+  /*virtual void SetUp() {
     initLogger();
     addConfigParam("NODE_TYPE", "PAGERANK");
     addConfigParam("INNER_MASTER_TYPE", "PAGERANK");
@@ -70,7 +110,9 @@ protected:
     nodeFactory2->setPartConfHandler(handler2);
 
     addNodeFactory(nodeFactory2);
-  }
+  }*/
+
+  AlgoTestUtil algoTestUtil;
 };
 
 
