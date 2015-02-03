@@ -46,6 +46,7 @@ Node* AlsBroadcastNodeFactory::createNodeFromConfig(
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   node->setPartitionIndex(slaveIndex);
 
+  logger_->info("Als broadcast node created.");
   return node;
 }
 
