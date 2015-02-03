@@ -10,6 +10,7 @@ AlgoFactory::AlgoFactory() {
 }
 
 AlgoBase* AlgoFactory::createAlgo(unordered_map<string, string>* params) {
+  logger_->info("Creating algo.");
   AlgoFactoryHelper helper;
   AlgoBase* retval = helper.initAlgo(params);
   return retval;

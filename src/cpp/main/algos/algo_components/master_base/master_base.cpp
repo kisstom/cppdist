@@ -16,6 +16,9 @@ MasterBase::MasterBase(int master_port, vector<Slave>* slaves)
 MasterBase::~MasterBase()
 {
   delete master_socket_;
+  for (int i = 0; i < (int) slaves_->size(); ++i) {
+    if ((*slaves_)[i].socket) delete (*slaves_)[i].socket;
+  }
 }
 
 bool MasterBase::setUp() {

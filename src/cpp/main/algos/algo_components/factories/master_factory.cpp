@@ -22,6 +22,7 @@ vector<Slave>* MasterFactory::initSlaves(int initSlavePort, int num_slaves) {
   int port = initSlavePort;
   for (int i = 0; i < num_slaves; ++i) {
     (*slaves)[i].port = port++;
+    (*slaves)[i].socket = NULL;
   }
 
   return slaves;

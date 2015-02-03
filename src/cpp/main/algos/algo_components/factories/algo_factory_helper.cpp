@@ -4,9 +4,8 @@
 
 AlgoBase* AlgoFactoryHelper::initAlgo(unordered_map<string, string>* params) {
   if (params->find("MULTI") != params->end()) {
-    if ((*params)["MULTI"].compare("MULTICAST")) {
-      return new ThreeThreadedAlgo(params);
-    } else if ((*params)["MULTI"].compare("BROADCAST")) {
+    if ((*params)["MULTI"].compare("MULTICAST") == 0 ||
+        (*params)["MULTI"].compare("BROADCAST") == 0) {
       return new ThreeThreadedAlgo(params);
     } else {
       throw std::exception();
