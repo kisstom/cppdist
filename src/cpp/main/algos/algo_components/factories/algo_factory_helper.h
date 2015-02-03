@@ -7,7 +7,10 @@
 
 class AlgoFactoryHelper {
 public:
+  AlgoFactoryHelper();
   AlgoBase* initAlgo(unordered_map<string, string>* params);
+private:
+  log4cpp::Category* logger_;
 };
 
 
