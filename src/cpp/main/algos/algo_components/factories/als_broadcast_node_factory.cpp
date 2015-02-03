@@ -11,6 +11,8 @@ AlsBroadcastNodeFactory::AlsBroadcastNodeFactory() {
 Node* AlsBroadcastNodeFactory::createNodeFromConfig(
     unordered_map<string, string>* params) {
   logger_->info("Creating als broadcast node.");
+  util.checkParam(params, 3, "REMOTE_DIR", "SLAVE_INDEX", "LOCAL_DIR");
+
   AlsBroadcastNode* node = new AlsBroadcastNode(params);
 
   string userPartFile = (*params)["REMOTE_DIR"] + "/user_part_"
