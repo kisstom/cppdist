@@ -42,7 +42,9 @@ DeserializerFactory::DeserializerFactory() {
 }
 
 Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<string, string>* params, Node* node) {
-	string nodeType = (*params)["DESERIALIZER_TYPE"];
+  string nodeType = (*params)["DESERIALIZER_TYPE"];
+  logger_->info("Creating deserializer %s.", nodeType.c_str());
+
 	Deserializer* deserializer = NULL;
 	if (nodeType.compare("SIMRANK_UPDATE") == 0) {
 		deserializer = createSimrankUpdateDeserializer(params, node);
@@ -78,7 +80,6 @@ Deserializer* DeserializerFactory::createDeserializerFromConfig(unordered_map<st
     logger_->error("Unknown tpye of deserializer %s", nodeType.c_str());
 	}
 
-	logger_->info("Using deserializer type %s.", nodeType.c_str());
 	return deserializer;
 }
 
