@@ -283,13 +283,13 @@ def ratingMxSplitter():
     numEdgePerPart = getNumEdgePerPart()
     remoteDir =  conf.get('NODE', 'REMOTE_DIR')
 
-    inputData =  conf.get('ALGO', 'USER_RATING_DATA')
+    inputData =  conf.get('NODE', 'USER_RATING_DATA')
     configFile = remoteDir + '/user_part.cfg'
     prefix = remoteDir + '/user_part_'
     run('%s/main/common/tools/sparse_rating_splitter_tool  %s %d %s %s'%(bin_dir, prefix, numEdgePerPart, inputData, configFile))
 
 
-    inputData =  conf.get('ALGO', 'ITEM_RATING_DATA')
+    inputData =  conf.get('NODE', 'ITEM_RATING_DATA')
     configFile = remoteDir + '/item_part.cfg'
     prefix = remoteDir + '/item_part_'
     run('%s/main/common/tools/sparse_transposed_rating_splitter_tool  %s %d %s %s'%(bin_dir, prefix, numEdgePerPart, inputData, configFile))
@@ -342,7 +342,7 @@ def pagerankInversePreprocess():
   global conf, cfg_hosts
   with settings(host_string=MASTER_HOST):
     
-    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
+    inversePartDir = conf.get('NODE', 'INVERSE_PARTITION_DIR')
 
     # making inverse parts
     for i in xrange(numJobs):
@@ -358,8 +358,8 @@ def pagerankInversePartition():
     bin_dir = conf.get('ALGO', 'BIN')
     inputData = conf.get('NODE', 'INPUT_DATA')
     prPartitionDir = conf.get('NODE', 'REMOTE_DIR')
-    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
-    slaveryCfg = conf.get('ALGO', 'SLAVERY_CFG')
+    inversePartDir = conf.get('NODE', 'INVERSE_PARTITION_DIR')
+    slaveryCfg = conf.get('NODE', 'SLAVERY_CFG')
 
     rowLen = conf.get('PREPROCESS', 'ROWLEN')
     run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
@@ -389,7 +389,7 @@ def putPagerankInversePartitionIfNeeded():
 
 def putInverseOnMachine(slave_index, host):
   with settings(host_string=host):
-    inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR') + '/part_' + str(slave_index)
+    inversePartDir = conf.get('NODE', 'INVERSE_PARTITION_DIR') + '/part_' + str(slave_index)
     run('mkdir -p %s'%inversePartDir)
     boundFile = inversePartDir + '/bound.txt'
     edgesFile = inversePartDir + '/edges.txt'
@@ -402,7 +402,7 @@ def putInverseOnMachine(slave_index, host):
 def outpartitionIndexCompute():
   global conf, numJobs
 
-  outPartIndicesDir = conf.get('ALGO', 'OUT_PARTITION_INDICES_DIR')
+  outPartIndicesDir = conf.get('NODE', 'OUT_PARTITION_INDICES_DIR')
   run('mkdir -p %s'%outPartIndicesDir)
 
   for slave_index in xrange(numJobs):
@@ -412,8 +412,8 @@ def outpartitionIndexCompute():
 def outpartitionIndexComputeOnePart(slave_index):
   global numJobs, conf
   rowLen = conf.get('PREPROCESS', 'ROWLEN')
-  outPartIndicesDir = conf.get('ALGO', 'OUT_PARTITION_INDICES_DIR')
-  slaveryCfg = conf.get('ALGO', 'SLAVERY_CFG')
+  outPartIndicesDir = conf.get('NODE', 'OUT_PARTITION_INDICES_DIR')
+  slaveryCfg = conf.get('NODE', 'SLAVERY_CFG')
   with settings(host_string=MASTER_HOST):
     command = '%s/main/common/tools/outpartition_index_as_edgelist_computer '%conf.get('ALGO', 'BIN')
     command += '%s/slavery_%d.txt ' % (conf.get('NODE', 'REMOTE_DIR'), slave_index)
@@ -426,8 +426,8 @@ def outpartitionIndexComputeOnePart(slave_index):
 ########### Counter inverse ##################
 
 def counterInversePreprocess():
-  runOnAllNodes(lambda : run('mkdir -p %s'%conf.get('ALGO', 'COUNTER_INVERSE_OUTPUT_DIR')))
-  runOnAllNodes(lambda : run('mkdir -p %s'%conf.get('ALGO', 'PARTITION_BOUNDS_DIR')))
+  runOnAllNodes(lambda : run('mkdir -p %s'%conf.get('NODE', 'COUNTER_INVERSE_OUTPUT_DIR')))
+  runOnAllNodes(lambda : run('mkdir -p %s'%conf.get('NODE', 'PARTITION_BOUNDS_DIR')))
 
 
 """

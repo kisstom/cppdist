@@ -22,7 +22,7 @@ void OutPartitionIndexComputer::readConfig(FILE* slaveryFile) {
   logger_->info("Reading config");
   long lowerBound = 0, numNodes = 0, upperBound = 0, partNumNodes = 0;
   for (int i = 0; i < numslaves; ++i) {
-    fscanf(slaveryFile,"%*d %*s %ld %*ld %ld", &numNodes, &lowerBound);
+    fscanf(slaveryFile,"%ld %*ld %ld", &numNodes, &lowerBound);
     upperBound = lowerBound + numNodes;
     partitionBounds.push_back(std::make_pair<long, long>(lowerBound, upperBound));
     if (i == partIndex) {
