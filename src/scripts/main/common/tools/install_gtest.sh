@@ -1,18 +1,27 @@
-#!/bin/bash -eu
+#!/bin/bash -u
+
+trap "echo Some errors occurred while installing gtest. Exiting." ERR
 
 SCRIPT_DIR=$(dirname "$0")
-INSTALL_DIR=$SCRIPT_DIR/../../../../dep
-#INSTALL_DIR=/home/kisstom/sandbox/
+DEP_DIR=$SCRIPT_DIR/../../../../dep/
+INSTALL_DIR=$DEP_DIR/gtest/
 
-mkdir -p $INSTALL_DIR
-cd $INSTALL_DIR
+if [ -d "$INSTALL_DIR" ]; then
+  echo "$INSTALL_DIR exists already. Exiting."
+  exit 0
+fi
+
+tempdir=`mktemp -d`
+trap "rm -rf $tempdir" EXIT
+
+cd $tempdir
 
 wget http://googletest.googlecode.com/files/gtest-1.6.0.zip
 
 unzip gtest-1.6.0.zip
-mv gtest-1.6.0 gtest
+mv gtest-1.6.0 $DEP_DIR/gmock
 
-cd gtest
+cd $INSTALL_DIR
 
 GTEST_DIR=`pwd`
 

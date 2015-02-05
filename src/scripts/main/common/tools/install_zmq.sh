@@ -1,19 +1,19 @@
-#!/bin/bash
+#!/bin/bash -u
+
+trap "echo Some errors occurred while installing zmq. Exiting." ERR
 
 SCRIPT_DIR=$(readlink -f $(dirname "$0"))
 INSTALL_DIR=$SCRIPT_DIR/../../../../dep/zmq
 
 if [ -d "$INSTALL_DIR" ]; then
-  echo "ZMQ is already installed in $INSTALL_DIR. Exiting."
+  echo "$INSTALL_DIR exists already. Exiting."
   exit 0
 fi
-
-trap echo "Some errors occurred while installing zmq. Exiting." ERR
 
 mkdir -p $INSTALL_DIR
 tempdir=`mktemp -d`
 
-trap rm -rf "$tempdir" EXIT
+trap "rm -rf $tempdir" EXIT
 
 cd $tempdir
 

@@ -1,10 +1,19 @@
 #!/bin/bash -u
 
+trap "echo Some errors occurred while installing gmp. Exiting." ERR
+
 SCRIPT_DIR=$(readlink -f $(dirname "$0"))
 INSTALL_DIR=$SCRIPT_DIR/../../../../dep/gmp
 
+if [ -d "$INSTALL_DIR" ]; then
+  echo "$INSTALL_DIR exists already. Exiting."
+  exit 0
+fi
+
 mkdir -p $INSTALL_DIR
 tempdir=`mktemp -d`
+
+trap "rm -rf $tempdir" EXIT
 
 cd $tempdir
 
@@ -16,4 +25,4 @@ cd gmp-5.1.3/
 make -j4
 make -j4 install
 
-rm -rf "$tempdir"
+echo "GMP installed successfully."

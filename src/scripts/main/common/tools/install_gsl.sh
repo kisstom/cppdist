@@ -1,10 +1,19 @@
-#!/bin/bash -u
+#!/bin/bash -u 
+
+trap "echo Some errors occurred while installing gsl. Exiting." ERR
 
 SCRIPT_DIR=$(readlink -f $(dirname "$0"))
 INSTALL_DIR=$SCRIPT_DIR/../../../../dep/gsl
 
+if [ -d "$INSTALL_DIR" ]; then
+  echo "$INSTALL_DIR exists already. Exiting."
+  exit 0
+fi
+
 mkdir -p $INSTALL_DIR
 tempdir=`mktemp -d`
+
+trap "rm -rf $tempdir" EXIT
 
 cd $tempdir
 
@@ -17,4 +26,4 @@ make -j4
 make -j4 html
 make -j4 install
 
-rm -rf "$tempdir"
+echo "GSL installed successfully."
