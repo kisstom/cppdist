@@ -127,7 +127,7 @@ CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, 
 
   int rowLen, numSlaves, slaveIndex;
 
-  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
+  string cfg = (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -197,7 +197,7 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
 
   int rowLen, numSlaves, slaveIndex;
   long minNode;
-  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
+  string cfg = (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -243,7 +243,7 @@ CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, 
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
-  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
+  string cfg = (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -281,7 +281,7 @@ CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_ma
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
 
   int rowLen, numSlaves, slaveIndex;
-  string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
+  string cfg = (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);

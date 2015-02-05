@@ -56,16 +56,17 @@ def readCfg():
     conf = readConfig(configFile)
     isConfReaded = True
 
-#  env.user = 'hadoop'
-#  env.key_filename = '~/.ssh/hadoop_dell150_idrsa'
-  
   if conf.has_option('ALGO', 'USER'):
     env.user = conf.get('ALGO', 'USER')
   else:
     env.user = 'kisstom'
 
-  if conf.has_option('ALGO', 'USER'):
+  if conf.has_option('ALGO', 'KEY_FILENAME'):
     env.key_filename = conf.get('ALGO', 'KEY_FILENAME')
+
+  if conf.has_option('NODE', 'REMOTE_DIR'):
+    slaveryCfg = conf.get('NODE', 'REMOTE_DIR') + '/slavery.cfg'
+    conf.set('NODE', 'SLAVERY_CFG', slaveryCfg)
 
   BASE_DIR = conf.get('ALGO', 'BASE_DIR')
   LOCAL_DIR = BASE_DIR + "/outdir/"
@@ -209,7 +210,7 @@ def makePartition():
     bin_dir = conf.get('ALGO', 'BIN')
     remoteDir =  conf.get('NODE', 'REMOTE_DIR')
     inputData =  conf.get('NODE', 'INPUT_DATA')
-    slaveryCfg =  conf.get('ALGO', 'SLAVERY_CFG')
+    slaveryCfg =  conf.get('NODE', 'SLAVERY_CFG')
     initSlavePort =  conf.get('ALGO', 'INIT_SLAVE_PORT')
     try:
       splitType = conf.get('ALGO', 'SPLIT_TYPE')
@@ -220,14 +221,14 @@ def makePartition():
     if splitType == '' or splitType == 'EDGE_BALANCED':
       print 'Using partitioner edge balanced'
       numEdgePerPart = getNumEdgePerPart()
-      run('%s/main/common/tools/split_clueweb_vector_node  %s %s %d %s %s'%(bin_dir, inputData, initSlavePort, numEdgePerPart, remoteDir + 'slavery', remoteDir + slaveryCfg))
+      run('%s/main/common/tools/split_clueweb_vector_node  %s %s %d %s %s'%(bin_dir, inputData, initSlavePort, numEdgePerPart, remoteDir + 'slavery', slaveryCfg))
  
  
     elif splitType == 'NODE_BALANCED':
       print 'Using partitioner node balanced'
       numNodePerPart = getNumNodePerPart()
       logFile = conf.get('ALGO', 'LOCAL_DIR') + '/err'
-      run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, remoteDir + slaveryCfg, initSlavePort))
+      run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, slaveryCfg, initSlavePort))
     
 
 def putPartitionIfNeeded():
@@ -267,7 +268,7 @@ def putOldSplitConfigOnMachine(host):
   with settings(host_string=host):
     remoteDir = conf.get('NODE', 'REMOTE_DIR')
   
-    configFile = remoteDir + '/' + conf.get('ALGO', 'SLAVERY_CFG')
+    configFile = conf.get('NODE', 'SLAVERY_CFG')
     put(configFile, remoteDir)
 
 ########### Rating matrix splitter ################
@@ -339,11 +340,6 @@ def createRemoteDir(host):
 ########### For pagerank inverse ##################
 def pagerankInversePreprocess():
   global conf, cfg_hosts
-  # Copying slavery config to remote nodes
-  slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
-  remoteDir = conf.get('NODE', 'REMOTE_DIR')
-  baseDir = conf.get('ALGO', 'BASE_DIR')
-
   with settings(host_string=MASTER_HOST):
     
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
@@ -363,7 +359,7 @@ def pagerankInversePartition():
     inputData = conf.get('NODE', 'INPUT_DATA')
     prPartitionDir = conf.get('NODE', 'REMOTE_DIR')
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
-    slaveryCfg = prPartitionDir + '/' + conf.get('ALGO', 'SLAVERY_CFG')
+    slaveryCfg = conf.get('ALGO', 'SLAVERY_CFG')
 
     rowLen = conf.get('PREPROCESS', 'ROWLEN')
     run('%s/main/common/tools/inverse_partition_maker_job %s %s %s %d %s'%
@@ -417,7 +413,7 @@ def outpartitionIndexComputeOnePart(slave_index):
   global numJobs, conf
   rowLen = conf.get('PREPROCESS', 'ROWLEN')
   outPartIndicesDir = conf.get('ALGO', 'OUT_PARTITION_INDICES_DIR')
-  slaveryCfg = conf.get('NODE', 'REMOTE_DIR') + '/' + conf.get('ALGO', 'SLAVERY_CFG')
+  slaveryCfg = conf.get('ALGO', 'SLAVERY_CFG')
   with settings(host_string=MASTER_HOST):
     command = '%s/main/common/tools/outpartition_index_as_edgelist_computer '%conf.get('ALGO', 'BIN')
     command += '%s/slavery_%d.txt ' % (conf.get('NODE', 'REMOTE_DIR'), slave_index)

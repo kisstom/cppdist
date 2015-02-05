@@ -2,7 +2,7 @@
 #include "../../../common/util/util.h"
 
 GraphPartitionConfigHandler::GraphPartitionConfigHandler() {
-  logger_ = &log4cpp::Category::getInstance(std::string("GraphSlaveConfigReader"));;
+  logger_ = &log4cpp::Category::getInstance(std::string("GraphPartitionConfigHandler"));;
   partitionMinNodes = NULL;
   partitionNumNodes = NULL;
 }

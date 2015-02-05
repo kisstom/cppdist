@@ -44,7 +44,7 @@ INodeFactory* AbstractNodeFactory::provideNodeFactory(unordered_map<string, stri
   } else {
     NodeFactory* concreteFactory = new NodeFactory;
     GraphPartitionConfigHandler* handler = new GraphPartitionConfigHandler;
-    string cfg = (*params)["REMOTE_DIR"] + "/" + (*params)["SLAVERY_CFG"];
+    string cfg = (*params)["SLAVERY_CFG"];
     handler->readSlaveConfig(cfg, atoi((*params)["NUM_SLAVES"].c_str()));
     concreteFactory->setPartitionConfigHandler(handler);
     nodeFactory = concreteFactory;
