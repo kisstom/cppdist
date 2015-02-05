@@ -1,8 +1,8 @@
-#!/bin/bash -u
+#!/bin/bash -eu
 
 trap "echo Some errors occurred while installing gtest. Exiting." ERR
 
-SCRIPT_DIR=$(dirname "$0")
+SCRIPT_DIR=$(readlink -f $(dirname "$0"))
 DEP_DIR=$SCRIPT_DIR/../../../../dep/
 INSTALL_DIR=$DEP_DIR/gtest/
 

@@ -1,8 +1,8 @@
-#!/bin/bash -u
+#!/bin/bash -eu
 
 trap "echo Some errors occurred while installing gmock. Exiting." ERR
 
-SCRIPT_DIR=$(dirname "$0")
+SCRIPT_DIR=$(readlink -f $(dirname "$0"))
 INSTALL_DIR=$SCRIPT_DIR/../../../../dep/gmock/
 DEP_DIR=$SCRIPT_DIR/../../../../dep/
 

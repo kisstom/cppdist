@@ -1,4 +1,4 @@
-#!/bin/bash -u
+#!/bin/bash -eu
 
 trap "echo Some errors occurred while installing gmp. Exiting." ERR
 
