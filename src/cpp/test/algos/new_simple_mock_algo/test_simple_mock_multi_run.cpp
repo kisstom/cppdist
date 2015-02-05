@@ -20,7 +20,7 @@ protected:
     addConfigParam("NODE_TYPE", "SIMPLE_MOCK");
     addConfigParam("INNER_MASTER_TYPE", "SIMPLE_MOCK");
     addConfigParam("DESERIALIZER_TYPE", "SIMPLE_MOCK");
-    addConfigParam("MULTI", "1");
+    addConfigParam("MULTI", "MULTICAST");
 
     INodeFactory* nodeFactory1 = new TestSimrankOddEvenNodeFactory();
     addNodeFactory(nodeFactory1);
