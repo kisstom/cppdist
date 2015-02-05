@@ -1,10 +1,19 @@
-#!/bin/bash -u
+#!/bin/bash
 
 SCRIPT_DIR=$(readlink -f $(dirname "$0"))
 INSTALL_DIR=$SCRIPT_DIR/../../../../dep/zmq
 
+if [ -d "$INSTALL_DIR" ]; then
+  echo "ZMQ is already installed in $INSTALL_DIR. Exiting."
+  exit 0
+fi
+
+trap echo "Some errors occurred while installing zmq. Exiting." ERR
+
 mkdir -p $INSTALL_DIR
 tempdir=`mktemp -d`
+
+trap rm -rf "$tempdir" EXIT
 
 cd $tempdir
 
@@ -16,4 +25,4 @@ cd zeromq-4.0.5
 make -j4
 make -j4 install
 
-rm -rf "$tempdir"
+echo "ZMQ installed successfully."
