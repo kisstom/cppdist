@@ -56,7 +56,17 @@ def readCfg():
     conf = readConfig(configFile)
     isConfReaded = True
 
-  env.user = 'kisstom'
+#  env.user = 'hadoop'
+#  env.key_filename = '~/.ssh/hadoop_dell150_idrsa'
+  
+  if conf.has_option('ALGO', 'USER'):
+    env.user = conf.get('ALGO', 'USER')
+  else:
+    env.user = 'kisstom'
+
+  if conf.has_option('ALGO', 'USER'):
+    env.key_filename = conf.get('ALGO', 'KEY_FILENAME')
+
   BASE_DIR = conf.get('ALGO', 'BASE_DIR')
   LOCAL_DIR = BASE_DIR + "/outdir/"
 
@@ -85,6 +95,16 @@ def buildHosts(cfg):
     cfg_hosts += [option]
   env.hosts = [MASTER_HOST]
 
+def listfiles():
+  run('ls -l')
+
+@task
+def hello():
+  env.hosts = cfg_hosts
+  execute(listfiles)
+  env.hosts = [MASTER_HOST]
+
+
 """
   ####################################################
   ########  TOOLS APPLIED TO ALL MACHINES ############
@@ -99,11 +119,10 @@ def cleanup():
   run('mkdir -p %s'%local_dir) 
   pids.clear()
 
-
 def copyCfg():
-  global conf, configFile
-  local_dir = conf.get('ALGO', 'LOCAL_DIR')
-  configFile = local_dir + 'deploy.ini'
+  global conf
+
+  configFile = conf.get('ALGO', 'LOCAL_DIR') + 'deploy.ini'
 
   tempf = tempfile.mktemp()
   tempfO = open(tempf, 'w')
@@ -112,6 +131,7 @@ def copyCfg():
 
   put(tempf, configFile)
   os.system('rm ' + tempf)
+
 
 def createLocalDir():
   global conf
@@ -160,10 +180,15 @@ def runPreprocessTask(section, function):
 
 @task
 def preprocess():
-  runOnAllNodes(cleanup)
   global conf
+  runOnAllNodes(cleanup)
 
-  with  shell_env(LD_LIBRARY_PATH='/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/gmp/lib/:/home/kisstom/git/DistributedComp/DistributedFrame/src/dep/log4cpp/lib/'):    
+  bin_dir = conf.get('ALGO', 'BIN')
+  depDir = bin_dir + '../dep/'
+  libPath = depDir + 'gmp/lib/'
+  libPath += ':' + depDir + 'log4cpp/lib/'
+
+  with  shell_env(LD_LIBRARY_PATH=libPath):
     runPreprocessTask('MAKE_PARTITION', makePartition)
     runPreprocessTask('PUT_TO_LOCAL', putPartitionIfNeeded)
     runPreprocessTask('PAGERANK_INVERSE', pagerankInversePreprocess)
@@ -182,8 +207,8 @@ def makePartition():
     global conf, numJobs
 
     bin_dir = conf.get('ALGO', 'BIN')
-    remoteDir =  conf.get('ALGO', 'REMOTE_DIR')
-    inputData =  conf.get('ALGO', 'INPUT_DATA')
+    remoteDir =  conf.get('NODE', 'REMOTE_DIR')
+    inputData =  conf.get('NODE', 'INPUT_DATA')
     slaveryCfg =  conf.get('ALGO', 'SLAVERY_CFG')
     initSlavePort =  conf.get('ALGO', 'INIT_SLAVE_PORT')
     try:
@@ -221,7 +246,7 @@ def putPartitionIfNeeded():
         slave_index += int(conf.get('MACHINES', host))
         continue
       jobs_on_host = int(conf.get('MACHINES', host))
-      prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
+      prPartitionDir = conf.get('NODE', 'REMOTE_DIR')
 
       createRemoteDir(host)
       putOldSplitConfigOnMachine(host)
@@ -231,16 +256,16 @@ def putPartitionIfNeeded():
 
 def putOnMachine(slave_index, host):
   with settings(host_string=host):
-    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    remoteDir = conf.get('NODE', 'REMOTE_DIR')
     run('mkdir -p %s'%remoteDir)
-    partitionFile = conf.get('ALGO', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
+    partitionFile = conf.get('NODE', 'REMOTE_DIR') + '/slavery_' + str(slave_index) + '.txt'
     put(partitionFile, remoteDir)
 
 def putOldSplitConfigOnMachine(host):
   global conf
 
   with settings(host_string=host):
-    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    remoteDir = conf.get('NODE', 'REMOTE_DIR')
   
     configFile = remoteDir + '/' + conf.get('ALGO', 'SLAVERY_CFG')
     put(configFile, remoteDir)
@@ -255,7 +280,7 @@ def ratingMxSplitter():
 
     bin_dir = conf.get('ALGO', 'BIN')
     numEdgePerPart = getNumEdgePerPart()
-    remoteDir =  conf.get('ALGO', 'REMOTE_DIR')
+    remoteDir =  conf.get('NODE', 'REMOTE_DIR')
 
     inputData =  conf.get('ALGO', 'USER_RATING_DATA')
     configFile = remoteDir + '/user_part.cfg'
@@ -285,7 +310,7 @@ def putRatingSplitsToCluster():
 
 def putRatingSplitOnMachine(slave_index, host):
   global conf
-  remoteDir = conf.get('ALGO', 'REMOTE_DIR') 
+  remoteDir = conf.get('NODE', 'REMOTE_DIR') 
   with settings(host_string=host):
     partitionFile = remoteDir + '/user_part_' + str(slave_index)
     put(partitionFile, remoteDir)
@@ -296,7 +321,7 @@ def putRatingSplitOnMachine(slave_index, host):
 def putRatingSplitConfigOnMachine(host):
   global conf
   with settings(host_string=host):
-    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    remoteDir = conf.get('NODE', 'REMOTE_DIR')
   
     configFile = remoteDir + '/user_part.cfg'
     put(configFile, remoteDir)
@@ -307,7 +332,7 @@ def putRatingSplitConfigOnMachine(host):
 def createRemoteDir(host):
   global conf
   with settings(host_string=host):
-    remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+    remoteDir = conf.get('NODE', 'REMOTE_DIR')
     run('mkdir -p %s'%remoteDir)
 
 
@@ -316,7 +341,7 @@ def pagerankInversePreprocess():
   global conf, cfg_hosts
   # Copying slavery config to remote nodes
   slaveryFile = conf.get('ALGO', 'SLAVERY_CFG')
-  remoteDir = conf.get('ALGO', 'REMOTE_DIR')
+  remoteDir = conf.get('NODE', 'REMOTE_DIR')
   baseDir = conf.get('ALGO', 'BASE_DIR')
 
   with settings(host_string=MASTER_HOST):
@@ -335,8 +360,8 @@ def pagerankInversePartition():
     global conf
 
     bin_dir = conf.get('ALGO', 'BIN')
-    inputData = conf.get('ALGO', 'INPUT_DATA')
-    prPartitionDir = conf.get('ALGO', 'REMOTE_DIR')
+    inputData = conf.get('NODE', 'INPUT_DATA')
+    prPartitionDir = conf.get('NODE', 'REMOTE_DIR')
     inversePartDir = conf.get('ALGO', 'INVERSE_PARTITION_DIR')
     slaveryCfg = prPartitionDir + '/' + conf.get('ALGO', 'SLAVERY_CFG')
 
@@ -392,10 +417,10 @@ def outpartitionIndexComputeOnePart(slave_index):
   global numJobs, conf
   rowLen = conf.get('PREPROCESS', 'ROWLEN')
   outPartIndicesDir = conf.get('ALGO', 'OUT_PARTITION_INDICES_DIR')
-  slaveryCfg = conf.get('ALGO', 'REMOTE_DIR') + '/' + conf.get('ALGO', 'SLAVERY_CFG')
+  slaveryCfg = conf.get('NODE', 'REMOTE_DIR') + '/' + conf.get('ALGO', 'SLAVERY_CFG')
   with settings(host_string=MASTER_HOST):
     command = '%s/main/common/tools/outpartition_index_as_edgelist_computer '%conf.get('ALGO', 'BIN')
-    command += '%s/slavery_%d.txt ' % (conf.get('ALGO', 'REMOTE_DIR'), slave_index)
+    command += '%s/slavery_%d.txt ' % (conf.get('NODE', 'REMOTE_DIR'), slave_index)
     command += '%s %d %s %d ' % (slaveryCfg, numJobs, rowLen, slave_index)
     command += '%s/outpartition_indices_%s.txt '%(outPartIndicesDir, slave_index)
     command += '%s/neighbors_file_%s.txt'%(outPartIndicesDir, slave_index)
@@ -417,14 +442,15 @@ def counterInversePreprocess():
 
 
 def startMaster():
-    global conf, configFile, numJobs, pids
+    global conf, numJobs, pids
+    iniFile = conf.get('ALGO', 'LOCAL_DIR') + 'deploy.ini'
     with settings(host_string=MASTER_HOST):
       bin_dir = conf.get('ALGO', 'BIN')
       master_log = conf.get('ALGO', 'MASTER_LOG')
       run('rm -f %s'%master_log)
       logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
       pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
-        echo $!)'''%(bin_dir, configFile, numJobs, logfile), pty = False)
+        echo $!)'''%(bin_dir, iniFile, numJobs, logfile), pty = False)
       storePid(MASTER_HOST, pid)
       time.sleep(2)
 
@@ -439,12 +465,18 @@ def startNodes():
           time.sleep(1)
 
 def startOnMachine(slave_index, host):
-  global configFile, numJobs, conf
-  with settings(host_string=host):
+  global numJobs, conf
+  iniFile = conf.get('ALGO', 'LOCAL_DIR') + 'deploy.ini'
+  bin_dir = None
+  if conf.has_option('ALGO', 'REMOTE_BIN'):
+    bin_dir = conf.get('ALGO', 'REMOTE_BIN') 
+  else:
     bin_dir = conf.get('ALGO', 'BIN') 
+
+  with settings(host_string=host):
     logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_' + str(slave_index)
     pid = run('''(nohup %s/main/algos/task/node_task %s %d %d 1> %s 2>&1 < /dev/null &
-      echo $!)'''%(bin_dir, configFile, slave_index, numJobs, logfile), pty = False)
+      echo $!)'''%(bin_dir, iniFile, slave_index, numJobs, logfile), pty = False)
     storePid(host, pid)
 
 def mainCompute():
@@ -459,11 +491,12 @@ def mainCompute():
   libPath += ':' + depDir + 'log4cpp/lib/'
   libPath += ':' + depDir + 'zmq/'
   libPath += ':' + depDir + 'gsl/lib/'
+  libPath += ':' + depDir + 'cpplibs/'
 
   with  shell_env(LD_LIBRARY_PATH=libPath):
+    copyIniToAll()
     createLocalDir()
     gitInfo(debug)
-    runOnAllNodes(copyCfg)
     execute(copyCfg)
     startMaster()
     startNodes() 
@@ -471,27 +504,11 @@ def mainCompute():
 
 @task
 def compute():
-  global conf
-  bin_dir = conf.get('ALGO', 'BIN')
-  depDir = bin_dir + '../dep/'
-  libPath = depDir + 'gmp/lib/'
-  libPath += ':' + depDir + 'log4cpp/lib/'
-
-  with  shell_env(LD_LIBRARY_PATH=libPath):
     runOnAllNodes(cleanup)
     mainCompute()
 
 @task
-def computeAll():
-  global conf
-  bin_dir = conf.get('ALGO', 'BIN')
-  depDir = bin_dir + '../dep/'
-  libPath = depDir + 'gmp/lib/'
-  libPath += ':' + depDir + 'log4cpp/lib/'
-
-  print libPath
-  with  shell_env(LD_LIBRARY_PATH=libPath):
-    
+def computeAll():    
     preprocess()
     mainCompute()
 
@@ -534,7 +551,7 @@ def waitForFinish():
 def getNumNodePerPart():
     global conf, numJobs
 
-    numNode = int(conf.get('ALGO', 'NUMLINE'))
+    numNode = int(conf.get('NODE', 'NUMLINE'))
     if numNode % numJobs:
       numNodePerPart = numNode // numJobs + 1
     else:
@@ -546,7 +563,7 @@ def getNumNodePerPart():
 def getNumEdgePerPart():
     global conf, numJobs
 
-    numEdge = int(conf.get('ALGO', 'NUMEDGE'))
+    numEdge = int(conf.get('NODE', 'NUMEDGE'))
     if numEdge % numJobs:
       numEdgePerPart = numEdge // numJobs + 1
     else:
@@ -569,16 +586,20 @@ def gitInfo(debug):
   localDir = conf.get('ALGO', 'LOCAL_DIR')
   scriptDir = conf.get('ALGO', 'SCRIPTDIR')
   gitLog = localDir + '/gitlog.txt'
-  f = open(gitLog, 'w')
+
+  tempf = tempfile.mktemp()
+  tempfO = open(tempf, 'w')
 
   with cd(scriptDir):
     if not debug:
       run("""git diff --quiet --exit-code || """ +
         """(echo "ERROR: the current state of the git repository is not committed"; exit 42)""")
     out = run("""git log -1 --pretty=format:%H""")
-    f.write(out.strip())
+    tempfO.write(out.strip())
 
-  f.close()
+  tempfO.close()
+  put(tempf, gitLog)
+  os.system('rm ' + tempf)
 
 
 """
@@ -640,3 +661,8 @@ def bitpropExperiment():
 
     runOnAllNodes(cleanup)
     mainCompute()
+
+
+@task
+def copyIniToAll():
+  runOnAllNodes(copyCfg)
