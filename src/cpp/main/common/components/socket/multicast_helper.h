@@ -2,6 +2,7 @@
 #define MULTICAST_HELPER_H_
 
 #include <set>
+#include "log4cpp/Category.hh"
 
 using std::set;
 
@@ -13,6 +14,7 @@ public:
 
 private:
   int nodeIndex;
+  log4cpp::Category* logger_;
 };
 
 

@@ -26,6 +26,7 @@ void NodeFactory::setPartitionConfigHandler(GraphPartitionConfigHandler* handler
 Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 	string nodeType = (*params)["NODE_TYPE"];
 	OldPartitionNode* node = NULL;
+
 	if (nodeType.compare("SIMRANK_UPDATE") == 0) {
 		node = NULL;
 	} else if (nodeType.compare("SIMRANK_STORE_FIRST") == 0) {
@@ -55,6 +56,7 @@ Node* NodeFactory::createNodeFromConfig(unordered_map<string, string>* params) {
 	}
 
 	node->setPartitionConfigHandler(partConfigHandler);
+
 	int slaveIndex;
 	sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
 	node->setPartitionIndex(slaveIndex);
@@ -79,7 +81,7 @@ SimrankStoreFirstNode* NodeFactory::createSimrankStoreFirstNode(
 
 SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
 		unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   SimrankOddEvenNode* node = helper.initSimrankOddEvenNode(params);
   IEdgeListBuilder* edgeListBuilder = createEdgeListBuilder(params);
 
@@ -96,7 +98,7 @@ SimrankOddEvenNode* NodeFactory::createSimrankOddEvenNode(
 }
 
 PagerankNode* NodeFactory::createPagerankNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   EdgelistContainer* container = createEdgeListContainer(params);
   PagerankNode* node = helper.initPagerankNode(params);
   node->setEdgeListContainer(container);
@@ -108,7 +110,7 @@ PagerankNode* NodeFactory::createPagerankNode(unordered_map<string, string>* par
 }
 
 PagerankNonBlockNode* NodeFactory::createPagerankNonBlockNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   EdgelistContainer* container = createEdgeListContainer(params);
   PagerankNonBlockNode* node = helper.initPagerankNonBlockNode(params);
   node->setEdgeListContainer(container);
@@ -120,7 +122,7 @@ PagerankNonBlockNode* NodeFactory::createPagerankNonBlockNode(unordered_map<stri
 }
 
 CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   CleverPagerankNode* node = helper.initCleverPagerankNode(params);
   util.checkParam(params, 5, "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
@@ -161,7 +163,7 @@ CleverPagerankNode* NodeFactory::createCleverPagerankNode(unordered_map<string, 
 CounterInverseNode* NodeFactory::
 createCounterInverseNode(unordered_map<string, string>* params) {
   int numSlaves;
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   EdgelistContainer* container = createEdgeListContainer(params);
   CounterInverseNode* node = helper.initCounterInverseNode(params);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
@@ -190,7 +192,7 @@ EdgelistContainer* NodeFactory::createEdgeListContainer(
 
 CounterInversePagerankNode* NodeFactory::
 createCounterInversePagerankNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   CounterInversePagerankNode* node = helper.initCounterInversePagerankNode(params);
   util.checkParam(params, 7, "POINTER_TO_COUNTERS_DIR", "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "OUT_PARTITION_INDICES_DIR", "LOCAL_DIR", "PARTITION_BOUNDS_DIR");
@@ -237,7 +239,7 @@ createCounterInversePagerankNode(unordered_map<string, string>* params) {
 
 
 CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   CustomNonBlockNode* node = helper.initCustomNonBlockNode(params);
   util.checkParam(params, 5, "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
@@ -275,7 +277,7 @@ CustomNonBlockNode* NodeFactory::createCustomNonBlockNode(unordered_map<string, 
 }
 
 CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   CustomMultiNonBlockNode* node = helper.initCustomMultiNonBlockNode(params);
   util.checkParam(params, 5, "SLAVE_INDEX", "ROWLEN", "NUM_SLAVES",
       "INVERSE_PARTITION_DIR", "LOCAL_DIR");
@@ -283,6 +285,7 @@ CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_ma
   int rowLen, numSlaves, slaveIndex;
   string cfg = (*params)["SLAVERY_CFG"];
   sscanf((*params)["SLAVE_INDEX"].c_str(), "%d", &slaveIndex);
+  logger_->info("Slave index is %d", slaveIndex);
   sscanf((*params)["ROWLEN"].c_str(), "%d", &rowLen);
   sscanf((*params)["NUM_SLAVES"].c_str(), "%d", &numSlaves);
 
@@ -297,6 +300,7 @@ CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_ma
   logger_->info("Starting computing out partition indices.");
   string input = (*params)["REMOTE_DIR"] + "/slavery_" +
          (*params)["SLAVE_INDEX"] + ".txt";
+
   OutpartitionHashComputer computer(input, cfg, numSlaves, rowLen, slaveIndex);
   computer.run();
   node->setNumneighbors(computer.getNumNeighbors());
@@ -314,7 +318,7 @@ CustomMultiNonBlockNode* NodeFactory::createCustomMultiNonBlockNode(unordered_ma
 }
 
 PSimrankNode* NodeFactory::createPSimrankNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   PSimrankNode* node = helper.initPSimrankNode(params);
   IEdgeListBuilder* edgeListBuilder = createEdgeListBuilder(params);
 
@@ -331,7 +335,7 @@ PSimrankNode* NodeFactory::createPSimrankNode(unordered_map<string, string>* par
 }
 
 BitpropNode* NodeFactory::createBitpropNode(unordered_map<string, string>* params) {
-  NodeFactoryHelper helper;
+  //NodeFactoryHelper helper;
   BitpropNode* node = helper.initBitpropNode(params);
 
   long minNode = partConfigHandler->getMinNode(util.stringToInt((*params)["SLAVE_INDEX"]));

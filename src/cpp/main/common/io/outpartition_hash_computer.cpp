@@ -4,7 +4,7 @@
 using std::set;
 
 OutpartitionHashComputer::OutpartitionHashComputer(
-    string input, string cfg, int _numslaves, int _rowlen, int _partIndex): multicastHelper(partIndex) {
+    string input, string cfg, int _numslaves, int _rowlen, int _partIndex): multicastHelper(_partIndex) {
   inputPartition = input;
   slaveConfig = cfg;
   numslaves = _numslaves;
@@ -19,7 +19,7 @@ void OutpartitionHashComputer::readConfig(FILE* slaveryFile) {
   logger_->info("Reading config");
   long lowerBound = 0, numNodes = 0, upperBound = 0, partNumNodes = 0;
   for (int i = 0; i < numslaves; ++i) {
-    fscanf(slaveryFile,"%*d %*s %ld %*ld %ld", &numNodes, &lowerBound);
+    fscanf(slaveryFile,"%ld %*ld %ld", &numNodes, &lowerBound);
     upperBound = lowerBound + numNodes;
     partitionBounds.push_back(std::make_pair<long, long>(lowerBound, upperBound));
     if (i == partIndex) {
@@ -74,7 +74,7 @@ void OutpartitionHashComputer::process(FILE* inputFile) {
   long current_row = 0;
   vector<long> edges;
   set<short> outIndices;
-  short hashId;
+  short hashId = 0;
 
   bool shouldUseNetwork = false;
   bool shouldUpdate = false;

@@ -3,6 +3,9 @@
 
 MulticastHelper::MulticastHelper(int _nodeIndex) {
   nodeIndex = _nodeIndex;
+
+  logger_ = &log4cpp::Category::getInstance(std::string("MulticastHelper"));
+  logger_->info("node_index %d", nodeIndex);
 }
 
 int MulticastHelper::publishHashId(short* outIndices, bool* shouldUpdateSelf) {
@@ -33,6 +36,7 @@ int MulticastHelper::publishHashId(const set<short>& outIds, bool* shouldUpdateS
   for (set<short>::const_iterator it = outIds.begin(); it != outIds.end(); ++it) {
     value = *it;
 
+    //logger_->info("value %hd node_index %d", value, nodeIndex);
     if (value == nodeIndex) {
       *shouldUpdateSelf = true;
       continue;

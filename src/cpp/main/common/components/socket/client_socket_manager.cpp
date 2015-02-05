@@ -52,6 +52,7 @@ void ClientSocketManager::initPublisher() {
   logger->info("Publishing on port %d.", clusterConfig->getPort(selfIndex));
   sprintf(ip, "tcp://*:%d", clusterConfig->getPort(selfIndex));
   publisherSocket->bind(ip);
+  sleep(1);
 }
 
 void ClientSocketManager::setClusterConfig(ClusterConfig* _clusterConfig) {
@@ -78,6 +79,7 @@ void ClientSocketManager::initSubscribes() {
 
   pollItems = new zmq::pollitem_t [numCluster - 1];
   buildPoll();
+  usleep(500);
 }
 
 int ClientSocketManager::findFdIsSet() {
@@ -158,7 +160,7 @@ void ClientSocketManager::readFromPoll() {
 
     if (pollItems[actIndex].revents & ZMQ_POLLIN) {
       listenerSockets[i]->recv(&m);
-      //logger->info("Received from poll %s in %d.", (char*) m.data(), selfIndex);
+      logger->info("Received from poll %s in %d.", (char*) m.data(), selfIndex);
       found = true;
       break;
     }

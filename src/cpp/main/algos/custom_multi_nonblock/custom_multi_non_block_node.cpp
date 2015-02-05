@@ -75,7 +75,7 @@ void CustomMultiNonBlockNode::serializeImportance(short hash, long fromNode,
     senderBuffer_->emptyBuffer(hash);
   }
 
-  //logger_->info("Serializing to %hd from %ld imp %.10lf.", hashIndex, fromNode, importance);
+  //logger_->info("Serializing to %hd from %ld imp %.10lf.", hash, fromNode, importance);
   senderBuffer_->setBreak(hash);
   senderBuffer_->store(hash, fromNode);
   senderBuffer_->store(hash, importance);
