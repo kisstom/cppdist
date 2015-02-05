@@ -19,7 +19,7 @@ cd $tempdir
 wget http://googletest.googlecode.com/files/gtest-1.6.0.zip
 
 unzip gtest-1.6.0.zip
-mv gtest-1.6.0 $DEP_DIR/gmock
+mv gtest-1.6.0 $DEP_DIR/gtest
 
 cd $INSTALL_DIR
 
