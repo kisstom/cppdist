@@ -19,8 +19,10 @@ public:
   void setNode(CustomNonBlockNode*);
   void update(short partindex);
   int storeFromBinary(char*, unsigned);
+  ~CustomNonBlockDeserializer();
 
 private:
+  int messageCounter;
   log4cpp::Category* logger_;
   CustomNonBlockNode* node_;
   double imp;

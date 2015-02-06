@@ -11,7 +11,9 @@ public:
   int storeFromBinary(char*, unsigned);
   bool checkReadable(char* buffer, unsigned length);
   void setNode(PagerankNonBlockNode*);
+  ~PagerankNonBlockDeserializer();
 private:
+  int messageCounter;
   long to;
   double val;
   PagerankNonBlockNode* node_;

@@ -10,6 +10,11 @@
 CustomNonBlockDeserializer::CustomNonBlockDeserializer() {
   logger_ = &log4cpp::Category::getInstance(std::string("CustomNonBlockDeserializer"));
   node_ = NULL;
+  messageCounter = 0;
+}
+
+CustomNonBlockDeserializer::~CustomNonBlockDeserializer() {
+  logger_->info("Received %d messages.", messageCounter);
 }
 
 void CustomNonBlockDeserializer::update(short partindex) {
@@ -26,6 +31,7 @@ int CustomNonBlockDeserializer::storeFromBinary(char* buffer, unsigned length) {
   memcpy(&imp, buffer + stored, sizeof(double));
   stored += sizeof(double);
 
+  ++messageCounter;
   return stored;
 }
 
