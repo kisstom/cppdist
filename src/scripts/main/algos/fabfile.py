@@ -228,7 +228,7 @@ def makePartition():
       print 'Using partitioner node balanced'
       numNodePerPart = getNumNodePerPart()
       logFile = conf.get('ALGO', 'LOCAL_DIR') + '/err'
-      run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, slaveryCfg, initSlavePort))
+      run('%s/main/common/graph_converter/split_by_row_job %s %s %s %d %s'%(bin_dir, inputData, logFile, remoteDir + 'slavery', numNodePerPart, slaveryCfg))
     
 
 def putPartitionIfNeeded():

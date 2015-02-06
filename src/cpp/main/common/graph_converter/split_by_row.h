@@ -24,7 +24,7 @@ using std::string;
 
 class SplitByRow {
 public:
-	SplitByRow(string, string, char*, long, string, int);
+	SplitByRow(string, string, char*, long, string);
 	SplitByRow();
 	~SplitByRow();
 	void run();
@@ -39,7 +39,6 @@ private:
 	FILE* slavery_;
 	FILE* input_;
 
-	int slavePort_;
 	string inputFile_;
 	char outputFilePrefix_[1024];
 	long numNodesPerPart_;
@@ -47,7 +46,6 @@ private:
 	log4cpp::Category* logger_;
 	long numRow_;
 	int partIndex_;
-	int initSlavePort_;
 	string slaverFile_;
 	long minnode_;
 	long numNodes_;

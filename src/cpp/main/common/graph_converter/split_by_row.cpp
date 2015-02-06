@@ -11,7 +11,7 @@ using std::stringstream;
 SplitByRow::SplitByRow() : ROWLEN(15000000) {}
 
 SplitByRow::SplitByRow(string inputFile, string logfile, char* outputPrefix, long numNodesPerPart,
-		string slaverFile, int initSlavePort) : ROWLEN(15000000) {
+		string slaverFile) : ROWLEN(15000000) {
 	inputFile_ = inputFile;
 	strcpy(outputFilePrefix_, outputPrefix);
 
@@ -23,8 +23,6 @@ SplitByRow::SplitByRow(string inputFile, string logfile, char* outputPrefix, lon
 	partition_ = NULL;
 	slavery_ = NULL;
 	input_ = NULL;
-	initSlavePort_ = initSlavePort;
-	slavePort_ = initSlavePort;
 	slaverFile_ = slaverFile;
 
 	log4cpp::Appender *appender = new log4cpp::FileAppender("default", logfile);
@@ -64,8 +62,7 @@ bool SplitByRow::init() {
 }
 
 void SplitByRow::addNextPartToCfg(long numnode, long numedge) {
-	fprintf(slavery_, "%d %s_%d.txt %ld %ld %ld\n",
-	         slavePort_, outputFilePrefix_, partIndex_, numnode, numedge, minnode_);
+	fprintf(slavery_, "%ld %ld %ld\n", numnode, numedge, minnode_);
 
 }
 
@@ -137,7 +134,6 @@ bool SplitByRow::initPartition() {
 
 bool SplitByRow::openNextPartition() {
 	if (partition_) fclose(partition_);
-	++slavePort_;
 	++partIndex_;
   minnode_ = numNodes_ - 1;
 
