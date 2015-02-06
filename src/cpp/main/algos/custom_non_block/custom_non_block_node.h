@@ -39,6 +39,8 @@ public:
   void updateReceiverScore(long fromEdge, double sc);
   void readInverseNodeBounds(string);
   void readInverseOutEdges(string);
+
+  ~CustomNonBlockNode();
 private:
   vector<short*>* outPartitions;
   unordered_map<long, std::pair<long, long> >* inverseNodeBounds;
@@ -57,6 +59,8 @@ private:
   int actIter;
   int maxIter;
 
+  int messageCounter;
+  int numUpdates;
   log4cpp::Category* logger_;
 };
 

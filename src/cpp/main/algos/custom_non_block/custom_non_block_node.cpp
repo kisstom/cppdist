@@ -15,6 +15,8 @@ CustomNonBlockNode::CustomNonBlockNode(long _allnode, long _minnode, double _dum
    dump_ = _dump;
    actIter = 0;
    maxIter = _maxIter;
+   messageCounter = 0;
+   numUpdates = 0;
 
    outPartitions = NULL;
    inverseNodeBounds = NULL;
@@ -25,6 +27,11 @@ CustomNonBlockNode::CustomNonBlockNode(long _allnode, long _minnode, double _dum
    tmpReceiverScore_ = NULL;
    partConfHandler = NULL;
  }
+
+CustomNonBlockNode::~CustomNonBlockNode() {
+  logger_->info("%d messages sent.", messageCounter);
+  logger_->info("%d updates done.", numUpdates);
+}
 
 void CustomNonBlockNode::setPartitionConfigHandler(GraphPartitionConfigHandler* configHandler) {
   partConfHandler = configHandler;
@@ -69,6 +76,7 @@ void CustomNonBlockNode::serializeImportance(short bufferIndex, long fromNode, d
   senderBuffer_->setBreak(bufferIndex);
   senderBuffer_->store(bufferIndex, fromNode);
   senderBuffer_->store(bufferIndex, importance);
+  ++messageCounter;
 }
 
 void CustomNonBlockNode::updateReceiverScore(long origNode, double imp) {
@@ -78,6 +86,7 @@ void CustomNonBlockNode::updateReceiverScore(long origNode, double imp) {
     end = (*inverseNodeBounds)[origNode].second;
     for (long outEdgeIt = start; outEdgeIt < end; ++outEdgeIt) {
       (*tmpReceiverScore_)[(*inverseOutEdges)[outEdgeIt] - minNode_] += imp;
+      ++numUpdates;
     }
   }
 }
