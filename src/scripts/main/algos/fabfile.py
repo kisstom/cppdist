@@ -485,7 +485,7 @@ def mainCompute():
   depDir = bin_dir + '../dep/'
   libPath = depDir + 'gmp/lib/'
   libPath += ':' + depDir + 'log4cpp/lib/'
-  libPath += ':' + depDir + 'zmq/'
+  libPath += ':' + depDir + 'zmq/lib/'
   libPath += ':' + depDir + 'gsl/lib/'
   libPath += ':' + depDir + 'cpplibs/'
 
