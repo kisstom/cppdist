@@ -5,8 +5,8 @@ trap "echo Test failed." ERR
 echo "------------------------ Starting index computer test ------------------------"
 
 thisDir=$(readlink -f $(dirname $0))
-toolDir=../../../../bin/main/common/tools/
-resourceDir=../../../../../resources/hash_compute_test/
+toolDir=$thisDir/../../../../bin/main/common/tools/
+resourceDir=$thisDir/../../../../../resources/hash_compute_test/
 
 tmpDir=`mktemp -d`
 trap "rm -r $tmpDir" EXIT
