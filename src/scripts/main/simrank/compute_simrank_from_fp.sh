@@ -36,7 +36,7 @@ nodes=$((wcl/num_pathes))
 echo "determining the intersection pathes"
 for x in `seq 2 $((path_len+1))`
 do
-  echo "number ", $((x-1))
+  echo "pathindex $((x-1))"
   index=$((x+1))
   sort -gk1,1 -gk$index,$index $fp_with_pathindex > $outdir/tmp.sort
   awk -v field_num=$index -f $SRCDIR/scripts/main/simrank/get_section_new.awk $outdir/tmp.sort > $outdir/pairs_$index
