@@ -87,7 +87,7 @@ int get_connection(int socket_type, u_short port, int *listener)
      This is used with the bind() call */
   memset((char *) &address, 0, sizeof(address));
   address.sin_family = AF_INET;
-  address.sin_port = port;
+  address.sin_port = htons(port);
   address.sin_addr.s_addr = htonl(INADDR_ANY);
 
   listening_socket = socket(AF_INET, socket_type, 0);
@@ -186,7 +186,7 @@ int make_connection(char *service, int type, char *netaddress)
  
   memset((char *) &address, 0, sizeof(address));
   address.sin_family = AF_INET;
-  address.sin_port = (port);
+  address.sin_port = htons(port);
   address.sin_addr.s_addr = addr->s_addr;
 
   sock = socket(AF_INET, type, 0);
@@ -240,7 +240,7 @@ int make_connection(int port, int socketType, char *netaddress)
  
   memset((char *) &address, 0, sizeof(address));
   address.sin_family = AF_INET;
-  address.sin_port = (port);
+  address.sin_port = htons(port);
   address.sin_addr.s_addr = addr->s_addr;
 
   sock = socket(AF_INET, SOCK_DGRAM, 0);
