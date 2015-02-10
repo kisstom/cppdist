@@ -188,6 +188,8 @@ def preprocess():
   depDir = bin_dir + '../dep/'
   libPath = depDir + 'gmp/lib/'
   libPath += ':' + depDir + 'log4cpp/lib/'
+  libPath += ':' + depDir + 'zmq/lib/'
+  libPath += ':' + depDir + 'gsl/lib/'
 
   with  shell_env(LD_LIBRARY_PATH=libPath):
     runPreprocessTask('MAKE_PARTITION', makePartition)
