@@ -35,7 +35,6 @@ int main (int argc, char* argv[]) {
   FILE* outPartFile = fopen(argv[7], "w");
   computer.flushAsEdgelistContainer(outPartFile);
   fclose(outPartFile);
-
 }
 
 
