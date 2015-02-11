@@ -34,6 +34,12 @@ public class SortedTreeOutputKeyComparator extends WritableComparator {
       return -1;
     }
     
+    if (key1.getTreeSize() > key2.getTreeSize()) {
+      return 1;
+    } else if (key1.getTreeSize() < key2.getTreeSize()) {
+      return -1;
+    }
+    
     if (key1.getPathIndex() > key2.getPathIndex()) {
       return 1;
     } else if (key1.getPathIndex() < key2.getPathIndex()) {

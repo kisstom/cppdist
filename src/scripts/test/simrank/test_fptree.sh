@@ -1,5 +1,5 @@
 #!/bin/bash -eu
-exit 0
+#exit 0
 
 thisDir="$(cd "$(dirname $0)" && pwd)"
 
@@ -29,5 +29,5 @@ if [ "$output_diff" != "" ]; then
 fi
 
 echo "FP tree counter test passed."
-rm -rf "$outputFS"
+#rm -rf "$outputFS"
 exit 0

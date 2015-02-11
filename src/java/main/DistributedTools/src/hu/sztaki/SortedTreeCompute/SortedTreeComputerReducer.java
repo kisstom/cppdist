@@ -20,7 +20,8 @@ public class SortedTreeComputerReducer extends
     Edge edge;
     Edge prevEdge = null;
     StringBuilder builder = new StringBuilder();
-    Text outputKey = new Text(key.getFpindex() + " " + key.getRootNode());
+    Text outputKey = new Text(key.getFpindex() + " " +
+    key.getRootNode() + " " + key.getTreeSize());
     //System.out.println("key " + key.getFpindex() + " " + key.getRootNode());
     
     while (edges.hasNext()) {

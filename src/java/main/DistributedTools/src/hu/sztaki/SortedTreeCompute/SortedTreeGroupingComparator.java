@@ -38,7 +38,13 @@ public class SortedTreeGroupingComparator extends WritableComparator {
     } else if (key1.getRootNode() < key2.getRootNode()) {
       return -1;
     }
-       
+     
+    if (key1.getTreeSize() > key2.getTreeSize()) {
+      return 1;
+    } else if (key1.getTreeSize() < key2.getTreeSize()) {
+      return -1;
+    }
+    
     return 0;
   }
 

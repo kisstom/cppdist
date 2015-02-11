@@ -14,7 +14,8 @@ public class SortedTreePartitioner extends Partitioner {
     TreeKey treeKey = (TreeKey) key;
     long rootNode = treeKey.getRootNode();
     int fpIndex = treeKey.getFpindex();
-    return (int) (rootNode + fpIndex) % i;
+    int size = treeKey.getTreeSize();
+    return (int) (rootNode + fpIndex + size) % i;
   }
   
 }
