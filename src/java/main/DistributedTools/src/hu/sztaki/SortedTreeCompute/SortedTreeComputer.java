@@ -41,6 +41,8 @@ public class SortedTreeComputer {
     job.setOutputFormatClass(TextOutputFormat.class);
 		
     job.setJarByClass(SortedTreeComputer.class);
+    job.setNumReduceTasks(4);
+    
     FileInputFormat.addInputPath(job, new Path(input));
     FileOutputFormat.setOutputPath(job, new Path(output));
     job.waitForCompletion(false);
