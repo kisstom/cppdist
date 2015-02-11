@@ -10,7 +10,6 @@
 
 
 #include <log4cpp/Category.hh>
-//#include <sstream>
 #include <algorithm>
 
 #include "../util/file_util.h"
