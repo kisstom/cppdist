@@ -18,6 +18,7 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 SocketManager::SocketManager() {
   logger_ = NULL;
