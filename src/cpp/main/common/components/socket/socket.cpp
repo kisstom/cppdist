@@ -104,7 +104,7 @@ ServerSocket *ServerSocket::Create(int port) {
   memset((char *) &server_address, 0, sizeof(server_address));
   server_address.sin_family = AF_INET;
   server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-  server_address.sin_port = port;
+  server_address.sin_port = htons(port);
   if (bind(socket_obj->socket_file_descriptor, (struct sockaddr *) &server_address,
            sizeof(server_address)) < 0) {
     close(socket_obj->socket_file_descriptor);
