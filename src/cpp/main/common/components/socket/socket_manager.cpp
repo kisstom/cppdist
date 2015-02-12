@@ -69,6 +69,7 @@ void SocketManager::initConnections()
   logger_->info("Initing connections.");
   initClient();
   initSockets();
+  sleep(5);
 
   char buf[1024], instr[1024], host[1024];
   int slave_index, port;
