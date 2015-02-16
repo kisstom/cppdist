@@ -72,6 +72,7 @@ TEST(InfectedTreeComputerTest, getRoot) {
 
   ASSERT_EQ(1, computer.infectedTreeCount[1]);
   ASSERT_EQ(2, computer.infectedTreeCount[2]);
+  //ASSERT_EQ(0, computer.infectedTreeCount[3]);
 
 }
 

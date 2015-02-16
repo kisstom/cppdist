@@ -22,6 +22,8 @@ void InfectedTreeComputer::computeInfectedTrees() {
   int numTreesChecked = 0;
   for (std::tr1::unordered_map<long, std::set<long> >::iterator rootIt = fpTreeNodes->begin();
       rootIt != fpTreeNodes->end(); ++rootIt) {
+
+    // Index starts from 1, because we interested in later crawls and finishes with the size of it.
     for (int infectedLevelInd = 1; infectedLevelInd <= (int) infectedNodes->size(); ++infectedLevelInd) {
       hasSection = util.hasSection(rootIt->second, (*infectedNodes)[infectedLevelInd]);
 

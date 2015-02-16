@@ -22,7 +22,6 @@ public class SortedTreeComputerReducer extends
     StringBuilder builder = new StringBuilder();
     Text outputKey = new Text(key.getFpindex() + " " +
     key.getRootNode() + " " + key.getTreeSize());
-    //System.out.println("key " + key.getFpindex() + " " + key.getRootNode());
     
     while (edges.hasNext()) {
       edge = new Edge(edges.next());
@@ -34,8 +33,6 @@ public class SortedTreeComputerReducer extends
       }
       prevEdge = edge;
       
-      //System.out.println(edge.getPathIndex() + " " + edge.getStartNode() +
-      //        " " + edge.getEndNode());
       builder.append("|" + edge.getPathIndex() + " " + edge.getStartNode() +
               " " + edge.getEndNode());
     }
