@@ -52,6 +52,7 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
   int partI = 0;
   long numCrossEdge = 0;
   long outPartSize = 0;
+  long allOutPartSize = 0;
   char* line = new char[rowlen];
   long current_row = 0;
   vector<long> edges;
@@ -91,6 +92,8 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
 
     short* indices = new short[outIndices.size() + 1];
     indices[0] = outIndices.size();
+    allOutPartSize += (long) outIndices.size();
+
     short count = 1;
     for (set<short>::const_iterator it = outIndices.begin(); it != outIndices.end(); ++it) {
       indices[count] = *it;
@@ -107,6 +110,7 @@ void OutPartitionIndexComputer::process(FILE* inputFile) {
   logger_->info("Num should use: %d", numShouldUse);
   logger_->info("Number of edges between partitions: %ld", numCrossEdge);
   logger_->info("Out partition count %ld", outPartSize);
+  logger_->info("All partition count %ld", allOutPartSize);
 }
 
 void OutPartitionIndexComputer::run() {
