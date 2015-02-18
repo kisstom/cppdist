@@ -22,7 +22,7 @@ public:
   int findInfectedIndex(long);
   void addInfectedNodes(const std::vector<long>& edges);
   void incrementNumLine();
-  std::tr1::unordered_map<long, std::set<long> > infectedNodes;
+  std::tr1::unordered_map<int, std::set<long> > infectedNodes;
 private:
   std::vector<long> crawlMaxes;
   long maxNodeId;

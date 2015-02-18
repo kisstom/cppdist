@@ -89,9 +89,9 @@ TEST(InfectedTreeComputerTest, testSmallMx) {
   std::set<long> root2;
   root1.insert(5);
 
-  fpTreeNodes[2] = root0;
-  fpTreeNodes[3] = root1;
-  fpTreeNodes[20] = root2;
+  fpTreeNodes[RootPath(2, 10)] = root0;
+  fpTreeNodes[RootPath(3, 10)] = root1;
+  fpTreeNodes[RootPath(20, 10)] = root2;
 
   std::set<long> infectedLev1;
   infectedLev1.insert(2);

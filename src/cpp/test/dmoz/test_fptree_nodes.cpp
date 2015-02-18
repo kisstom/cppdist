@@ -49,15 +49,16 @@ TEST(FPTreeNodesTest, addInner) {
   FpTreeLeaves fpTreeLeaves;
   fpTreeLeaves.addInnerNodes(line);
 
-  ASSERT_FALSE(fpTreeLeaves.nodes.find(5) == fpTreeLeaves.nodes.end());
+  RootPath rp(5, 4);
+  ASSERT_FALSE(fpTreeLeaves.nodes.find(rp) == fpTreeLeaves.nodes.end());
 
-  ASSERT_TRUE(fpTreeLeaves.nodes[5].find(0) == fpTreeLeaves.nodes[5].end());
-  ASSERT_FALSE(fpTreeLeaves.nodes[5].find(1) == fpTreeLeaves.nodes[5].end());
-  ASSERT_FALSE(fpTreeLeaves.nodes[5].find(2) == fpTreeLeaves.nodes[5].end());
-  ASSERT_FALSE(fpTreeLeaves.nodes[5].find(3) == fpTreeLeaves.nodes[5].end());
-  ASSERT_FALSE(fpTreeLeaves.nodes[5].find(4) == fpTreeLeaves.nodes[5].end());
+  ASSERT_TRUE(fpTreeLeaves.nodes[rp].find(0) == fpTreeLeaves.nodes[rp].end());
+  ASSERT_FALSE(fpTreeLeaves.nodes[rp].find(1) == fpTreeLeaves.nodes[rp].end());
+  ASSERT_FALSE(fpTreeLeaves.nodes[rp].find(2) == fpTreeLeaves.nodes[rp].end());
+  ASSERT_FALSE(fpTreeLeaves.nodes[rp].find(3) == fpTreeLeaves.nodes[rp].end());
+  ASSERT_FALSE(fpTreeLeaves.nodes[rp].find(4) == fpTreeLeaves.nodes[rp].end());
   ASSERT_EQ(1, fpTreeLeaves.nodes.size());
-  ASSERT_EQ(4, fpTreeLeaves.nodes[5].size());
+  ASSERT_EQ(4, fpTreeLeaves.nodes[rp].size());
 }
 
 TEST(FPTreeNodesTest, addSink) {
