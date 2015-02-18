@@ -10,3 +10,4 @@ env.Program('test_simrank_score', ['test_simrank_score.cpp', '../../main/dmoz/si
 env.Program('test_fptree_nodes', ['test_fptree_nodes.cpp', '../../main/dmoz/fpTreeLeaves.o'] + utils)
 env.Program('test_infected_node_computer', ['test_infected_node_computer.cpp', '../../main/dmoz/infectedNodeComputer.o'] + utils)
 env.Program('test_infected_tree_computer', ['test_infected_tree_computer.cpp', '../../main/dmoz/infectedTreeComputer.o'] + utils)
+env.Program('test_root_path_struct', ['test_root_path_struct.cpp'])
