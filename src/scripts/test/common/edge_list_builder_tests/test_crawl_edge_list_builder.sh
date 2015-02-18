@@ -9,6 +9,11 @@ maxNodeToKeep=2
 minnode=0
 
 work_dir=`mktemp -d`
+#trap 'rm -rf "$work_dir"' EXIT
+
+echo "Working dir $work_dir ."
+
+
 output=$work_dir/outputGraph
 
 $this_dir/../../../../bin/test/useFileSystem/common/edge_list_builder_tests/crawl_edge_list_builder_main $maxNodeToKeep  $input $output $minnode
@@ -19,8 +24,6 @@ if [ "$output_diff" != "" ]; then
   echo $output_diff
   exit 1
 fi
-
-rm -rf "$work_dir"
 
 echo "Crawl edge list builder test accepted."
 

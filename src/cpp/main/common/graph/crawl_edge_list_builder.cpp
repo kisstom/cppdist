@@ -56,6 +56,7 @@ void CrawlEdgeListBuilder::buildFromFile(string fname) {
     ++lineNumber;
   }
 
+  logger_->info("%d edges stored.", edgeNum);
   container_->setFinish();
   fclose(input);
   delete[] line;

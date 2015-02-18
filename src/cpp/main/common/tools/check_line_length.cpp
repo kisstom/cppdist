@@ -14,7 +14,7 @@ int main (int argc, char* argv[]) {
   while (!feof(f)) {
     fgets(line, row_max, f);
     if (line[strlen(line) - 1] != '\n') {
-      printf("%d chars not enough. %d is needed.\n", row_max, (int) strlen(line));
+      printf("%d chars not enough.\n", row_max);
       fail = true;
       break;
     }
