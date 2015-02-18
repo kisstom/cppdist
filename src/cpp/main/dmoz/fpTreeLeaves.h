@@ -22,7 +22,7 @@ public:
   void addInnerNodes(char* s);
   ~FpTreeLeaves();
 
-  std::tr1::unordered_map<RootPath, std::set<long> > nodes;
+  std::tr1::unordered_map<RootPath, std::set<long>, RootPathFunc, RootPathFunc> nodes;
 
 private:
   log4cpp::Category* logger;
