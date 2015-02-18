@@ -44,7 +44,7 @@ protected:
 
 
 TEST(InfectedTreeComputerTest, getRoot) {
-  std::tr1::unordered_map<long, std::set<long> > fpTreeNodes;
+  std::tr1::unordered_map<RootPath, std::set<long>, RootPathFunc, RootPathFunc> fpTreeNodes;
   std::tr1::unordered_map<int, std::set<long> > infectedNodes;
 
   std::set<long> root0;
@@ -55,8 +55,8 @@ TEST(InfectedTreeComputerTest, getRoot) {
   root1.insert(2);
   root1.insert(3);
 
-  fpTreeNodes[0] = root0;
-  fpTreeNodes[1] = root1;
+  fpTreeNodes[RootPath(0, 10)] = root0;
+  fpTreeNodes[RootPath(1, 10)] = root1;
 
   std::set<long> infectedLev1;
   infectedLev1.insert(1);
@@ -77,7 +77,7 @@ TEST(InfectedTreeComputerTest, getRoot) {
 }
 
 TEST(InfectedTreeComputerTest, testSmallMx) {
-  std::tr1::unordered_map<long, std::set<long> > fpTreeNodes;
+  std::tr1::unordered_map<RootPath, std::set<long>, RootPathFunc, RootPathFunc> fpTreeNodes;
   std::tr1::unordered_map<int, std::set<long> > infectedNodes;
 
   std::set<long> root0;
@@ -107,14 +107,14 @@ TEST(InfectedTreeComputerTest, testSmallMx) {
 }
 
 TEST(InfectedTreeComputerTest, testBreakLevel) {
-  std::tr1::unordered_map<long, std::set<long> > fpTreeNodes;
+  std::tr1::unordered_map<RootPath, std::set<long>, RootPathFunc, RootPathFunc> fpTreeNodes;
   std::tr1::unordered_map<int, std::set<long> > infectedNodes;
 
   std::set<long> root0;
   root0.insert(1);
   root0.insert(2);
 
-  fpTreeNodes[0] = root0;
+  fpTreeNodes[RootPath(0, 10)] = root0;
 
   std::set<long> infectedLev1;
   infectedLev1.insert(1);

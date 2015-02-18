@@ -14,10 +14,11 @@
 #include <stdio.h>
 #include <iostream>
 #include "log4cpp/Category.hh"
+#include "root_path_key.h"
 
 class InfectedTreeComputer {
 public:
-  InfectedTreeComputer(std::tr1::unordered_map<long, std::set<long> >*,
+  InfectedTreeComputer(std::tr1::unordered_map<RootPath, std::set<long>, RootPathFunc, RootPathFunc>*,
       std::tr1::unordered_map<int, std::set<long> >*);
 
   void computeInfectedTrees();
@@ -26,7 +27,7 @@ public:
   std::tr1::unordered_map<long, int> infectedTreeCount;
   std::tr1::unordered_map<long, int> infectedTreeSize;
 private:
-  std::tr1::unordered_map<long, std::set<long> >* fpTreeNodes;
+  std::tr1::unordered_map<RootPath, std::set<long>, RootPathFunc, RootPathFunc>* fpTreeNodes;
   std::tr1::unordered_map<int, std::set<long> >* infectedNodes;
   Util util;
   log4cpp::Category* logger_;

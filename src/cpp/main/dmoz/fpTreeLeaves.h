@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <sstream>
 #include "log4cpp/Category.hh"
+#include "root_path_key.h"
 
 class FpTreeLeaves {
 public:
@@ -21,7 +22,7 @@ public:
   void addInnerNodes(char* s);
   ~FpTreeLeaves();
 
-  std::tr1::unordered_map<long, std::set<long> > nodes;
+  std::tr1::unordered_map<RootPath, std::set<long> > nodes;
 
 private:
   log4cpp::Category* logger;

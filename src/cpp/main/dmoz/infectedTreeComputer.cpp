@@ -7,8 +7,9 @@
 
 #include "infectedTreeComputer.h"
 
-InfectedTreeComputer::InfectedTreeComputer(std::tr1::unordered_map<long, std::set<long> >* _fpTreeNode,
-      std::tr1::unordered_map<int, std::set<long> >* _infectedNodes) {
+InfectedTreeComputer::InfectedTreeComputer(std::tr1::unordered_map<RootPath, std::set<long>,
+    RootPathFunc, RootPathFunc>* _fpTreeNode,
+    std::tr1::unordered_map<int, std::set<long> >* _infectedNodes) {
   fpTreeNodes = _fpTreeNode;
   infectedNodes = _infectedNodes;
   logger_ = &log4cpp::Category::getInstance(std::string("InfectedTreeComputer"));
@@ -20,7 +21,7 @@ void InfectedTreeComputer::computeInfectedTrees() {
   logger_->info("Starting infected tree count.");
   fflush(stdout);
   int numTreesChecked = 0;
-  for (std::tr1::unordered_map<long, std::set<long> >::iterator rootIt = fpTreeNodes->begin();
+  for (std::tr1::unordered_map<RootPath, std::set<long> >::iterator rootIt = fpTreeNodes->begin();
       rootIt != fpTreeNodes->end(); ++rootIt) {
 
     // Index starts from 1, because we interested in later crawls and finishes with the size of it.

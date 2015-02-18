@@ -37,9 +37,13 @@ void FpTreeLeaves::run(FILE* f) {
 void FpTreeLeaves::addInnerNodes(char* line) {
   std::vector<long> edges;
   Util::split(line, edges);
+
   long root = edges[edges.size() - 1];
+  short pathLen = (short) (edges.size() - 2);
+  RootPath rootPath(root, pathLen);
+
   for (int i = 1; i < (int) edges.size() - 1; ++i) {
-    nodes[root].insert(edges[i]);
+    nodes[rootPath].insert(edges[i]);
   }
 }
 
