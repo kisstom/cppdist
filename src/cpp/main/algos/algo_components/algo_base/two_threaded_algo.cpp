@@ -86,6 +86,7 @@ void TwoThreadedAlgo::receiver() {
   Selector* selector = socketManager_->getSelector(timeout);
 
   socketManager_->resetFinishCount();
+  if (socketManager_->isFinishedAll()) return;
   while (1)
   {
     socket_index = selector->SelectIndex();

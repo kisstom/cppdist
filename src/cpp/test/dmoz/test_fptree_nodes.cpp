@@ -61,6 +61,16 @@ TEST(FPTreeNodesTest, addInner) {
   ASSERT_EQ(4, fpTreeLeaves.nodes[rp].size());
 }
 
+TEST(FPTreeNodesTest, addInnerDiffSize) {
+  char line0[] = "0 1 2 3 4 5";
+  char line1[] = "0 2 3 4 5";
+  FpTreeLeaves fpTreeLeaves;
+  fpTreeLeaves.addInnerNodes(line0);
+  fpTreeLeaves.addInnerNodes(line1);
+
+  ASSERT_EQ(2, fpTreeLeaves.nodes.size());
+}
+
 TEST(FPTreeNodesTest, addSink) {
   char line[] = "0 5";
 
