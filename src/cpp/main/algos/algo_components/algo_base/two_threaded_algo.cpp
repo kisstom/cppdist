@@ -80,13 +80,15 @@ void TwoThreadedAlgo::run() {
 
 void TwoThreadedAlgo::receiver() {
   logger_->info("Starting receiver.");
-  int socket_index, size = 0;
-  bool is_more = true;
-  int timeout = 0;
-  Selector* selector = socketManager_->getSelector(timeout);
 
   socketManager_->resetFinishCount();
   if (socketManager_->isFinishedAll()) return;
+
+  int timeout = 0;
+  Selector* selector = socketManager_->getSelector(timeout);
+
+  int socket_index, size = 0;
+  bool is_more = true;
   while (1)
   {
     socket_index = selector->SelectIndex();
