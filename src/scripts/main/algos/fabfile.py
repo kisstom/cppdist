@@ -443,28 +443,40 @@ def startMaster():
     global conf, numJobs, pids
     iniFile = conf.get('ALGO', 'LOCAL_DIR') + 'deploy.ini'
     with settings(host_string=MASTER_HOST):
-      bin_dir = conf.get('ALGO', 'BIN')
       master_log = conf.get('ALGO', 'MASTER_LOG')
       run('rm -f %s'%master_log)
       logfile = conf.get('ALGO', 'LOCAL_DIR') + 'err_master'
-      pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
-        echo $!)'''%(bin_dir, iniFile, numJobs, logfile), pty = False)
+      bin_dir = conf.get('ALGO', 'BIN')
+      libPath = createDepString(bin_dir)
+      with shell_env(LD_LIBRARY_PATH=libPath):
+        pid = run('''(nohup %s/main/algos/task/master_task %s %d 1> %s 2>&1 < /dev/null & 
+          echo $!)'''%(bin_dir, iniFile, numJobs, logfile), pty = False)
       storePid(MASTER_HOST, pid)
       time.sleep(2)
 
 def startNodes():
     global conf, numJobs
-    slave_index = 0
-    for host in cfg_hosts:
-        jobs_on_host = int(conf.get('MACHINES', host))
-        for x in xrange(jobs_on_host):
-          startOnMachine(slave_index, host)
-          slave_index += 1
-          time.sleep(1)
+
+    bin_dir = None
+    if conf.has_option('ALGO', 'REMOTE_BIN'):
+      bin_dir = conf.get('ALGO', 'REMOTE_BIN') 
+    else:
+      bin_dir = conf.get('ALGO', 'BIN') 
+
+    libPath = createDepString(bin_dir)
+    with shell_env(LD_LIBRARY_PATH=libPath):
+      slave_index = 0
+      for host in cfg_hosts:
+          jobs_on_host = int(conf.get('MACHINES', host))
+          for x in xrange(jobs_on_host):
+            startOnMachine(slave_index, host)
+            slave_index += 1
+            time.sleep(1)
 
 def startOnMachine(slave_index, host):
   global numJobs, conf
   iniFile = conf.get('ALGO', 'LOCAL_DIR') + 'deploy.ini'
+  
   bin_dir = None
   if conf.has_option('ALGO', 'REMOTE_BIN'):
     bin_dir = conf.get('ALGO', 'REMOTE_BIN') 
@@ -477,13 +489,8 @@ def startOnMachine(slave_index, host):
       echo $!)'''%(bin_dir, iniFile, slave_index, numJobs, logfile), pty = False)
     storePid(host, pid)
 
-def mainCompute():
-  global conf, MASTER_HOST
-  debug = False
-  if conf.has_option('ALGO', 'DEBUG'):
-    debug = True
 
-  bin_dir = conf.get('ALGO', 'BIN')
+def createDepString(bin_dir):
   depDir = bin_dir + '../dep/'
   libPath = depDir + 'gmp/lib/'
   libPath += ':' + depDir + 'log4cpp/lib/'
@@ -491,14 +498,22 @@ def mainCompute():
   libPath += ':' + depDir + 'gsl/lib/'
   libPath += ':' + depDir + 'cpplibs/'
 
-  with  shell_env(LD_LIBRARY_PATH=libPath):
-    copyIniToAll()
-    createLocalDir()
-    gitInfo(debug)
-    execute(copyCfg)
-    startMaster()
-    startNodes() 
-    waitForFinish()
+  return libPath
+
+
+def mainCompute():
+  global conf, MASTER_HOST
+  debug = False
+  if conf.has_option('ALGO', 'DEBUG'):
+    debug = True
+
+  copyIniToAll()
+  createLocalDir()
+  gitInfo(debug)
+  execute(copyCfg)
+  startMaster()
+  startNodes() 
+  waitForFinish()
 
 @task
 def compute():
